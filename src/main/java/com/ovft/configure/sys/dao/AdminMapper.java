@@ -14,6 +14,10 @@ import org.apache.ibatis.annotations.Param;
 public interface AdminMapper {
 
     public Admin selectById(@Param("adminId") Integer adminId);
+
+    public Admin selectByPhone(@Param("phone") String phone);
+
     public void creatAdmin(@Param("admin") Admin admin);
 
+    public void updateByPassword(@Param("adminId") Integer adminId, @Param("password") String password);
 }

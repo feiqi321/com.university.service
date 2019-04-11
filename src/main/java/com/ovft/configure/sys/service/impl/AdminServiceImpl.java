@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * @ClassName AdminServiceImpl
@@ -26,6 +27,58 @@ public class AdminServiceImpl implements AdminService {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     @Resource
     private AdminMapper adminMapper;
+
+    /**
+     *登录
+     * @return
+     */
+    @Override
+    public WebResult login(Admin admin) {
+        if(StringUtils.isBlank(admin.getPhone())) {
+            return new WebResult("error", "手机号不能为空");
+        }
+        if(StringUtils.isBlank(admin.getPassword())) {
+            return new WebResult("error", "密码不能为空");
+        }
+        //查询该手机号是否已经存在
+        Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
+        if(adminPhone == null) {
+            return new WebResult("error", "手机号不存在");
+        }
+        String pasword = MD5Utils.md5Password(admin.getPhone() + admin.getPassword());
+        if(!pasword.equals(adminPhone.getPassword())) {
+            return new WebResult("error", "密码错误");
+        }
+        HashMap<String, Object> map = new HashMap();
+        map.put("admin", adminPhone);
+
+        //TODO   添加redis
+        map.put("token", "123456");
+
+        WebResult result = new WebResult(map);
+        result.setCode("success");
+        return result;
+    }
+
+    /**
+     * 修改密码
+     * @param adminId
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult updatePassword(Integer adminId, String oldPassword, String newPassword) {
+        Admin admin = adminMapper.selectById(adminId);
+        String password = MD5Utils.md5Password(admin.getPhone() + oldPassword);
+        if(!admin.getPassword().equals(password)) {
+            return new WebResult("error", "原密码错误");
+        }
+        password = MD5Utils.md5Password(admin.getPhone() + newPassword);
+        adminMapper.updateByPassword(adminId, password);
+        return new WebResult("success", "修改成功");
+    }
 
     /**
      * 添加管理员
@@ -46,6 +99,11 @@ public class AdminServiceImpl implements AdminService {
             result.setMsg("手机号不能为空");
             return result;
         }
+        //查询该手机号是否已经存在
+        Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
+        if(adminPhone != null) {
+            return new WebResult("error", "手机号已存在");
+        }
         //管理员初始密码为000000
         String password = admin.getPhone() + "000000";
         admin.setPassword(MD5Utils.md5Password(password));
@@ -55,4 +113,6 @@ public class AdminServiceImpl implements AdminService {
         result.setCode("success");
         return result;
     }
+
+
 }

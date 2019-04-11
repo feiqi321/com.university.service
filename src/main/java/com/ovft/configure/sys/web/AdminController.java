@@ -4,10 +4,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @ClassName AdminController
@@ -22,6 +19,29 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    /**
+     * 登录
+     * @param admin
+     * @return
+     */
+    @PostMapping(value = "/login")
+    public WebResult login(@RequestBody Admin admin) {
+        return adminService.login(admin);
+    }
+
+    /**
+     * 修改密码
+     * @param adminId
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @PostMapping(value = "/updatePassword")
+    public WebResult updatePasword(@RequestParam(value = "adminId")Integer adminId, @RequestParam(value = "oldPassword")String oldPassword,
+                                   @RequestParam(value = "newPassword")String newPassword) {
+        return adminService.updatePassword(adminId, oldPassword, newPassword);
+    }
 
     /**
      * 添加管理员

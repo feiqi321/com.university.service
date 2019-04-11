@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.SchoolMapper" >
+
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.School">
+         select school_id as schoolId, school_name as schoolName, admin_id as adminId, longitude, latitude
+         from edu_school
+         where school_id = #{school}
+    </select>
+
+    <insert id="createSchool" parameterType="com.ovft.configure.sys.bean.School" useGeneratedKeys="true" keyProperty="school_id">
+         insert into edu_school(school_name, admin_id, longitude, latitude)
+         values (#{school.schoolName}, #{school.adminId}, #{school.longitude}, #{school.latitude})
+    </insert>
+
+
+
+
+</mapper>

@@ -4,13 +4,23 @@
 <mapper namespace="com.ovft.configure.sys.dao.AdminMapper" >
 
     <select id="selectById"  resultType="com.ovft.configure.sys.bean.Admin">
-         select admin_id as adminId, name, password from edu_admin where admin_id = #{adminId}
+         select admin_id as adminId, name, password, phone, image, role from edu_admin where admin_id = #{adminId}
+    </select>
+
+    <select id="selectByPhone"  resultType="com.ovft.configure.sys.bean.Admin">
+         select admin_id as adminId, name, password, phone, image, role from edu_admin where phone = #{phone}
     </select>
 
     <insert id="creatAdmin" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="admin_id">
          insert into edu_admin(name, password, phone, image, role)
          values (#{admin.name}, #{admin.password}, #{admin.phone}, #{admin.image}, #{admin.role})
     </insert>
+    
+    <update id="updateByPassword">
+          update edu_admin e
+          set e.password = #{password}
+          where e.admin_id = #{adminId}
+    </update>
 
 
 
