@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.bean;
 
 /**
+ *
  * @ClassName User
  * @Author zqx
  * @Date 2019/4/9 10:13
@@ -71,7 +72,11 @@ public class User {
     private String emergencyRelation2;
     private String emergencyPhone2;
 
-    public Integer getUserId() {
+    /**
+     * 学员审批
+     */
+    private Integer checkIn;
+ public Integer getUserId() {
         return userId;
     }
 
@@ -221,5 +226,13 @@ public class User {
 
     public void setEmergencyPhone2(String emergencyPhone2) {
         this.emergencyPhone2 = emergencyPhone2;
+    }
+
+    public Integer getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(Integer checkIn) {
+        this.checkIn = checkIn;
     }
 }

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @ClassName User
+ * @ClassName User   课程表
  * @Author zqx
  * @Date 2019/4/9 10:13
  * @Version 1.0

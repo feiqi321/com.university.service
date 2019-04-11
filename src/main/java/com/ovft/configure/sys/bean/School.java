@@ -1,7 +1,7 @@
 package com.ovft.configure.sys.bean;
 
 /**
- * @ClassName School
+ * @ClassName School   学校
  * @Author zqx
  * @Date 2019/4/10 11:52
  * @Version 1.0

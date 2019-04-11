@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.bean;
 
 /**
+ * 管理员
  * @ClassName Admin
  * @Author zqx
  * @Date 2019/4/10 11:39
