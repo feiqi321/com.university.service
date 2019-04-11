@@ -23,7 +23,7 @@ public class Course {
     /**
      * 上课地点
      */
-    private String placeClass;
+    private Integer placeClass;
 
     /**
      * 开课日期
@@ -83,11 +83,11 @@ public class Course {
         this.courseTeacher = courseTeacher;
     }
 
-    public String getPlaceClass() {
+    public Integer getPlaceClass() {
         return placeClass;
     }
 
-    public void setPlaceClass(String placeClass) {
+    public void setPlaceClass(Integer placeClass) {
         this.placeClass = placeClass;
     }
 

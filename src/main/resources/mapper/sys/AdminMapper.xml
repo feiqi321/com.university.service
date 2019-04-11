@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.AdminMapper" >
+
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.Admin">
+         select admin_id as adminId, name, password from edu_admin where admin_id = #{adminId}
+    </select>
+
+    <insert id="creatAdmin" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="admin_id">
+         insert into edu_admin(name, password, phone, image, role)
+         values (#{admin.name}, #{admin.password}, #{admin.phone}, #{admin.image}, #{admin.role})
+    </insert>
+
+
+
+
+</mapper>
