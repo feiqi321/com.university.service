@@ -9,9 +9,9 @@ package com.ovft.configure.sys.bean;
  **/
 public class SchoolClass {
 
-    public Integer classId;
-    public Integer schoolId;
-    public String className;
+    private Integer classId;
+    private Integer schoolId;
+    private String className;
 
     public Integer getClassId() {
         return classId;

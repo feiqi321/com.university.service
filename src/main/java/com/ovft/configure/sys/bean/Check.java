@@ -3,7 +3,7 @@ package com.ovft.configure.sys.bean;
 import java.util.Date;
 
 /**
- * 请假申请表
+ * 学员打卡
  * @ClassName Check
  * @Author zqx
  * @Date 2019/4/10 11:43
