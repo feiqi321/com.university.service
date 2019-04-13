@@ -23,6 +23,12 @@ public class WebResult implements Serializable {
         this.msg = msg;
     }
 
+    public WebResult(String code,String msg,Object data){
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+
     public WebResult(Object data) {
         this.data = data;
     }

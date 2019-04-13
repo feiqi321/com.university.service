@@ -3,6 +3,7 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.service.AdminService;
+import com.ovft.configure.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,8 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 登录

@@ -17,7 +17,7 @@ public interface AdminMapper {
 
     public Admin selectByPhone(@Param("phone") String phone);
 
-    public void creatAdmin(@Param("admin") Admin admin);
+    public void creatAdmin(Admin admin);
 
     public void updateByPassword(@Param("adminId") Integer adminId, @Param("password") String password);
 }

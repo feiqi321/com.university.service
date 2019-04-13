@@ -11,9 +11,9 @@
          select admin_id as adminId, name, password, phone, image, role from edu_admin where phone = #{phone}
     </select>
 
-    <insert id="creatAdmin" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="admin_id">
+    <insert id="creatAdmin" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="adminId">
          insert into edu_admin(name, password, phone, image, role)
-         values (#{admin.name}, #{admin.password}, #{admin.phone}, #{admin.image}, #{admin.role})
+         values (#{name}, #{password}, #{phone}, #{image}, #{role})
     </insert>
     
     <update id="updateByPassword">

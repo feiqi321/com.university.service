@@ -29,12 +29,22 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public WebResult createSchool(School school) {
         if(StringUtils.isBlank(school.getSchoolName())) {
-            return new WebResult("error", "学校名称不能为空");
+            return new WebResult("400", "学校名称不能为空");
         }
         if(StringUtils.isBlank(school.getLongitude()) || StringUtils.isBlank(school.getLatitude())) {
-            return new WebResult("error", "学校位置不能为空");
+            return new WebResult("400", "学校位置不能为空");
         }
         schoolmapper.createSchool(school);
-        return new WebResult("success", "");
+        System.out.println("school.getSchoolId() = " + school.getSchoolId());
+        return new WebResult("200", "", school);
+    }
+
+    @Override
+    public WebResult updateSchoolName(School school) {
+        if(StringUtils.isBlank(school.getSchoolName())) {
+            return new WebResult("400", "学校名称不能为空");
+        }
+        schoolmapper.updateSchoolName(school);
+        return new WebResult("200", "");
     }
 }

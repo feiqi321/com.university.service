@@ -2,6 +2,7 @@ package com.ovft.configure.sys.web;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
+import com.ovft.configure.sys.bean.SchoolClass;
 import com.ovft.configure.sys.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,5 +34,14 @@ public class SchoolController {
         return  schoolService.createSchool(school);
     }
 
+    /**
+          * 修改学校名称
+          * @param schoolClass
+          * @return
+          */
+    @PostMapping(value = "/updateSchoolName")
+    public WebResult updateSchoolName(@RequestBody School school) {
+        return schoolService.updateSchoolName(school);
+    }
 
 }

@@ -6,13 +6,22 @@
     <select id="selectById"  resultType="com.ovft.configure.sys.bean.School">
          select school_id as schoolId, school_name as schoolName, admin_id as adminId, longitude, latitude
          from edu_school
-         where school_id = #{school}
+         where school_id = #{schoolId}
     </select>
 
-    <insert id="createSchool" parameterType="com.ovft.configure.sys.bean.School" useGeneratedKeys="true" keyProperty="school_id">
+    <insert id="createSchool" parameterType="com.ovft.configure.sys.bean.School" useGeneratedKeys="true" keyProperty="schoolId">
          insert into edu_school(school_name, admin_id, longitude, latitude)
-         values (#{school.schoolName}, #{school.adminId}, #{school.longitude}, #{school.latitude})
+         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude})
     </insert>
+
+
+
+    
+    <update id="updateSchoolName" parameterType="com.ovft.configure.sys.bean.School">
+        update edu_school e
+          set e.school_name = #{school.schoolName}
+          where e.school_id = #{school.schoolId}
+    </update>
 
 
 

@@ -7,4 +7,5 @@ public interface SchoolClassService {
 
     public WebResult createClass(SchoolClass schoolClass);
 
+    public WebResult updateNameClass(SchoolClass schoolClass);
 }
