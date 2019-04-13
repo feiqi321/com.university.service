@@ -24,7 +24,7 @@ public class MywebConfiguration extends WebMvcConfigurerAdapter {
         registry.addInterceptor(passportInterceptor())
                 .addPathPatterns("/**")
                 //TODO    放行路径待修改
-               .excludePathPatterns("/server/admin/login");
+               .excludePathPatterns("/server/admin/login","/user/login","/user/regist");
         super.addInterceptors(registry);
     }
 }
