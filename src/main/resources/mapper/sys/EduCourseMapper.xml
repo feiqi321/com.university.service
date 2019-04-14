@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduCourseMapper">
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduCourse">
+        <id column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="course_price" jdbcType="DECIMAL" property="coursePrice"/>
+        <result column="course_teacher" jdbcType="VARCHAR" property="courseTeacher"/>
+        <result column="place_class" jdbcType="VARCHAR" property="placeClass"/>
+        <result column="start_date" jdbcType="DATE" property="startDate"/>
+        <result column="end_date" jdbcType="DATE" property="endDate"/>
+        <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
+        <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    course_id, course_name, course_price, course_teacher, place_class, start_date, end_date, 
+    people_number, school_id
+  </sql>
+    <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduCourseExample" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from edu_course
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_course
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from edu_course
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduCourseExample">
+        delete from edu_course
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduCourse">
+    insert into edu_course (course_id, course_name, course_price, 
+      course_teacher, place_class, start_date, 
+      end_date, people_number, school_id
+      )
+    values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL}, 
+      #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, 
+      #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduCourse">
+        insert into edu_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">
+                course_id,
+            </if>
+            <if test="courseName != null">
+                course_name,
+            </if>
+            <if test="coursePrice != null">
+                course_price,
+            </if>
+            <if test="courseTeacher != null">
+                course_teacher,
+            </if>
+            <if test="placeClass != null">
+                place_class,
+            </if>
+            <if test="startDate != null">
+                start_date,
+            </if>
+            <if test="endDate != null">
+                end_date,
+            </if>
+            <if test="peopleNumber != null">
+                people_number,
+            </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">
+                #{courseId,jdbcType=INTEGER},
+            </if>
+            <if test="courseName != null">
+                #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="coursePrice != null">
+                #{coursePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="courseTeacher != null">
+                #{courseTeacher,jdbcType=VARCHAR},
+            </if>
+            <if test="placeClass != null">
+                #{placeClass,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null">
+                #{endDate,jdbcType=DATE},
+            </if>
+            <if test="peopleNumber != null">
+                #{peopleNumber,jdbcType=INTEGER},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.ovft.configure.sys.bean.EduCourseExample"
+            resultType="java.lang.Long">
+        select count(*) from edu_course
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update edu_course
+        <set>
+            <if test="record.courseId != null">
+                course_id = #{record.courseId,jdbcType=INTEGER},
+            </if>
+            <if test="record.courseName != null">
+                course_name = #{record.courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.coursePrice != null">
+                course_price = #{record.coursePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="record.courseTeacher != null">
+                course_teacher = #{record.courseTeacher,jdbcType=VARCHAR},
+            </if>
+            <if test="record.placeClass != null">
+                place_class = #{record.placeClass,jdbcType=VARCHAR},
+            </if>
+            <if test="record.startDate != null">
+                start_date = #{record.startDate,jdbcType=DATE},
+            </if>
+            <if test="record.endDate != null">
+                end_date = #{record.endDate,jdbcType=DATE},
+            </if>
+            <if test="record.peopleNumber != null">
+                people_number = #{record.peopleNumber,jdbcType=INTEGER},
+            </if>
+            <if test="record.schoolId != null">
+                school_id = #{record.schoolId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update edu_course
+        set course_id = #{record.courseId,jdbcType=INTEGER},
+        course_name = #{record.courseName,jdbcType=VARCHAR},
+        course_price = #{record.coursePrice,jdbcType=DECIMAL},
+        course_teacher = #{record.courseTeacher,jdbcType=VARCHAR},
+        place_class = #{record.placeClass,jdbcType=VARCHAR},
+        start_date = #{record.startDate,jdbcType=DATE},
+        end_date = #{record.endDate,jdbcType=DATE},
+        people_number = #{record.peopleNumber,jdbcType=INTEGER},
+        school_id = #{record.schoolId,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.EduCourse">
+        update edu_course
+        <set>
+            <if test="courseName != null">
+                course_name = #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="coursePrice != null">
+                course_price = #{coursePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="courseTeacher != null">
+                course_teacher = #{courseTeacher,jdbcType=VARCHAR},
+            </if>
+            <if test="placeClass != null">
+                place_class = #{placeClass,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="peopleNumber != null">
+                people_number = #{peopleNumber,jdbcType=INTEGER},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduCourse">
+    update edu_course
+    set course_name = #{courseName,jdbcType=VARCHAR},
+      course_price = #{coursePrice,jdbcType=DECIMAL},
+      course_teacher = #{courseTeacher,jdbcType=VARCHAR},
+      place_class = #{placeClass,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      people_number = #{peopleNumber,jdbcType=INTEGER},
+      school_id = #{schoolId,jdbcType=VARCHAR}
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </update>
+
+
+    <!--1.查找专业类别-->
+    <select id="listCourseCategoryByShoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduCourse">
+    select course_name from edu_course where school_id =#{school_id}
+  </select>
+
+    <!--2.查找专业相关报名信息-->
+    <select id="queryCourseByCourseId" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCourseVo">
+    selectss
+    c.course_name,
+    c.course_price,
+    e1.school_name schoolId,
+    e2.name course_teacher,
+    c.place_class
+    from edu_course c
+    left join edu_school e1 on c.school_id=e1.school_id
+    left join edu_admin e2 on c.course_teacher=e2.admin_id
+    where course_id =#{courseId}
+  </select>
+</mapper>

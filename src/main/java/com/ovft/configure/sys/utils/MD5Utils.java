@@ -1,4 +1,4 @@
-package com.ovft.configure.utils;
+package com.ovft.configure.sys.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
