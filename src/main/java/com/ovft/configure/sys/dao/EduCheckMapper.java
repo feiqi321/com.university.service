@@ -1,0 +1,38 @@
+package com.ovft.configure.sys.dao;
+
+import com.ovft.configure.sys.bean.EduCheck;
+import com.ovft.configure.sys.bean.EduCheckExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface EduCheckMapper {
+    long countByExample(EduCheckExample example);
+
+    int deleteByExample(EduCheckExample example);
+
+    int deleteByPrimaryKey(Integer checkId);
+
+    int insert(EduCheck record);
+
+    int insertSelective(EduCheck record);
+
+    List<EduCheck> selectByExample(EduCheckExample example);
+
+    EduCheck selectByPrimaryKey(Integer checkId);
+
+    /**
+     * 根据userId打卡
+     * @param record
+     * @param example
+     * @return
+     */
+    int updateByExampleSelective(@Param("record") EduCheck record, @Param("example") EduCheckExample example);
+
+    int updateByExample(@Param("record") EduCheck record, @Param("example") EduCheckExample example);
+
+    int updateByPrimaryKeySelective(EduCheck record);
+
+    int updateByPrimaryKey(EduCheck record);
+
+
+}

@@ -35,6 +35,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int queryForCourseId(int userId, int status) {
-        return orderMapper.queryForCourseId(userId,status);
+        return orderMapper.queryCourseNumById(userId,status);
     }
 }

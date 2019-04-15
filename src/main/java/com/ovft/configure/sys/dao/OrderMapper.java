@@ -39,7 +39,13 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order record);
 
-    public int queryForCourseId(int userId, int status);
+    /**
+     *查询订单的已付款的个数
+     * @param userId
+     * @param status
+     * @return
+     */
+    public int queryCourseNumById(int userId, int status);
 
     /**
      * 根据用户id查询已付款的订单

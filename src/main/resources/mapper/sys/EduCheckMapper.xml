@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduCheckMapper">
+  <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduCheck">
+    <id column="check_id" jdbcType="INTEGER" property="checkId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="check_start_time" jdbcType="TIMESTAMP" property="checkStartTime" />
+    <result column="check_end_time" jdbcType="TIMESTAMP" property="checkEndTime" />
+    <result column="is_check" jdbcType="INTEGER" property="isCheck" />
+    <result column="school_id" jdbcType="VARCHAR" property="schoolId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    check_id, user_id, check_start_time, check_end_time, is_check, school_id
+  </sql>
+  <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduCheckExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from edu_check
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from edu_check
+    where check_id = #{checkId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from edu_check
+    where check_id = #{checkId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduCheckExample">
+    delete from edu_check
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduCheck">
+    insert into edu_check (check_id, user_id, check_start_time, 
+      check_end_time, is_check, school_id
+      )
+    values (#{checkId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{checkStartTime,jdbcType=TIMESTAMP}, 
+      #{checkEndTime,jdbcType=TIMESTAMP}, #{isCheck,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduCheck">
+    insert into edu_check
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="checkId != null">
+        check_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="checkStartTime != null">
+        check_start_time,
+      </if>
+      <if test="checkEndTime != null">
+        check_end_time,
+      </if>
+      <if test="isCheck != null">
+        is_check,
+      </if>
+      <if test="schoolId != null">
+        school_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="checkId != null">
+        #{checkId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="checkStartTime != null">
+        #{checkStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkEndTime != null">
+        #{checkEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCheck != null">
+        #{isCheck,jdbcType=INTEGER},
+      </if>
+      <if test="schoolId != null">
+        #{schoolId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ovft.configure.sys.bean.EduCheckExample" resultType="java.lang.Long">
+    select count(*) from edu_check
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update edu_check
+    <set>
+      <if test="record.checkId != null">
+        check_id = #{record.checkId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.checkStartTime != null">
+        check_start_time = #{record.checkStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.checkEndTime != null">
+        check_end_time = #{record.checkEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isCheck != null">
+        is_check = #{record.isCheck,jdbcType=INTEGER},
+      </if>
+      <if test="record.schoolId != null">
+        school_id = #{record.schoolId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update edu_check
+    set check_id = #{record.checkId,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      check_start_time = #{record.checkStartTime,jdbcType=TIMESTAMP},
+      check_end_time = #{record.checkEndTime,jdbcType=TIMESTAMP},
+      is_check = #{record.isCheck,jdbcType=INTEGER},
+      school_id = #{record.schoolId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.EduCheck">
+    update edu_check
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="checkStartTime != null">
+        check_start_time = #{checkStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkEndTime != null">
+        check_end_time = #{checkEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCheck != null">
+        is_check = #{isCheck,jdbcType=INTEGER},
+      </if>
+      <if test="schoolId != null">
+        school_id = #{schoolId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where check_id = #{checkId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduCheck">
+    update edu_check
+    set user_id = #{userId,jdbcType=INTEGER},
+      check_start_time = #{checkStartTime,jdbcType=TIMESTAMP},
+      check_end_time = #{checkEndTime,jdbcType=TIMESTAMP},
+      is_check = #{isCheck,jdbcType=INTEGER},
+      school_id = #{schoolId,jdbcType=VARCHAR}
+    where check_id = #{checkId,jdbcType=INTEGER}
+  </update>
+</mapper>
