@@ -33,7 +33,7 @@ public class EduCourseController {
     @GetMapping(value = "showCategory/{schoolId}")
     public WebResult queryAllCourse(@PathVariable("schoolId") int schoolId) {
         List<EduCourse> eduCourses = eduCourseService.listCourseCategoryByShoolId(schoolId);
-        return new WebResult(StatusCode.Ok, "查找成功", eduCourses);
+        return new WebResult(StatusCode.OK, "查找成功", eduCourses);
     }
 
     /**
@@ -47,7 +47,7 @@ public class EduCourseController {
         //1.报名之前判断是否登陆
         // TODO
         EduCourseVo eduCourseVo = eduCourseService.queryCourseByCourseId(courseId);
-        return new WebResult(StatusCode.Ok, "查找成功", eduCourseVo);
+        return new WebResult(StatusCode.OK, "查找成功", eduCourseVo);
     }
 
 

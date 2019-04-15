@@ -6,6 +6,6 @@ package com.ovft.configure.http.result;
  */
 public class StatusCode {
     public static final String OK ="200";//成功码
-    public static final String ERROR ="400";//失败码
+    public static final String ERROR ="500";//失败码
 
 }

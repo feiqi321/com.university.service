@@ -28,7 +28,7 @@ public class CourseManagerController {
     @GetMapping
     public WebResult queryAllCourseNotice(){
         List<CourseManager> courseManagers = courseManagerService.queryAllCourseNotice();
-        return  new WebResult(StatusCode.Ok,"查询成功",courseManagers);
+        return  new WebResult(StatusCode.OK,"查询成功",courseManagers);
     }
 
 }
