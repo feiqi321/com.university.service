@@ -76,7 +76,18 @@ public class User {
      * 学员审批
      */
     private Integer checkIn;
- public Integer getUserId() {
+
+    private String identity_card;
+
+    public String getIdentity_card() {
+        return identity_card;
+    }
+
+    public void setIdentity_card(String identity_card) {
+        this.identity_card = identity_card;
+    }
+
+    public Integer getUserId() {
         return userId;
     }
 
