@@ -26,6 +26,11 @@ public class School {
      */
     private String latitude;
 
+    /**
+     *学校头像
+     */
+    private String image;
+
     public Integer getSchoolId() {
         return schoolId;
     }
@@ -64,5 +69,13 @@ public class School {
 
     public void setLatitude(String latitude) {
         this.latitude = latitude;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

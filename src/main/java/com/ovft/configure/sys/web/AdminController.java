@@ -53,7 +53,17 @@ public class AdminController {
      */
     @PostMapping(value = "/create")
     public WebResult createAdmin(@RequestBody Admin admin)  {
-        return  adminService.createAdmin(admin);
+        return  adminService.createAdmin(admin, 1);
+    }
+
+    /**
+     * 添加管教师
+     * @param admin
+     * @return
+     */
+    @PostMapping(value = "/createTeacher")
+    public WebResult createTeacher(@RequestBody Admin admin)  {
+        return  adminService.createAdmin(admin, 2);
     }
 
 

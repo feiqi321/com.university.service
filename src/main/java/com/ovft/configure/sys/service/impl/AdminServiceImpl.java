@@ -98,7 +98,7 @@ public class AdminServiceImpl implements AdminService {
      */
     @Transactional
     @Override
-    public WebResult createAdmin(Admin admin) {
+    public WebResult createAdmin(Admin admin, int role) {
         WebResult result = new WebResult();
         if(StringUtils.isBlank(admin.getName())) {
             result.setCode("400");
@@ -118,8 +118,8 @@ public class AdminServiceImpl implements AdminService {
         //管理员初始密码为000000
         String password = admin.getPhone() + "000000";
         admin.setPassword(MD5Utils.md5Password(password));
-        //添加角色    1-管理员
-        admin.setRole(1);
+        //添加角色    1-管理员,2-教师
+        admin.setRole(role);
         adminMapper.creatAdmin(admin);
         System.out.println("admin = " + admin.getAdminId());
         result.setCode("200");

@@ -9,8 +9,8 @@ public class Vacate {
     private Integer vacateId;
     private Integer userId;
     private Integer courseId;
-    private Date startTime;
-    private Date endTime;
+    private Date vacateTime;
+    private Date createTime;
 
     //联系人电话
     private String contactsPhone;
@@ -28,7 +28,17 @@ public class Vacate {
     private String vacateCause;
 
     //请假类型
-    private String vacateType;
+    private Integer vacateType;
+
+    private String vacateTypeName;
+
+    public String getVacateTypeName() {
+        return vacateTypeName;
+    }
+
+    public void setVacateTypeName(String vacateTypeName) {
+        this.vacateTypeName = vacateTypeName;
+    }
 
     public Integer getVacateId() {
         return vacateId;
@@ -54,20 +64,20 @@ public class Vacate {
         this.courseId = courseId;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getVacateTime() {
+        return vacateTime;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setVacateTime(Date vacateTime) {
+        this.vacateTime = vacateTime;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public String getContactsPhone() {
@@ -110,11 +120,11 @@ public class Vacate {
         this.vacateCause = vacateCause;
     }
 
-    public String getVacateType() {
+    public Integer getVacateType() {
         return vacateType;
     }
 
-    public void setVacateType(String vacateType) {
+    public void setVacateType(Integer vacateType) {
         this.vacateType = vacateType;
     }
 }
