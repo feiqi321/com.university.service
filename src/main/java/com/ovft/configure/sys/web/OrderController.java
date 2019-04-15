@@ -34,7 +34,7 @@ public class OrderController {
     public WebResult queryAllPayOrder() {
         int userId = 1;
         //TODO
-        return new WebResult(StatusCode.Ok, "查询成功", orderService.queryAllOrder(userId));
+        return new WebResult(StatusCode.OK, "查询成功", orderService.queryAllOrder(userId));
 
     }
 
