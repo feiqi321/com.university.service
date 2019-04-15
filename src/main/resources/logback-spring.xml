@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="GBK"?>
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="10 seconds">
-    <conversionRule conversionWord="ip" converterClass="com.ovft.configure.utils.LogIpConfigUtil"/>
+    <conversionRule conversionWord="ip" converterClass="com.ovft.configure.sys.utils.LogIpConfigUtil"/>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProperty scope="context" name="port" source="server.port"/>
     <property name="LOG_PATH" value=".logs"/>

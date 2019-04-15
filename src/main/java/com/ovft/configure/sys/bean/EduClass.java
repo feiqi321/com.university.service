@@ -1,6 +1,9 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author 
@@ -11,12 +14,25 @@ public class EduClass implements Serializable {
     /**
      * 课程id
      */
-    private Integer courseId;
+    private Integer courseIds;
+
+    /**
+     * 开课日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date startDate;
+
+    /**
+     * 结课日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date endDate;
+
 
     /**
      * 课时id
      */
-    private Integer week;
+    private String week;
 
     private String startTime;
 
@@ -32,19 +48,19 @@ public class EduClass implements Serializable {
         this.classScheduleId = classScheduleId;
     }
 
-    public Integer getCourseId() {
-        return courseId;
+    public Integer getCourseIds() {
+        return courseIds;
     }
 
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
+    public void setCourseIds(Integer courseIds) {
+        this.courseIds = courseIds;
     }
 
-    public Integer getWeek() {
+    public String getWeek() {
         return week;
     }
 
-    public void setWeek(Integer week) {
+    public void setWeek(String week) {
         this.week = week;
     }
 
@@ -77,7 +93,7 @@ public class EduClass implements Serializable {
         }
         EduClass other = (EduClass) that;
         return (this.getClassScheduleId() == null ? other.getClassScheduleId() == null : this.getClassScheduleId().equals(other.getClassScheduleId()))
-            && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()))
+            && (this.getCourseIds() == null ? other.getCourseIds() == null : this.getCourseIds().equals(other.getCourseIds()))
             && (this.getWeek() == null ? other.getWeek() == null : this.getWeek().equals(other.getWeek()))
             && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
             && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()));
@@ -88,7 +104,7 @@ public class EduClass implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getClassScheduleId() == null) ? 0 : getClassScheduleId().hashCode());
-        result = prime * result + ((getCourseId() == null) ? 0 : getCourseId().hashCode());
+        result = prime * result + ((getCourseIds() == null) ? 0 : getCourseIds().hashCode());
         result = prime * result + ((getWeek() == null) ? 0 : getWeek().hashCode());
         result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
         result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
@@ -102,7 +118,7 @@ public class EduClass implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", classScheduleId=").append(classScheduleId);
-        sb.append(", courseId=").append(courseId);
+        sb.append(", courseIds=").append(courseIds);
         sb.append(", week=").append(week);
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);

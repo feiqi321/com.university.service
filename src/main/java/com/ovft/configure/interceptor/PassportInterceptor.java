@@ -1,7 +1,7 @@
 package com.ovft.configure.interceptor;
 
 import com.ovft.configure.constant.ConstantClassField;
-import com.ovft.configure.utils.RedisUtil;
+import com.ovft.configure.sys.utils.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

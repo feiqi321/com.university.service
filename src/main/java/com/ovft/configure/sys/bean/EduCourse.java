@@ -1,12 +1,13 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
- * @author 
+ * @author
  */
 public class EduCourse implements Serializable {
     private Integer courseId;
@@ -18,7 +19,7 @@ public class EduCourse implements Serializable {
     /**
      * 课程老师
      */
-    private Integer courseTeacher;
+    private String courseTeacher;
 
     /**
      * 上课地点
@@ -28,11 +29,13 @@ public class EduCourse implements Serializable {
     /**
      * 开课日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     /**
      * 结课日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     /**
@@ -40,21 +43,7 @@ public class EduCourse implements Serializable {
      */
     private Integer peopleNumber;
 
-    private Integer schoolId;
-
-    private List<EduClass> classList;
-
-    public List<EduClass> getClassList() {
-        return classList;
-    }
-
-    public void setClassList(List<EduClass> classList) {
-        this.classList = classList;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
+    private String schoolId;
 
     private static final long serialVersionUID = 1L;
 
@@ -82,11 +71,11 @@ public class EduCourse implements Serializable {
         this.coursePrice = coursePrice;
     }
 
-    public Integer getCourseTeacher() {
+    public String getCourseTeacher() {
         return courseTeacher;
     }
 
-    public void setCourseTeacher(Integer courseTeacher) {
+    public void setCourseTeacher(String courseTeacher) {
         this.courseTeacher = courseTeacher;
     }
 
@@ -122,11 +111,11 @@ public class EduCourse implements Serializable {
         this.peopleNumber = peopleNumber;
     }
 
-    public Integer getSchoolId() {
+    public String getSchoolId() {
         return schoolId;
     }
 
-    public void setSchoolId(Integer schoolId) {
+    public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
     }
 
@@ -143,14 +132,14 @@ public class EduCourse implements Serializable {
         }
         EduCourse other = (EduCourse) that;
         return (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()))
-            && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()))
-            && (this.getCoursePrice() == null ? other.getCoursePrice() == null : this.getCoursePrice().equals(other.getCoursePrice()))
-            && (this.getCourseTeacher() == null ? other.getCourseTeacher() == null : this.getCourseTeacher().equals(other.getCourseTeacher()))
-            && (this.getPlaceClass() == null ? other.getPlaceClass() == null : this.getPlaceClass().equals(other.getPlaceClass()))
-            && (this.getStartDate() == null ? other.getStartDate() == null : this.getStartDate().equals(other.getStartDate()))
-            && (this.getEndDate() == null ? other.getEndDate() == null : this.getEndDate().equals(other.getEndDate()))
-            && (this.getPeopleNumber() == null ? other.getPeopleNumber() == null : this.getPeopleNumber().equals(other.getPeopleNumber()))
-            && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()));
+                && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()))
+                && (this.getCoursePrice() == null ? other.getCoursePrice() == null : this.getCoursePrice().equals(other.getCoursePrice()))
+                && (this.getCourseTeacher() == null ? other.getCourseTeacher() == null : this.getCourseTeacher().equals(other.getCourseTeacher()))
+                && (this.getPlaceClass() == null ? other.getPlaceClass() == null : this.getPlaceClass().equals(other.getPlaceClass()))
+                && (this.getStartDate() == null ? other.getStartDate() == null : this.getStartDate().equals(other.getStartDate()))
+                && (this.getEndDate() == null ? other.getEndDate() == null : this.getEndDate().equals(other.getEndDate()))
+                && (this.getPeopleNumber() == null ? other.getPeopleNumber() == null : this.getPeopleNumber().equals(other.getPeopleNumber()))
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.ovft.configure.utils;
+package com.ovft.configure.sys.utils;
 
 import java.util.List;
 import java.util.Map;
