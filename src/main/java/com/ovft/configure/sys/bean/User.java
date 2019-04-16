@@ -71,13 +71,27 @@ public class User {
     private String emergencyContact2;
     private String emergencyRelation2;
     private String emergencyPhone2;
-
+    //确认密码
+    private String nextPass;
     /**
      * 学员审批
      */
     private Integer checkIn;
-
+     //身份证
     private String identity_card;
+    private String securityCode;
+
+    public void setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+    }
+
+    public String getNextPass() {
+        return nextPass;
+    }
+
+    public void setNextPass(String nextPass) {
+        this.nextPass = nextPass;
+    }
 
     public String getIdentity_card() {
         return identity_card;

@@ -5,8 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * @ClassName AdminMapper
- * @Author zqx
+ * @ClassName UserMapper
+ * @Author xzy
  * @Date 2019/4/10 16:04
  * @Version 1.0
  **/
@@ -23,5 +23,7 @@ public interface UserMapper {
         //修改密码
         public void updateByPassword(@Param("phone") String phone, @Param("password") String password);
         //保存基本信息
-        public void savaInfo(User user);
+        public void savaInfo(@Param("user") User user);
+        //更换手机
+        public void updatePhone(@Param("phone") String phone,@Param("newPhone") String newPhone);
 }

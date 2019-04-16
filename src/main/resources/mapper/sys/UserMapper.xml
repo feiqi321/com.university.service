@@ -17,13 +17,16 @@
     <update id="updateByPassword">
           update edu_user set password = #{password} where phone=#{phone}
     </update>
-    <update id="savaInfo">
-          update edu_user set userName=#{user.userName},sex=#{user.sex},identity_card=#{user.identity_card}
-           address=#{address},political=#{political},educational=#{educational},retired=#{retired},
-           employer=#{employer},position=#{position},job=#{job},emergency_contact1=#{emergency_contact1},
-           emergency_relation1=#{emergency_relation1},emergency_phone1=#{emergency_phone1},
-           emergency_contact2=#{emergency_contact2},emergency_relation2=#{emergency_relation2},
-           emergency_phone2=#{emergency_phone2} where phone=#{user.phone}
+    <update id="savaInfo" parameterType="com.ovft.configure.sys.bean.User">
+          update edu_user set user_name=#{user.userName},sex=#{user.sex},identity_card=#{user.identity_card},
+           address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},
+           employer=#{user.employer},position=#{user.position},job=#{user.job},emergency_contact1=#{user.emergencyContact1},
+           emergency_relation1=#{user.emergencyRelation1},emergency_phone1=#{user.emergencyPhone1},
+           emergency_contact2=#{user.emergencyContact2},emergency_relation2=#{user.emergencyRelation2},
+           emergency_phone2=#{user.emergencyPhone2} where phone=#{user.phone}
+    </update>
+    <update id="updatePhone" parameterType="java.lang.String">
+              update  edu_user set phone=#{newPhone} where  phone=#{phone}
     </update>
 
 </mapper>

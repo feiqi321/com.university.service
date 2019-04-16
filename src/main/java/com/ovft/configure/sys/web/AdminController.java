@@ -47,6 +47,18 @@ public class AdminController {
     }
 
     /**
+     * 修改手机号
+     * @param adminId
+     * @param newPhone
+     * @return
+     */
+    @PostMapping(value = "/updatePhone")
+    public WebResult updatePhone(@RequestParam(value = "adminId")Integer adminId, @RequestParam(value = "newPhone")String newPhone,
+                                   @RequestParam(value = "securityCode")String securityCode) {
+        return adminService.updatePhone(adminId, newPhone, securityCode);
+    }
+
+    /**
      * 添加管理员
      * @param admin
      * @return
@@ -57,7 +69,7 @@ public class AdminController {
     }
 
     /**
-     * 添加管教师
+     * 添加教师
      * @param admin
      * @return
      */
@@ -65,6 +77,8 @@ public class AdminController {
     public WebResult createTeacher(@RequestBody Admin admin)  {
         return  adminService.createAdmin(admin, 2);
     }
+
+
 
 
 }

@@ -14,21 +14,15 @@
          order by create_time
     </select>
 
-    <!--<select id="selectByUserId"  resultType="java.util.HashMap">-->
-         <!--select vacate_id as vacateId,user_id as userId, course_id as courseId,-->
-          <!--(select course_name from edu_course where course_id = edu_course.course_id) as courseName-->
-         <!--vacate_time as vacateTime,create_time as createTime,-->
-         <!--contacts_phone as contactsPhone, contacts, vacate_name as vacateName,-->
-          <!--is_check as isCheck, vacate_cause as vacateCause, vacate_type as vacateType,-->
-          <!--(select dict_name from edu_dict where dict_type='VACATE_TYPE' and dict_value = edu_vacate.vacate_type) as vacateTypeName-->
-         <!--from edu_vacate-->
-         <!--where user_id = #{userId}-->
-         <!--order by create_time-->
-    <!--</select>-->
-
     <insert id="applyVacate" parameterType="com.ovft.configure.sys.bean.Vacate" useGeneratedKeys="true" keyProperty="vacateId">
          insert into edu_vacate(user_id, course_id, vacate_time, create_time, contacts_phone, contacts, vacate_name, is_check, vacate_cause, vacate_type)
          values (#{userId}, #{courseId}, #{vacateTime}, #{createTime}, #{contactsPhone}, #{contacts}, #{vacateName}, #{isCheck}, #{vacateCause}, #{vacateType})
     </insert>
+    
+    <update id="updateCheck">
+        update edu_vacate
+        set is_check = #{isCheck}
+        where vacate_id = #{vacateId}
+    </update>
 
 </mapper>

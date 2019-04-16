@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
        @Autowired
        private UserService userService;
     /**;
@@ -29,9 +30,10 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/regist")
-       public WebResult regist(@RequestBody User user,String  nextPass){
+       public WebResult regist(@RequestBody User user){
+
         user.setUserName(user.getPhone());
-        return userService.addUser(user,nextPass);
+        return userService.addUser(user);
     }
     /**
      * 登录
@@ -49,20 +51,31 @@ public class UserController {
      * @return
      */
     @PutMapping(value = "/updatePassword")
-    public WebResult updatePassword(@RequestBody User user, @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
+    public WebResult updatePassword( @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
                                     @RequestParam(value = "nextpass")String nextpass,@RequestParam(value = "identifying_code")String identifying_code ){
+
         System.out.print("短信验证码"+identifying_code);
-        return userService.updatePassword(user,phone,newPassword,nextpass);
+        return userService.updatePassword(phone,newPassword,nextpass);
     }
     /**
      * 基本信息保存
      * @param  user
      * @return
      */
-    @PostMapping(value = "/savaInfo")
+    @PutMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user){
-
         return userService.savaInfo(user);
+    }
+    /**
+     * 变更手机
+     * @param  oldPhone,newPhone
+     * @return
+     */
+    @PutMapping(value = "/updatePhone")
+    public WebResult updatePhone(@RequestParam(value = "oldphone")String oldPhone,@RequestParam(value = "newPhone")String newPhone,
+    @RequestParam(value = "identifying_code")String identifying_code
+    ){
+         return userService.updatePhone(oldPhone,newPhone);
     }
 
 }

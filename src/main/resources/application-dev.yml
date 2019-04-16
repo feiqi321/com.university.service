@@ -30,8 +30,7 @@ redis:
     host: 192.168.31.200
     port: 6379
     pool:
-      max-active: 8
-      max-wait: 1
-      max-idle: 8
-      min-idle: 0
-    timeout: 0
+      max-active: 300
+      max-wait: 10000
+      max-idle: 100
+      test-on-borrow: true

@@ -20,4 +20,6 @@ public interface AdminMapper {
     public void creatAdmin(Admin admin);
 
     public void updateByPassword(@Param("adminId") Integer adminId, @Param("password") String password);
+
+    public void updateByPrimary(Admin admin);
 }

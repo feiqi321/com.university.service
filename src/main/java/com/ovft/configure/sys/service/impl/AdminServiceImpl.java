@@ -5,6 +5,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.dao.AdminMapper;
 import com.ovft.configure.sys.service.AdminService;
+import com.ovft.configure.sys.utils.SecurityUtils;
 import com.ovft.configure.sys.web.AdminController;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.RedisUtil;
@@ -41,8 +42,8 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public WebResult login(Admin admin) {
-        if(StringUtils.isBlank(admin.getPhone())) {
-            return new WebResult("400", "手机号不能为空");
+        if(!SecurityUtils.securityPhone(admin.getPhone())) {
+            return new WebResult("400", "请输入正确的手机号");
         }
         if(StringUtils.isBlank(admin.getPassword())) {
             return new WebResult("400", "密码不能为空");
@@ -52,7 +53,7 @@ public class AdminServiceImpl implements AdminService {
         if(adminPhone == null) {
             return new WebResult("400", "手机号不存在");
         }
-        String pasword = MD5Utils.md5Password(admin.getPhone() + admin.getPassword());
+        String pasword = MD5Utils.md5Password(admin.getPassword());
         if(!pasword.equals(adminPhone.getPassword())) {
             return new WebResult("400", "密码错误");
         }
@@ -82,17 +83,55 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public WebResult updatePassword(Integer adminId, String oldPassword, String newPassword) {
         Admin admin = adminMapper.selectById(adminId);
-        String password = MD5Utils.md5Password(admin.getPhone() + oldPassword);
+        if(StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword)) {
+            return new WebResult("400", "密码不能为空");
+        }
+        if (newPassword.length() < 6 || newPassword.length() > 16 ) {
+            return new WebResult("400", "密码长度必须要在6-16之间");
+        }
+        String password = MD5Utils.md5Password(oldPassword);
         if(!admin.getPassword().equals(password)) {
             return new WebResult("400", "原密码错误");
         }
-        password = MD5Utils.md5Password(admin.getPhone() + newPassword);
+        password = MD5Utils.md5Password(newPassword);
         adminMapper.updateByPassword(adminId, password);
         return new WebResult("200", "修改成功");
     }
 
     /**
-     * 添加管理员
+     * 修改手机号
+     * @param adminId
+     * @param newPhone
+     * @return
+     */
+    @Override
+    public WebResult updatePhone(Integer adminId, String newPhone, String securityCode) {
+        if(!SecurityUtils.securityPhone(newPhone)) {
+            return new WebResult("400", "请输入正确的手机号");
+        }
+        //查询该手机号是否已经存在
+        Admin adminPhone = adminMapper.selectByPhone(newPhone);
+        if(adminPhone != null) {
+            return new WebResult("400", "手机号已存在");
+        }
+
+        Object value = redisUtil.get("sendSms-" + newPhone);
+        if(value == null) {
+            return new WebResult("400", "验证码失效");
+        }
+        if(!securityCode.equals(value.toString())) {
+            return new WebResult("400", "验证码错误");
+        }
+        adminPhone = new Admin();
+        adminPhone.setAdminId(adminId);
+        adminPhone.setPhone(newPhone);
+        adminMapper.updateByPrimary(adminPhone);
+
+        return new WebResult("200", "修改成功");
+    }
+
+    /**
+     * 添加管理员、教师
      * @param admin
      * @return
      */
@@ -105,10 +144,8 @@ public class AdminServiceImpl implements AdminService {
             result.setMsg("用户名不能为空");
             return result;
         }
-        if(StringUtils.isBlank(admin.getPhone())) {
-            result.setCode("400");
-            result.setMsg("手机号不能为空");
-            return result;
+        if(!SecurityUtils.securityPhone(admin.getPhone())) {
+            return new WebResult("400", "请输入正确的手机号");
         }
         //查询该手机号是否已经存在
         Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
@@ -116,12 +153,12 @@ public class AdminServiceImpl implements AdminService {
             return new WebResult("400", "手机号已存在");
         }
         //管理员初始密码为000000
-        String password = admin.getPhone() + "000000";
+        String password = "000000";
         admin.setPassword(MD5Utils.md5Password(password));
         //添加角色    1-管理员,2-教师
         admin.setRole(role);
         adminMapper.creatAdmin(admin);
-        System.out.println("admin = " + admin.getAdminId());
+        //System.out.println("admin = " + admin.getAdminId());
         result.setCode("200");
         result.setData(admin);
         return result;
