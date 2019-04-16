@@ -56,7 +56,7 @@ public class Sms253Util {
             System.out.println("response  toString is :" + smsSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("[短信发送失败]： " + e);
+            logger.error("[短信发送失败]：" + e);
             return false;
         }
         return true;

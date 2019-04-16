@@ -25,5 +25,8 @@
            emergency_contact2=#{user.emergencyContact2},emergency_relation2=#{user.emergencyRelation2},
            emergency_phone2=#{user.emergencyPhone2} where phone=#{user.phone}
     </update>
+    <update id="updatePhone" parameterType="java.lang.String">
+              update  edu_user set phone=#{newPhone} where  phone=#{phone}
+    </update>
 
 </mapper>

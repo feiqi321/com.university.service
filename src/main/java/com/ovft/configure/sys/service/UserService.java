@@ -8,4 +8,6 @@ public interface UserService {
           public WebResult findUser(User user);
           public WebResult updatePassword( String phone, String newPassword, String nextpass);
           public WebResult savaInfo(User user);
+          public WebResult updatePhone(String oldPhone,String newPhone);
+
 }

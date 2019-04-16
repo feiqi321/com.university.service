@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SecurityUtils {
-
     /**
      * //手机号格式验证
      *

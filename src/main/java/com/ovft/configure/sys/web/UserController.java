@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
        @Autowired
        private UserService userService;
     /**;
@@ -63,8 +64,18 @@ public class UserController {
      */
     @PutMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user){
-
         return userService.savaInfo(user);
+    }
+    /**
+     * 变更手机
+     * @param  oldPhone,newPhone
+     * @return
+     */
+    @PutMapping(value = "/updatePhone")
+    public WebResult updatePhone(@RequestParam(value = "oldphone")String oldPhone,@RequestParam(value = "newPhone")String newPhone,
+    @RequestParam(value = "identifying_code")String identifying_code
+    ){
+         return userService.updatePhone(oldPhone,newPhone);
     }
 
 }

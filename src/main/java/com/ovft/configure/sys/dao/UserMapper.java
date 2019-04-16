@@ -24,4 +24,6 @@ public interface UserMapper {
         public void updateByPassword(@Param("phone") String phone, @Param("password") String password);
         //保存基本信息
         public void savaInfo(@Param("user") User user);
+        //更换手机
+        public void updatePhone(@Param("phone") String phone,@Param("newPhone") String newPhone);
 }

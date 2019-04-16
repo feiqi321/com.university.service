@@ -1,16 +1,24 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
+import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.web.AdminController;
+import com.ovft.configure.sys.web.UserController;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,9 +30,11 @@ import java.util.regex.Pattern;
  **/
 @Service
 public class UserServiceImpl  implements UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Resource
     private UserMapper userMapper;
-
+    @Autowired
+    private RedisUtil redisUtil;
     /**
      * 用户注册
      *
@@ -101,11 +111,15 @@ public class UserServiceImpl  implements UserService {
         HashMap<String, Object> map = new HashMap();
         map.put("user", finduserbyphone);
 
-        //TODO   添加redis
-        map.put("token", "123456");
-        WebResult result = new WebResult(map);
-        result.setCode("200");
-        result.setMsg("登录成功");
+        //添加token
+        String token = UUID.randomUUID().toString();
+        //pc端设置半年缓存过期
+        boolean isSet =  redisUtil.set(token, finduserbyphone.getUserId(),6*30*24*60*60);
+        if(!isSet) {
+            return new WebResult("400", "登录失败");
+        }
+        map.put("token", token);
+        WebResult result = new WebResult("200", "", map);
         return result;
     }
 
@@ -209,6 +223,28 @@ public class UserServiceImpl  implements UserService {
             userMapper.savaInfo(user);
             return new WebResult("200", "保存成功");
         }
+    /**
+     * 更换手机
+     *
+     * @param oldPhone,newPhone
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult updatePhone(String oldPhone, String newPhone) {
+           User user=new User();
+           user.setPhone(newPhone);
+        WebResult phoneResult = isTure(user);
+        if (!phoneResult.getCode().equals("200")){
+            return new WebResult("400",phoneResult.getMsg());
+        }
+       User findUser=userMapper.findUserByPhone2(newPhone);
+           if (findUser!=null){
+               return new WebResult("400","手机号已存在");
+           }
+              userMapper.updatePhone(oldPhone,newPhone);
+               return new WebResult("200","更换成功");
+    }
 
 
     /**
@@ -286,7 +322,7 @@ public class UserServiceImpl  implements UserService {
         return matches;
     }
     //手机号格式验证
-    public WebResult isTure(User user) {
+    public static WebResult isTure(User user) {
         if (StringUtils.isBlank(user.getPhone())) {
             return new WebResult("400", "手机号不能为空");
         }

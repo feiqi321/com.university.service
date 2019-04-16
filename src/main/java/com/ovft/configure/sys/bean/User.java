@@ -79,6 +79,11 @@ public class User {
     private Integer checkIn;
      //身份证
     private String identity_card;
+    private String securityCode;
+
+    public void setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+    }
 
     public String getNextPass() {
         return nextPass;
