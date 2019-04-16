@@ -12,8 +12,8 @@
     </select>
 
     <insert id="creatAdmin" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="adminId">
-         insert into edu_admin(name, password, phone, image, role)
-         values (#{name}, #{password}, #{phone}, #{image}, #{role})
+         insert into edu_admin(name, password, phone, image, role, school_id)
+         values (#{name}, #{password}, #{phone}, #{image}, #{role}, #{schoolId})
     </insert>
     
     <update id="updateByPassword">
@@ -22,7 +22,29 @@
           where e.admin_id = #{adminId}
     </update>
 
-
-
+    <update id="updateByPrimary" parameterType="com.ovft.configure.sys.bean.Admin">
+        update edu_admin
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="role != null">
+                role = #{role},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId},
+            </if>
+        </set>
+        where admin_id = #{adminId,jdbcType=INTEGER}
+    </update>
 
 </mapper>

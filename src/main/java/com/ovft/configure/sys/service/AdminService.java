@@ -10,4 +10,6 @@ public interface AdminService {
     public WebResult login(Admin admin);
 
     public WebResult updatePassword(Integer adminId, String oldPassword, String newPassword);
+
+    public WebResult updatePhone(Integer adminId, String newPhone, String securityCode);
 }

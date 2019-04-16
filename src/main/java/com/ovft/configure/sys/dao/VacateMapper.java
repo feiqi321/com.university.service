@@ -20,5 +20,6 @@ public interface VacateMapper {
 
     public void applyVacate(Vacate vacate);
 
+    public void updateCheck(@Param("vacateId") Integer vacateId, @Param("isCheck") Integer isCheck);
 
 }

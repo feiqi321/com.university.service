@@ -6,6 +6,7 @@ import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.service.SchoolService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -26,6 +27,7 @@ public class SchoolServiceImpl implements SchoolService {
      * @param school
      * @return
      */
+    @Transactional
     @Override
     public WebResult createSchool(School school) {
         if(StringUtils.isBlank(school.getSchoolName())) {
@@ -39,6 +41,7 @@ public class SchoolServiceImpl implements SchoolService {
         return new WebResult("200", "", school);
     }
 
+    @Transactional
     @Override
     public WebResult updateSchoolName(School school) {
         if(StringUtils.isBlank(school.getSchoolName())) {
