@@ -25,11 +25,5 @@ public interface EduCourseService {
      */
     public EduCourseVo queryCourseByCourseId(int courseId);
 
-    /**
-     * 根据当前的课程Id获取上课的具体时间
-     * @param couseId
-     * @return
-     */
-    Date queryStartTimeByCouserId(int couseId);
 
 }

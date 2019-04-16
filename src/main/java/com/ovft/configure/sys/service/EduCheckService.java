@@ -10,11 +10,10 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface EduCheckService {
     /**
-     * 根据userId更新状态
+     * 根据userId打卡
      * @param record
-     * @param example
      * @return
      */
-    int doSign(@Param("record") EduCheck record, @Param("example") EduCheckExample example);
+    int doSign(EduCheck record);
 
 }

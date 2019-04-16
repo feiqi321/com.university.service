@@ -53,5 +53,11 @@ public interface OrderMapper {
      * @return
      */
     List<OrderVo> queryAllOrder(int userId);
+    /**
+     * 根据用户id查询開課的時間
+     * @param userId
+     * @return
+     */
+    List<OrderVo> queryStartDateTimeByCouserId(int userId);
 
 }

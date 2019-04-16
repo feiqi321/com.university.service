@@ -21,4 +21,6 @@ public class EduCourseVo extends EduCourse {
         this.classList = classList;
     }
 
+
+
 }

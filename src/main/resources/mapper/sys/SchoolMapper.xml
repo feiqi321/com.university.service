@@ -14,14 +14,23 @@
          values (#{schoolName}, #{adminId}, #{longitude}, #{latitude})
     </insert>
 
-
-
-    
     <update id="updateSchoolName" parameterType="com.ovft.configure.sys.bean.School">
         update edu_school e
           set e.school_name = #{school.schoolName}
           where e.school_id = #{school.schoolId}
     </update>
+
+    <!--查询学校的坐标-->
+    <select id="queryRecordBySchoolId"  resultType="com.ovft.configure.sys.bean.School">
+        	select
+		longitude,
+		latitude
+		from
+			edu_school
+			where
+			school_id=#{schoolId}
+    </select>
+
 
 
 

@@ -70,14 +70,4 @@ public class EduCourseServiceImpl implements EduCourseService {
 
     }
 
-    /**
-     * 根据当前的课程Id获取上课的具体时间
-     *
-     * @param couseId
-     * @return
-     */
-    @Override
-    public Date queryStartTimeByCouserId(int couseId) {
-        return null;
-    }
 }

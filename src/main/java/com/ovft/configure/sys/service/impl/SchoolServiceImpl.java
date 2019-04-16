@@ -47,4 +47,14 @@ public class SchoolServiceImpl implements SchoolService {
         schoolmapper.updateSchoolName(school);
         return new WebResult("200", "");
     }
+
+    /**
+     * 根据学校id查询坐标
+     * @param schoolId
+     * @return
+     */
+    @Override
+    public School queryRecordBySchoolId(Integer schoolId) {
+        return schoolmapper.queryRecordBySchoolId(schoolId);
+    }
 }

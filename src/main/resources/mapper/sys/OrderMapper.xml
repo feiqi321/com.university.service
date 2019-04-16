@@ -283,6 +283,7 @@
   <!--查询报名记录-->
   <select id="queryAllOrder" parameterType="com.ovft.configure.sys.bean.Order" resultType="com.ovft.configure.sys.vo.OrderVo">
     select
+      e1.school_id,
       e1.school_name,
       c.course_name,
       e2.name course_teacher,
@@ -299,16 +300,26 @@
 	in(select DISTINCT course_id from edu_order where user_id=#{userId} and pay_status=1)
   </select>
 
+  <!--查询报名开课的时间-->
+<!--  <select id="queryStartDateTimeByCouserId" parameterType="com.ovft.configure.sys.bean.Order" resultType="com.ovft.configure.sys.vo.OrderVo">
+    select
+       c.start_date,
+       e3.start_time
+	from edu_course  c
+		 left join edu_school e1 on c.school_id=e1.school_id
+		 left join edu_admin e2 on c.course_teacher=e2.admin_id
+		 inner JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+    where course_id
+	in(select DISTINCT course_id from edu_order where user_id=#{userId} and pay_status=1)
+  </select>-->
+
   <!--查询报名记录个数-->
   <select id="queryCourseNumById" parameterType="com.ovft.configure.sys.bean.Order" resultType="int">
    select
-    count(*)
-	from edu_course  c
-		 left join edu_school e1 on c.school_id=e1.school_id
-		 left join edu_admin e2 on c.course_teacher=e2.admin_idint
-		 inner JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+    count(course_id)
+	from edu_course
     where course_id
-	in(select DISTINCT course_id from edu_order where user_id=1 and pay_status=1)
+	in(select DISTINCT course_id from edu_order where user_id=#{userId} and pay_status=#{payStatus})
   </select>
 
 

@@ -14,18 +14,17 @@ public interface EduCheckMapper {
 
     int insert(EduCheck record);
 
+    /**
+     * 根据userId打卡
+     * @param record
+     * @return
+     */
     int insertSelective(EduCheck record);
 
     List<EduCheck> selectByExample(EduCheckExample example);
 
     EduCheck selectByPrimaryKey(Integer checkId);
 
-    /**
-     * 根据userId打卡
-     * @param record
-     * @param example
-     * @return
-     */
     int updateByExampleSelective(@Param("record") EduCheck record, @Param("example") EduCheckExample example);
 
     int updateByExample(@Param("record") EduCheck record, @Param("example") EduCheckExample example);
@@ -33,6 +32,7 @@ public interface EduCheckMapper {
     int updateByPrimaryKeySelective(EduCheck record);
 
     int updateByPrimaryKey(EduCheck record);
+
 
 
 }

@@ -18,7 +18,7 @@ public class EduCheckServiceImpl implements EduCheckService {
     private EduCheckMapper eduCheckMapper;
 
     @Override
-    public int doSign(EduCheck eduCheck, EduCheckExample example) {
-        return eduCheckMapper.updateByExampleSelective(eduCheck,example);
+    public int doSign(EduCheck eduCheck) {
+        return eduCheckMapper.insertSelective(eduCheck);
     }
 }
