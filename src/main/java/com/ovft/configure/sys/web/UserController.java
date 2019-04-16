@@ -29,9 +29,10 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/regist")
-       public WebResult regist(@RequestBody User user,String  nextPass){
+       public WebResult regist(@RequestBody User user){
+
         user.setUserName(user.getPhone());
-        return userService.addUser(user,nextPass);
+        return userService.addUser(user);
     }
     /**
      * 登录
@@ -49,10 +50,11 @@ public class UserController {
      * @return
      */
     @PutMapping(value = "/updatePassword")
-    public WebResult updatePassword(@RequestBody User user, @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
+    public WebResult updatePassword( @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
                                     @RequestParam(value = "nextpass")String nextpass,@RequestParam(value = "identifying_code")String identifying_code ){
+
         System.out.print("短信验证码"+identifying_code);
-        return userService.updatePassword(user,phone,newPassword,nextpass);
+        return userService.updatePassword(phone,newPassword,nextpass);
     }
     /**
      * 基本信息保存

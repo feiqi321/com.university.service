@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 /**
  * @ClassName UserService
- * @Author
+ * @Author  xzy
  * @Date 2019/4/11 16:21
  * @Version 1.0
  **/
@@ -33,25 +33,37 @@ public class UserServiceImpl  implements UserService {
      */
     @Transactional
     @Override
-    public WebResult addUser(User user, String nextPass) {
+    public WebResult addUser(User user) {
+             //验证手机号是否被注册
+           User finduserbyphone=userMapper.findUserByPhone(user);
+               if (finduserbyphone!=null){
+                   return new WebResult("400","用户已注册！");
+               }
            //手机号码格式验证
             WebResult phoneResult = isTure(user);
               if (!phoneResult.getCode().equals("200")){
                   return new WebResult("400",phoneResult.getMsg());
               }
-
+        int l = user.getPassword().length();
+              if (user.getPassword().equals("123456")){
+                  return new WebResult("400", "密码不能过于简单");
+              }
+        if (l < 6 || l > 16 ) {
+           return new WebResult("400", "密码长度必须要在6-16之间");
+        }
         if (StringUtils.isBlank(user.getPassword())) {
             return new WebResult("400", "密码不能为空");
         }
-        if (StringUtils.isBlank(nextPass)) {
+        if (StringUtils.isBlank(user.getNextPass())) {
             return new WebResult("400", "确认密码不能为空");
         }
-        if (user.getPassword().equals(nextPass)) {
+        if (!user.getPassword().equals(user.getNextPass())) {
             return new WebResult("400", "输入的两次密码不一致");
 
         }
         String password = user.getPassword();
         user.setPassword(MD5Utils.md5Password(password));
+        //TODO   添加短信验证
         WebResult result = new WebResult();
         userMapper.addUser(user);
         result.setCode("200");
@@ -79,7 +91,7 @@ public class UserServiceImpl  implements UserService {
         }
         User finduserbyphone = userMapper.findUserByPhone(user);
         if (finduserbyphone == null) {
-            return new WebResult("400", "手机号不存在");
+            return new WebResult("400", "您的手机号尚未注册！");
         }
 
         String pasword = MD5Utils.md5Password(user.getPassword());
@@ -95,8 +107,6 @@ public class UserServiceImpl  implements UserService {
         result.setCode("200");
         result.setMsg("登录成功");
         return result;
-
-
     }
 
     /**
@@ -107,11 +117,21 @@ public class UserServiceImpl  implements UserService {
      */
     @Transactional
     @Override
-    public WebResult updatePassword(User user,String phone, String newPassword, String nextpass) {
+    public WebResult updatePassword(String phone, String newPassword, String nextpass) {
+            User user=new User();
+            user.setPhone(phone);
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
         if (!phoneResult.getCode().equals("200")){
             return new WebResult("400",phoneResult.getMsg());
+        }
+
+        int l = newPassword.length();
+        if (newPassword.equals("123456")){
+            return new WebResult("400", "密码不能过于简单");
+        }
+        if (l < 6 || l > 16 ) {
+            return new WebResult("400", "密码长度必须要在6-16之间");
         }
 
         if (StringUtils.isBlank(nextpass)) {
@@ -125,9 +145,10 @@ public class UserServiceImpl  implements UserService {
         if (!newPassword.equals(nextpass)) {
             return new WebResult("400", "输入的两次密码不一致");
         }
-        System.out.print("查找用户名密码为" + user.getPassword());
+
         String newPasswordMd5 = MD5Utils.md5Password(newPassword);
         userMapper.updateByPassword(phone, newPasswordMd5);
+        //TODO   添加短信验证
         WebResult result = new WebResult();
         result.setCode("200");
         result.setMsg("修改密码成功");
@@ -148,11 +169,11 @@ public class UserServiceImpl  implements UserService {
         if (!phoneResult.getCode().equals("200")){
             return new WebResult("400",phoneResult.getMsg());
         }
+        if (StringUtils.isBlank(user.getEmergencyPhone1())) {
+            return new WebResult("400", "紧急联系人1电话不能为空");
+        }
 
-            System.out.print("============================.." + user.getIdentity_card());
-            System.out.print("==================================>>" + user.getPhone());
             boolean testCard = this.isIDNumber(user.getIdentity_card());
-            System.out.print("==================================>>" + testCard);
             if (testCard == false) {
                 return new WebResult("400", "输入身份证格式有误");
             }
@@ -235,12 +256,12 @@ public class UserServiceImpl  implements UserService {
         }
         return matches;
     }
-
+    //手机号格式验证
     public WebResult isTure(User user) {
-        //手机号格式验证
         if (StringUtils.isBlank(user.getPhone())) {
             return new WebResult("400", "手机号不能为空");
         }
+
         String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
         if (user.getPhone().length() != 11) {
             return new WebResult("400", "手机号应为11位");
