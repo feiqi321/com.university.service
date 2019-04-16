@@ -161,6 +161,7 @@ public class UserServiceImpl  implements UserService {
      * @param user
      * @return
      */
+    @Transactional
     @Override
     public WebResult savaInfo(User user) {
 
@@ -169,14 +170,42 @@ public class UserServiceImpl  implements UserService {
         if (!phoneResult.getCode().equals("200")){
             return new WebResult("400",phoneResult.getMsg());
         }
+        //紧急联系人一手机号验证
         if (StringUtils.isBlank(user.getEmergencyPhone1())) {
             return new WebResult("400", "紧急联系人1电话不能为空");
         }
+        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+        if (user.getEmergencyPhone1().length() != 11) {
+            return new WebResult("400", "手机号应为11位");
+        } else {
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(user.getEmergencyPhone1());
+            boolean isMatch = m.matches();
 
+            if (!isMatch) {
+                return new WebResult("400", "请输入正确手机号");
+            }
+        }
+        //紧急联系人二手机号验证
+        if (user.getEmergencyPhone2()!=null){
+        if (user.getEmergencyPhone2().length() != 11) {
+            return new WebResult("400", "手机号应为11位");
+        } else {
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(user.getEmergencyPhone2());
+            boolean isMatch = m.matches();
+
+            if (!isMatch) {
+                return new WebResult("400", "请输入正确手机号");
+            }
+        }
+        }
+         //身份证格式校验
             boolean testCard = this.isIDNumber(user.getIdentity_card());
             if (testCard == false) {
                 return new WebResult("400", "输入身份证格式有误");
             }
+            //保存
             userMapper.savaInfo(user);
             return new WebResult("200", "保存成功");
         }

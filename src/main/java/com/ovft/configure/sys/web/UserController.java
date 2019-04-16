@@ -61,7 +61,7 @@ public class UserController {
      * @param  user
      * @return
      */
-    @PostMapping(value = "/savaInfo")
+    @PutMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user){
 
         return userService.savaInfo(user);
