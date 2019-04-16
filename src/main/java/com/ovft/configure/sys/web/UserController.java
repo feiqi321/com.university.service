@@ -30,7 +30,7 @@ public class UserController {
      */
     @PostMapping(value = "/regist")
        public WebResult regist(@RequestBody User user){
-        System.out.print("======================>>"+user.getNextPass());
+
         user.setUserName(user.getPhone());
         return userService.addUser(user);
     }
@@ -52,7 +52,7 @@ public class UserController {
     @PutMapping(value = "/updatePassword")
     public WebResult updatePassword( @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
                                     @RequestParam(value = "nextpass")String nextpass,@RequestParam(value = "identifying_code")String identifying_code ){
-        System.out.print("修改密码控制器执行了");
+
         System.out.print("短信验证码"+identifying_code);
         return userService.updatePassword(phone,newPassword,nextpass);
     }
