@@ -5,7 +5,7 @@ import com.ovft.configure.sys.bean.Admin;
 
 public interface AdminService {
 
-    public WebResult createAdmin(Admin admin);
+    public WebResult createAdmin(Admin admin, int role);
 
     public WebResult login(Admin admin);
 
