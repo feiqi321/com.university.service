@@ -5,8 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * @ClassName AdminMapper
- * @Author zqx
+ * @ClassName UserMapper
+ * @Author xzy
  * @Date 2019/4/10 16:04
  * @Version 1.0
  **/
