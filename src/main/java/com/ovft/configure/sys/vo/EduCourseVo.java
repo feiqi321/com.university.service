@@ -7,11 +7,32 @@ import java.util.List;
 
 /**
  * 课程的扩展类
+ *
  * @author vvtxw
  * @create 2019-04-14 7:53
  */
 public class EduCourseVo extends EduCourse {
     private List<EduClass> classList;
+    private String schoolName;
+
+    private String startTime;
+    private String endTime;
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public List<EduClass> getClassList() {
         return classList;
@@ -22,5 +43,11 @@ public class EduCourseVo extends EduCourse {
     }
 
 
+    public String getSchoolName() {
+        return schoolName;
+    }
 
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
 }

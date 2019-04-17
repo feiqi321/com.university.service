@@ -3,6 +3,8 @@ package com.ovft.configure.sys.dao;
 import com.ovft.configure.sys.bean.EduCheck;
 import com.ovft.configure.sys.bean.EduCheckExample;
 import java.util.List;
+
+import com.ovft.configure.sys.vo.EduCheckVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface EduCheckMapper {
@@ -33,6 +35,12 @@ public interface EduCheckMapper {
 
     int updateByPrimaryKey(EduCheck record);
 
+    /**
+     * 根据userId查询打卡记录
+     * @param userId
+     * @return
+     */
+    List<EduCheckVo> queryAllPunchRecord(Integer userId);
 
 
 }

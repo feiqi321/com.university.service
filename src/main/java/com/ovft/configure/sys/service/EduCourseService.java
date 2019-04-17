@@ -13,6 +13,7 @@ import java.util.List;
 public interface EduCourseService {
     /**
      * 按学校的id来查找专业类别
+     *
      * @param schoolId
      * @return
      */
@@ -20,10 +21,10 @@ public interface EduCourseService {
 
     /**
      * 根据课程id查询课程信息报名
+     *
      * @param courseId
      * @return
      */
     public EduCourseVo queryCourseByCourseId(int courseId);
-
 
 }

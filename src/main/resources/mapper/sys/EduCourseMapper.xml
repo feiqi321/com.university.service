@@ -114,12 +114,12 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduCourse" useGeneratedKeys="true" keyProperty="courseId">
-    insert into edu_course (course_name, course_price,
+    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduCourse">
+    insert into edu_course (course_id, course_name, course_price, 
       course_teacher, place_class, start_date, 
       end_date, people_number, school_id
       )
-    values (#{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
+    values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL}, 
       #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, 
       #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
       )
@@ -304,12 +304,4 @@
     left join edu_admin e2 on c.course_teacher=e2.admin_id
     where course_id =#{courseId}
   </select>
-
-    <!--根据教师id查找课程-->
-    <select id="selectByTeacherId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from edu_course
-        where course_teacher = #{adminId}
-    </select>
 </mapper>

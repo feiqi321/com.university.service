@@ -9,17 +9,18 @@ import com.ovft.configure.sys.service.EduCheckService;
 import com.ovft.configure.sys.service.EduCourseService;
 import com.ovft.configure.sys.service.OrderService;
 import com.ovft.configure.sys.service.SchoolService;
+import com.ovft.configure.sys.vo.EduCheckVo;
+import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.OrderVo;
+import javafx.scene.input.InputMethodTextRun;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -42,7 +43,7 @@ public class EduCheckController {
     private SchoolService schoolService;
 
     /**
-     * 根据userId来修改打卡状态
+     * 打卡
      *
      * @param
      */
@@ -60,6 +61,18 @@ public class EduCheckController {
         } else {
             return new WebResult(StatusCode.OK, "你还未购买课程，无法课时打卡");
         }
+    }
+
+    /**
+     * 打卡记录
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "record/{userId}")
+    public WebResult queryAllPunchRecord(@PathVariable Integer userId) {
+        List<EduCheckVo> eduCheckVos = eduCheckService.queryAllPunchRecord(userId);
+        return new WebResult(StatusCode.OK, "查询成功", eduCheckVos);
     }
 
 
@@ -119,8 +132,9 @@ public class EduCheckController {
                         return new WebResult(StatusCode.OK, "您还不在指定的打卡区域，请到指定区域打卡");
                     }
                 } else {
-                    EduCheck eduCheck = noCheckInsert(orderVo);
-                    eduCheckService.doSign(eduCheck);
+                    //在交易成功生成需要打卡的记录
+                   /* EduCheck eduCheck = noCheckInsert(orderVo);
+                    eduCheckService.doSign(eduCheck);*/
                     return new WebResult(StatusCode.OK, "请在当天半小时之内打卡");
                 }
             } catch (ParseException e) {
@@ -153,6 +167,5 @@ public class EduCheckController {
         eduCheckService.doSign(eduCheck);
         return eduCheck;
     }
-
 
 }
