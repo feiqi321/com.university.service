@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @ClassName UserService
+ * @ClassName UserServiceImpl
  * @Author  xzy
  * @Date 2019/4/11 16:21
  * @Version 1.0
@@ -73,7 +73,14 @@ public class UserServiceImpl  implements UserService {
         }
         String password = user.getPassword();
         user.setPassword(MD5Utils.md5Password(password));
-        //TODO   添加短信验证
+        //短信验证码
+        Object value = redisUtil.get("sendSms-" + user.getPhone());
+        if(value == null) {
+            return new WebResult("400", "验证码失效");
+        }
+        if(!user.getSecurityCode().equals(value.toString())) {
+            return new WebResult("400", "验证码错误");
+        }
         WebResult result = new WebResult();
         userMapper.addUser(user);
         result.setCode("200");
@@ -131,7 +138,7 @@ public class UserServiceImpl  implements UserService {
      */
     @Transactional
     @Override
-    public WebResult updatePassword(String phone, String newPassword, String nextpass) {
+    public WebResult updatePassword(String phone, String newPassword, String nextPass,String securityCode) {
             User user=new User();
             user.setPhone(phone);
         //手机号码格式验证
@@ -139,16 +146,13 @@ public class UserServiceImpl  implements UserService {
         if (!phoneResult.getCode().equals("200")){
             return new WebResult("400",phoneResult.getMsg());
         }
-
+         //密码验证
         int l = newPassword.length();
-        if (newPassword.equals("123456")){
-            return new WebResult("400", "密码不能过于简单");
-        }
         if (l < 6 || l > 16 ) {
             return new WebResult("400", "密码长度必须要在6-16之间");
         }
 
-        if (StringUtils.isBlank(nextpass)) {
+        if (StringUtils.isBlank(nextPass)) {
             return new WebResult("400", "密码不能为空");
         }
         User findUser = userMapper.findUserByPhone2(phone);
@@ -156,13 +160,20 @@ public class UserServiceImpl  implements UserService {
         if (findUser==null) {
             return new WebResult("400", "手机号不存在");
         }
-        if (!newPassword.equals(nextpass)) {
+        if (!newPassword.equals(nextPass)) {
             return new WebResult("400", "输入的两次密码不一致");
         }
 
         String newPasswordMd5 = MD5Utils.md5Password(newPassword);
+        //短信验证码
+        Object value = redisUtil.get("sendSms-" + user.getPhone());
+        if(value == null) {
+            return new WebResult("400", "验证码失效");
+        }
+        if(!user.getSecurityCode().equals(value.toString())) {
+            return new WebResult("400", "验证码错误");
+        }
         userMapper.updateByPassword(phone, newPasswordMd5);
-        //TODO   添加短信验证
         WebResult result = new WebResult();
         result.setCode("200");
         result.setMsg("修改密码成功");
@@ -224,14 +235,14 @@ public class UserServiceImpl  implements UserService {
             return new WebResult("200", "保存成功");
         }
     /**
-     * 更换手机
+     * 更换手机号
      *
      * @param oldPhone,newPhone
      * @return
      */
     @Transactional
     @Override
-    public WebResult updatePhone(String oldPhone, String newPhone) {
+    public WebResult updatePhone(String oldPhone, String newPhone,String securityCode) {
            User user=new User();
            user.setPhone(newPhone);
         WebResult phoneResult = isTure(user);
@@ -242,6 +253,14 @@ public class UserServiceImpl  implements UserService {
            if (findUser!=null){
                return new WebResult("400","手机号已存在");
            }
+        //短信验证码
+        Object value = redisUtil.get("sendSms-" + user.getPhone());
+        if(value == null) {
+            return new WebResult("400", "验证码失效");
+        }
+        if(!user.getSecurityCode().equals(value.toString())) {
+            return new WebResult("400", "验证码错误");
+        }
               userMapper.updatePhone(oldPhone,newPhone);
                return new WebResult("200","更换成功");
     }

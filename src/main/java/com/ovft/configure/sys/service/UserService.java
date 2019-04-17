@@ -6,8 +6,8 @@ import com.ovft.configure.sys.bean.User;
 public interface UserService {
           public WebResult addUser(User user);
           public WebResult findUser(User user);
-          public WebResult updatePassword( String phone, String newPassword, String nextpass);
+          public WebResult updatePassword( String phone, String newPassword, String nextPass,String securityCode);
           public WebResult savaInfo(User user);
-          public WebResult updatePhone(String oldPhone,String newPhone);
+          public WebResult updatePhone(String oldPhone,String newPhone,String securityCode);
 
 }
