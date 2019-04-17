@@ -4,7 +4,6 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.dao.EduClassMapper;
-import com.ovft.configure.sys.dao.EduCourseMapper;
 import com.ovft.configure.sys.dao.TeacherMapper;
 import com.ovft.configure.sys.dao.VacateMapper;
 import com.ovft.configure.sys.service.TeacherService;
@@ -33,8 +32,6 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherMapper teacherMapper;
     @Resource
     public VacateMapper vacateMapper;
-    @Resource
-    public EduCourseMapper courseMapper;
     @Resource
     public EduClassMapper classMapper;
 
@@ -122,7 +119,7 @@ public class TeacherServiceImpl implements TeacherService {
             }
         }
 
-        courseMapper.insert(course);
+        teacherMapper.insertCourse(course);
         Integer courseId = course.getCourseId();
         for (EduClass eduClass : classList) {
             eduClass.setCourseIds(courseId);
@@ -156,7 +153,7 @@ public class TeacherServiceImpl implements TeacherService {
         if(adminId == null) {
             return new WebResult("400", "请登录");
         }
-        List<EduCourse> courseList = courseMapper.selectByTeacherId(adminId);
+        List<EduCourse> courseList = teacherMapper.selectByTeacherId(adminId);
 
         return new WebResult("200","", courseList);
     }
