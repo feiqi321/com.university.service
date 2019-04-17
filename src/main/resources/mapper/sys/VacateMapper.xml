@@ -24,5 +24,12 @@
         set is_check = #{isCheck}
         where vacate_id = #{vacateId}
     </update>
+    
+    <select id="selectUserCourse" resultType="java.util.HashMap" >
+        select c1.course_id as courseId, c1.course_name as courseName from edu_course c1
+        INNER JOIN (SELECT course_id from edu_order where user_id = #{userId} and pay_status = 1) c2 ON c1.course_id = c2.course_id
+        WHERE <![CDATA[ c1.start_date <= #{today}]]>
+        <![CDATA[ and c1.end_date >= #{today}]]>
+    </select>
 
 </mapper>

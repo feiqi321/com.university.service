@@ -2,10 +2,10 @@ package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Dict;
-import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.bean.Vacate;
 import com.ovft.configure.sys.dao.DictMapper;
+import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.dao.VacateMapper;
 import com.ovft.configure.sys.service.VacateService;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName SchoolServiceImpl
@@ -28,6 +32,8 @@ public class VacateServiceImpl implements VacateService {
     public VacateMapper vacateMapper;
     @Resource
     public DictMapper dictMapper;
+    @Resource
+    public UserMapper userMapper;
 
     /**
      * 请假申请
@@ -66,16 +72,13 @@ public class VacateServiceImpl implements VacateService {
     @Override
     public WebResult intoVacate(Integer userId) {
         HashMap<String, Object> map = new HashMap<>();
-        //todo   根据id查找user
-        User user = new User();
-        user.setUserId(6);
-        user.setUserName("17764020416");
+        //获取用户信息
+        User user = userMapper.selectById(userId);
+
         //todo   获取课程列表
-        LinkedList<EduCourse> courseList = new LinkedList<>();
-        EduCourse course = new EduCourse();
-        course.setCourseId(1);
-        course.setCourseName("针灸治疗学");
-        courseList.push(course);
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        System.out.println(today);
+        List<Map<String, Object>> courseList = vacateMapper.selectUserCourse(userId, today);
 
         //获取请假类型VACATE_TYPE
         List<Dict> dicts = dictMapper.selectByDictType("VACATE_TYPE");

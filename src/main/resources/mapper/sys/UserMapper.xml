@@ -14,6 +14,16 @@
          <select id="findUserByPassword" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where  password=#{user.password};
          </select>
+
+        <select id="selectById"  resultType="com.ovft.configure.sys.bean.User">
+            select user_id as auserId,
+            user_name as userName,
+            emergency_contact1 as emergencyContact1,
+            emergency_phone1 as emergencyPhone1
+            from  edu_user
+            where  user_id=#{userId};
+         </select>
+
     <update id="updateByPassword">
           update edu_user set password = #{password} where phone=#{phone}
     </update>

@@ -22,4 +22,6 @@ public interface VacateMapper {
 
     public void updateCheck(@Param("vacateId") Integer vacateId, @Param("isCheck") Integer isCheck);
 
+    public List<Map<String, Object>> selectUserCourse(@Param("userId") Integer userId, @Param("today") String today);
+
 }
