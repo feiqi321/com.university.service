@@ -55,80 +55,84 @@ public class EduCheckController {
         List<OrderVo> orderVos = orderService.queryAllOrder(userId);
         if (orderVos.size() > 0) {
             //3.打卡时间判断，则可以进行打卡
-            Date nowTime = new Date();
-            long now = nowTime.getTime();//当前时间戳
-            //查询订单详细数据
-            for (OrderVo orderVo : orderVos) {
-                int schoolId = orderVo.getSchoolId();
-                Date startDate = orderVo.getStartDate();//获取开班当前日期
-                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-                String formatstartDate = date.format(startDate);//获取开班当前日期字符串
-                String formatnowTime = date.format(nowTime);//获取当前日期字符串
-                if (!formatstartDate.equals(formatnowTime)) {
-                    return new WebResult(StatusCode.OK, "请到课时当天打卡");
-                }
-                String startTime = orderVo.getStartTime();//获取开班当前时间的字符串
-                String newClassDateTime = formatstartDate + " " + startTime;
-                SimpleDateFormat hours = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                try {
-                    Date newTime = hours.parse(newClassDateTime);
-                    //获取开课时间的毫秒值
-                    long classStartTime = newTime.getTime();
-
-                    String current = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm");
-                    Date parse = hours.parse(current);
-                    //获取当前时间的毫秒值
-                    long currentTime = parse.getTime();
-                    //获取开课30分钟的时间
-                    long fitTime = classStartTime - 1800000;
-                    if ((fitTime <= currentTime) && (currentTime <= classStartTime)) {
-                        //4.打卡之前判断是否在学校区域内
-                        School school = schoolService.queryRecordBySchoolId(schoolId);
-                        String longitude = school.getLongitude();//经度
-                        String[] splits = longitude.split("\\.");
-                        String longitudeX = splits[1];
-                        int recordx = Integer.parseInt(longitudeX);
-                        String latitude = school.getLatitude();//纬度
-                        String[] split1 = latitude.split("\\.");
-                        String latitudeY = split1[1];
-                        int recordy = Integer.parseInt(latitudeY);
-                        String xStr = String.valueOf(x);
-                        String yStr = String.valueOf(y);
-                        String[] split2 = xStr.split("\\.");
-                        String xrecord = split2[1];
-                        String[] split3 = yStr.split("\\.");
-                        String yrecord = split3[1];
-                        int x1 = Integer.parseInt(xrecord);
-                        int y1 = Integer.parseInt(yrecord);
-                        if ((x1 > recordx - 2 && x1 < recordx + 2) || (y1 > recordy - 2 && y1 < recordy + 2)) {
-                            EduCheck eduCheck = CheckInsert(orderVo);
-                            eduCheckService.doSign(eduCheck);
-                            return new WebResult(StatusCode.OK, "打卡成功");
-                        } else {
-                            EduCheck eduCheck = noCheckInsert(orderVo);
-                            eduCheckService.doSign(eduCheck);
-                            return new WebResult(StatusCode.OK, "您还不在指定的打卡区域，请到指定区域打卡");
-                        }
-                    } else {
-                       /* EduCheck eduCheck = noCheckInsert(orderVo);
-                        eduCheckService.doSign(eduCheck);*/
-                        return new WebResult(StatusCode.OK, "请在当天半小时之内打卡");
-
-
-                    }
-                } catch (ParseException e) {
-                    return new WebResult(StatusCode.OK, "后台输入的开始时间格式有误");
-                }
-            }
-
+            WebResult orNoCheck = isOrNoCheck(orderVos, x, y);
+            return orNoCheck;
         } else {
             return new WebResult(StatusCode.OK, "你还未购买课程，无法课时打卡");
+        }
+    }
+
+
+    public WebResult isOrNoCheck(List<OrderVo> orderVos, Double x, Double y) {
+        //查询订单详细数据
+        for (OrderVo orderVo : orderVos) {
+            Date nowTime = new Date();
+            long now = nowTime.getTime();//当前时间戳
+            int schoolId = orderVo.getSchoolId();
+            Date startDate = orderVo.getStartDate();//获取开班当前日期
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+            String formatstartDate = date.format(startDate);//获取开班当前日期字符串
+            String formatnowTime = date.format(nowTime);//获取当前日期字符串
+            if (!formatstartDate.equals(formatnowTime)) {
+                return new WebResult(StatusCode.OK, "请到课时当天打卡");
+            }
+            String startTime = orderVo.getStartTime();//获取开班当前时间的字符串
+            String newClassDateTime = formatstartDate + " " + startTime;
+            SimpleDateFormat hours = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            try {
+                Date newTime = hours.parse(newClassDateTime);
+                //获取开课时间的毫秒值
+                long classStartTime = newTime.getTime();
+
+                String current = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm");
+                Date parse = hours.parse(current);
+                //获取当前时间的毫秒值
+                long currentTime = parse.getTime();
+                //获取开课30分钟的时间
+                long fitTime = classStartTime - 1800000;
+                if ((fitTime <= currentTime) && (currentTime <= classStartTime)) {
+                    //4.打卡之前判断是否在学校区域内
+                    School school = schoolService.queryRecordBySchoolId(schoolId);
+                    String longitude = school.getLongitude();//经度
+                    String[] splits = longitude.split("\\.");
+                    String longitudeX = splits[1];
+                    int recordx = Integer.parseInt(longitudeX);
+                    String latitude = school.getLatitude();//纬度
+                    String[] split1 = latitude.split("\\.");
+                    String latitudeY = split1[1];
+                    int recordy = Integer.parseInt(latitudeY);
+                    String xStr = String.valueOf(x);
+                    String yStr = String.valueOf(y);
+                    String[] split2 = xStr.split("\\.");
+                    String xrecord = split2[1];
+                    String[] split3 = yStr.split("\\.");
+                    String yrecord = split3[1];
+                    int x1 = Integer.parseInt(xrecord);
+                    int y1 = Integer.parseInt(yrecord);
+                    if ((x1 > recordx - 2 && x1 < recordx + 2) || (y1 > recordy - 2 && y1 < recordy + 2)) {
+                        EduCheck eduCheck = CheckInsert(orderVo);
+                        eduCheckService.doSign(eduCheck);
+                        return new WebResult(StatusCode.OK, "打卡成功");
+                    } else {
+                        EduCheck eduCheck = noCheckInsert(orderVo);
+                        eduCheckService.doSign(eduCheck);
+                        return new WebResult(StatusCode.OK, "您还不在指定的打卡区域，请到指定区域打卡");
+                    }
+                } else {
+                    EduCheck eduCheck = noCheckInsert(orderVo);
+                    eduCheckService.doSign(eduCheck);
+                    return new WebResult(StatusCode.OK, "请在当天半小时之内打卡");
+                }
+            } catch (ParseException e) {
+                return new WebResult(StatusCode.OK, "后台输入的开始时间格式有误");
+            }
         }
         return new WebResult(StatusCode.ERROR, "操作错误");
     }
 
     public EduCheck noCheckInsert(OrderVo orderVo) {
         EduCheck eduCheck = new EduCheck();
+        eduCheck.setUserId(orderVo.getUserId());
         eduCheck.setCheckStartTime(new Date());
         eduCheck.setCheckEndTime(new Date());
         eduCheck.setUserId(orderVo.getUserId());
@@ -140,6 +144,7 @@ public class EduCheckController {
 
     public EduCheck CheckInsert(OrderVo orderVo) {
         EduCheck eduCheck = new EduCheck();
+        eduCheck.setUserId(orderVo.getUserId());
         eduCheck.setCheckStartTime(new Date());
         eduCheck.setCheckEndTime(new Date());
         eduCheck.setUserId(orderVo.getUserId());
