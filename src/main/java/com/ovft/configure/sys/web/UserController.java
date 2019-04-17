@@ -52,10 +52,10 @@ public class UserController {
      */
     @PutMapping(value = "/updatePassword")
     public WebResult updatePassword( @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
-                                    @RequestParam(value = "nextpass")String nextpass,@RequestParam(value = "identifying_code")String identifying_code ){
+                                    @RequestParam(value = "nextpass")String nextpass,@RequestParam(value = "securityCode")String securityCode ){
 
-        System.out.print("短信验证码"+identifying_code);
-        return userService.updatePassword(phone,newPassword,nextpass);
+        System.out.print("短信验证码"+securityCode);
+        return userService.updatePassword(phone,newPassword,nextpass,securityCode);
     }
     /**
      * 基本信息保存
@@ -73,9 +73,9 @@ public class UserController {
      */
     @PutMapping(value = "/updatePhone")
     public WebResult updatePhone(@RequestParam(value = "oldphone")String oldPhone,@RequestParam(value = "newPhone")String newPhone,
-    @RequestParam(value = "identifying_code")String identifying_code
+    @RequestParam(value = "securityCode")String securityCode
     ){
-         return userService.updatePhone(oldPhone,newPhone);
+         return userService.updatePhone(oldPhone,newPhone,securityCode);
     }
 
 }

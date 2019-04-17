@@ -79,11 +79,12 @@ public class User {
     private Integer checkIn;
      //身份证
     private String identity_card;
+       //短信验证码
     private String securityCode;
 
-    public void setSecurityCode(String securityCode) {
-        this.securityCode = securityCode;
-    }
+    public void setSecurityCode(String securityCode) { this.securityCode = securityCode; }
+
+    public String getSecurityCode() { return securityCode; }
 
     public String getNextPass() {
         return nextPass;
