@@ -2,10 +2,9 @@ package com.ovft.configure.sys.web;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.service.TeacherService;
+import com.ovft.configure.sys.vo.EduCourseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 
 /**
  * @ClassName TeacherController
@@ -22,7 +21,7 @@ public class TeacherController {
     public TeacherService teacherService;
 
     /**
-     * 教师请假申请审批列表
+     * 请假申请教师审批列表
      * @param adminId
      * @return
      */
@@ -33,22 +32,33 @@ public class TeacherController {
 
     /**
      * 请假审批
-     * @param map
+     * @param isCheck
+     * @param vacateId
      * @return
      */
     @PostMapping(value = "/vacateApprover")
-    public WebResult vacateApprover(@RequestBody HashMap<String, Object> map) {
-        return  teacherService.vacateApprover(map);
+    public WebResult vacateApprover(@RequestParam(value = "isCheck")Integer isCheck, @RequestParam(value = "vacateId")Integer vacateId) {
+        return  teacherService.vacateApprover(vacateId, isCheck);
+    }
+
+    /**
+     * 课程列表
+     * @param adminId
+     * @return
+     */
+    @GetMapping(value = "/courseList")
+    public WebResult courseList(@RequestParam(value = "adminId")Integer adminId) {
+        return  teacherService.courseList(adminId);
     }
 
     /**
      * 添加课程
-     * @param map
+     * @param courseVo
      * @return
      */
     @PostMapping(value = "/createCourse")
-    public WebResult createCourse(@RequestBody HashMap<String, Object> map) {
-        return  teacherService.createCourse(map);
+    public WebResult createCourse(@RequestBody EduCourseVo courseVo) {
+        return  teacherService.createCourse(courseVo);
     }
 
 }

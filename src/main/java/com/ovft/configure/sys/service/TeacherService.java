@@ -1,17 +1,17 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.vo.EduCourseVo;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Service
 public interface TeacherService {
 
     public WebResult vacateChackList(Integer adminId);
 
-    public WebResult createCourse(HashMap<String, Object> course);
+    public WebResult createCourse(EduCourseVo courseVo);
 
-    public WebResult vacateApprover(HashMap<String,Object> map);
+    public WebResult vacateApprover(Integer vacateId, Integer isCheck);
 
+    public WebResult courseList(Integer adminId);
 }
