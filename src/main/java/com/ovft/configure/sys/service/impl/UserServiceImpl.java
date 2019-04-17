@@ -170,7 +170,7 @@ public class UserServiceImpl  implements UserService {
         if(value == null) {
             return new WebResult("400", "验证码失效");
         }
-        if(!user.getSecurityCode().equals(value.toString())) {
+        if(!securityCode.equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
         userMapper.updateByPassword(phone, newPasswordMd5);
@@ -258,7 +258,7 @@ public class UserServiceImpl  implements UserService {
         if(value == null) {
             return new WebResult("400", "验证码失效");
         }
-        if(!user.getSecurityCode().equals(value.toString())) {
+        if(!securityCode.equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
               userMapper.updatePhone(oldPhone,newPhone);
