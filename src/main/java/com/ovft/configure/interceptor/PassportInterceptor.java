@@ -22,7 +22,6 @@ public class PassportInterceptor implements HandlerInterceptor {
  
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
- 
         String token = httpServletRequest.getHeader("token");
         //TODO  验证token
         if(StringUtils.isBlank(token)) {
@@ -37,7 +36,6 @@ public class PassportInterceptor implements HandlerInterceptor {
         if(servletPath.contains("/server")) {
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
         }
-
         return true;
     }
  

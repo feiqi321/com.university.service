@@ -293,7 +293,7 @@
 
     <!--2.查找专业相关报名信息-->
     <select id="queryCourseByCourseId" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCourseVo">
-    selectss
+    select
     c.course_name,
     c.course_price,
     e1.school_name schoolId,

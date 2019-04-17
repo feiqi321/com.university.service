@@ -33,8 +33,35 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.queryAllOrder(userId);
     }
 
+    /**
+     * 根据用户id查询开课的具体时间点
+     * @param userId
+     * @return
+     */
+    public List<OrderVo> queryStartDateTimeByCouserId(int userId) {
+        return orderMapper.queryAllOrder(userId);
+    }
+
+
+    /**
+     * 查询courseId
+     * @param userId
+     * @param status
+     * @return
+     */
     @Override
     public int queryForCourseId(int userId, int status) {
+        return orderMapper.queryCourseNumById(userId,status);
+    }
+
+    /**
+     * 查询courseNum的个数
+     * @param userId
+     * @param status
+     * @return
+     */
+    @Override
+    public int queryCourseNumById(int userId, int status) {
         return orderMapper.queryCourseNumById(userId,status);
     }
 }

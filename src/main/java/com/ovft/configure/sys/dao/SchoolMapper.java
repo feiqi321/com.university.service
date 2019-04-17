@@ -11,4 +11,11 @@ public interface SchoolMapper {
 
     //修改学校名称
     public void updateSchoolName(School school);
+
+    /**
+     * 根据学校id查询坐标
+     * @param schoolId
+     * @return
+     */
+    public School queryRecordBySchoolId(Integer schoolId);
 }

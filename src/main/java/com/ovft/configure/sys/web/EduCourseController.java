@@ -33,11 +33,12 @@ public class EduCourseController {
     @GetMapping(value = "showCategory/{schoolId}")
     public WebResult queryAllCourse(@PathVariable("schoolId") int schoolId) {
         List<EduCourse> eduCourses = eduCourseService.listCourseCategoryByShoolId(schoolId);
+        System.out.println("进来没");
         return new WebResult(StatusCode.OK, "查找成功", eduCourses);
     }
 
     /**
-     * 根据课程id查询课程信息报名
+     * 立即报名
      *
      * @param courseId
      * @return

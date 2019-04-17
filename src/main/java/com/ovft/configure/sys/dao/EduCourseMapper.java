@@ -3,7 +3,6 @@ package com.ovft.configure.sys.dao;
 import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -40,8 +39,4 @@ public interface EduCourseMapper {
      * @return
      */
     Date queryStartTimeByCouserId(int couseId);
-
-    public void insert(EduCourse course);
-
-    public List<EduCourse> selectByTeacherId(@Param("adminId") Integer adminId);
 }

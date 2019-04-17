@@ -19,5 +19,26 @@ public interface OrderService {
      */
     List<OrderVo> queryAllOrder(int userId);
 
+    /**
+     * 根据用户id查询开课的具体时间点
+     * @param userId
+     * @return
+     */
+    List<OrderVo> queryStartDateTimeByCouserId(int userId);
+
+    /**
+     * 查询courseId
+     * @param userId
+     * @param status
+     * @return
+     */
     public int queryForCourseId(int userId, int status);
+
+    /**
+     *查询订单的已付款的个数
+     * @param userId
+     * @param status
+     * @return
+     */
+    public int queryCourseNumById(int userId, int status);
 }

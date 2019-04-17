@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class OrderVo extends Order {
     private static final String pay = "已缴费，报名成功";
+    private Integer schoolId;
     private String schoolName;
     private String courseName;
     /**
@@ -43,6 +44,15 @@ public class OrderVo extends Order {
     private Date endDate;
 
     private String endTime;
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
 
     public static String getPay() {
         return pay;
