@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
  **/
 
 @RestController
-@RequestMapping("/school")
 public class SchoolController {
     @Autowired
     private SchoolService schoolService;
@@ -56,7 +55,7 @@ public class SchoolController {
           * @param
           * @return
           */
-    @GetMapping(value = "/switchSchoolID")
+    @GetMapping(value = "/school/switchSchoolID")
     public WebResult switchSchoolID(@RequestParam(value = "SchoolId")Integer SchoolId,@RequestParam(value = "userId")Integer userId) {
         return schoolService.switchSchoolID(SchoolId,userId);
     }
