@@ -7,8 +7,7 @@ import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.RedisUtil;
-import com.ovft.configure.sys.web.AdminController;
-import com.ovft.configure.sys.web.UserController;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ import java.util.regex.Pattern;
  **/
 @Service
 public class UserServiceImpl  implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Resource
     private UserMapper userMapper;
     @Autowired
