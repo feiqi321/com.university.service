@@ -110,6 +110,15 @@ public class SchoolServiceImpl implements SchoolService {
                webResult.setData(map);
                return webResult;
     }
+    /**
+     * 更换学校ID
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult switchSchoolID(Integer SchoolId,Integer userId){
 
+        return null;
+    }
 
 }

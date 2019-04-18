@@ -23,8 +23,8 @@ public interface SchoolMapper {
      */
     public School queryRecordBySchoolId(Integer schoolId);
 
-    //更换手机查询所有
+    //更换学校查询所有
     public List<School> selectSchoolAll();
-
-
+     //更换学校ID
+    public WebResult switchSchoolID(Integer SchoolId,Integer userId);
 }

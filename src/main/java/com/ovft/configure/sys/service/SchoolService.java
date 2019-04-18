@@ -13,6 +13,8 @@ public interface SchoolService {
      * @return
      */
     public School queryRecordBySchoolId(Integer schoolId);
-
+    //找到所有学校
     public WebResult switchSchool();
+     //更换学校ID
+    public WebResult switchSchoolID(Integer SchoolId,Integer userId);
 }

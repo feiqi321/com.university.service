@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  **/
 
 @RestController
-@RequestMapping("/server/school")
+@RequestMapping("/school")
 public class SchoolController {
     @Autowired
     private SchoolService schoolService;
@@ -46,6 +46,15 @@ public class SchoolController {
     @GetMapping(value = "/switchSchool")
     public WebResult switchSchool() {
         return schoolService.switchSchool();
+    }
+    /**
+          * 切换学校ID
+          * @param
+          * @return
+          */
+    @GetMapping(value = "/switchSchoolID")
+    public WebResult switchSchoolID(@RequestParam(value = "SchoolId")Integer SchoolId,@RequestParam(value = "userId")Integer userId) {
+        return schoolService.switchSchoolID(SchoolId,userId);
     }
 
 
