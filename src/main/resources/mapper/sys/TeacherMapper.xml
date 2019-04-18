@@ -19,6 +19,21 @@
     </select>
 
     <!--根据教师id查找课程-->
+    <sql id="Base_Column_List">
+    course_id, course_name, course_price, course_teacher, place_class, start_date, end_date,
+    people_number, school_id
+  </sql>
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduCourse">
+        <id column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="course_price" jdbcType="DECIMAL" property="coursePrice"/>
+        <result column="course_teacher" jdbcType="VARCHAR" property="courseTeacher"/>
+        <result column="place_class" jdbcType="VARCHAR" property="placeClass"/>
+        <result column="start_date" jdbcType="DATE" property="startDate"/>
+        <result column="end_date" jdbcType="DATE" property="endDate"/>
+        <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
+        <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
+    </resultMap>
     <select id="selectByTeacherId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
