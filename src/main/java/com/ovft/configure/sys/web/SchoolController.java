@@ -4,10 +4,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @ClassName SchoolController
@@ -35,12 +32,22 @@ public class SchoolController {
 
     /**
           * 修改学校名称
-          * @param schoolClass
+          * @param school
           * @return
           */
     @PostMapping(value = "/updateSchoolName")
     public WebResult updateSchoolName(@RequestBody School school) {
         return schoolService.updateSchoolName(school);
     }
+    /**
+          * 切换学校
+          * @param
+          * @return
+          */
+    @GetMapping(value = "/switchSchool")
+    public WebResult switchSchool() {
+        return schoolService.switchSchool();
+    }
+
 
 }

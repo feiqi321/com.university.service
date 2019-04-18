@@ -31,6 +31,33 @@ public class School {
      */
     private String image;
 
+    /**
+     *字母标识
+     */
+    private String schoolChar;
+
+    @Override
+    public String toString() {
+        return "School{" +
+                "schoolId=" + schoolId +
+                ", schoolName='" + schoolName + '\'' +
+                ", adminId=" + adminId +
+                ", longitude='" + longitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", image='" + image + '\'' +
+                ", schoolChar='" + schoolChar + '\'' +
+                '}';
+    }
+
+    public String getSchoolChar() {
+        return schoolChar;
+    }
+
+    public void setSchoolChar(String schoolChar) {
+
+        this.schoolChar = schoolChar;
+    }
+
     public Integer getSchoolId() {
         return schoolId;
     }

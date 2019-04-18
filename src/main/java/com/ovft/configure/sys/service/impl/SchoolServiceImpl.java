@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.alibaba.druid.pool.vendor.SybaseExceptionSorter;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.dao.SchoolMapper;
@@ -9,6 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @ClassName SchoolServiceImpl
@@ -60,4 +65,51 @@ public class SchoolServiceImpl implements SchoolService {
     public School queryRecordBySchoolId(Integer schoolId) {
         return schoolmapper.queryRecordBySchoolId(schoolId);
     }
+
+    /**
+     * 切换学校
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult switchSchool() {
+        TreeMap<String, HashMap> map=new TreeMap();
+        List<School> schoolList=schoolmapper.selectSchoolAll();
+
+//        for (School school : schoolList) {
+//            HashMap schoolMap = map.get(school.getSchoolChar());
+//            if(schoolMap == null) {
+//                schoolMap = new HashMap();
+//            }
+//            schoolMap.put(school.getSchoolId(), school);
+//        }
+
+        String[] alphatableb =
+                {
+                        "A", "B", "C", "D", "E", "F", "G", "H", "I",
+                        "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+
+                };
+           for (int i=0;i<alphatableb.length;i++){
+               HashMap value=new HashMap();
+              for (int j=0;j<schoolList.size();j++){
+                   School school=schoolList.get(j);
+
+                     if (alphatableb[i].equals(school.getSchoolChar())){
+
+                         value.put(school.getSchoolId(),school.getSchoolName());
+                 map.put(alphatableb[i],value);
+                     }
+              }
+
+           }
+
+            WebResult webResult=new WebResult();
+               webResult.setCode("200");
+               webResult.setMsg("学校");
+               webResult.setData(map);
+               return webResult;
+    }
+
+
 }

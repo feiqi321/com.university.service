@@ -29,7 +29,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @PostMapping(value = "/regist")
+    @PutMapping(value = "/regist")
        public WebResult regist(@RequestBody User user){
 
         user.setUserName(user.getPhone());
