@@ -6,6 +6,8 @@ import com.ovft.configure.sys.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @ClassName SchoolController
  * @Author zqx
@@ -25,8 +27,10 @@ public class SchoolController {
      * @param school
      * @return
      */
-    @PostMapping(value = "/create")
-    public WebResult createAdmin(@RequestBody School school)  {
+    @PostMapping(value = "/server/school/create")
+    public WebResult createAdmin(HttpServletRequest request, @RequestBody School school)  {
+        Integer adminId = (Integer) request.getAttribute("adminId");
+        school.setAdminId(adminId);
         return  schoolService.createSchool(school);
     }
 
@@ -35,7 +39,7 @@ public class SchoolController {
           * @param school
           * @return
           */
-    @PostMapping(value = "/updateSchoolName")
+    @PostMapping(value = "/server/school/updateSchoolName")
     public WebResult updateSchoolName(@RequestBody School school) {
         return schoolService.updateSchoolName(school);
     }
@@ -44,7 +48,7 @@ public class SchoolController {
           * @param
           * @return
           */
-    @GetMapping(value = "/switchSchool")
+    @GetMapping(value = "/school/switchSchool")
     public WebResult switchSchool() {
         return schoolService.switchSchool();
     }

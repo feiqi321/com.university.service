@@ -7,6 +7,8 @@ import com.ovft.configure.sys.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @ClassName AdminController
  * @Author zqx
@@ -41,8 +43,9 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/updatePassword")
-    public WebResult updatePasword(@RequestParam(value = "adminId")Integer adminId, @RequestParam(value = "oldPassword")String oldPassword,
+    public WebResult updatePasword(HttpServletRequest request, @RequestParam(value = "oldPassword")String oldPassword,
                                    @RequestParam(value = "newPassword")String newPassword) {
+        Integer adminId = (Integer) request.getAttribute("adminId");
         return adminService.updatePassword(adminId, oldPassword, newPassword);
     }
 
@@ -53,8 +56,9 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/updatePhone")
-    public WebResult updatePhone(@RequestParam(value = "adminId")Integer adminId, @RequestParam(value = "newPhone")String newPhone,
+    public WebResult updatePhone(HttpServletRequest request, @RequestParam(value = "newPhone")String newPhone,
                                    @RequestParam(value = "securityCode")String securityCode) {
+        Integer adminId = (Integer) request.getAttribute("adminId");
         return adminService.updatePhone(adminId, newPhone, securityCode);
     }
 
@@ -64,7 +68,9 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/create")
-    public WebResult createAdmin(@RequestBody Admin admin)  {
+    public WebResult createAdmin(HttpServletRequest request, @RequestBody Admin admin)  {
+        Integer adminId = (Integer) request.getAttribute("adminId");
+        admin.setAdminId(adminId);
         return  adminService.createAdmin(admin, 1);
     }
 
@@ -74,7 +80,9 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/createTeacher")
-    public WebResult createTeacher(@RequestBody Admin admin)  {
+    public WebResult createTeacher(HttpServletRequest request, @RequestBody Admin admin)  {
+        Integer adminId = (Integer) request.getAttribute("adminId");
+        admin.setAdminId(adminId);
         return  adminService.createAdmin(admin, 2);
     }
 

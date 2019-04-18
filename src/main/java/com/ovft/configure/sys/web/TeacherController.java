@@ -6,6 +6,8 @@ import com.ovft.configure.sys.vo.EduCourseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @ClassName TeacherController
  * @Author zqx
@@ -22,11 +24,11 @@ public class TeacherController {
 
     /**
      * 请假申请教师审批列表
-     * @param adminId
      * @return
      */
     @GetMapping(value = "/vacateChackList")
-    public WebResult vacateChackList(@RequestParam(value = "adminId")Integer adminId) {
+    public WebResult vacateChackList(HttpServletRequest request) {
+        Integer adminId = (Integer) request.getAttribute("adminId");
         return  teacherService.vacateChackList(adminId);
     }
 
@@ -47,7 +49,8 @@ public class TeacherController {
      * @return
      */
     @GetMapping(value = "/courseList")
-    public WebResult courseList(@RequestParam(value = "adminId")Integer adminId) {
+    public WebResult courseList(HttpServletRequest request) {
+        Integer adminId = (Integer) request.getAttribute("adminId");
         return  teacherService.courseList(adminId);
     }
 
@@ -57,7 +60,9 @@ public class TeacherController {
      * @return
      */
     @PostMapping(value = "/createCourse")
-    public WebResult createCourse(@RequestBody EduCourseVo courseVo) {
+    public WebResult createCourse(HttpServletRequest request, @RequestBody EduCourseVo courseVo) {
+        Integer adminId = (Integer) request.getAttribute("adminId");
+        courseVo.setCourseTeacher(adminId.toString());
         return  teacherService.createCourse(courseVo);
     }
 
