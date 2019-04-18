@@ -2,6 +2,8 @@ package com.ovft.configure.config;
 
 import com.ovft.configure.interceptor.PassportInterceptor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
  
@@ -10,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @Date 2019/2/15 11:29
  * @Description
  */
-//@Configuration
+@Configuration
 public class MywebConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
@@ -19,11 +21,18 @@ public class MywebConfiguration extends WebMvcConfigurerAdapter {
     }
 
     @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*")
+                .allowedHeaders("*").allowedMethods("*");
+    }
+
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
-      /*registry.addInterceptor(passportInterceptor())
-                .addPathPatterns("/**")
-                //TODO    放行路径待修改
-               .excludePathPatterns("/server/admin/login","/user/login","/user/regist");
-        super.addInterceptors(registry);*/
+//      registry.addInterceptor(passportInterceptor())
+//                .addPathPatterns("/**")
+//                //TODO    放行路径待修改
+////               .excludePathPatterns("/server/admin/login","/user/login","/user/regist");
+//                .excludePathPatterns("/server/admin/login","/user/regist");
+//        super.addInterceptors(registry);
     }
 }
