@@ -35,6 +35,10 @@
        SELECT  school_id as schoolId, school_name as schoolName,school_char as schoolChar
        from  edu_school;
     </select>
-
+      <update id="switchSchoolID" parameterType="int">
+              update edu_user
+              set  school_id=#{schoolId}
+              where  user_id=#{userId}
+      </update>
 
 </mapper>

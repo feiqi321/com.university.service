@@ -29,7 +29,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @PutMapping(value = "/regist")
+    @PostMapping(value = "/regist")
        public WebResult regist(@RequestBody User user){
 
         user.setUserName(user.getPhone());
@@ -50,7 +50,7 @@ public class UserController {
      * @param  phone,  newPassword,nextpass,identifying_code
      * @return
      */
-    @PutMapping(value = "/updatePassword")
+    @PostMapping(value = "/updatePassword")
     public WebResult updatePassword( @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
                                     @RequestParam(value = "nextpass")String nextpass,@RequestParam(value = "securityCode")String securityCode ){
 
@@ -62,7 +62,7 @@ public class UserController {
      * @param  user
      * @return
      */
-    @PutMapping(value = "/savaInfo")
+    @PostMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user){
         return userService.savaInfo(user);
     }
@@ -71,7 +71,7 @@ public class UserController {
      * @param  oldPhone,newPhone
      * @return
      */
-    @PutMapping(value = "/updatePhone")
+    @PostMapping(value = "/updatePhone")
     public WebResult updatePhone(@RequestParam(value = "oldphone")String oldPhone,@RequestParam(value = "newPhone")String newPhone,
     @RequestParam(value = "securityCode")String securityCode
     ){
