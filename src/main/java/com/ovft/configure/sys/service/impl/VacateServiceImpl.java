@@ -61,7 +61,7 @@ public class VacateServiceImpl implements VacateService {
         vacate.setCreateTime(new Date());
         vacateMapper.applyVacate(vacate);
 
-        return new WebResult("200", "");
+        return new WebResult("200", "请假成功", "");
     }
 
     /**
@@ -87,7 +87,7 @@ public class VacateServiceImpl implements VacateService {
         map.put("course", courseList);
         map.put("dicts", dicts);
 
-        return new WebResult("200", "", map);
+        return new WebResult("200", "请求成功", map);
     }
 
     /**
@@ -102,7 +102,7 @@ public class VacateServiceImpl implements VacateService {
         }
         List<Map<String, Object>> maps = vacateMapper.selectByUserId(userId);
 
-        return new WebResult("200", "", maps);
+        return new WebResult("200", "请求成功", maps);
     }
 
 

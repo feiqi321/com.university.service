@@ -68,7 +68,7 @@ public class AdminServiceImpl implements AdminService {
             return new WebResult("400", "登录失败");
         }
         map.put("token", token);
-        WebResult result = new WebResult("200", "", map);
+        WebResult result = new WebResult("200", "登录成功", map);
         return result;
     }
 
@@ -160,6 +160,7 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.creatAdmin(admin);
         //System.out.println("admin = " + admin.getAdminId());
         result.setCode("200");
+        result.setMsg("添加成功");
         result.setData(admin);
         return result;
     }

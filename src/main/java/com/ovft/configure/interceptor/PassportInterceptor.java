@@ -1,7 +1,6 @@
 package com.ovft.configure.interceptor;
 
 import com.ovft.configure.sys.utils.RedisUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,9 +21,10 @@ public class PassportInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String token = httpServletRequest.getHeader("token");
         //验证token
-        if(StringUtils.isBlank(token)) {
-            return false;
-        }
+//        if(StringUtils.isBlank(token)) {
+            logger.error("[获取token失败] + " + token);
+//            return false;
+//        }
         //todo 如果token不存在
 //        if(!redisUtil.hasKey(token)) {
 //            throw new AuthException("请先登录");

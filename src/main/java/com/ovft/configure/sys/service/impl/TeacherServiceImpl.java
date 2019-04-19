@@ -43,11 +43,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult vacateChackList(Integer adminId) {
         if(adminId == null) {
-            return new WebResult("400", "请登录");
+            return new WebResult("400", "请登录","");
         }
         List<Map<String, Object>> maps = teacherMapper.seleceVacateByTeacherId(adminId);
 
-        return new WebResult("200", "", maps);
+        return new WebResult("200", "请求成功", maps);
     }
 
     /**
@@ -60,47 +60,47 @@ public class TeacherServiceImpl implements TeacherService {
     public WebResult createCourse(EduCourseVo courseVo) {
         List<EduClass> classList = courseVo.getClassList();
         if(classList == null || classList.size() == 0){
-            return new WebResult("400","请选择上课时间");
+            return new WebResult("400","请选择上课时间","");
         }
         EduCourse course = new EduCourse();
         if(StringUtils.isBlank(courseVo.getCourseName())) {
-            return new WebResult("400","课程名称不能为空");
+            return new WebResult("400","课程名称不能为空","");
         }
         course.setCourseName(courseVo.getCourseName());
 
         if(courseVo.getCoursePrice() == null || courseVo.getCoursePrice().compareTo(BigDecimal.ZERO)< 0) {
-            return new WebResult("400","课程价格不正确");
+            return new WebResult("400","课程价格不正确","");
         }
         course.setCoursePrice(courseVo.getCoursePrice());
 
         if(courseVo.getCourseTeacher() == null) {
-            return new WebResult("400","请添加课程教师");
+            return new WebResult("400","请添加课程教师","");
         }
         course.setCourseTeacher(courseVo.getCourseTeacher());
 
         if(StringUtils.isBlank(courseVo.getPlaceClass())) {
-            return new WebResult("400","请添加上课地点");
+            return new WebResult("400","请添加上课地点","");
         }
         course.setPlaceClass(courseVo.getPlaceClass());
 
         Date startDate = courseVo.getStartDate();
         Date endDate = courseVo.getEndDate();
         if(startDate == null || endDate == null){
-            return new WebResult("400","请添加课程日期");
+            return new WebResult("400","请添加课程日期","");
         }
         if(startDate.after(endDate)) {
-            return new WebResult("400","结束日期不能早于开课日期");
+            return new WebResult("400","结束日期不能早于开课日期","");
         }
         course.setStartDate(startDate);
         course.setEndDate(endDate);
 
         if(courseVo.getPeopleNumber() == null || courseVo.getPeopleNumber().compareTo(0)<=0) {
-            return new WebResult("400","请添加课程人数");
+            return new WebResult("400","请添加课程人数","");
         }
         course.setPeopleNumber(courseVo.getPeopleNumber());
 
         if(courseVo.getSchoolId() == null) {
-            return new WebResult("400","请选择学校");
+            return new WebResult("400","请选择学校","");
         }
         course.setSchoolId(courseVo.getSchoolId());
 
@@ -112,10 +112,10 @@ public class TeacherServiceImpl implements TeacherService {
             String startTime = eduClass.getStartTime();
             String endTime = eduClass.getEndTime();
             if(!p.matcher(startTime).matches() || !p.matcher(endTime).matches()) {
-                return new WebResult("400","请添加课程时间");
+                return new WebResult("400","请添加课程时间","");
             }
             if(StringUtils.isBlank(eduClass.getWeek())) {
-                return new WebResult("400","请选择周几上课");
+                return new WebResult("400","请选择周几上课","");
             }
         }
 
@@ -125,7 +125,7 @@ public class TeacherServiceImpl implements TeacherService {
             eduClass.setCourseIds(courseId);
             classMapper.insert(eduClass);
         }
-        return new WebResult("200","课程添加成功");
+        return new WebResult("200","课程添加成功","");
     }
 
     /**
@@ -137,10 +137,10 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult vacateApprover(Integer vacateId, Integer isCheck) {
         if(isCheck == null || vacateId == null) {
-            return new WebResult("400","审批出错");
+            return new WebResult("400","审批出错","");
         }
         vacateMapper.updateCheck(vacateId, isCheck);
-        return new WebResult("200","审批成功");
+        return new WebResult("200","审批成功","");
     }
 
     /**
@@ -151,11 +151,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult courseList(Integer adminId) {
         if(adminId == null) {
-            return new WebResult("400", "请登录");
+            return new WebResult("400", "请登录","");
         }
         List<EduCourse> courseList = teacherMapper.selectByTeacherId(adminId);
 
-        return new WebResult("200","", courseList);
+        return new WebResult("200","请求成功", courseList);
     }
 
 

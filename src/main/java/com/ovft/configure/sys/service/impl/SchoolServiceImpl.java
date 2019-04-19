@@ -1,6 +1,5 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.alibaba.druid.pool.vendor.SybaseExceptionSorter;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.dao.SchoolMapper;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -43,7 +41,7 @@ public class SchoolServiceImpl implements SchoolService {
         }
         schoolmapper.createSchool(school);
         System.out.println("school.getSchoolId() = " + school.getSchoolId());
-        return new WebResult("200", "", school);
+        return new WebResult("200", "添加成功", school);
     }
 
     @Transactional
@@ -53,7 +51,7 @@ public class SchoolServiceImpl implements SchoolService {
             return new WebResult("400", "学校名称不能为空");
         }
         schoolmapper.updateSchoolName(school);
-        return new WebResult("200", "");
+        return new WebResult("200", "修改成功", "");
     }
 
     /**
