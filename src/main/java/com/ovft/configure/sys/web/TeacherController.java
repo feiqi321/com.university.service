@@ -3,6 +3,7 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,10 +49,10 @@ public class TeacherController {
      * @param adminId
      * @return
      */
-    @GetMapping(value = "/courseList")
-    public WebResult courseList(HttpServletRequest request) {
+    @PostMapping(value = "/courseList")
+    public WebResult courseList(HttpServletRequest request, @RequestBody PageVo pageVo) {
         Integer adminId = (Integer) request.getAttribute("adminId");
-        return  teacherService.courseList(adminId);
+        return  teacherService.courseList(adminId, pageVo);
     }
 
     /**

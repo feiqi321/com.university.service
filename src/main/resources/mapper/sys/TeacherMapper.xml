@@ -39,6 +39,9 @@
         <include refid="Base_Column_List"/>
         from edu_course
         where course_teacher = #{adminId}
+        <if test="search != null and search != ''">
+            AND course_name like CONCAT('%',#{search},'%')
+        </if>
     </select>
 
     <insert id="insertCourse" parameterType="com.ovft.configure.sys.bean.EduCourse">

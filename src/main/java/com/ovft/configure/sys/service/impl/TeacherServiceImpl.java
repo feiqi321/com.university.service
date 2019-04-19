@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
@@ -8,6 +10,7 @@ import com.ovft.configure.sys.dao.TeacherMapper;
 import com.ovft.configure.sys.dao.VacateMapper;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,13 +152,15 @@ public class TeacherServiceImpl implements TeacherService {
      * @return
      */
     @Override
-    public WebResult courseList(Integer adminId) {
+    public WebResult courseList(Integer adminId, PageVo pageVo) {
         if(adminId == null) {
             return new WebResult("400", "请登录","");
         }
-        List<EduCourse> courseList = teacherMapper.selectByTeacherId(adminId);
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "start_date");
+        List<EduCourse> courseList = teacherMapper.selectByTeacherId(adminId, pageVo.getSearch());
+        PageInfo pageInfo = new PageInfo<>(courseList);
 
-        return new WebResult("200","请求成功", courseList);
+        return new WebResult("200","请求成功", pageInfo);
     }
 
 

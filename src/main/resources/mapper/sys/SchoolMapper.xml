@@ -4,15 +4,24 @@
 <mapper namespace="com.ovft.configure.sys.dao.SchoolMapper">
 
     <select id="selectById" resultType="com.ovft.configure.sys.bean.School">
-         select school_id as schoolId, school_name as schoolName, admin_id as adminId, longitude, latitude
+         select school_id as schoolId, school_name as schoolName, admin_id as adminId, longitude, latitude, image
          from edu_school
          where school_id = #{schoolId}
     </select>
 
+    <select id="selectSchoolByAdminId" resultType="com.ovft.configure.sys.bean.School">
+         select school_id as schoolId, school_name as schoolName, admin_id as adminId, longitude, latitude, image
+         from edu_school
+         where admin_id = #{adminId}
+        <if test="search != null and search != ''">
+            AND school_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
+
     <insert id="createSchool" parameterType="com.ovft.configure.sys.bean.School" useGeneratedKeys="true"
             keyProperty="schoolId">
-         insert into edu_school(school_name, admin_id, longitude, latitude)
-         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude})
+         insert into edu_school(school_name, admin_id, longitude, latitude, image, school_char)
+         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude}, #{image}, #{schoolChar})
     </insert>
 
 
@@ -32,7 +41,7 @@
 	  WHERE school_id=#{schoolId}
     </select>
     <select id="selectSchoolAll" resultType="com.ovft.configure.sys.bean.School">
-       SELECT  school_id as schoolId, school_name as schoolName,school_char as schoolChar
+       SELECT  school_id as schoolId, school_name as schoolName,school_char as schoolChar, image
        from  edu_school;
     </select>
       <update id="switchSchoolID" parameterType="int">

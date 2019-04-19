@@ -1,6 +1,9 @@
 package com.ovft.configure.interceptor;
 
+import com.ovft.configure.config.MessageCenterException;
+import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.utils.RedisUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,11 +23,12 @@ public class PassportInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String token = httpServletRequest.getHeader("token");
+        String schoolId = httpServletRequest.getHeader("schoolId");
         //验证token
-//        if(StringUtils.isBlank(token)) {
+        if(StringUtils.isBlank(token)) {
             logger.error("[获取token失败] + " + token);
-//            return false;
-//        }
+            throw new MessageCenterException(new WebResult("400", "请先登录", ""), null);
+        }
         //todo 如果token不存在
 //        if(!redisUtil.hasKey(token)) {
 //            throw new AuthException("请先登录");
@@ -39,6 +43,7 @@ public class PassportInterceptor implements HandlerInterceptor {
             httpServletRequest.setAttribute("adminId", 8);
         } else {
             httpServletRequest.setAttribute("userId", id);
+            httpServletRequest.setAttribute("schoolId", schoolId);
         }
         return true;
     }

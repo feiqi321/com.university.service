@@ -34,3 +34,10 @@ redis:
       max-wait: 10000
       max-idle: 100
       test-on-borrow: true
+
+ftp:
+  address: 47.104.152.24
+  prot: 21
+  username: ftpadmin
+  password: ftpadmin
+  imgpath: /home/ftpadmin/dev/images
