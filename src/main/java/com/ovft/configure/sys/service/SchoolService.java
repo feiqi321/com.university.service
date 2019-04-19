@@ -2,6 +2,7 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
+import com.ovft.configure.sys.vo.PageVo;
 
 public interface SchoolService {
     public WebResult createSchool(School school);
@@ -17,4 +18,6 @@ public interface SchoolService {
     public WebResult switchSchool();
      //更换学校ID
     public WebResult switchSchoolID(Integer SchoolId,Integer userId);
+
+    public WebResult schoolList(Integer adminId, PageVo pageVo);
 }

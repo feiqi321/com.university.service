@@ -152,6 +152,13 @@ public class AdminServiceImpl implements AdminService {
         if(adminPhone != null) {
             return new WebResult("400", "手机号已存在");
         }
+        //添加教师时学校id不能为空
+        if(role == 2) {
+            if(admin.getSchoolId() != null) {
+                return new WebResult("400", "请选择学校");
+            }
+        }
+
         //管理员初始密码为000000
         String password = "000000";
         admin.setPassword(MD5Utils.md5Password(password));

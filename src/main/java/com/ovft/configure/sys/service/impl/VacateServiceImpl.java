@@ -75,7 +75,7 @@ public class VacateServiceImpl implements VacateService {
         //获取用户信息
         User user = userMapper.selectById(userId);
 
-        //todo   获取课程列表
+        //获取课程列表
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         System.out.println(today);
         List<Map<String, Object>> courseList = vacateMapper.selectUserCourse(userId, today);

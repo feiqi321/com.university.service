@@ -3,6 +3,7 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.service.SchoolService;
+import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,6 +59,18 @@ public class SchoolController {
     @GetMapping(value = "/school/switchSchoolID")
     public WebResult switchSchoolID(@RequestParam(value = "SchoolId")Integer SchoolId,@RequestParam(value = "userId")Integer userId) {
         return schoolService.switchSchoolID(SchoolId,userId);
+    }
+
+    /**
+     * 学校列表
+     * @param request
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/server/school/schoolList")
+    public WebResult schoolList(HttpServletRequest request, @RequestBody PageVo pageVo)  {
+        Integer adminId = (Integer) request.getAttribute("adminId");
+        return schoolService.schoolList(adminId, pageVo);
     }
 
 

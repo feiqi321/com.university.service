@@ -17,5 +17,5 @@ public interface TeacherMapper {
 
     public void insertCourse(EduCourse course);
 
-    public List<EduCourse> selectByTeacherId(@Param("adminId") Integer adminId);
+    public List<EduCourse> selectByTeacherId(@Param("adminId") Integer adminId, @Param("search") String search);
 }

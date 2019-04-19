@@ -1,9 +1,13 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.service.SchoolService;
+import com.ovft.configure.sys.utils.PinyinUtil;
+import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +43,9 @@ public class SchoolServiceImpl implements SchoolService {
         if(StringUtils.isBlank(school.getLongitude()) || StringUtils.isBlank(school.getLatitude())) {
             return new WebResult("400", "学校位置不能为空");
         }
+        String pinYinHeadChar = PinyinUtil.getPinYinHeadChar(school.getSchoolName());
+        school.setSchoolChar(pinYinHeadChar.substring(0,1).toUpperCase());
         schoolmapper.createSchool(school);
-        System.out.println("school.getSchoolId() = " + school.getSchoolId());
         return new WebResult("200", "添加成功", school);
     }
 
@@ -117,6 +122,23 @@ public class SchoolServiceImpl implements SchoolService {
     public WebResult switchSchoolID(Integer SchoolId,Integer userId){
 
         return null;
+    }
+
+    /**
+     * 学校列表
+     * @param adminId
+     * @param pageVo
+     * @return
+     */
+    @Override
+    public WebResult schoolList(Integer adminId, PageVo pageVo) {
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "school_id");
+        //todo  测试
+        adminId = 1;
+
+        List<School> schoolList = schoolmapper.selectSchoolByAdminId(adminId, pageVo.getSearch());
+        PageInfo pageInfo = new PageInfo<>(schoolList);
+        return new WebResult("200", "获取学校列表成功", pageInfo);
     }
 
 }
