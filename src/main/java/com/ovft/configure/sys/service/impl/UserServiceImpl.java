@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
@@ -179,6 +180,21 @@ public class UserServiceImpl  implements UserService {
         return result;
     }
 
+    @Override
+    public WebResult updatePasswordByOldPass(String oldPass, String newPass, String nextPass) {
+            User findUserByOldPass=userMapper.selectByOldPass(oldPass);
+        if(findUserByOldPass==null){
+            return new WebResult("400","原密码错误");
+        }
+        if (!newPass.equals(nextPass)) {
+            return new WebResult("400", "输入的两次密码不一致");
+        }
+
+
+        userMapper.updateByOldPass(newPass,newPass);
+               return new  WebResult("200","修改成功");
+    }
+
     /**
      * 保存基本信息
      *
@@ -200,7 +216,7 @@ public class UserServiceImpl  implements UserService {
         }
         String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
         if (user.getEmergencyPhone1().length() != 11) {
-            return new WebResult("400", "手机号应为11位");
+            return new WebResult("400", "紧急联系人手机号应为11位");
         } else {
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(user.getEmergencyPhone1());
@@ -213,7 +229,7 @@ public class UserServiceImpl  implements UserService {
         //紧急联系人二手机号验证
         if (user.getEmergencyPhone2()!=null){
         if (user.getEmergencyPhone2().length() != 11) {
-            return new WebResult("400", "手机号应为11位");
+            return new WebResult("400", "紧急联系人手机号应为11位");
         } else {
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(user.getEmergencyPhone2());
@@ -231,7 +247,7 @@ public class UserServiceImpl  implements UserService {
             }
             //保存
             userMapper.savaInfo(user);
-            return new WebResult("200", "保存成功");
+            return new WebResult("200", "保存成功",user);
         }
     /**
      * 更换手机号
@@ -262,6 +278,12 @@ public class UserServiceImpl  implements UserService {
         }
               userMapper.updatePhone(oldPhone,newPhone);
                return new WebResult("200","更换成功");
+    }
+
+    @Override
+    public WebResult userQuit(String token) {
+        redisUtil.setRemove(token);
+        return new WebResult("200","退出成功","");
     }
 
 

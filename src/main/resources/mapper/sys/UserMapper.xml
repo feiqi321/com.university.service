@@ -38,5 +38,11 @@
     <update id="updatePhone" parameterType="java.lang.String">
               update  edu_user set phone=#{newPhone} where  phone=#{phone}
     </update>
+    <update id="selectByOldPass" parameterType="java.lang.String">
+             select * from  edu_user where phone=#{oldPass};
+    </update>
+    <update id="updateByOldPass">
+          update edu_user set password = #{newPass} where phone=#{oldPass}
+    </update>
 
 </mapper>

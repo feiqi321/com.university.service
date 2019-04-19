@@ -26,7 +26,10 @@ public interface UserMapper {
         public void savaInfo(@Param("user") User user);
         //更换手机
         public void updatePhone(@Param("phone") String phone,@Param("newPhone") String newPhone);
-
         //根据id查找用户
         public User selectById(@Param("userId") Integer userId);
+        //根据原密码查找用户
+        public User selectByOldPass(@Param("oldPass") String oldPass);
+        //修改密码
+        public void updateByOldPass(@Param("newPass") String newPass,@Param("oldPass") String oldPass);
 }

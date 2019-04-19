@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -76,6 +77,26 @@ public class UserController {
     @RequestParam(value = "securityCode")String securityCode
     ){
          return userService.updatePhone(oldPhone,newPhone,securityCode);
+    }
+    /**
+     * 退出登录
+     * @param  request
+     * @return
+     */
+    @PostMapping(value = "/updatePhone")
+    public WebResult userQuit(HttpServletRequest request){
+             String token=(String) request.getAttribute("token");
+         return userService.userQuit(token);
+    }
+    /**
+     * 修改密码
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/updatePasswordByOldpass")
+    public WebResult updatePasswordByOldpass( @RequestParam(value = "newPassword")String oldPassword,
+                                     @RequestParam(value = "newpass")String newPass,@RequestParam(value = "nextpass")String nextpass ){
+        return userService.updatePasswordByOldPass(oldPassword,newPass,nextpass);
     }
 
 }

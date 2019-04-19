@@ -1,7 +1,6 @@
 package com.ovft.configure.sys.bean;
 
 /**
- *
  * @ClassName User
  * @Author zqx
  * @Date 2019/4/9 10:13
@@ -18,21 +17,27 @@ public class User {
     private String password;
     private Integer schoolId;
     private String phone;
+    /**
+     * 居住地
+     */
+    private String area;
 
     /**
      * 地址
      */
     private String address;
 
+
     /**
      * 政治面貌
      */
-    private Integer political;
+
+    private String political;
 
     /**
      * 文化程度
      */
-    private Integer educational;
+    private String educational;
 
     /**
      * 工作单位
@@ -42,7 +47,7 @@ public class User {
     /**
      * 退休状态
      */
-    private Integer retired;
+    private String retired;
 
     /**
      * 职务
@@ -77,14 +82,26 @@ public class User {
      * 学员审批
      */
     private Integer checkIn;
-     //身份证
+    //身份证
     private String identity_card;
-       //短信验证码
+    //短信验证码
     private String securityCode;
 
-    public void setSecurityCode(String securityCode) { this.securityCode = securityCode; }
+    public String getArea() {
+        return area;
+    }
 
-    public String getSecurityCode() { return securityCode; }
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public void setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+    }
+
+    public String getSecurityCode() {
+        return securityCode;
+    }
 
     public String getNextPass() {
         return nextPass;
@@ -150,19 +167,21 @@ public class User {
         this.address = address;
     }
 
-    public Integer getPolitical() {
+    public String getPolitical() {
         return political;
     }
 
-    public void setPolitical(Integer political) {
+    public void setPolitical(String political) {
+
         this.political = political;
     }
 
-    public Integer getEducational() {
+    public String getEducational() {
         return educational;
     }
 
-    public void setEducational(Integer educational) {
+    public void setEducational(String educational) {
+
         this.educational = educational;
     }
 
@@ -174,13 +193,15 @@ public class User {
         this.position = position;
     }
 
-    public Integer getRetired() {
+    public String getRetired() {
         return retired;
     }
 
-    public void setRetired(Integer retired) {
+    public void setRetired(String retired) {
+
         this.retired = retired;
     }
+
 
     public String getJob() {
         return job;
