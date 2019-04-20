@@ -32,7 +32,6 @@ public class UserController {
      */
     @PostMapping(value = "/regist")
        public WebResult regist(@RequestBody User user){
-
         user.setUserName(user.getPhone());
         return userService.addUser(user);
     }
@@ -48,7 +47,7 @@ public class UserController {
     }
     /**
      * 修改密码
-     * @param  phone,  newPassword,nextpass,identifying_code
+     * @param  phone,newPassword,nextpass,identifying_code
      * @return
      */
     @PostMapping(value = "/updatePassword")
@@ -73,7 +72,7 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/updatePhone")
-    public WebResult updatePhone(@RequestParam(value = "oldphone")String oldPhone,@RequestParam(value = "newPhone")String newPhone,
+    public WebResult updatePhone(@RequestParam(value = "oldPhone")String oldPhone,@RequestParam(value = "newPhone")String newPhone,
     @RequestParam(value = "securityCode")String securityCode
     ){
          return userService.updatePhone(oldPhone,newPhone,securityCode);
@@ -83,20 +82,20 @@ public class UserController {
      * @param  request
      * @return
      */
-    @PostMapping(value = "/updatePhone")
+    @PostMapping(value = "/userQuit")
     public WebResult userQuit(HttpServletRequest request){
              String token=(String) request.getAttribute("token");
          return userService.userQuit(token);
     }
     /**
-     * 修改密码
+     * 修改密码（通过原密码）
      * @param
      * @return
      */
     @PostMapping(value = "/updatePasswordByOldpass")
-    public WebResult updatePasswordByOldpass( @RequestParam(value = "newPassword")String oldPassword,
+    public WebResult updatePasswordByOldpass( @RequestParam(value = "oldPassword")String oldPassword,
                                      @RequestParam(value = "newpass")String newPass,@RequestParam(value = "nextpass")String nextpass ){
-        return userService.updatePasswordByOldPass(oldPassword,newPass,nextpass);
+                return userService.updatePasswordByOldPass(oldPassword,newPass,nextpass);
     }
 
 }
