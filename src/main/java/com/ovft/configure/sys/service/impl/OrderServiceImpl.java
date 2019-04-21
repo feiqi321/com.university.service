@@ -1,7 +1,5 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.ovft.configure.sys.bean.Order;
-import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.EduCourseMapper;
 import com.ovft.configure.sys.dao.OrderMapper;
 import com.ovft.configure.sys.service.OrderService;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author vvtxw
@@ -22,46 +21,51 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private OrderMapper orderMapper;
 
+    @Override
+    public int countPayCourseNum(Map<String, Object> map) {
+        return orderMapper.countPayCourseNum(map);
+    }
 
-    /**
-     * 根据用户id查询已付款的订单
-     * @param userId
-     * @return
+    @Override
+    public int countPayCourseEmployerNum(Map<String, Object> map) {
+        return 0;
+    }
+
+
+
+    /*
      */
+/**
+ * 根据用户id查询已付款的订单
+ * @param userId
+ * @return
+ *//*
+
     @Override
     public List<OrderVo> queryAllOrder(int userId) {
         return orderMapper.queryAllOrder(userId);
     }
+*/
 
-    /**
+    /*    *//**
      * 根据用户id查询开课的具体时间点
      * @param userId
      * @return
-     */
+     *//*
     public List<OrderVo> queryStartDateTimeByCouserId(int userId) {
         return orderMapper.queryAllOrder(userId);
     }
 
 
-    /**
+    *//**
      * 查询courseId
      * @param userId
      * @param status
      * @return
-     */
+     *//*
     @Override
     public int queryForCourseId(int userId, int status) {
         return orderMapper.queryCourseNumById(userId,status);
-    }
+    }*/
 
-    /**
-     * 查询courseNum的个数
-     * @param userId
-     * @param status
-     * @return
-     */
-    @Override
-    public int queryCourseNumById(int userId, int status) {
-        return orderMapper.queryCourseNumById(userId,status);
-    }
 }

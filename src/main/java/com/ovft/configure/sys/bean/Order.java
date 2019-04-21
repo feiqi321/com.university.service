@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 订单实体
- * @author vvtxw
+ * @author 
  */
 public class Order implements Serializable {
     /**
@@ -29,29 +28,49 @@ public class Order implements Serializable {
     private Integer orderStatus;
 
     /**
-     * 支付状态0：未支付 1：已支付
-     */
-    private Integer payStatus;
-
-    /**
-     * 课程id
-     */
-    private Integer courseId;
-
-    /**
      * 订单创建时间
      */
     private Date createTime;
 
     /**
-     * 订单更新时间
+     * 订单失效时间
      */
-    private Date updateTime;
+    private Date expireTime;
 
     /**
      * 付款时间
      */
     private Date paymentTime;
+
+    /**
+     * 总金额
+     */
+    private Long totalAmount;
+
+    /**
+     * 付款方式
+     */
+    private String paymentWay;
+
+    /**
+     * 订单交易编号
+     */
+    private String outTradeNo;
+
+    /**
+     * 订单描述
+     */
+    private String tradeBody;
+
+    /**
+     * 图片路径
+     */
+    private String imgUrl;
+
+    /**
+     * 收货人
+     */
+    private String consignee;
 
     private static final long serialVersionUID = 1L;
 
@@ -87,22 +106,6 @@ public class Order implements Serializable {
         this.orderStatus = orderStatus;
     }
 
-    public Integer getPayStatus() {
-        return payStatus;
-    }
-
-    public void setPayStatus(Integer payStatus) {
-        this.payStatus = payStatus;
-    }
-
-    public Integer getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -111,12 +114,12 @@ public class Order implements Serializable {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public Date getExpireTime() {
+        return expireTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setExpireTime(Date expireTime) {
+        this.expireTime = expireTime;
     }
 
     public Date getPaymentTime() {
@@ -125,6 +128,54 @@ public class Order implements Serializable {
 
     public void setPaymentTime(Date paymentTime) {
         this.paymentTime = paymentTime;
+    }
+
+    public Long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getPaymentWay() {
+        return paymentWay;
+    }
+
+    public void setPaymentWay(String paymentWay) {
+        this.paymentWay = paymentWay;
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    public String getTradeBody() {
+        return tradeBody;
+    }
+
+    public void setTradeBody(String tradeBody) {
+        this.tradeBody = tradeBody;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
     }
 
     @Override
@@ -143,11 +194,15 @@ public class Order implements Serializable {
             && (this.getOrderSn() == null ? other.getOrderSn() == null : this.getOrderSn().equals(other.getOrderSn()))
             && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
             && (this.getOrderStatus() == null ? other.getOrderStatus() == null : this.getOrderStatus().equals(other.getOrderStatus()))
-            && (this.getPayStatus() == null ? other.getPayStatus() == null : this.getPayStatus().equals(other.getPayStatus()))
-            && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getPaymentTime() == null ? other.getPaymentTime() == null : this.getPaymentTime().equals(other.getPaymentTime()));
+            && (this.getExpireTime() == null ? other.getExpireTime() == null : this.getExpireTime().equals(other.getExpireTime()))
+            && (this.getPaymentTime() == null ? other.getPaymentTime() == null : this.getPaymentTime().equals(other.getPaymentTime()))
+            && (this.getTotalAmount() == null ? other.getTotalAmount() == null : this.getTotalAmount().equals(other.getTotalAmount()))
+            && (this.getPaymentWay() == null ? other.getPaymentWay() == null : this.getPaymentWay().equals(other.getPaymentWay()))
+            && (this.getOutTradeNo() == null ? other.getOutTradeNo() == null : this.getOutTradeNo().equals(other.getOutTradeNo()))
+            && (this.getTradeBody() == null ? other.getTradeBody() == null : this.getTradeBody().equals(other.getTradeBody()))
+            && (this.getImgUrl() == null ? other.getImgUrl() == null : this.getImgUrl().equals(other.getImgUrl()))
+            && (this.getConsignee() == null ? other.getConsignee() == null : this.getConsignee().equals(other.getConsignee()));
     }
 
     @Override
@@ -158,11 +213,15 @@ public class Order implements Serializable {
         result = prime * result + ((getOrderSn() == null) ? 0 : getOrderSn().hashCode());
         result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
         result = prime * result + ((getOrderStatus() == null) ? 0 : getOrderStatus().hashCode());
-        result = prime * result + ((getPayStatus() == null) ? 0 : getPayStatus().hashCode());
-        result = prime * result + ((getCourseId() == null) ? 0 : getCourseId().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
-        result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
+        result = prime * result + ((getExpireTime() == null) ? 0 : getExpireTime().hashCode());
         result = prime * result + ((getPaymentTime() == null) ? 0 : getPaymentTime().hashCode());
+        result = prime * result + ((getTotalAmount() == null) ? 0 : getTotalAmount().hashCode());
+        result = prime * result + ((getPaymentWay() == null) ? 0 : getPaymentWay().hashCode());
+        result = prime * result + ((getOutTradeNo() == null) ? 0 : getOutTradeNo().hashCode());
+        result = prime * result + ((getTradeBody() == null) ? 0 : getTradeBody().hashCode());
+        result = prime * result + ((getImgUrl() == null) ? 0 : getImgUrl().hashCode());
+        result = prime * result + ((getConsignee() == null) ? 0 : getConsignee().hashCode());
         return result;
     }
 
@@ -176,11 +235,15 @@ public class Order implements Serializable {
         sb.append(", orderSn=").append(orderSn);
         sb.append(", userId=").append(userId);
         sb.append(", orderStatus=").append(orderStatus);
-        sb.append(", payStatus=").append(payStatus);
-        sb.append(", courseId=").append(courseId);
         sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
+        sb.append(", expireTime=").append(expireTime);
         sb.append(", paymentTime=").append(paymentTime);
+        sb.append(", totalAmount=").append(totalAmount);
+        sb.append(", paymentWay=").append(paymentWay);
+        sb.append(", outTradeNo=").append(outTradeNo);
+        sb.append(", tradeBody=").append(tradeBody);
+        sb.append(", imgUrl=").append(imgUrl);
+        sb.append(", consignee=").append(consignee);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

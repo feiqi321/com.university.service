@@ -53,7 +53,8 @@ public class EduCheckController {
         //初始 默认查询订单状态为已付款的课程
         int orderStatus = 1;
         //2.如果订单商品存在，就进行打卡
-        List<OrderVo> orderVos = orderService.queryAllOrder(userId);
+//        List<OrderVo> orderVos = orderService.queryAllOrder(userId);
+        List<OrderVo> orderVos = null;
         if (orderVos.size() > 0) {
             //3.打卡时间判断，则可以进行打卡
             WebResult orNoCheck = isOrNoCheck(orderVos, x, y);

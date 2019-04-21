@@ -1,12 +1,9 @@
 package com.ovft.configure.sys.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.Order;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author vvtxw
@@ -17,6 +14,43 @@ public class OrderVo extends Order {
     private Integer schoolId;
     private String schoolName;
     private String courseName;
+
+    private Integer courseId;
+    private Integer paymentStatus;
+    private String employer;
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public Integer getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(Integer paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(String employer) {
+        this.employer = employer;
+    }
+
     /**
      * 课程老师
      */

@@ -4,13 +4,10 @@ import com.ovft.configure.sys.bean.Order;
 import com.ovft.configure.sys.bean.OrderExample;
 
 import java.util.List;
+import java.util.Map;
 
-
-import com.ovft.configure.sys.vo.OrderVo;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface OrderMapper {
     long countByExample(OrderExample example);
 
@@ -20,12 +17,7 @@ public interface OrderMapper {
 
     int insert(Order record);
 
-    /**
-     * 生成订单
-     *
-     * @param order
-     */
-    int insertSelective(Order order);
+    int insertSelective(Order record);
 
     List<Order> selectByExample(OrderExample example);
 
@@ -39,25 +31,23 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order record);
 
-    /**
-     *查询订单的已付款的个数
-     * @param userId
-     * @param status
-     * @return
-     */
-    public int queryCourseNumById(int userId, int status);
 
     /**
-     * 根据用户id查询已付款的订单
-     * @param userId
+     * 按支付状态统计总人数
+     *
+     * @param map
      * @return
      */
-    List<OrderVo> queryAllOrder(int userId);
+    public int countPayCourseNum(Map<String, Object> map);
+
+
     /**
-     * 根据用户id查询開課的時間
-     * @param userId
+     * 按学员的类别支付状态统计总人数
+     *
+     * @param map
      * @return
      */
-    List<OrderVo> queryStartDateTimeByCouserId(int userId);
+    public int countPayCourseEmployerNum(Map<String, Object> map);
+
 
 }

@@ -31,5 +31,10 @@ public interface EduCourseMapper {
      */
     public EduCourseVo queryCourseByCourseId(int courseId);
 
-
+    /**
+     * 查询学校报名的总人数
+     * @param courseId
+     * @return
+     */
+    int queryAcceptNum(Integer courseId);
 }
