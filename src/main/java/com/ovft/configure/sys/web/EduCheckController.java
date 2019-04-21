@@ -70,7 +70,7 @@ public class EduCheckController {
      *
      * @return
      */
-    @PostMapping(value ="record")
+    @PostMapping(value = "record")
     public WebResult queryAllPunchRecord(HttpServletRequest request) {
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId == null) {
