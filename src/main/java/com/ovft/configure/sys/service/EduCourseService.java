@@ -2,6 +2,7 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.OrderVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -28,5 +29,6 @@ public interface EduCourseService {
      * @return
      */
     public Map<String, EduCourseVo> queryCourseByCourseId(Integer user_id, Integer courseId);
+
 
 }

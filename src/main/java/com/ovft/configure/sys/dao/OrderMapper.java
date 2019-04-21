@@ -6,7 +6,10 @@ import com.ovft.configure.sys.bean.OrderExample;
 import java.util.List;
 import java.util.Map;
 
+import com.ovft.configure.sys.vo.OrderVo;
 import org.apache.ibatis.annotations.Param;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface OrderMapper {
     long countByExample(OrderExample example);
@@ -48,6 +51,14 @@ public interface OrderMapper {
      * @return
      */
     public int countPayCourseEmployerNum(Map<String, Object> map);
+
+    /**
+     * 查询所有的购买记录
+     *
+     * @param userId
+     * @return
+     */
+    public List<OrderVo> queryAllRecord(Integer userId);
 
 
 }

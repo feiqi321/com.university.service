@@ -2,6 +2,7 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.sys.vo.OrderVo;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,15 @@ public interface OrderService {
      * @return
      */
     public int countPayCourseEmployerNum(Map<String, Object> map);
+
+    /**
+     * 查询所有的购买记录
+     *
+     * @param userId
+     * @return
+     */
+    public List<OrderVo> queryAllRecord(Integer userId);
+
 
 
 

@@ -382,5 +382,49 @@
   WHERE course_id=#{course_id} and payment_status=#{payment_status}
   </select>
 
+    <!--3.查找报名记录信息-->
+    <select id="queryAllRecord" resultType="com.ovft.configure.sys.vo.OrderVo">
+      select
+			  c.*,
+	          e.check_start_time
+			 from (
+			 select
+                c.course_name,
+                c.place_class,
+                c.start_date,
+                e3.start_time,
+                e3.end_time,
+            (SELECT
+	            d.dict_name WEEK
+                from edu_class_schedule s
+                LEFT JOIN edu_dict d on d.dict_value=s.week WHERE week=e3.week) week,
+                e1.school_name,
+                e2.name,
+                e1.school_id
+	    from edu_course  c
+             left join edu_school e1 on c.school_id=e1.school_id
+             left join edu_admin e2 on c.course_teacher=e2.admin_id
+             inner JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+    where course_id
+	  in(
+			SELECT
+             t.course_id
+	        from
+  (
+	select
+        o.user_id,
+        i.course_id,
+        f.payment_status
+  from edu_order o
+        LEFT JOIN edu_order_item i on i.order_id=o.id
+        LEFT JOIN edu_payment_info f on f.order_id = o.id
+  ) t
+       WHERE payment_status=#{payment_status} and user_id=#{user_id}
+) ) c
+	  left JOIN edu_check e on  e.school_id =c.school_id
+			 where
+			 user_id =#{user_id}
+  </select>
+
 
 </mapper>

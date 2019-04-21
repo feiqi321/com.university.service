@@ -10,7 +10,6 @@ import java.util.Date;
  * @create 2019-04-14 16:59
  */
 public class OrderVo extends Order {
-    private static final String pay = "已缴费，报名成功";
     private Integer schoolId;
     private String schoolName;
     private String courseName;
@@ -18,6 +17,20 @@ public class OrderVo extends Order {
     private Integer courseId;
     private Integer paymentStatus;
     private String employer;
+    private String name;
+
+    /**
+     * 课时id
+     */
+    private String week;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getSchoolName() {
         return schoolName;
@@ -69,7 +82,6 @@ public class OrderVo extends Order {
 
     private String startTime;
 
-    private String week;
 
     /**
      * 结课日期
@@ -85,11 +97,6 @@ public class OrderVo extends Order {
 
     public void setSchoolId(Integer schoolId) {
         this.schoolId = schoolId;
-    }
-
-
-    public static String getPay() {
-        return pay;
     }
 
     public String getShoolName() {

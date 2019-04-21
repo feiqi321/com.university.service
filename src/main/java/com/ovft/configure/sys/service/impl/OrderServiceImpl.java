@@ -31,6 +31,11 @@ public class OrderServiceImpl implements OrderService {
         return 0;
     }
 
+    @Override
+    public List<OrderVo> queryAllRecord(Integer userId) {
+        return orderMapper.queryAllRecord(userId);
+    }
+
 
 
     /*
