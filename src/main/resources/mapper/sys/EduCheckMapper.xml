@@ -238,7 +238,7 @@
 
     <!--查询打卡记录的相关信息-->
     <select id="queryAllPunchRecord" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCheckVo">
-	    	select
+	    select
 				c.*,
 	          e.check_start_time,
 			  e.is_check
@@ -248,16 +248,30 @@
               c.start_date,
               e3.start_time,
               e3.end_time,
-			e1.school_name,
-			e1.school_id
+			  e1.school_name,
+			  e1.school_id
 	    from edu_course  c
              left join edu_school e1 on c.school_id=e1.school_id
              left join edu_admin e2 on c.course_teacher=e2.admin_id
              inner JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
     where course_id
-	  in(select DISTINCT course_id from edu_order where user_id=1 and pay_status=1))  c
+	   in(
+			SELECT
+               t.course_id
+	from
+  (
+            select
+                    o.user_id,
+                    i.course_id,
+                    f.payment_status
+          from edu_order o
+                LEFT JOIN edu_order_item i on i.order_id=o.id
+                LEFT JOIN edu_payment_info f on f.order_id = o.id
+  ) t
+  WHERE  payment_status=1 and user_id=#{user_id}
+))  c
 	  left JOIN edu_check e on  e.school_id =c.school_id
 			 where
-			 user_id =1
+			 user_id =#{user_id}
   </select>
 </mapper>

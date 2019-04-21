@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.web;
 
+import com.ovft.configure.constant.OrderStatus;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduCheck;
@@ -18,12 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * @author vvtxw
@@ -47,17 +46,19 @@ public class EduCheckController {
      *
      * @param
      */
-    @PutMapping(value = "{userId}")
-    public WebResult doSign(@PathVariable Integer userId, Double x, Double y) {
+    @PostMapping(value = "dosign")
+    public WebResult doSign(HttpServletRequest request, Double x, Double y) {
+        Integer userId = (Integer) request.getAttribute("userId");
+        if (userId == null) {
+            return new WebResult(StatusCode.ERROR, "userId不能为空", "");
+        }
+//        userId = 1;
         //1.查询已付款的订单课程是否存在
-        //初始 默认查询订单状态为已付款的课程
-        int orderStatus = 1;
         //2.如果订单商品存在，就进行打卡
-//        List<OrderVo> orderVos = orderService.queryAllOrder(userId);
-        List<OrderVo> orderVos = null;
+        List<OrderVo> orderVos = orderService.queryAllRecord(userId);
         if (orderVos.size() > 0) {
             //3.打卡时间判断，则可以进行打卡
-            WebResult orNoCheck = isOrNoCheck(orderVos, x, y);
+            WebResult orNoCheck = isOrNoCheck(orderVos, userId, x, y);
             return orNoCheck;
         } else {
             return new WebResult(StatusCode.OK, "你还未购买课程，无法课时打卡");
@@ -67,17 +68,44 @@ public class EduCheckController {
     /**
      * 打卡记录
      *
-     * @param userId
      * @return
      */
-    @GetMapping(value = "record/{userId}")
-    public WebResult queryAllPunchRecord(@PathVariable Integer userId) {
+    @PostMapping(value ="record")
+    public WebResult queryAllPunchRecord(HttpServletRequest request) {
+        Integer userId = (Integer) request.getAttribute("userId");
+        if (userId == null) {
+            return new WebResult(StatusCode.ERROR, "userId不能为空", "");
+        }
         List<EduCheckVo> eduCheckVos = eduCheckService.queryAllPunchRecord(userId);
-        return new WebResult(StatusCode.OK, "查询成功", eduCheckVos);
+        List Check = new ArrayList();
+        for (EduCheckVo eduCheckVoInfo : eduCheckVos) {
+            if (eduCheckVoInfo.getIsCheck() == 0) {
+                Map<String, Object> noCheck = new HashMap<>();
+                noCheck.put("courseName", eduCheckVoInfo.getCourseName());
+                noCheck.put("placeClass", eduCheckVoInfo.getPlaceClass());
+                noCheck.put("startDate", eduCheckVoInfo.getStartDate());
+                noCheck.put("startTime", eduCheckVoInfo.getStartTime());
+                noCheck.put("endTime", eduCheckVoInfo.getEndTime());
+                noCheck.put("isCheck", "未签到");
+                Check.add(noCheck);
+            } else {
+                Map<String, Object> isCheck = new HashMap<>();
+                isCheck.put("courseName", eduCheckVoInfo.getCourseName());
+                isCheck.put("placeClass", eduCheckVoInfo.getPlaceClass());
+                isCheck.put("startDate", eduCheckVoInfo.getStartDate());
+                isCheck.put("startTime", eduCheckVoInfo.getStartTime());
+                isCheck.put("endTime", eduCheckVoInfo.getEndTime());
+                isCheck.put("startTime", eduCheckVoInfo.getCheckStartTime());
+                isCheck.put("schoolName", eduCheckVoInfo.getSchoolName());
+                isCheck.put("isCheck", "正常");
+                Check.add(isCheck);
+            }
+        }
+        return new WebResult(StatusCode.OK, "查询成功", Check);
     }
 
 
-    public WebResult isOrNoCheck(List<OrderVo> orderVos, Double x, Double y) {
+    public WebResult isOrNoCheck(List<OrderVo> orderVos, Integer userId, Double x, Double y) {
         //查询订单详细数据
         for (OrderVo orderVo : orderVos) {
             Date nowTime = new Date();
@@ -124,49 +152,52 @@ public class EduCheckController {
                     int x1 = Integer.parseInt(xrecord);
                     int y1 = Integer.parseInt(yrecord);
                     if ((x1 > recordx - 2 && x1 < recordx + 2) || (y1 > recordy - 2 && y1 < recordy + 2)) {
-                        EduCheck eduCheck = CheckInsert(orderVo);
+                        EduCheck eduCheck = CheckInsert(orderVo, userId);
                         eduCheckService.doSign(eduCheck);
-                        return new WebResult(StatusCode.OK, "打卡成功");
+                        return new WebResult(StatusCode.OK, "打卡成功", null);
                     } else {
-                        EduCheck eduCheck = noCheckInsert(orderVo);
+                        EduCheck eduCheck = noCheckInsert(orderVo, userId);
                         eduCheckService.doSign(eduCheck);
-                        return new WebResult(StatusCode.OK, "您还不在指定的打卡区域，请到指定区域打卡");
+                        return new WebResult(StatusCode.OK, "您还不在指定的打卡区域，请到指定区域打卡", null);
                     }
                 } else {
                     //在交易成功生成需要打卡的记录
                    /* EduCheck eduCheck = noCheckInsert(orderVo);
                     eduCheckService.doSign(eduCheck);*/
-                    return new WebResult(StatusCode.OK, "请在当天半小时之内打卡");
+                    return new WebResult(StatusCode.OK, "请在当天半小时之内打卡", null);
                 }
             } catch (ParseException e) {
-                return new WebResult(StatusCode.OK, "后台输入的开始时间格式有误");
+                return new WebResult(StatusCode.OK, "后台输入的开始时间格式有误", null);
             }
         }
-        return new WebResult(StatusCode.ERROR, "操作错误");
+        return new WebResult(StatusCode.ERROR, "操作错误", null);
     }
 
-    public EduCheck noCheckInsert(OrderVo orderVo) {
+    public EduCheck noCheckInsert(OrderVo orderVo, Integer userId) {
         EduCheck eduCheck = new EduCheck();
-        eduCheck.setUserId(orderVo.getUserId());
+        orderVo.setUserId(userId);
+        eduCheck.setUserId(userId);
         eduCheck.setCheckStartTime(new Date());
         eduCheck.setCheckEndTime(new Date());
         eduCheck.setUserId(orderVo.getUserId());
         eduCheck.setSchoolId(String.valueOf(orderVo.getSchoolId()));
-        eduCheck.setIsCheck(0);
+        eduCheck.setIsCheck(OrderStatus.NOCHECK);
         eduCheckService.doSign(eduCheck);
         return eduCheck;
     }
 
-    public EduCheck CheckInsert(OrderVo orderVo) {
+    public EduCheck CheckInsert(OrderVo orderVo, Integer userId) {
         EduCheck eduCheck = new EduCheck();
-        eduCheck.setUserId(orderVo.getUserId());
+        orderVo.setUserId(userId);
+        eduCheck.setUserId(userId);
         eduCheck.setCheckStartTime(new Date());
         eduCheck.setCheckEndTime(new Date());
         eduCheck.setUserId(orderVo.getUserId());
         eduCheck.setSchoolId(String.valueOf(orderVo.getSchoolId()));
-        eduCheck.setIsCheck(1);
+        eduCheck.setIsCheck(OrderStatus.ISCHECK);
         eduCheckService.doSign(eduCheck);
         return eduCheck;
+
     }
 
 }
