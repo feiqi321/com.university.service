@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.TeacherMapper" >
 
+    <!--根据教师id获取请假列表-->
     <select id="seleceVacateByTeacherId"  resultType="java.util.HashMap">
          select co.course_name as courseName,
             va.vacate_id as vacateId,
@@ -18,11 +19,10 @@
          order by va.is_check DESC
     </select>
 
-    <!--根据教师id查找课程-->
     <sql id="Base_Column_List">
-    course_id, course_name, course_price, course_teacher, place_class, start_date, end_date,
-    people_number, school_id
-  </sql>
+        course_id, course_name, course_price, course_teacher, place_class, start_date, end_date,
+        people_number, school_id
+      </sql>
     <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduCourse">
         <id column="course_id" jdbcType="INTEGER" property="courseId"/>
         <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
@@ -34,27 +34,84 @@
         <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
         <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
     </resultMap>
-    <select id="selectByTeacherId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+    <select id="selectCourseListBySchoolId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from edu_course
-        where course_teacher = #{adminId}
+        where school_id = #{schoolId}
         <if test="search != null and search != ''">
             AND course_name like CONCAT('%',#{search},'%')
         </if>
     </select>
 
+    <!--添加课程-->
     <insert id="insertCourse" parameterType="com.ovft.configure.sys.bean.EduCourse">
-    insert into edu_course (course_id, course_name, course_price,
-      course_teacher, place_class, start_date,
-      end_date, people_number, school_id
-      )
-    values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
-      #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
-      #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
-      )
-  </insert>
+        insert into edu_course (course_id, course_name, course_price,
+          course_teacher, place_class, start_date,
+          end_date, people_number, school_id
+          )
+        values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
+          #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
+          #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
+          )
+    </insert>
 
+    <!--根据课程id查找课程-->
+    <select id="selectByCourseId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_course
+        where course_id = #{courseId}
+    </select>
+
+    <!--根据课程id查找课程详细信息-->
+    <select id="selectClassByCourseId" parameterType="java.lang.Integer" >
+        select class_schedule_id as classScheduleId, course_ids as courseIds, week, start_time as startTime, end_time as endTime
+        from edu_class_schedule
+        where course_ids = #{courseId}
+    </select>
+
+    <!--修改课程信息-->
+    <update id="updateCourseByCourseId" parameterType="com.ovft.configure.sys.bean.EduCourse">
+        update edu_course
+        <set>
+            <if test="courseName != null">
+                course_name = #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="coursePrice != null">
+                course_price = #{coursePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="courseTeacher != null">
+                course_teacher = #{courseTeacher,jdbcType=VARCHAR},
+            </if>
+            <if test="placeClass != null">
+                place_class = #{placeClass,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="peopleNumber != null">
+                people_number = #{peopleNumber,jdbcType=INTEGER},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </update>
+    
+    <delete id="deleteClassByCourseId">
+        delete from edu_class_schedule where course_ids = #{courseId}
+    </delete>
+
+    <delete id="deleteCourseById" parameterType="java.lang.Integer">
+    delete from edu_course
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </delete>
 
 
 </mapper>

@@ -4,6 +4,8 @@ import com.ovft.configure.sys.bean.Admin;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @ClassName AdminMapper
  * @Author zqx
@@ -17,9 +19,13 @@ public interface AdminMapper {
 
     public Admin selectByPhone(@Param("phone") String phone);
 
+    public List<Admin> selectTeacherBySchool(@Param("schoolId") Integer schoolId);
+
     public void creatAdmin(Admin admin);
 
     public void updateByPassword(@Param("adminId") Integer adminId, @Param("password") String password);
 
     public void updateByPrimary(Admin admin);
+
+    public void deleteById(@Param("adminId") Integer adminId);
 }

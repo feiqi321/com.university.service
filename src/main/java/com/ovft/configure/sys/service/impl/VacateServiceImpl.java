@@ -44,17 +44,17 @@ public class VacateServiceImpl implements VacateService {
     @Override
     public WebResult applyVacate(Vacate vacate) {
         if(StringUtils.isBlank(vacate.getVacateName())) {
-            return new WebResult("400", "请假人姓名不能为空");
+            return new WebResult("400", "请假人姓名不能为空", "");
         }
         if(StringUtils.isBlank(vacate.getContactsPhone()) || StringUtils.isBlank(vacate.getContacts())) {
-            return new WebResult("400", "联系人电话或姓名不能为空");
+            return new WebResult("400", "联系人电话或姓名不能为空", "");
         }
         if(vacate.getCourseId() == null) {
-            return new WebResult("400", "请选择课程");
+            return new WebResult("400", "请选择课程", "");
         }
         
         if(vacate.getVacateTime() == null) {
-            return new WebResult("400", "请选择请假时间");
+            return new WebResult("400", "请选择请假时间", "");
         }
         //是否同意  0-不同意，1-同意，2-未审核
         vacate.setIsCheck(2);
@@ -98,7 +98,7 @@ public class VacateServiceImpl implements VacateService {
     @Override
     public WebResult vacateList(Integer userId) {
         if(userId == null) {
-            return new WebResult("400", "请登录");
+            return new WebResult("400", "请登录", "");
         }
         List<Map<String, Object>> maps = vacateMapper.selectByUserId(userId);
 

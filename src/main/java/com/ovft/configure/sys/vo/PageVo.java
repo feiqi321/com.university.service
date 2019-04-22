@@ -11,6 +11,16 @@ public class PageVo {
 
     private String search;
 
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public int getPageSize() {
         return pageSize;
     }
