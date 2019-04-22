@@ -1,11 +1,11 @@
 package com.ovft.configure.sys.web;
 
+import com.ovft.configure.http.result.StatusCode;
+import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.service.EduArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,53 +26,10 @@ public class EduArticleController {
      * @param type
      * @return
      */
-    @PostMapping(value = "notice")
-    public List<EduArticle> queryAllNotice(String type) {
-        return eduArticleService.queryAllNotice(type);
-    }
-
-    /**
-     * 投稿专区
-     *
-     * @param type
-     * @return
-     */
-    @PostMapping(value = "submit")
-    public List<EduArticle> queryAllSubmit(String type) {
-        return eduArticleService.queryAllSubmit(type);
-    }
-
-    /**
-     * 投稿专区
-     *
-     * @param type
-     * @return
-     */
-    @PostMapping(value = "introduce")
-    public List<EduArticle> queryAllIntroduce(String type) {
-        return eduArticleService.queryAllIntroduce(type);
-    }
-
-    /**
-     * 投稿专区
-     *
-     * @param type
-     * @return
-     */
-    @PostMapping(value = "laws")
-    public List<EduArticle> queryAllLaws(String type) {
-        return eduArticleService.queryAllLaws(type);
-    }
-
-    /**
-     * 投稿专区
-     *
-     * @param type
-     * @return
-     */
-    @PostMapping(value = "news")
-    public List<EduArticle> queryAllNews(String type) {
-        return eduArticleService.queryAllNews(type);
+    @GetMapping(value = "notice")
+    public WebResult queryAllNotice(@RequestParam(value = "type", required = true) String type) {
+        List<EduArticle> eduArticles = eduArticleService.queryAllNotice(type);
+        return new WebResult(StatusCode.OK, "查询成功", eduArticles);
     }
 
 

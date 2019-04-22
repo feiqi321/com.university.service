@@ -46,9 +46,12 @@ public class EduCheckController {
      *
      * @param
      */
-    @PostMapping(value = "dosign")
-    public WebResult doSign(HttpServletRequest request, Double x, Double y) {
-        Integer userId = (Integer) request.getAttribute("userId");
+    @GetMapping(value = "dosign")
+    public WebResult doSign(HttpServletRequest request, @RequestParam(value = "x", required = true) Double x, @RequestParam(value = "y", required = true) Double y) {
+//        Integer userId = (Integer) request.getAttribute("userId");
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
+
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
         }
@@ -72,7 +75,9 @@ public class EduCheckController {
      */
     @PostMapping(value = "record")
     public WebResult queryAllPunchRecord(HttpServletRequest request) {
-        Integer userId = (Integer) request.getAttribute("userId");
+//        Integer userId = (Integer) request.getAttribute("userId");
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
         }
@@ -95,8 +100,8 @@ public class EduCheckController {
                 isCheck.put("startDate", eduCheckVoInfo.getStartDate());
                 isCheck.put("startTime", eduCheckVoInfo.getStartTime());
                 isCheck.put("endTime", eduCheckVoInfo.getEndTime());
-                isCheck.put("startTime", eduCheckVoInfo.getCheckStartTime());
                 isCheck.put("schoolName", eduCheckVoInfo.getSchoolName());
+                isCheck.put("checkStartTime", eduCheckVoInfo.getCheckStartTime());
                 isCheck.put("isCheck", "正常");
                 Check.add(isCheck);
             }
@@ -116,7 +121,7 @@ public class EduCheckController {
             String formatstartDate = date.format(startDate);//获取开班当前日期字符串
             String formatnowTime = date.format(nowTime);//获取当前日期字符串
             if (!formatstartDate.equals(formatnowTime)) {
-                return new WebResult(StatusCode.OK, "请到课时当天打卡");
+                return new WebResult(StatusCode.ERROR, "请到课时当天打卡");
             }
             String startTime = orderVo.getStartTime();//获取开班当前时间的字符串
             String newClassDateTime = formatstartDate + " " + startTime;
@@ -137,6 +142,7 @@ public class EduCheckController {
                     School school = schoolService.queryRecordBySchoolId(schoolId);
                     String longitude = school.getLongitude();//经度
                     String[] splits = longitude.split("\\.");
+
                     String longitudeX = splits[1];
                     int recordx = Integer.parseInt(longitudeX);
                     String latitude = school.getLatitude();//纬度
@@ -158,16 +164,16 @@ public class EduCheckController {
                     } else {
                         EduCheck eduCheck = noCheckInsert(orderVo, userId);
                         eduCheckService.doSign(eduCheck);
-                        return new WebResult(StatusCode.OK, "您还不在指定的打卡区域，请到指定区域打卡", null);
+                        return new WebResult(StatusCode.ERROR, "您还不在指定的打卡区域，请到指定区域打卡", null);
                     }
                 } else {
                     //在交易成功生成需要打卡的记录
                    /* EduCheck eduCheck = noCheckInsert(orderVo);
                     eduCheckService.doSign(eduCheck);*/
-                    return new WebResult(StatusCode.OK, "请在当天半小时之内打卡", null);
+                    return new WebResult(StatusCode.ERROR, "请在当天半小时之内打卡", null);
                 }
             } catch (ParseException e) {
-                return new WebResult(StatusCode.OK, "后台输入的开始时间格式有误", null);
+                return new WebResult(StatusCode.ERROR, "后台输入的开始时间格式有误", null);
             }
         }
         return new WebResult(StatusCode.ERROR, "操作错误", null);

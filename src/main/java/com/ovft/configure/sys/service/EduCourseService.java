@@ -30,5 +30,4 @@ public interface EduCourseService {
      */
     public Map<String, EduCourseVo> queryCourseByCourseId(Integer user_id, Integer courseId);
 
-
 }

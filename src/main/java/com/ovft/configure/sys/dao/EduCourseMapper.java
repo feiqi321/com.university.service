@@ -33,6 +33,7 @@ public interface EduCourseMapper {
 
     /**
      * 查询学校报名的总人数
+     *
      * @param courseId
      * @return
      */

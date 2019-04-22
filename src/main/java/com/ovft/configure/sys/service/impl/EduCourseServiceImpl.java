@@ -116,6 +116,8 @@ public class EduCourseServiceImpl implements EduCourseService {
         List<EduClass> eduClasses = eduClassMapper.queryCourseTimeByCourseId(courseId);
         //3.生成报名详情信息
         courseInfo.setClassList(eduClasses);
+
+
         //4.生成订单关联
         Order order = new Order();
         //生成订单的订单号

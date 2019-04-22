@@ -2,7 +2,9 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.bean.EduArticleExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface EduArticleMapper {
@@ -33,6 +35,14 @@ public interface EduArticleMapper {
     int updateByPrimaryKeyWithBLOBs(EduArticle record);
 
     int updateByPrimaryKey(EduArticle record);
+
+    /**
+     * 展示通知公告
+     *
+     * @param type
+     * @return
+     */
+    public List<EduArticle> queryAllNotice(String type);
 
 
 }

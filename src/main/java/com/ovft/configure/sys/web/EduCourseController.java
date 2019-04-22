@@ -6,10 +6,7 @@ import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.service.EduCourseService;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
@@ -34,7 +31,8 @@ public class EduCourseController {
      */
     @GetMapping(value = "showCategory")
     public WebResult queryAllCourse(HttpServletRequest request) {
-        Integer schoolId = (Integer) request.getAttribute("schoolId");
+        String schoolId1 = request.getHeader("schoolId");
+        Integer schoolId = Integer.parseInt(schoolId1);
         if (schoolId == null) {
             return new WebResult(StatusCode.ERROR, "学校id不能为空", "");
         }
@@ -45,13 +43,19 @@ public class EduCourseController {
     /**
      * 立即报名
      *
-     * @param courseId
+     * @param request
      * @return
      */
-    @GetMapping(value = "order/{courseId}")
-    public WebResult queryCourseInfoById(@PathVariable("courseId") Integer courseId, HttpServletRequest request) {
-        Integer userId = (Integer) request.getAttribute("userId");
-        userId = 2;
+    @GetMapping(value = "order")
+    public WebResult queryCourseInfoById(@RequestParam(value = "courseId", required = true) Integer courseId, HttpServletRequest request) {
+//        String queryString = request.getQueryString();
+//        Integer courseId = Integer.parseInt(queryString);
+//        System.out.println(queryString);
+//        Integer userId = (Integer) request.getAttribute("userId");
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
+
+        System.out.println(userId);
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
         }

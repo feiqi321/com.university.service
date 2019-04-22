@@ -25,11 +25,11 @@ public class OrderController {
 
     @GetMapping(value = "payrecord")
     public WebResult queryAllPayOrder(HttpServletRequest request) {
-        Integer userId = (Integer) request.getAttribute("userId");
-        userId = 1;
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
+//        Integer userId = (Integer) request.getAttribute("userId");
         List<OrderVo> orderVos = orderService.queryAllRecord(userId);
         return new WebResult(StatusCode.OK, "已缴费，报名成功", orderVos);
-
     }
 
 

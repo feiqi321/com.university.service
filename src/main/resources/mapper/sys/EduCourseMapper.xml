@@ -288,8 +288,8 @@
 
     <!--1.查找专业类别-->
     <select id="listCourseCategoryByShoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduCourse">
-    select course_name from edu_course where school_id =#{school_id}
-  </select>
+    select course_name,course_id from edu_course where school_id =#{school_id}
+   </select>
 
 
     <!--2.查找专业相关报名信息-->

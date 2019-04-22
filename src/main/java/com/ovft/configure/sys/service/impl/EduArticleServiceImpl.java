@@ -23,42 +23,9 @@ public class EduArticleServiceImpl implements EduArticleService {
     //通知公告
     @Override
     public List<EduArticle> queryAllNotice(String type) {
-        EduArticleExample eduArticleExample = new EduArticleExample();
-        eduArticleExample.createCriteria().andTypeEqualTo(type);
-        List<EduArticle> eduArticles = eduArticleMapper.selectByExample(eduArticleExample);
+        List<EduArticle> eduArticles = eduArticleMapper.queryAllNotice(type);
         return eduArticles;
     }
 
-    //投稿专区
-    @Override
-    public List<EduArticle> queryAllSubmit(String type) {
-        EduArticleExample eduArticleExample = new EduArticleExample();
-        eduArticleExample.createCriteria().andTypeEqualTo(type);
-        List<EduArticle> eduArticles = eduArticleMapper.selectByExample(eduArticleExample);
-        return eduArticles;
-    }
 
-    @Override
-    public List<EduArticle> queryAllIntroduce(String type) {
-        EduArticleExample eduArticleExample = new EduArticleExample();
-        eduArticleExample.createCriteria().andTypeEqualTo(type);
-        List<EduArticle> eduArticles = eduArticleMapper.selectByExample(eduArticleExample);
-        return eduArticles;
-    }
-
-    @Override
-    public List<EduArticle> queryAllLaws(String type) {
-        EduArticleExample eduArticleExample = new EduArticleExample();
-        eduArticleExample.createCriteria().andTypeEqualTo(type);
-        List<EduArticle> eduArticles = eduArticleMapper.selectByExample(eduArticleExample);
-        return eduArticles;
-    }
-
-    @Override
-    public List<EduArticle> queryAllNews(String type) {
-        EduArticleExample eduArticleExample = new EduArticleExample();
-        eduArticleExample.createCriteria().andTypeEqualTo(type);
-        List<EduArticle> eduArticles = eduArticleMapper.selectByExample(eduArticleExample);
-        return eduArticles;
-    }
 }

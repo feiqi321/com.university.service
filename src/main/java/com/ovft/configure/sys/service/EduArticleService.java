@@ -17,37 +17,7 @@ public interface EduArticleService {
      */
     public List<EduArticle> queryAllNotice(String type);
 
-    /**
-     * 展示投稿专区
-     *
-     * @param type
-     * @return
-     */
-    public List<EduArticle> queryAllSubmit(String type);
 
-    /**
-     * 校园介绍
-     *
-     * @param type
-     * @return
-     */
-    public List<EduArticle> queryAllIntroduce(String type);
-
-    /**
-     * 法规
-     *
-     * @param type
-     * @return
-     */
-    public List<EduArticle> queryAllLaws(String type);
-
-    /**
-     * 联盟资讯
-     *
-     * @param type
-     * @return
-     */
-    public List<EduArticle> queryAllNews(String type);
 
 
 }
