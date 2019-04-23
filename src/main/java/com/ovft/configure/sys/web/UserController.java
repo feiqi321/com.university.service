@@ -20,6 +20,7 @@ import java.util.List;
  * Created by looyer on 2019/4/2.
  */
 @RestController
+
 @RequestMapping("/user")
 public class UserController {
 
