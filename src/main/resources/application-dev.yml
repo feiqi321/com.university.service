@@ -26,6 +26,13 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 0
+      location:
+      max-file-size: 1MB
+      max-request-size: 10MB
 redis:
     host: 192.168.31.200
     port: 6379
@@ -41,3 +48,13 @@ ftp:
   username: ftpadmin
   password: ftpadmin
   imgpath: /home/ftpadmin/dev/images
+
+fastdfs:
+  connect_timeout_in_seconds: 5
+  netword_timeout_in_seconds: 30
+  charset: UTF-8
+  tracker_servers: 192.168.17.128:22122
+  storage.url: http://192.168.17.128/
+
+
+
