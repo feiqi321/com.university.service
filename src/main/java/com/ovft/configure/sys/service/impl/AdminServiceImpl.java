@@ -183,12 +183,12 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public WebResult teacherList(PageVo pageVo) {
         Integer schoolId = pageVo.getId();
-        if(schoolId == null) {
-            return new WebResult("400", "请选择学校", "");
-        }
+//        if(schoolId == null) {
+//            return new WebResult("400", "请选择学校", "");
+//        }
 
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "admin_id");
-        List<Admin> teacherList = adminMapper.selectTeacherBySchool(Integer.valueOf(schoolId));
+        List<Admin> teacherList = adminMapper.selectTeacherBySchool(schoolId);
         PageInfo pageInfo = new PageInfo<>(teacherList);
         return new WebResult("200", "查询成功", pageInfo);
     }

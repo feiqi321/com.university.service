@@ -29,8 +29,10 @@
          select
         <include refid="Base_Column_List"/>
          from edu_school
-         where admin_id = #{adminId} and is_using = 1
-        <if test="search != null and search != ''">
+         where is_using = 1
+        <if test="adminId != null and adminId != ''">
+            AND admin_id = #{adminId}
+        </if><if test="search != null and search != ''">
             AND school_name like CONCAT('%',#{search},'%')
         </if>
     </select>

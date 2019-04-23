@@ -187,7 +187,7 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public WebResult courseList(PageVo pageVo) {
-        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "start_date");
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "course_id");
         List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getId(), pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(courseList);
 

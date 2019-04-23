@@ -12,6 +12,8 @@ public class EduArticle implements Serializable {
      */
     private String id;
 
+    private Integer schoolId;
+
     /**
      * 用户ID
      */
@@ -88,6 +90,14 @@ public class EduArticle implements Serializable {
     private String content;
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
 
     public String getId() {
         return id;

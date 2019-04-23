@@ -39,19 +39,23 @@
         select
         <include refid="Base_Column_List"/>
         from edu_course
-        where school_id = #{schoolId}
+        where 1=1
+        <if test="schoolId != null and schoolId != ''">
+            AND school_id = #{schoolId}
+        </if>
         <if test="search != null and search != ''">
             AND course_name like CONCAT('%',#{search},'%')
         </if>
     </select>
 
     <!--添加课程-->
-    <insert id="insertCourse" parameterType="com.ovft.configure.sys.bean.EduCourse">
-        insert into edu_course (course_id, course_name, course_price,
+    <insert id="insertCourse" parameterType="com.ovft.configure.sys.bean.EduCourse"
+            useGeneratedKeys="true" keyProperty="courseId">
+        insert into edu_course (course_name, course_price,
           course_teacher, place_class, start_date,
           end_date, people_number, school_id
           )
-        values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
+        values (#{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
           #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
           #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
           )

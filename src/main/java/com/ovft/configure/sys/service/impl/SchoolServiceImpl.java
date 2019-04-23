@@ -156,11 +156,12 @@ public class SchoolServiceImpl implements SchoolService {
      */
     @Override
     public WebResult schoolList(Integer adminId, PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<School> schoolList = schoolmapper.selectSchoolByAdminId(null, pageVo.getSearch());
+            return new WebResult("200", "获取学校列表成功", schoolList);
+        }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "school_id");
-        //todo  测试
-        adminId = 1;
-
-        List<School> schoolList = schoolmapper.selectSchoolByAdminId(adminId, pageVo.getSearch());
+        List<School> schoolList = schoolmapper.selectSchoolByAdminId(null, pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(schoolList);
         return new WebResult("200", "获取学校列表成功", pageInfo);
     }
