@@ -288,20 +288,30 @@
 
     <!--1.查找专业类别-->
     <select id="listCourseCategoryByShoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduCourse">
-    select course_name from edu_course where school_id =#{school_id}
-  </select>
+    select course_name,course_id from edu_course where school_id =#{school_id}
+   </select>
+
 
     <!--2.查找专业相关报名信息-->
     <select id="queryCourseByCourseId" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCourseVo">
-    select
-    c.course_name,
-    c.course_price,
-    e1.school_name schoolId,
-    e2.name course_teacher,
-    c.place_class
-    from edu_course c
-    left join edu_school e1 on c.school_id=e1.school_id
-    left join edu_admin e2 on c.course_teacher=e2.admin_id
-    where course_id =#{courseId}
-  </select>
+        select
+        c.course_name,
+        c.course_price,
+        e1.school_name schoolId,
+        e2.name course_teacher,
+        c.place_class
+        from edu_course c
+        left join edu_school e1 on c.school_id=e1.school_id
+        left join edu_admin e2 on c.course_teacher=e2.admin_id
+        where course_id =#{courseId}
+    </select>
+
+    <!--3.查询每个科目可以报名的人数-->
+    <select id="queryAcceptNum" parameterType="int" resultType="int">
+          select
+            people_number
+            from edu_course
+           WHERE course_id=#{course_id}
+    </select>
+
 </mapper>

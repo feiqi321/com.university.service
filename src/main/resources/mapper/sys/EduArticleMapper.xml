@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduArticleMapper">
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduArticle">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="userid" jdbcType="VARCHAR" property="userid"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
+        <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime"/>
+        <result column="ispublic" jdbcType="VARCHAR" property="ispublic"/>
+        <result column="istop" jdbcType="VARCHAR" property="istop"/>
+        <result column="visits" jdbcType="INTEGER" property="visits"/>
+        <result column="thumbup" jdbcType="INTEGER" property="thumbup"/>
+        <result column="comment" jdbcType="INTEGER" property="comment"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="collect" jdbcType="VARCHAR" property="collect"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ovft.configure.sys.bean.EduArticle">
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, userid, title, image, createtime, updatetime, ispublic, istop, visits, thumbup, 
+    comment, state, url, type, collect
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByExampleWithBLOBs" parameterType="com.ovft.configure.sys.bean.EduArticleExample"
+            resultMap="ResultMapWithBLOBs">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from edu_article
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduArticleExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from edu_article
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from edu_article
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from edu_article
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduArticleExample">
+        delete from edu_article
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduArticle">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_article (userid, title, image,
+        createtime, updatetime, ispublic,
+        istop, visits, thumbup,
+        comment, state, url,
+        type, collect, content
+        )
+        values (#{userid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
+        #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{ispublic,jdbcType=VARCHAR},
+        #{istop,jdbcType=VARCHAR}, #{visits,jdbcType=INTEGER}, #{thumbup,jdbcType=INTEGER},
+        #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
+        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduArticle">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="image != null">
+                image,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="updatetime != null">
+                updatetime,
+            </if>
+            <if test="ispublic != null">
+                ispublic,
+            </if>
+            <if test="istop != null">
+                istop,
+            </if>
+            <if test="visits != null">
+                visits,
+            </if>
+            <if test="thumbup != null">
+                thumbup,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="collect != null">
+                collect,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ispublic != null">
+                #{ispublic,jdbcType=VARCHAR},
+            </if>
+            <if test="istop != null">
+                #{istop,jdbcType=VARCHAR},
+            </if>
+            <if test="visits != null">
+                #{visits,jdbcType=INTEGER},
+            </if>
+            <if test="thumbup != null">
+                #{thumbup,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=INTEGER},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="collect != null">
+                #{collect,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.ovft.configure.sys.bean.EduArticleExample"
+            resultType="java.lang.Long">
+        select count(*) from edu_article
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update edu_article
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userid != null">
+                userid = #{record.userid,jdbcType=VARCHAR},
+            </if>
+            <if test="record.title != null">
+                title = #{record.title,jdbcType=VARCHAR},
+            </if>
+            <if test="record.image != null">
+                image = #{record.image,jdbcType=VARCHAR},
+            </if>
+            <if test="record.createtime != null">
+                createtime = #{record.createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.updatetime != null">
+                updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.ispublic != null">
+                ispublic = #{record.ispublic,jdbcType=VARCHAR},
+            </if>
+            <if test="record.istop != null">
+                istop = #{record.istop,jdbcType=VARCHAR},
+            </if>
+            <if test="record.visits != null">
+                visits = #{record.visits,jdbcType=INTEGER},
+            </if>
+            <if test="record.thumbup != null">
+                thumbup = #{record.thumbup,jdbcType=INTEGER},
+            </if>
+            <if test="record.comment != null">
+                comment = #{record.comment,jdbcType=INTEGER},
+            </if>
+            <if test="record.state != null">
+                state = #{record.state,jdbcType=VARCHAR},
+            </if>
+            <if test="record.url != null">
+                url = #{record.url,jdbcType=VARCHAR},
+            </if>
+            <if test="record.type != null">
+                type = #{record.type,jdbcType=VARCHAR},
+            </if>
+            <if test="record.collect != null">
+                collect = #{record.collect,jdbcType=VARCHAR},
+            </if>
+            <if test="record.content != null">
+                content = #{record.content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExampleWithBLOBs" parameterType="map">
+        update edu_article
+        set id = #{record.id,jdbcType=VARCHAR},
+        userid = #{record.userid,jdbcType=VARCHAR},
+        title = #{record.title,jdbcType=VARCHAR},
+        image = #{record.image,jdbcType=VARCHAR},
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+        ispublic = #{record.ispublic,jdbcType=VARCHAR},
+        istop = #{record.istop,jdbcType=VARCHAR},
+        visits = #{record.visits,jdbcType=INTEGER},
+        thumbup = #{record.thumbup,jdbcType=INTEGER},
+        comment = #{record.comment,jdbcType=INTEGER},
+        state = #{record.state,jdbcType=VARCHAR},
+        url = #{record.url,jdbcType=VARCHAR},
+        type = #{record.type,jdbcType=VARCHAR},
+        collect = #{record.collect,jdbcType=VARCHAR},
+        content = #{record.content,jdbcType=LONGVARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update edu_article
+        set id = #{record.id,jdbcType=VARCHAR},
+        userid = #{record.userid,jdbcType=VARCHAR},
+        title = #{record.title,jdbcType=VARCHAR},
+        image = #{record.image,jdbcType=VARCHAR},
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+        ispublic = #{record.ispublic,jdbcType=VARCHAR},
+        istop = #{record.istop,jdbcType=VARCHAR},
+        visits = #{record.visits,jdbcType=INTEGER},
+        thumbup = #{record.thumbup,jdbcType=INTEGER},
+        comment = #{record.comment,jdbcType=INTEGER},
+        state = #{record.state,jdbcType=VARCHAR},
+        url = #{record.url,jdbcType=VARCHAR},
+        type = #{record.type,jdbcType=VARCHAR},
+        collect = #{record.collect,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.EduArticle">
+        update edu_article
+        <set>
+            <if test="userid != null">
+                userid = #{userid,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                updatetime = #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ispublic != null">
+                ispublic = #{ispublic,jdbcType=VARCHAR},
+            </if>
+            <if test="istop != null">
+                istop = #{istop,jdbcType=VARCHAR},
+            </if>
+            <if test="visits != null">
+                visits = #{visits,jdbcType=INTEGER},
+            </if>
+            <if test="thumbup != null">
+                thumbup = #{thumbup,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=INTEGER},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="collect != null">
+                collect = #{collect,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ovft.configure.sys.bean.EduArticle">
+    update edu_article
+    set userid = #{userid,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      ispublic = #{ispublic,jdbcType=VARCHAR},
+      istop = #{istop,jdbcType=VARCHAR},
+      visits = #{visits,jdbcType=INTEGER},
+      thumbup = #{thumbup,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=INTEGER},
+      state = #{state,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      collect = #{collect,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduArticle">
+    update edu_article
+    set userid = #{userid,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      ispublic = #{ispublic,jdbcType=VARCHAR},
+      istop = #{istop,jdbcType=VARCHAR},
+      visits = #{visits,jdbcType=INTEGER},
+      thumbup = #{thumbup,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=INTEGER},
+      state = #{state,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      collect = #{collect,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <!--查询文章信息-->
+    <select id="queryAllNotice" parameterType="String" resultType="com.ovft.configure.sys.bean.EduArticle">
+
+        	select
+				*
+				from edu_article
+				 where
+				type=#{type}
+
+    </select>
+
+
+</mapper>

@@ -32,4 +32,8 @@ public interface UserMapper {
         public User selectByOldPass(@Param("oldPass") String oldPass);
         //修改密码
         public void updateByOldPass(@Param("newPass") String newPass,@Param("oldPass") String oldPass);
+        //查询用户所对应的学员分类-vvtxw
+        public String queryemployerByUserId(Integer userId);
+
+
 }

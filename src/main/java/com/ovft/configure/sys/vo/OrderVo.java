@@ -1,22 +1,69 @@
 package com.ovft.configure.sys.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.Order;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author vvtxw
  * @create 2019-04-14 16:59
  */
 public class OrderVo extends Order {
-    private static final String pay = "已缴费，报名成功";
     private Integer schoolId;
     private String schoolName;
     private String courseName;
+
+    private Integer courseId;
+    private Integer paymentStatus;
+    private String employer;
+    private String name;
+
+    /**
+     * 课时id
+     */
+    private String week;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public Integer getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(Integer paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(String employer) {
+        this.employer = employer;
+    }
+
     /**
      * 课程老师
      */
@@ -35,7 +82,6 @@ public class OrderVo extends Order {
 
     private String startTime;
 
-    private String week;
 
     /**
      * 结课日期
@@ -51,11 +97,6 @@ public class OrderVo extends Order {
 
     public void setSchoolId(Integer schoolId) {
         this.schoolId = schoolId;
-    }
-
-
-    public static String getPay() {
-        return pay;
     }
 
     public String getShoolName() {

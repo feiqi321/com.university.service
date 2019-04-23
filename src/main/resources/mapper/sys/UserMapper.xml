@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ovft.configure.sys.dao.UserMapper" >
-    <insert id="addUser" parameterType="com.ovft.configure.sys.bean.User" >
+<mapper namespace="com.ovft.configure.sys.dao.UserMapper">
+    <insert id="addUser" parameterType="com.ovft.configure.sys.bean.User">
           insert  into edu_user(user_name,phone,password) values(#{user.userName},#{user.phone},#{user.password});
     </insert>
-         <select id="findUserByPhone" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+    <select id="findUserByPhone" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where phone=#{user.phone};
          </select>
-         <select id="findUserByPhone2" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+    <select id="findUserByPhone2" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where phone=#{phone};
          </select>
-         <select id="findUserByPassword" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+    <select id="findUserByPassword" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where  password=#{user.password};
          </select>
 
-        <select id="selectById"  resultType="com.ovft.configure.sys.bean.User">
+    <select id="selectById" resultType="com.ovft.configure.sys.bean.User">
             select user_id as auserId,
             user_name as userName,
             emergency_contact1 as emergencyContact1,
@@ -44,5 +47,13 @@
     <update id="updateByOldPass">
           update edu_user set password = #{newPass} where phone=#{oldPass}
     </update>
+
+   <!--查询用户所对应的学员分类-vvtxw-->
+    <select id="queryemployerByUserId" parameterType="int" resultType="String">
+        select
+            employer
+            from edu_user
+            WHERE user_id=#{user_id}
+    </select>
 
 </mapper>

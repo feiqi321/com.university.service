@@ -24,7 +24,7 @@ public interface EduCheckService {
     /**
      * 根据userId查询打卡记录
      *
-     * @param userIds
+     * @param userId
      * @return
      */
     List<EduCheckVo> queryAllPunchRecord(Integer userId);
