@@ -35,6 +35,18 @@
         <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
     </resultMap>
 
+    <resultMap id="EduCourseVoResultMap" type="com.ovft.configure.sys.vo.EduCourseVo">
+        <id column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="course_price" jdbcType="DECIMAL" property="coursePrice"/>
+        <result column="course_teacher" jdbcType="VARCHAR" property="courseTeacher"/>
+        <result column="place_class" jdbcType="VARCHAR" property="placeClass"/>
+        <result column="start_date" jdbcType="DATE" property="startDate"/>
+        <result column="end_date" jdbcType="DATE" property="endDate"/>
+        <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
+        <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
+    </resultMap>
+
     <select id="selectCourseListBySchoolId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -62,7 +74,7 @@
     </insert>
 
     <!--根据课程id查找课程-->
-    <select id="selectByCourseId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectByCourseId" parameterType="java.lang.Integer" resultMap="EduCourseVoResultMap">
         select
         <include refid="Base_Column_List"/>
         from edu_course
@@ -70,7 +82,7 @@
     </select>
 
     <!--根据课程id查找课程详细信息-->
-    <select id="selectClassByCourseId" parameterType="java.lang.Integer" >
+    <select id="selectClassByCourseId" parameterType="java.lang.Integer" resultType="com.ovft.configure.sys.bean.EduClass">
         select class_schedule_id as classScheduleId, course_ids as courseIds, week, start_time as startTime, end_time as endTime
         from edu_class_schedule
         where course_ids = #{courseId}

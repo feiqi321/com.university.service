@@ -6,10 +6,8 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
-import com.ovft.configure.sys.dao.AdminMapper;
-import com.ovft.configure.sys.dao.EduClassMapper;
-import com.ovft.configure.sys.dao.TeacherMapper;
-import com.ovft.configure.sys.dao.VacateMapper;
+import com.ovft.configure.sys.bean.School;
+import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
@@ -20,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -42,6 +39,8 @@ public class TeacherServiceImpl implements TeacherService {
     public EduClassMapper classMapper;
     @Resource
     public AdminMapper adminMapper;
+    @Resource
+    public SchoolMapper schoolMapper;
 
     /**
      * 请假申请列表
@@ -133,6 +132,9 @@ public class TeacherServiceImpl implements TeacherService {
         for (EduClass eduClass : classList) {
             String startTime = eduClass.getStartTime();
             String endTime = eduClass.getEndTime();
+            if(StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)) {
+                return new WebResult("400","请添加课程时间","");
+            }
             if(!p.matcher(startTime).matches() || !p.matcher(endTime).matches()) {
                 return new WebResult("400","请添加课程时间","");
             }
@@ -150,7 +152,7 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public WebResult intoCourse(Integer schoolId) {
-        List<Admin> teacherList = adminMapper.selectTeacherBySchool(schoolId);
+        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
         return new WebResult("200","查询成功", teacherList);
     }
 
@@ -187,6 +189,10 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public WebResult courseList(PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getId(), pageVo.getSearch());
+            return new WebResult("200","查询成功", courseList);
+        }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "course_id");
         List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getId(), pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(courseList);
@@ -207,14 +213,18 @@ public class TeacherServiceImpl implements TeacherService {
         }
         List<EduClass> classList = teacherMapper.selectClassByCourseId(courseVo.getCourseId());
         courseVo.setClassList(classList);
+        School school = schoolMapper.selectById(Integer.valueOf(courseVo.getSchoolId()));
+        courseVo.setSchoolName(school==null?"":school.getSchoolName());
+        Admin admin = adminMapper.selectById(Integer.valueOf(courseVo.getCourseTeacher()));
+        courseVo.setTeacherName(admin==null?"":admin.getName());
 
-        List<Admin> teacherList = adminMapper.selectTeacherBySchool(Integer.valueOf(courseVo.getSchoolId()));
+//        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(Integer.valueOf(courseVo.getSchoolId()));
+//
+//        HashMap<String, Object> map = new HashMap<>();
+//        map.put("courseVo", courseVo);
+//        map.put("teacherList", teacherList);
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("courseVo", courseVo);
-        map.put("teacherList", teacherList);
-
-        return new WebResult("200","查询成功", map);
+        return new WebResult("200","查询成功", courseVo);
     }
 
     /**

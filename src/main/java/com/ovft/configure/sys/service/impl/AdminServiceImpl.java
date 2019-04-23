@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -187,8 +188,12 @@ public class AdminServiceImpl implements AdminService {
 //            return new WebResult("400", "请选择学校", "");
 //        }
 
-        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "admin_id");
-        List<Admin> teacherList = adminMapper.selectTeacherBySchool(schoolId);
+        if(pageVo.getPageSize() == 0) {
+            List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
+            return new WebResult("200", "查询成功", teacherList);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "a.admin_id");
+        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
         PageInfo pageInfo = new PageInfo<>(teacherList);
         return new WebResult("200", "查询成功", pageInfo);
     }

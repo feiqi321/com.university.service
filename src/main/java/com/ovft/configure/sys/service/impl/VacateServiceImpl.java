@@ -71,6 +71,7 @@ public class VacateServiceImpl implements VacateService {
      */
     @Override
     public WebResult intoVacate(Integer userId) {
+        userId = 1;
         HashMap<String, Object> map = new HashMap<>();
         //获取用户信息
         User user = userMapper.selectById(userId);

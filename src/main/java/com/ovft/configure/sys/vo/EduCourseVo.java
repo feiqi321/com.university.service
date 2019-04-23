@@ -14,9 +14,18 @@ import java.util.List;
 public class EduCourseVo extends EduCourse {
     private List<EduClass> classList;
     private String schoolName;
+    private String teacherName;
 
     private String startTime;
     private String endTime;
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
 
     public String getStartTime() {
         return startTime;

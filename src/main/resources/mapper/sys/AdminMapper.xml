@@ -23,13 +23,14 @@
         where admin_id = #{adminId}
     </select>
 
-    <select id="selectTeacherBySchool"  resultMap="BaseResultMap">
+    <select id="selectTeacherBySchool"  resultType="java.util.Map">
         select
-        <include refid="Base_Column_List"/>
-        from edu_admin
-        where 1=1
+        a.admin_id adminId, a.name, a.password, a.phone, a.image, a.role, a.school_id schoolId, s.school_name as schoolName
+        from edu_admin a
+        left join edu_school s on a.school_id = s.school_id
+        where role = 2
         <if test="schoolId != null and schoolId != ''">
-            and school_id = #{schoolId}
+            and a.school_id = #{schoolId}
         </if>
     </select>
 

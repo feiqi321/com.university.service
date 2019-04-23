@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName AdminMapper
@@ -19,7 +20,7 @@ public interface AdminMapper {
 
     public Admin selectByPhone(@Param("phone") String phone);
 
-    public List<Admin> selectTeacherBySchool(@Param("schoolId") Integer schoolId);
+    public List<Map<String, Object>> selectTeacherBySchool(@Param("schoolId") Integer schoolId);
 
     public void creatAdmin(Admin admin);
 
