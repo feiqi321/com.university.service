@@ -53,8 +53,8 @@ fastdfs:
   connect_timeout_in_seconds: 5
   netword_timeout_in_seconds: 30
   charset: UTF-8
-  tracker_servers: 192.168.17.128:22122
-  storage.url: http://192.168.17.128/
+  tracker_servers: 192.168.5.161:22122
+  storage.url: http://192.168.5.161/
 
 
 
