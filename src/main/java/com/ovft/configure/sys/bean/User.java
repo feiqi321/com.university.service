@@ -63,7 +63,7 @@ public class User {
     /**
      * 志愿者
      */
-    private String volunteer;
+    private Integer volunteer;
 
 
     /**
@@ -101,9 +101,13 @@ public class User {
     //短信验证码
     private String securityCode;
 
-    public String getVolunteer() { return volunteer; }
+    public Integer getVolunteer() {
+        return volunteer;
+    }
 
-    public void setVolunteer(String volunteer) { volunteer = volunteer; }
+    public void setVolunteer(Integer volunteer) {
+        this.volunteer = volunteer;
+    }
 
     public String getTelephone() {
         return telephone;

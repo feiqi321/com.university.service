@@ -65,7 +65,10 @@ public class UserController {
      */
     @PostMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user,HttpServletRequest request){
-            user.setSchoolId((Integer) request.getAttribute("schoolId"));
+             System.out.println(user);
+             System.out.println("========================>"+request.getHeader("schoolId"));
+            user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
+            user.setUserId(Integer.parseInt(request.getHeader("userId")));
         return userService.savaInfo(user);
     }
     /**
@@ -98,6 +101,22 @@ public class UserController {
     public WebResult updatePasswordByOldpass( @RequestParam(value = "oldPassword")String oldPassword,
                                      @RequestParam(value = "newpass")String newPass,@RequestParam(value = "nextpass")String nextpass ){
                 return userService.updatePasswordByOldPass(oldPassword,newPass,nextpass);
+    }
+    /**
+     * 信息回显
+     * @param  request
+     * @return
+     */
+    @GetMapping(value = "/selectInfo")
+    public WebResult selectInfo(HttpServletRequest request){
+        User user=new User();
+        System.out.println("userId是："+ request.getHeader("userId"));
+        String userId= request.getHeader("userId");
+
+        user.setUserId(Integer.parseInt(userId));
+        user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
+        System.out.println("===================================>>"+userId+"=====>"+user.getSchoolId());
+        return userService.selectInfo(user);
     }
 
 }

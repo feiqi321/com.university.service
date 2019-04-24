@@ -7,6 +7,7 @@ import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
+
 import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
 
@@ -219,7 +220,7 @@ public class UserServiceImpl  implements UserService {
         PhoneTest phoneTest=new PhoneTest();
            Boolean   isPhone=phoneTest.isPhone(user.getTelephone());
            if (isPhone==false){
-               return new WebResult("400", "输入电话格式有误");
+               return new WebResult("400", "输入电话格式有误", "");
            }
 
         //紧急联系人一手机号验证
@@ -259,15 +260,19 @@ public class UserServiceImpl  implements UserService {
             }
             //保存
           User findUser=userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
-               if (findUser==null){
+               if (findUser!=null){
                    userMapper.savaInfo(user);
                    return new WebResult("200", "保存成功",user);
                }else{
+
+
                   User findUserItems =userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
                     if (findUserItems==null){
+                        //新增
                         userMapper.addInfoItems(user);
                         return new WebResult("200", "保存成功",user);
                     }else{
+                        //修改
                         userMapper.savaInfoItems(user);
                         return new WebResult("200", "保存成功",user);
                     }
@@ -309,6 +314,39 @@ public class UserServiceImpl  implements UserService {
     public WebResult userQuit(String token) {
         redisUtil.setRemove(token);
         return new WebResult("200","退出成功","");
+    }
+
+    @Override
+    public WebResult selectInfo(User user) {
+             if (user.getUserId()==null||user.getSchoolId()==null){
+
+             }
+        User findUserInfo=userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
+        if (findUserInfo==null){
+            //待优化
+            User findUserInfoById=userMapper.selectByIdAll(user.getUserId());
+            User findItemInfoById= userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+            findUserInfoById.setPassword(null);
+            findUserInfoById.setSchoolId(findItemInfoById.getSchoolId());
+            findUserInfoById.setArea(findItemInfoById.getArea());
+            findUserInfoById.setAddress(findItemInfoById.getAddress());
+            findUserInfoById.setPolitical(findItemInfoById.getPolitical());
+            findUserInfoById.setRetired(findItemInfoById.getRetired());
+            findUserInfoById.setJob(findItemInfoById.getJob());
+            findUserInfoById.setEmployer(findItemInfoById.getEmployer());
+            findUserInfoById.setEmergencyContact1(findItemInfoById.getEmergencyContact1());
+            findUserInfoById.setEmergencyRelation1(findItemInfoById.getEmergencyRelation1());
+            findUserInfoById.setEmergencyPhone1(findItemInfoById.getEmergencyPhone1());
+            findUserInfoById.setEducational(findItemInfoById.getEducational());
+            findUserInfoById.setEmergencyContact2(findItemInfoById.getEmergencyContact2());
+            findUserInfoById.setEmergencyRelation2(findItemInfoById.getEmergencyRelation2());
+            findUserInfoById.setEmergencyPhone2(findItemInfoById.getEmergencyPhone2());
+            findUserInfoById.setCheckIn(findItemInfoById.getCheckIn());
+             return  new WebResult("200","获取成功",findUserInfoById);
+        }else{
+//         User user1= userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
+            return  new WebResult("200","获取成功",findUserInfo);
+        }
     }
 
 
