@@ -3,32 +3,62 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.SchoolMapper">
 
-    <select id="selectById" resultType="com.ovft.configure.sys.bean.School">
-         select school_id as schoolId, school_name as schoolName, admin_id as adminId, longitude, latitude, image
+
+    <sql id="Base_Column_List">
+        school_id, school_name, admin_id, longitude, latitude, image, school_char, is_using
+    </sql>
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.School">
+        <id column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
+        <result column="admin_id" jdbcType="INTEGER" property="adminId"/>
+        <result column="longitude" jdbcType="VARCHAR" property="longitude"/>
+        <result column="latitude" jdbcType="VARCHAR" property="latitude"/>
+        <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="school_char" jdbcType="VARCHAR" property="schoolChar"/>
+        <result column="is_using" jdbcType="INTEGER" property="isUsing"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+         select
+        <include refid="Base_Column_List"/>
          from edu_school
          where school_id = #{schoolId}
     </select>
 
-    <select id="selectSchoolByAdminId" resultType="com.ovft.configure.sys.bean.School">
-         select school_id as schoolId, school_name as schoolName, admin_id as adminId, longitude, latitude, image
+    <select id="selectSchoolByAdminId" resultMap="BaseResultMap">
+         select
+        <include refid="Base_Column_List"/>
          from edu_school
-         where admin_id = #{adminId}
-        <if test="search != null and search != ''">
+         where is_using = 1
+        <if test="adminId != null and adminId != ''">
+            AND admin_id = #{adminId}
+        </if><if test="search != null and search != ''">
             AND school_name like CONCAT('%',#{search},'%')
         </if>
     </select>
 
     <insert id="createSchool" parameterType="com.ovft.configure.sys.bean.School" useGeneratedKeys="true"
             keyProperty="schoolId">
-         insert into edu_school(school_name, admin_id, longitude, latitude, image, school_char)
-         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude}, #{image}, #{schoolChar})
+         insert into edu_school(school_name, admin_id, longitude, latitude, image, school_char, is_using)
+         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude}, #{image}, #{schoolChar}, #{isUsing})
     </insert>
 
 
-    <update id="updateSchoolName" parameterType="com.ovft.configure.sys.bean.School">
+    <update id="updateSchool" parameterType="com.ovft.configure.sys.bean.School">
         update edu_school e
-          set e.school_name = #{school.schoolName}
-          where e.school_id = #{school.schoolId}
+        set school_name = #{schoolName},
+        longitude = #{longitude},
+        latitude = #{latitude},
+        image = #{image},
+        school_char = #{schoolChar}
+        where school_id = #{schoolId}
+    </update>
+
+    <!--是否启用学校-->
+    <update id="isUsingSchool" parameterType="com.ovft.configure.sys.bean.School">
+        update edu_school e
+        set is_using = #{isUsing}
+        where school_id = #{schoolId}
     </update>
 
     <!--查询学校坐标-vvtxw-->

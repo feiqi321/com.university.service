@@ -3,8 +3,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.AdminMapper" >
 
-    <select id="selectById"  resultType="com.ovft.configure.sys.bean.Admin">
-         select admin_id as adminId, name, password, phone, image, role from edu_admin where admin_id = #{adminId}
+    <sql id="Base_Column_List">
+        admin_id, name, password, phone, image, role, school_id
+    </sql>
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.Admin">
+        <id column="admin_id" jdbcType="INTEGER" property="adminId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="role" jdbcType="INTEGER" property="role"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+    </resultMap>
+
+    <select id="selectById"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_admin
+        where admin_id = #{adminId}
+    </select>
+
+    <select id="selectTeacherBySchool"  resultType="java.util.Map">
+        select
+        a.admin_id adminId, a.name, a.password, a.phone, a.image, a.role, a.school_id schoolId, s.school_name as schoolName
+        from edu_admin a
+        left join edu_school s on a.school_id = s.school_id
+        where role = 2
+        <if test="schoolId != null and schoolId != ''">
+            and a.school_id = #{schoolId}
+        </if>
     </select>
 
     <select id="selectByPhone"  resultType="com.ovft.configure.sys.bean.Admin">
@@ -18,8 +45,8 @@
     
     <update id="updateByPassword">
           update edu_admin e
-          set e.password = #{password}
-          where e.admin_id = #{adminId}
+          set password = #{password}
+          where admin_id = #{adminId}
     </update>
 
     <update id="updateByPrimary" parameterType="com.ovft.configure.sys.bean.Admin">
@@ -46,5 +73,10 @@
         </set>
         where admin_id = #{adminId,jdbcType=INTEGER}
     </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from edu_admin
+        where admin_id = #{adminId}
+  </delete>
 
 </mapper>

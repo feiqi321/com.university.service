@@ -10,9 +10,18 @@ public interface TeacherService {
 
     public WebResult vacateChackList(Integer adminId);
 
+    public WebResult intoCourse(Integer schoolId);
+
     public WebResult createCourse(EduCourseVo courseVo);
 
     public WebResult vacateApprover(Integer vacateId, Integer isCheck);
 
-    public WebResult courseList(Integer adminId, PageVo pageVo);
+    public WebResult courseList(PageVo pageVo);
+
+    public WebResult findCourse(Integer courseId);
+
+    public WebResult updateCourse(EduCourseVo courseVo);
+
+    public WebResult deleteCourse(Integer courseId);
+
 }

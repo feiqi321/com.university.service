@@ -36,6 +36,16 @@ public class School {
      */
     private String schoolChar;
 
+    private Integer isUsing;
+
+    public Integer getIsUsing() {
+        return isUsing;
+    }
+
+    public void setIsUsing(Integer isUsing) {
+        this.isUsing = isUsing;
+    }
+
     @Override
     public String toString() {
         return "School{" +

@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 public class SchoolController {
     @Autowired
     private SchoolService schoolService;
+
     /**
      * 添加学校
      * @param school
@@ -33,13 +34,23 @@ public class SchoolController {
     }
 
     /**
-          * 修改学校名称
+     * 进入修改学校页面
+     * @param schoolId
+     * @return
+     */
+    @GetMapping(value = "/server/school/findSchool")
+    public WebResult findSchool(@RequestParam(value = "schoolId")Integer schoolId) {
+        return schoolService.findSchool(schoolId);
+    }
+
+    /**
+          * 修改学校
           * @param school
           * @return
           */
-    @PostMapping(value = "/server/school/updateSchoolName")
-    public WebResult updateSchoolName(@RequestBody School school) {
-        return schoolService.updateSchoolName(school);
+    @PostMapping(value = "/server/school/updateSchool")
+    public WebResult updateSchool(@RequestBody School school) {
+        return schoolService.updateSchool(school);
     }
     /**
           * 切换学校
@@ -71,5 +82,16 @@ public class SchoolController {
         Integer adminId = (Integer) request.getAttribute("adminId");
         return schoolService.schoolList(adminId, pageVo);
     }
+
+    /**
+     * 删除学校
+     * @param schoolId
+     * @return
+     */
+    @GetMapping(value = "/server/school/deleteSchool")
+    public WebResult deleteSchool(@RequestParam(value = "schoolId")Integer schoolId) {
+        return schoolService.deleteSchool(schoolId);
+    }
+
 
 }

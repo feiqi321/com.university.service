@@ -40,7 +40,7 @@ public class PassportInterceptor implements HandlerInterceptor {
             //todo 如果是pc端登录，更新token缓存失效时间
 //            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
 //            httpServletRequest.setAttribute("adminId", id);
-            httpServletRequest.setAttribute("adminId", 8);
+            httpServletRequest.setAttribute("adminId", 1);
         } else {
             httpServletRequest.setAttribute("userId", id);
             httpServletRequest.setAttribute("schoolId", schoolId);

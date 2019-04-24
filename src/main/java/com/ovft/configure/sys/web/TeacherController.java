@@ -46,13 +46,22 @@ public class TeacherController {
 
     /**
      * 课程列表
-     * @param adminId
+     * @param pageVo
      * @return
      */
     @PostMapping(value = "/courseList")
-    public WebResult courseList(HttpServletRequest request, @RequestBody PageVo pageVo) {
-        Integer adminId = (Integer) request.getAttribute("adminId");
-        return  teacherService.courseList(adminId, pageVo);
+    public WebResult courseList(@RequestBody PageVo pageVo) {
+        return  teacherService.courseList(pageVo);
+    }
+
+    /**
+     * 进入添加课程页面
+     * @param schoolId
+     * @return
+     */
+    @GetMapping(value = "/intoCourse")
+    public WebResult intoCourse(@RequestParam(value = "schoolId")Integer schoolId) {
+        return teacherService.intoCourse(schoolId);
     }
 
     /**
@@ -61,10 +70,38 @@ public class TeacherController {
      * @return
      */
     @PostMapping(value = "/createCourse")
-    public WebResult createCourse(HttpServletRequest request, @RequestBody EduCourseVo courseVo) {
-        Integer adminId = (Integer) request.getAttribute("adminId");
-        courseVo.setCourseTeacher(adminId.toString());
+    public WebResult createCourse(@RequestBody EduCourseVo courseVo) {
         return  teacherService.createCourse(courseVo);
+    }
+
+    /**
+     * 进入修改课程页面
+     * @param courseId
+     * @return
+     */
+    @GetMapping(value = "/findCourse")
+    public WebResult findCourse(@RequestParam(value = "courseId")Integer courseId) {
+        return teacherService.findCourse(courseId);
+    }
+
+    /**
+     * 修改课程
+     * @param courseVo
+     * @return
+     */
+    @PostMapping(value = "/updateCourse")
+    public WebResult updateCourse(@RequestBody EduCourseVo courseVo) {
+        return teacherService.updateCourse(courseVo);
+    }
+
+    /**
+     * 删除课程
+     * @param courseId
+     * @return
+     */
+    @GetMapping(value = "/deleteCourse")
+    public WebResult deleteCourse(@RequestParam(value = "courseId")Integer courseId) {
+        return teacherService.deleteCourse(courseId);
     }
 
 }

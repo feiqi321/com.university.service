@@ -7,7 +7,9 @@ import com.ovft.configure.sys.vo.PageVo;
 public interface SchoolService {
     public WebResult createSchool(School school);
 
-    public WebResult updateSchoolName(School school);
+    public WebResult findSchool(Integer schoolId);
+
+    public WebResult updateSchool(School school);
     /**
      * 根据学校id查询坐标
      * @param schoolId
@@ -20,4 +22,7 @@ public interface SchoolService {
     public WebResult switchSchoolID(Integer SchoolId,Integer userId);
 
     public WebResult schoolList(Integer adminId, PageVo pageVo);
+
+    public WebResult deleteSchool(Integer schoolId);
+
 }

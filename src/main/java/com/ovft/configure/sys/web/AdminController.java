@@ -4,6 +4,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.service.AdminService;
 import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,6 @@ public class AdminController {
 
     /**
      * 修改密码
-     * @param adminId
      * @param oldPassword
      * @param newPassword
      * @return
@@ -51,7 +51,6 @@ public class AdminController {
 
     /**
      * 修改手机号
-     * @param adminId
      * @param newPhone
      * @return
      */
@@ -75,6 +74,16 @@ public class AdminController {
     }
 
     /**
+     * 教师列表
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/teacherList")
+    public WebResult teacherList(@RequestBody PageVo pageVo)  {
+        return adminService.teacherList(pageVo);
+    }
+
+    /**
      * 添加教师
      * @param admin
      * @return
@@ -86,7 +95,34 @@ public class AdminController {
         return  adminService.createAdmin(admin, 2);
     }
 
+    /**
+     * 进入修改教师页面
+     * @param adminId
+     * @return
+     */
+    @GetMapping(value = "/findTeacher")
+    public WebResult findTeacher(@RequestParam(value = "adminId")Integer adminId) {
+        return adminService.findTeacher(adminId);
+    }
 
+    /**
+     * 修改管理员、教师
+     * @param admin
+     * @return
+     */
+    @PostMapping(value = "/updateAdmin")
+    public WebResult updateAdmin(@RequestBody Admin admin) {
+        return adminService.updateAdmin(admin);
+    }
 
+    /**
+     * 删除管理员、教师
+     * @param adminId
+     * @return
+     */
+    @GetMapping(value = "/deleteAdmin")
+    public WebResult deleteAdmin(@RequestParam(value = "adminId")Integer adminId) {
+        return adminService.deleteAdmin(adminId);
+    }
 
 }

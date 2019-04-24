@@ -3,11 +3,11 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
-import com.ovft.configure.sys.dao.EduClassMapper;
-import com.ovft.configure.sys.dao.TeacherMapper;
-import com.ovft.configure.sys.dao.VacateMapper;
+import com.ovft.configure.sys.bean.School;
+import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
@@ -37,6 +37,10 @@ public class TeacherServiceImpl implements TeacherService {
     public VacateMapper vacateMapper;
     @Resource
     public EduClassMapper classMapper;
+    @Resource
+    public AdminMapper adminMapper;
+    @Resource
+    public SchoolMapper schoolMapper;
 
     /**
      * 请假申请列表
@@ -54,18 +58,32 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * 添加课程
-     * @param courseVo
+     * 请假审批
+     * @param vacateId
+     * @param isCheck
      * @return
      */
-    @Transactional
     @Override
-    public WebResult createCourse(EduCourseVo courseVo) {
+    public WebResult vacateApprover(Integer vacateId, Integer isCheck) {
+        if(isCheck == null || vacateId == null) {
+            return new WebResult("400","审批出错","");
+        }
+        vacateMapper.updateCheck(vacateId, isCheck);
+        return new WebResult("200","审批成功","");
+    }
+
+    /**
+     * 课程相关信息验证
+     * @param courseVo
+     * @param course
+     * @return
+     */
+    public WebResult security(EduCourseVo courseVo, EduCourse course) {
         List<EduClass> classList = courseVo.getClassList();
         if(classList == null || classList.size() == 0){
             return new WebResult("400","请选择上课时间","");
         }
-        EduCourse course = new EduCourse();
+
         if(StringUtils.isBlank(courseVo.getCourseName())) {
             return new WebResult("400","课程名称不能为空","");
         }
@@ -114,6 +132,9 @@ public class TeacherServiceImpl implements TeacherService {
         for (EduClass eduClass : classList) {
             String startTime = eduClass.getStartTime();
             String endTime = eduClass.getEndTime();
+            if(StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)) {
+                return new WebResult("400","请添加课程时间","");
+            }
             if(!p.matcher(startTime).matches() || !p.matcher(endTime).matches()) {
                 return new WebResult("400","请添加课程时间","");
             }
@@ -121,9 +142,39 @@ public class TeacherServiceImpl implements TeacherService {
                 return new WebResult("400","请选择周几上课","");
             }
         }
+        return null;
+    }
+
+    /**
+     * 进入添加课程页面
+     * @param schoolId
+     * @return
+     */
+    @Override
+    public WebResult intoCourse(Integer schoolId) {
+        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
+        return new WebResult("200","查询成功", teacherList);
+    }
+
+    /**
+     * 添加课程
+     * @param courseVo
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult createCourse(EduCourseVo courseVo) {
+        EduCourse course = new EduCourse();
+        WebResult security = security(courseVo, course);
+
+        if(security != null) {
+            return security;
+        }
 
         teacherMapper.insertCourse(course);
         Integer courseId = course.getCourseId();
+
+        List<EduClass> classList = courseVo.getClassList();
         for (EduClass eduClass : classList) {
             eduClass.setCourseIds(courseId);
             classMapper.insert(eduClass);
@@ -132,35 +183,88 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * 请假审批
-     * @param vacateId
-     * @param isCheck
+     * 课程列表
+     * @param pageVo
      * @return
      */
     @Override
-    public WebResult vacateApprover(Integer vacateId, Integer isCheck) {
-        if(isCheck == null || vacateId == null) {
-            return new WebResult("400","审批出错","");
+    public WebResult courseList(PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getId(), pageVo.getSearch());
+            return new WebResult("200","查询成功", courseList);
         }
-        vacateMapper.updateCheck(vacateId, isCheck);
-        return new WebResult("200","审批成功","");
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "course_id");
+        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getId(), pageVo.getSearch());
+        PageInfo pageInfo = new PageInfo<>(courseList);
+
+        return new WebResult("200","查询成功", pageInfo);
     }
 
     /**
-     * 课程列表
-     * @param adminId
+     * 进入修改课程页面
+     * @param courseId
      * @return
      */
     @Override
-    public WebResult courseList(Integer adminId, PageVo pageVo) {
-        if(adminId == null) {
-            return new WebResult("400", "请登录","");
+    public WebResult findCourse(Integer courseId) {
+        EduCourseVo courseVo = teacherMapper.selectByCourseId(courseId);
+        if(courseVo == null) {
+            return new WebResult("400", "请选择课程","");
         }
-        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "start_date");
-        List<EduCourse> courseList = teacherMapper.selectByTeacherId(adminId, pageVo.getSearch());
-        PageInfo pageInfo = new PageInfo<>(courseList);
+        List<EduClass> classList = teacherMapper.selectClassByCourseId(courseVo.getCourseId());
+        courseVo.setClassList(classList);
+        School school = schoolMapper.selectById(Integer.valueOf(courseVo.getSchoolId()));
+        courseVo.setSchoolName(school==null?"":school.getSchoolName());
+        Admin admin = adminMapper.selectById(Integer.valueOf(courseVo.getCourseTeacher()));
+        courseVo.setTeacherName(admin==null?"":admin.getName());
 
-        return new WebResult("200","请求成功", pageInfo);
+//        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(Integer.valueOf(courseVo.getSchoolId()));
+//
+//        HashMap<String, Object> map = new HashMap<>();
+//        map.put("courseVo", courseVo);
+//        map.put("teacherList", teacherList);
+
+        return new WebResult("200","查询成功", courseVo);
+    }
+
+    /**
+     * 修改课程
+     * @param courseVo
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult updateCourse(EduCourseVo courseVo) {
+        EduCourse course = new EduCourse();
+        WebResult security = security(courseVo, course);
+
+        if(security != null) {
+            return security;
+        }
+        course.setCourseId(courseVo.getCourseId());
+        teacherMapper.updateCourseByCourseId(course);
+
+        //先删除原有的详细信息
+        teacherMapper.deleteClassByCourseId(course.getCourseId());
+        //添加课程详细信息
+        List<EduClass> classList = courseVo.getClassList();
+        for (EduClass eduClass : classList) {
+            eduClass.setCourseIds(course.getCourseId());
+            classMapper.insert(eduClass);
+        }
+        return new WebResult("200","课程修改成功","");
+    }
+
+    /**
+     * 删除课程
+     * @param courseId
+     * @return
+     */
+    @Override
+    public WebResult deleteCourse(Integer courseId) {
+        teacherMapper.deleteClassByCourseId(courseId);
+        teacherMapper.deleteCourseById(courseId);
+        return new WebResult("200","删除成功","");
     }
 
 

@@ -38,24 +38,48 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public WebResult createSchool(School school) {
         if(StringUtils.isBlank(school.getSchoolName())) {
-            return new WebResult("400", "学校名称不能为空");
+            return new WebResult("400", "学校名称不能为空", "");
         }
         if(StringUtils.isBlank(school.getLongitude()) || StringUtils.isBlank(school.getLatitude())) {
-            return new WebResult("400", "学校位置不能为空");
+            return new WebResult("400", "学校位置不能为空", "");
         }
         String pinYinHeadChar = PinyinUtil.getPinYinHeadChar(school.getSchoolName());
         school.setSchoolChar(pinYinHeadChar.substring(0,1).toUpperCase());
+        //默认启用学校
+        school.setIsUsing(1);
         schoolmapper.createSchool(school);
         return new WebResult("200", "添加成功", school);
     }
 
+    /**
+     * 根据学校id获取学校
+     * @param schoolId
+     * @return
+     */
+    @Override
+    public WebResult findSchool(Integer schoolId) {
+        School school = schoolmapper.selectById(schoolId);
+        return new WebResult("200", "查询成功", school);
+    }
+
+    /**
+     * 修改学校
+     * @param school
+     * @return
+     */
     @Transactional
     @Override
-    public WebResult updateSchoolName(School school) {
+    public WebResult updateSchool(School school) {
         if(StringUtils.isBlank(school.getSchoolName())) {
-            return new WebResult("400", "学校名称不能为空");
+            return new WebResult("400", "学校名称不能为空", "");
         }
-        schoolmapper.updateSchoolName(school);
+        if(StringUtils.isBlank(school.getLongitude()) || StringUtils.isBlank(school.getLatitude())) {
+            return new WebResult("400", "学校位置不能为空", "");
+        }
+        String pinYinHeadChar = PinyinUtil.getPinYinHeadChar(school.getSchoolName());
+        school.setSchoolChar(pinYinHeadChar.substring(0,1).toUpperCase());
+
+        schoolmapper.updateSchool(school);
         return new WebResult("200", "修改成功", "");
     }
 
@@ -132,13 +156,27 @@ public class SchoolServiceImpl implements SchoolService {
      */
     @Override
     public WebResult schoolList(Integer adminId, PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<School> schoolList = schoolmapper.selectSchoolByAdminId(null, pageVo.getSearch());
+            return new WebResult("200", "获取学校列表成功", schoolList);
+        }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "school_id");
-        //todo  测试
-        adminId = 1;
-
-        List<School> schoolList = schoolmapper.selectSchoolByAdminId(adminId, pageVo.getSearch());
+        List<School> schoolList = schoolmapper.selectSchoolByAdminId(null, pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(schoolList);
         return new WebResult("200", "获取学校列表成功", pageInfo);
+    }
+
+    /**
+     * 删除学校
+     * @param schoolId
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult deleteSchool(Integer schoolId) {
+        //停用
+        schoolmapper.isUsingSchool(schoolId, 0);
+        return new WebResult("200", "删除成功", "");
     }
 
 }

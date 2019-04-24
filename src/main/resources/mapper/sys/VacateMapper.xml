@@ -25,11 +25,22 @@
         where vacate_id = #{vacateId}
     </update>
     
-    <select id="selectUserCourse" resultType="java.util.HashMap" >
+    <!--<select id="selectUserCourse" resultType="java.util.HashMap" >
         select c1.course_id as courseId, c1.course_name as courseName from edu_course c1
         INNER JOIN (SELECT course_id from edu_order where user_id = #{userId} and pay_status = 1) c2 ON c1.course_id = c2.course_id
         WHERE <![CDATA[ c1.start_date <= #{today}]]>
         <![CDATA[ and c1.end_date >= #{today}]]>
+    </select>-->
+    <select id="selectUserCourse" resultType="java.util.HashMap" >
+        select c.course_id as courseId, c.course_name as courseName
+        from edu_order o
+        LEFT JOIN edu_payment_info p on o.id = p.order_id
+        LEFT JOIN edu_order_item i on o.id = i.order_id
+        LEFT JOIN edu_course c on i.course_id = c.course_id
+        where o.user_id = #{userId}
+        and p.payment_status = 1
+        <![CDATA[ and  c.start_date <= #{today}]]>
+        <![CDATA[ and c.end_date >= #{today}]]>
     </select>
 
 </mapper>
