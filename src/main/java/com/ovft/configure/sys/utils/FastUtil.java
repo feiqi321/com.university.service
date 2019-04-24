@@ -15,18 +15,15 @@ import java.io.IOException;
  */
 public class FastUtil {
     public static StorageClient client = null;
-    public static final String  CONFI_FILE= "fdfs_client.conf";
 
 
    /* @Value("${fastdfs.tracker_servers}")
     private static String tracker_servers;*/
-//    String file = this.getClass().getResource("conf/fdfs_client.conf").getFile();
 
     static {
 
         try {
-//              ClientGlobal.init(CONFI_FILE);
-            ClientGlobal.initByTrackers("192.168.5.161:22122");
+            ClientGlobal.initByTrackers("192.168.17.128 :22122");
             TrackerClient trackerClient = new TrackerClient();
             TrackerServer trackerService = trackerClient.getConnection();
             client = new StorageClient(trackerService, null);
@@ -70,6 +67,8 @@ public class FastUtil {
             e.printStackTrace();
         }
     }
+
+
 
 
 

@@ -101,9 +101,23 @@ public class User {
     //短信验证码
     private String securityCode;
 
-    public String getVolunteer() { return volunteer; }
+    private String image;
 
-    public void setVolunteer(String volunteer) { volunteer = volunteer; }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getVolunteer() {
+        return volunteer;
+    }
+
+    public void setVolunteer(String volunteer) {
+        volunteer = volunteer;
+    }
 
     public String getTelephone() {
         return telephone;

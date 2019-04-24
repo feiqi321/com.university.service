@@ -73,9 +73,9 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    course_id, course_name, course_price, course_teacher, place_class, start_date, end_date, 
-    people_number, school_id
-  </sql>
+        course_id, course_name, course_price, course_teacher, place_class, start_date, end_date,
+        people_number, school_id
+    </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduCourseExample" resultMap="BaseResultMap">
         select
         <if test="distinct">
@@ -105,9 +105,9 @@
         where course_id = #{courseId,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from edu_course
-    where course_id = #{courseId,jdbcType=INTEGER}
-  </delete>
+        delete from edu_course
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduCourseExample">
         delete from edu_course
         <if test="_parameter != null">
@@ -115,15 +115,15 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduCourse">
-    insert into edu_course (course_id, course_name, course_price, 
-      course_teacher, place_class, start_date, 
-      end_date, people_number, school_id
-      )
-    values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL}, 
-      #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, 
-      #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
-      )
-  </insert>
+        insert into edu_course (course_id, course_name, course_price,
+        course_teacher, place_class, start_date,
+        end_date, people_number, school_id
+        )
+        values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
+        #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
+        #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
+        )
+    </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduCourse">
         insert into edu_course
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -273,23 +273,23 @@
         where course_id = #{courseId,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduCourse">
-    update edu_course
-    set course_name = #{courseName,jdbcType=VARCHAR},
-      course_price = #{coursePrice,jdbcType=DECIMAL},
-      course_teacher = #{courseTeacher,jdbcType=VARCHAR},
-      place_class = #{placeClass,jdbcType=VARCHAR},
-      start_date = #{startDate,jdbcType=DATE},
-      end_date = #{endDate,jdbcType=DATE},
-      people_number = #{peopleNumber,jdbcType=INTEGER},
-      school_id = #{schoolId,jdbcType=VARCHAR}
-    where course_id = #{courseId,jdbcType=INTEGER}
-  </update>
+        update edu_course
+        set course_name = #{courseName,jdbcType=VARCHAR},
+        course_price = #{coursePrice,jdbcType=DECIMAL},
+        course_teacher = #{courseTeacher,jdbcType=VARCHAR},
+        place_class = #{placeClass,jdbcType=VARCHAR},
+        start_date = #{startDate,jdbcType=DATE},
+        end_date = #{endDate,jdbcType=DATE},
+        people_number = #{peopleNumber,jdbcType=INTEGER},
+        school_id = #{schoolId,jdbcType=VARCHAR}
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </update>
 
 
     <!--1.查找专业类别-->
     <select id="listCourseCategoryByShoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduCourse">
-    select course_name,course_id from edu_course where school_id =#{school_id}
-   </select>
+        select * from edu_course where school_id =#{school_id}
+    </select>
 
 
     <!--2.查找专业相关报名信息-->
@@ -303,15 +303,15 @@
         from edu_course c
         left join edu_school e1 on c.school_id=e1.school_id
         left join edu_admin e2 on c.course_teacher=e2.admin_id
-        where course_id =#{courseId}
+        where course_id =#{course_id}
     </select>
 
     <!--3.查询每个科目可以报名的人数-->
     <select id="queryAcceptNum" parameterType="int" resultType="int">
-          select
-            people_number
-            from edu_course
-           WHERE course_id=#{course_id}
+        select
+        people_number
+        from edu_course
+        WHERE course_id=#{course_id}
     </select>
 
 </mapper>
