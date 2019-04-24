@@ -26,11 +26,6 @@
             from  edu_user
             where  user_id=#{userId};
          </select>
-    <select id="selectByIdAll" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
-            select *
-            from  edu_user
-            where  user_id=#{userId};
-         </select>
 
     <update id="updateByPassword">
           update edu_user set password = #{password} where phone=#{phone}
@@ -55,8 +50,8 @@
           update edu_user set password = #{newPass} where phone=#{oldPass}
     </update>
 
-   <!--查询用户所对应的学员分类-vvtxw-->
-    <select id="queryemployerByUserId" parameterType="java.lang.Integer" resultType="String">
+    <!--查询用户所对应的学员分类-vvtxw-->
+    <select id="queryemployerByUserId" parameterType="int" resultType="String">
         select
             employer
             from edu_user
@@ -67,31 +62,43 @@
         select
            *
             from edu_user
-             WHERE user_id=#{userId} and school_id=#{schoolId}
+             WHERE user_id=#{user_id} and school_id=#{schoolId}
     </select>
     <!--查询对应edu_user_item表里面是否存在该用户记录-->
     <select id="queryByItemsIdAndSchoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
         select
            *
             from edu_user_item
-             WHERE user_id=#{userId} and school_id=#{schoolId}
+             WHERE user_id=#{user_id} and school_id=#{schoolId}
     </select>
     <!--修改edu_user_item表里面该用户记录-->
     <update id="savaInfoItems" parameterType="com.ovft.configure.sys.bean.User">
-          update edu_user_item set area=#{user.area},
+          update edu_user set area=#{user.area}
            address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},volunteer=#{user.volunteer},
            employer=#{user.employer},position=#{user.position},job=#{user.job},emergency_contact1=#{user.emergencyContact1},
            emergency_relation1=#{user.emergencyRelation1},emergency_phone1=#{user.emergencyPhone1},
            emergency_contact2=#{user.emergencyContact2},emergency_relation2=#{user.emergencyRelation2},
-           emergency_phone2=#{user.emergencyPhone2} where user_id=#{user.userId} and school_id=#{user.schoolId}
+           emergency_phone2=#{user.emergencyPhone2} where userId=#{user.userId} and schoolId=#{user.schoolId}
     </update>
     <!--增加edu_user_item表里面该用户记录-->
-    <insert id="addInfoItems" parameterType="com.ovft.configure.sys.bean.User" >
-        INSERT  INTO edu_user_item VALUES (DEFAULT,#{user.userId},#{user.schoolId},#{user.area},#{user.address},#{user.political},#{user.educational},#{user.volunteer},
-          #{user.retired},#{user.employer},#{user.position},#{user.job},#{user.emergencyContact1},#{user.emergencyRelation1},#{user.emergencyRelation1},
+    <insert id="addInfoItems" parameterType="com.ovft.configure.sys.bean.User">
+        INSERT  INTO edu_user VALUES (DEFAULT,#{user.userId},#{user.schoolId},#{user.area},#{user.address},#{user.political},#{educational},volunteer=#{user.volunteer}
+          #{user.retired},#{user.employer},#{user.position},#{user.job},#{user.emergencyContact1},#{user.emergencyRelation1},#{user.emergencyRelation1}
          #{user.emergencyRelation1}, #{user.emergencyPhone1},#{user.emergencyContact2},#{user.emergencyRelation2},#{user.emergencyPhone2}
           )
 
     </insert>
+    <!--查询用户头像地址-vvtxw-->
+    <select id="queryAllAddress" parameterType="int" resultType="String">
+        select
+        image
+        from edu_user
+        WHERE user_id=#{userId}
+    </select>
+
+    <update id="updateAddress" parameterType="com.ovft.configure.sys.bean.User">
+        UPDATE edu_user SET  image=#{image} where userId=#{userId}
+    </update>
+
 
 </mapper>

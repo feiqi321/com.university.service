@@ -7,8 +7,6 @@ import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
-
-import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,17 +24,18 @@ import java.util.regex.Pattern;
 
 /**
  * @ClassName UserServiceImpl
- * @Author  xzy
+ * @Author xzy
  * @Date 2019/4/11 16:21
  * @Version 1.0
  **/
 @Service
-public class UserServiceImpl  implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
     @Autowired
     private RedisUtil redisUtil;
+
     /**
      * 用户注册
      *
@@ -46,20 +45,20 @@ public class UserServiceImpl  implements UserService {
     @Transactional
     @Override
     public WebResult addUser(User user) {
-             //验证手机号是否被注册
-           User finduserbyphone=userMapper.findUserByPhone(user);
-               if (finduserbyphone!=null){
-                   return new WebResult("400","用户已注册！");
-               }
-           //手机号码格式验证
-            WebResult phoneResult = isTure(user);
-              if (!phoneResult.getCode().equals("200")){
-                  return new WebResult("400",phoneResult.getMsg());
-              }
+        //验证手机号是否被注册
+        User finduserbyphone = userMapper.findUserByPhone(user);
+        if (finduserbyphone != null) {
+            return new WebResult("400", "用户已注册！");
+        }
+        //手机号码格式验证
+        WebResult phoneResult = isTure(user);
+        if (!phoneResult.getCode().equals("200")) {
+            return new WebResult("400", phoneResult.getMsg());
+        }
         int l = user.getPassword().length();
 
-        if (l < 6 || l > 16 ) {
-           return new WebResult("400", "密码长度必须要在6-16之间");
+        if (l < 6 || l > 16) {
+            return new WebResult("400", "密码长度必须要在6-16之间");
         }
         if (StringUtils.isBlank(user.getPassword())) {
             return new WebResult("400", "密码不能为空");
@@ -75,10 +74,10 @@ public class UserServiceImpl  implements UserService {
         user.setPassword(MD5Utils.md5Password(password));
         //短信验证码
         Object value = redisUtil.get("sendSms-" + user.getPhone());
-        if(value == null) {
+        if (value == null) {
             return new WebResult("400", "验证码失效");
         }
-        if(!user.getSecurityCode().equals(value.toString())) {
+        if (!user.getSecurityCode().equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
         WebResult result = new WebResult();
@@ -99,8 +98,8 @@ public class UserServiceImpl  implements UserService {
     public WebResult findUser(User user) {
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
-        if (!phoneResult.getCode().equals("200")){
-            return new WebResult("400",phoneResult.getMsg());
+        if (!phoneResult.getCode().equals("200")) {
+            return new WebResult("400", phoneResult.getMsg());
         }
 
         if (StringUtils.isBlank(user.getPassword())) {
@@ -121,8 +120,8 @@ public class UserServiceImpl  implements UserService {
         //添加token
         String token = UUID.randomUUID().toString();
         //pc端设置半年缓存过期
-        boolean isSet =  redisUtil.set(token, finduserbyphone.getUserId(),6*30*24*60*60);
-        if(!isSet) {
+        boolean isSet = redisUtil.set(token, finduserbyphone.getUserId(), 6 * 30 * 24 * 60 * 60);
+        if (!isSet) {
             return new WebResult("400", "登录失败");
         }
         map.put("token", token);
@@ -138,17 +137,17 @@ public class UserServiceImpl  implements UserService {
      */
     @Transactional
     @Override
-    public WebResult updatePassword(String phone, String newPassword, String nextPass,String securityCode) {
-            User user=new User();
-            user.setPhone(phone);
+    public WebResult updatePassword(String phone, String newPassword, String nextPass, String securityCode) {
+        User user = new User();
+        user.setPhone(phone);
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
-        if (!phoneResult.getCode().equals("200")){
-            return new WebResult("400",phoneResult.getMsg());
+        if (!phoneResult.getCode().equals("200")) {
+            return new WebResult("400", phoneResult.getMsg());
         }
-         //密码验证
+        //密码验证
         int l = newPassword.length();
-        if (l < 6 || l > 16 ) {
+        if (l < 6 || l > 16) {
             return new WebResult("400", "密码长度必须要在6-16之间");
         }
 
@@ -157,7 +156,7 @@ public class UserServiceImpl  implements UserService {
         }
         User findUser = userMapper.findUserByPhone2(phone);
         //判段手机号是否错误
-        if (findUser==null) {
+        if (findUser == null) {
             return new WebResult("400", "手机号不存在");
         }
         if (!newPassword.equals(nextPass)) {
@@ -167,10 +166,10 @@ public class UserServiceImpl  implements UserService {
         String newPasswordMd5 = MD5Utils.md5Password(newPassword);
         //短信验证码
         Object value = redisUtil.get("sendSms-" + user.getPhone());
-        if(value == null) {
+        if (value == null) {
             return new WebResult("400", "验证码失效");
         }
-        if(!securityCode.equals(value.toString())) {
+        if (!securityCode.equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
         userMapper.updateByPhone(phone, newPasswordMd5);
@@ -179,6 +178,7 @@ public class UserServiceImpl  implements UserService {
         result.setMsg("修改密码成功");
         return result;
     }
+
     /**
      * 修改密码 （根据原密码修改）
      *
@@ -188,17 +188,17 @@ public class UserServiceImpl  implements UserService {
     @Transactional
     @Override
     public WebResult updatePasswordByOldPass(String oldPass, String newPass, String nextPass) {
-            User findUserByOldPass=userMapper.selectByOldPass(oldPass);
-        if(findUserByOldPass==null){
-            return new WebResult("400","原密码错误");
+        User findUserByOldPass = userMapper.selectByOldPass(oldPass);
+        if (findUserByOldPass == null) {
+            return new WebResult("400", "原密码错误");
         }
         if (!newPass.equals(nextPass)) {
             return new WebResult("400", "输入的两次密码不一致");
         }
 
 
-        userMapper.updateByOldPass(newPass,newPass);
-               return new  WebResult("200","修改成功");
+        userMapper.updateByOldPass(newPass, newPass);
+        return new WebResult("200", "修改成功");
     }
 
     /**
@@ -210,18 +210,18 @@ public class UserServiceImpl  implements UserService {
     @Transactional
     @Override
     public WebResult savaInfo(User user) {
-            user.setCheckIn(0);
+        user.setCheckIn(0);
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
-        if (!phoneResult.getCode().equals("200")){
-            return new WebResult("400",phoneResult.getMsg());
+        if (!phoneResult.getCode().equals("200")) {
+            return new WebResult("400", phoneResult.getMsg());
         }
-          //固定电话的验证
-        PhoneTest phoneTest=new PhoneTest();
+        //固定电话的验证
+     /*   PhoneTest phoneTest=new PhoneTest();
            Boolean   isPhone=phoneTest.isPhone(user.getTelephone());
            if (isPhone==false){
-               return new WebResult("400", "输入电话格式有误", "");
-           }
+               return new WebResult("400", "输入电话格式有误");
+           }*/
 
         //紧急联系人一手机号验证
         if (StringUtils.isBlank(user.getEmergencyPhone1())) {
@@ -240,45 +240,42 @@ public class UserServiceImpl  implements UserService {
             }
         }
         //紧急联系人二手机号验证
-        if (user.getEmergencyPhone2()!=null){
-        if (user.getEmergencyPhone2().length() != 11) {
-            return new WebResult("400", "紧急联系人手机号应为11位");
+        if (user.getEmergencyPhone2() != null) {
+            if (user.getEmergencyPhone2().length() != 11) {
+                return new WebResult("400", "紧急联系人手机号应为11位");
+            } else {
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(user.getEmergencyPhone2());
+                boolean isMatch = m.matches();
+
+                if (!isMatch) {
+                    return new WebResult("400", "请输入正确手机号");
+                }
+            }
+        }
+        //身份证格式校验
+        boolean testCard = this.isIDNumber(user.getIdentity_card());
+        if (testCard == false) {
+            return new WebResult("400", "输入身份证格式有误");
+        }
+        //保存
+        User findUser = userMapper.queryByUserIdAndSchoolId(user.getUserId(), user.getSchoolId());
+        if (findUser == null) {
+            userMapper.savaInfo(user);
+            return new WebResult("200", "保存成功", user);
         } else {
-            Pattern p = Pattern.compile(regex);
-            Matcher m = p.matcher(user.getEmergencyPhone2());
-            boolean isMatch = m.matches();
-
-            if (!isMatch) {
-                return new WebResult("400", "请输入正确手机号");
+            User findUserItems = userMapper.queryByItemsIdAndSchoolId(user.getUserId(), user.getSchoolId());
+            if (findUserItems == null) {
+                userMapper.addInfoItems(user);
+                return new WebResult("200", "保存成功", user);
+            } else {
+                userMapper.savaInfoItems(user);
+                return new WebResult("200", "保存成功", user);
             }
         }
-        }
-         //身份证格式校验
-            boolean testCard = this.isIDNumber(user.getIdentity_card());
-            if (testCard == false) {
-                return new WebResult("400", "输入身份证格式有误");
-            }
-            //保存
-          User findUser=userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
-               if (findUser!=null){
-                   userMapper.savaInfo(user);
-                   return new WebResult("200", "保存成功",user);
-               }else{
 
+    }
 
-                  User findUserItems =userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-                    if (findUserItems==null){
-                        //新增
-                        userMapper.addInfoItems(user);
-                        return new WebResult("200", "保存成功",user);
-                    }else{
-                        //修改
-                        userMapper.savaInfoItems(user);
-                        return new WebResult("200", "保存成功",user);
-                    }
-               }
-
-        }
     /**
      * 更换手机号
      *
@@ -287,66 +284,56 @@ public class UserServiceImpl  implements UserService {
      */
     @Transactional
     @Override
-    public WebResult updatePhone(String oldPhone, String newPhone,String securityCode) {
-           User user=new User();
-           user.setPhone(newPhone);
+    public WebResult updatePhone(String oldPhone, String newPhone, String securityCode) {
+        User user = new User();
+        user.setPhone(newPhone);
         WebResult phoneResult = isTure(user);
-        if (!phoneResult.getCode().equals("200")){
-            return new WebResult("400",phoneResult.getMsg());
+        if (!phoneResult.getCode().equals("200")) {
+            return new WebResult("400", phoneResult.getMsg());
         }
-       User findUser=userMapper.findUserByPhone2(newPhone);
-           if (findUser!=null){
-               return new WebResult("400","手机号已存在");
-           }
+        User findUser = userMapper.findUserByPhone2(newPhone);
+        if (findUser != null) {
+            return new WebResult("400", "手机号已存在");
+        }
         //短信验证码
         Object value = redisUtil.get("sendSms-" + newPhone);
-        if(value == null) {
+        if (value == null) {
             return new WebResult("400", "验证码失效");
         }
-        if(!securityCode.equals(value.toString())) {
+        if (!securityCode.equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
-              userMapper.updatePhone(oldPhone,newPhone);
-               return new WebResult("200","更换成功");
+        userMapper.updatePhone(oldPhone, newPhone);
+        return new WebResult("200", "更换成功");
     }
 
     @Override
     public WebResult userQuit(String token) {
         redisUtil.setRemove(token);
-        return new WebResult("200","退出成功","");
+        return new WebResult("200", "退出成功", "");
     }
 
+    /**
+     * 查询头像——vvtxw
+     *
+     * @param userId
+     * @return
+     */
     @Override
-    public WebResult selectInfo(User user) {
-             if (user.getUserId()==null||user.getSchoolId()==null){
+    public String queryAllAddress(Integer userId) {
+        return userMapper.queryAllAddress(userId);
+    }
 
-             }
-        User findUserInfo=userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
-        if (findUserInfo==null){
-            //待优化
-            User findUserInfoById=userMapper.selectByIdAll(user.getUserId());
-            User findItemInfoById= userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-            findUserInfoById.setPassword(null);
-            findUserInfoById.setSchoolId(findItemInfoById.getSchoolId());
-            findUserInfoById.setArea(findItemInfoById.getArea());
-            findUserInfoById.setAddress(findItemInfoById.getAddress());
-            findUserInfoById.setPolitical(findItemInfoById.getPolitical());
-            findUserInfoById.setRetired(findItemInfoById.getRetired());
-            findUserInfoById.setJob(findItemInfoById.getJob());
-            findUserInfoById.setEmployer(findItemInfoById.getEmployer());
-            findUserInfoById.setEmergencyContact1(findItemInfoById.getEmergencyContact1());
-            findUserInfoById.setEmergencyRelation1(findItemInfoById.getEmergencyRelation1());
-            findUserInfoById.setEmergencyPhone1(findItemInfoById.getEmergencyPhone1());
-            findUserInfoById.setEducational(findItemInfoById.getEducational());
-            findUserInfoById.setEmergencyContact2(findItemInfoById.getEmergencyContact2());
-            findUserInfoById.setEmergencyRelation2(findItemInfoById.getEmergencyRelation2());
-            findUserInfoById.setEmergencyPhone2(findItemInfoById.getEmergencyPhone2());
-            findUserInfoById.setCheckIn(findItemInfoById.getCheckIn());
-             return  new WebResult("200","获取成功",findUserInfoById);
-        }else{
-//         User user1= userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
-            return  new WebResult("200","获取成功",findUserInfo);
-        }
+
+    /**
+     * 更新地址——vvtxw
+     *
+     * @param address
+     * @param userId
+     */
+    @Override
+    public void updateAddress(String address, Integer userId) {
+        userMapper.upadateAddress(address, userId);
     }
 
 
@@ -424,6 +411,7 @@ public class UserServiceImpl  implements UserService {
         }
         return matches;
     }
+
     //手机号格式验证
     public static WebResult isTure(User user) {
         if (StringUtils.isBlank(user.getPhone())) {

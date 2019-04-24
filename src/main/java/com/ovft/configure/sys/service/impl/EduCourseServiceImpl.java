@@ -109,6 +109,17 @@ public class EduCourseServiceImpl implements EduCourseService {
         return map;
     }
 
+    @Override
+    public EduCourseVo queryCourseByCategory(Integer courseId) {
+        //1.根据courseId查询订单的信息
+        EduCourseVo courseInfo = eduCourseMapper.queryCourseByCourseId(courseId);
+        //2.根据courseId查询开课的具体时间
+        List<EduClass> eduClasses = eduClassMapper.queryCourseTimeByCourseId(courseId);
+        //3.生成报名详情信息
+        courseInfo.setClassList(eduClasses);
+        return courseInfo;
+    }
+
     private EduCourseVo applyCourse(Integer userId, Integer courseId) {
         //1.根据courseId查询订单的信息
         EduCourseVo courseInfo = eduCourseMapper.queryCourseByCourseId(courseId);

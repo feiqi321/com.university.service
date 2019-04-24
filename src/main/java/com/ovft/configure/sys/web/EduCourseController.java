@@ -25,7 +25,7 @@ public class EduCourseController {
     private EduCourseService eduCourseService;
 
     /**
-     * 按学校的id来查找专业类别
+     * 按学校的id来查找专业类别信息
      *
      * @return
      */
@@ -40,6 +40,15 @@ public class EduCourseController {
         return new WebResult(StatusCode.OK, "查找成功", eduCourses);
     }
 
+    @GetMapping(value = "showInfo")
+    public WebResult queryAllInfo(@RequestParam(value = "courseId", required = true) Integer courseId, HttpServletRequest request) {
+        if (courseId == null) {
+            return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
+        }
+        EduCourseVo eduCourseVos = eduCourseService.queryCourseByCategory(courseId);
+        return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
+    }
+
     /**
      * 立即报名
      *
@@ -47,15 +56,13 @@ public class EduCourseController {
      * @return
      */
     @GetMapping(value = "order")
-    public WebResult queryCourseInfoById(@RequestParam(value = "courseId", required = true) Integer courseId, HttpServletRequest request) {
+    public WebResult queryCourseInfoById(@RequestParam(value = "courseId") Integer courseId, HttpServletRequest request) {
 //        String queryString = request.getQueryString();
 //        Integer courseId = Integer.parseInt(queryString);
 //        System.out.println(queryString);
 //        Integer userId = (Integer) request.getAttribute("userId");
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-
-        System.out.println(userId);
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
         }
@@ -72,7 +79,6 @@ public class EduCourseController {
                 return new WebResult(StatusCode.OK, message, eduCourseVo);
             }
         }
-
         return new WebResult(StatusCode.ERROR, "查询没有数据", null);
     }
 
