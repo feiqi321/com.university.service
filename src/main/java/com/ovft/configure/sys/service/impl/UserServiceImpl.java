@@ -7,6 +7,7 @@ import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
+import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,9 +56,7 @@ public class UserServiceImpl  implements UserService {
                   return new WebResult("400",phoneResult.getMsg());
               }
         int l = user.getPassword().length();
-              if (user.getPassword().equals("123456")){
-                  return new WebResult("400", "密码不能过于简单");
-              }
+
         if (l < 6 || l > 16 ) {
            return new WebResult("400", "密码长度必须要在6-16之间");
         }
@@ -113,7 +112,7 @@ public class UserServiceImpl  implements UserService {
 
         String pasword = MD5Utils.md5Password(user.getPassword());
         if (!pasword.equals(finduserbyphone.getPassword())) {
-            return new WebResult("400", "密码错误");
+            return new WebResult("400", "帐号或密码错误");
         }
         HashMap<String, Object> map = new HashMap();
         map.put("user", finduserbyphone);
@@ -173,13 +172,19 @@ public class UserServiceImpl  implements UserService {
         if(!securityCode.equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
-        userMapper.updateByPassword(phone, newPasswordMd5);
+        userMapper.updateByPhone(phone, newPasswordMd5);
         WebResult result = new WebResult();
         result.setCode("200");
         result.setMsg("修改密码成功");
         return result;
     }
-
+    /**
+     * 修改密码 （根据原密码修改）
+     *
+     * @param oldPass, newPassword, nextpass
+     * @return
+     */
+    @Transactional
     @Override
     public WebResult updatePasswordByOldPass(String oldPass, String newPass, String nextPass) {
             User findUserByOldPass=userMapper.selectByOldPass(oldPass);
@@ -204,12 +209,19 @@ public class UserServiceImpl  implements UserService {
     @Transactional
     @Override
     public WebResult savaInfo(User user) {
-
+            user.setCheckIn(0);
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
         if (!phoneResult.getCode().equals("200")){
             return new WebResult("400",phoneResult.getMsg());
         }
+          //固定电话的验证
+        PhoneTest phoneTest=new PhoneTest();
+           Boolean   isPhone=phoneTest.isPhone(user.getTelephone());
+           if (isPhone==false){
+               return new WebResult("400", "输入电话格式有误");
+           }
+
         //紧急联系人一手机号验证
         if (StringUtils.isBlank(user.getEmergencyPhone1())) {
             return new WebResult("400", "紧急联系人1电话不能为空");
@@ -246,8 +258,21 @@ public class UserServiceImpl  implements UserService {
                 return new WebResult("400", "输入身份证格式有误");
             }
             //保存
-            userMapper.savaInfo(user);
-            return new WebResult("200", "保存成功",user);
+          User findUser=userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
+               if (findUser==null){
+                   userMapper.savaInfo(user);
+                   return new WebResult("200", "保存成功",user);
+               }else{
+                  User findUserItems =userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+                    if (findUserItems==null){
+                        userMapper.addInfoItems(user);
+                        return new WebResult("200", "保存成功",user);
+                    }else{
+                        userMapper.savaInfoItems(user);
+                        return new WebResult("200", "保存成功",user);
+                    }
+               }
+
         }
     /**
      * 更换手机号

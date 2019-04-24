@@ -18,9 +18,16 @@ public class User {
     private Integer schoolId;
     private String phone;
     /**
+     * 固定电话
+     */
+    private String telephone;
+
+    /**
      * 居住地
      */
+
     private String area;
+
 
     /**
      * 地址
@@ -53,6 +60,11 @@ public class User {
      * 职务
      */
     private String job;
+    /**
+     * 志愿者
+     */
+    private String volunteer;
+
 
     /**
      * 学员分类
@@ -72,6 +84,8 @@ public class User {
     /**
      * 紧急联系人电话1
      */
+
+
     private String emergencyPhone1;
     private String emergencyContact2;
     private String emergencyRelation2;
@@ -86,6 +100,18 @@ public class User {
     private String identity_card;
     //短信验证码
     private String securityCode;
+
+    public String getVolunteer() { return volunteer; }
+
+    public void setVolunteer(String volunteer) { volunteer = volunteer; }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
     public String getArea() {
         return area;

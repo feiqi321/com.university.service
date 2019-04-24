@@ -18,7 +18,7 @@
             select * from  edu_user where  password=#{user.password};
          </select>
 
-    <select id="selectById" resultType="com.ovft.configure.sys.bean.User">
+    <select id="selectById" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
             select user_id as auserId,
             user_name as userName,
             emergency_contact1 as emergencyContact1,
@@ -31,8 +31,8 @@
           update edu_user set password = #{password} where phone=#{phone}
     </update>
     <update id="savaInfo" parameterType="com.ovft.configure.sys.bean.User">
-          update edu_user set user_name=#{user.userName},sex=#{user.sex},identity_card=#{user.identity_card},
-           address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},
+          update edu_user set user_name=#{user.userName},sex=#{user.sex},school_id=#{user.schoolId},area=#{user.area},volunteer=#{user.volunteer},
+          identity_card=#{user.identity_card},address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},
            employer=#{user.employer},position=#{user.position},job=#{user.job},emergency_contact1=#{user.emergencyContact1},
            emergency_relation1=#{user.emergencyRelation1},emergency_phone1=#{user.emergencyPhone1},
            emergency_contact2=#{user.emergencyContact2},emergency_relation2=#{user.emergencyRelation2},
@@ -41,9 +41,11 @@
     <update id="updatePhone" parameterType="java.lang.String">
               update  edu_user set phone=#{newPhone} where  phone=#{phone}
     </update>
-    <update id="selectByOldPass" parameterType="java.lang.String">
-             select * from  edu_user where phone=#{oldPass};
-    </update>
+    <!--通过原密码查询-->
+    <select id="selectByOldPass" parameterType="java.lang.String" resultType="com.ovft.configure.sys.bean.User">
+             select * from  edu_user where password=#{oldPass}
+    </select>
+    <!--通过原密码修改-->
     <update id="updateByOldPass">
           update edu_user set password = #{newPass} where phone=#{oldPass}
     </update>
@@ -53,7 +55,38 @@
         select
             employer
             from edu_user
-            WHERE user_id=#{user_id}
+            WHERE user_id=#{userId}
     </select>
+    <!--查询对应edu_user表里面是否存在该用户记录-->
+    <select id="queryByUserIdAndSchoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
+        select
+           *
+            from edu_user
+             WHERE user_id=#{user_id} and school_id=#{schoolId}
+    </select>
+    <!--查询对应edu_user_item表里面是否存在该用户记录-->
+    <select id="queryByItemsIdAndSchoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
+        select
+           *
+            from edu_user_item
+             WHERE user_id=#{user_id} and school_id=#{schoolId}
+    </select>
+    <!--修改edu_user_item表里面该用户记录-->
+    <update id="savaInfoItems" parameterType="com.ovft.configure.sys.bean.User">
+          update edu_user set area=#{user.area}
+           address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},volunteer=#{user.volunteer},
+           employer=#{user.employer},position=#{user.position},job=#{user.job},emergency_contact1=#{user.emergencyContact1},
+           emergency_relation1=#{user.emergencyRelation1},emergency_phone1=#{user.emergencyPhone1},
+           emergency_contact2=#{user.emergencyContact2},emergency_relation2=#{user.emergencyRelation2},
+           emergency_phone2=#{user.emergencyPhone2} where userId=#{user.userId} and schoolId=#{user.schoolId}
+    </update>
+    <!--增加edu_user_item表里面该用户记录-->
+    <insert id="addInfoItems" parameterType="com.ovft.configure.sys.bean.User" >
+        INSERT  INTO edu_user VALUES (DEFAULT,#{user.userId},#{user.schoolId},#{user.area},#{user.address},#{user.political},#{educational},volunteer=#{user.volunteer}
+          #{user.retired},#{user.employer},#{user.position},#{user.job},#{user.emergencyContact1},#{user.emergencyRelation1},#{user.emergencyRelation1}
+         #{user.emergencyRelation1}, #{user.emergencyPhone1},#{user.emergencyContact2},#{user.emergencyRelation2},#{user.emergencyPhone2}
+          )
+
+    </insert>
 
 </mapper>

@@ -21,7 +21,7 @@ public interface UserMapper {
         //通过密码查找用户
         public User findUserByPassword(@Param("user") User user);
         //修改密码
-        public void updateByPassword(@Param("phone") String phone, @Param("password") String password);
+        public void updateByPhone(@Param("phone") String phone, @Param("password") String password);
         //保存基本信息
         public void savaInfo(@Param("user") User user);
         //更换手机
@@ -34,6 +34,15 @@ public interface UserMapper {
         public void updateByOldPass(@Param("newPass") String newPass,@Param("oldPass") String oldPass);
         //查询用户所对应的学员分类-vvtxw
         public String queryemployerByUserId(Integer userId);
+        //查询对应学员
+        public User queryByUserIdAndSchoolId(Integer userId,Integer schoolId);
+        //查询对应学员是否已选择该学校
+        public User queryByItemsIdAndSchoolId(Integer userId,Integer schoolId);
+        //更换学校时保存信息
+        public void savaInfoItems(@Param("user") User user);
+        //增加更换学校时信息
+        public void addInfoItems(@Param("user") User user);
+
 
 
 }
