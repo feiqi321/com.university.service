@@ -38,6 +38,19 @@ public class School {
 
     private Integer isUsing;
 
+    /**
+     * 轮播图
+     */
+    private String slideshow;
+
+    public String getSlideshow() {
+        return slideshow;
+    }
+
+    public void setSlideshow(String slideshow) {
+        this.slideshow = slideshow;
+    }
+
     public Integer getIsUsing() {
         return isUsing;
     }

@@ -5,7 +5,7 @@
 
 
     <sql id="Base_Column_List">
-        school_id, school_name, admin_id, longitude, latitude, image, school_char, is_using
+        school_id, school_name, admin_id, longitude, latitude, image, school_char, is_using, slideshow
     </sql>
     <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.School">
         <id column="school_id" jdbcType="INTEGER" property="schoolId"/>
@@ -16,6 +16,7 @@
         <result column="image" jdbcType="VARCHAR" property="image"/>
         <result column="school_char" jdbcType="VARCHAR" property="schoolChar"/>
         <result column="is_using" jdbcType="INTEGER" property="isUsing"/>
+        <result column="slideshow" jdbcType="VARCHAR" property="slideshow"/>
     </resultMap>
 
     <select id="selectById" resultMap="BaseResultMap">
@@ -39,8 +40,8 @@
 
     <insert id="createSchool" parameterType="com.ovft.configure.sys.bean.School" useGeneratedKeys="true"
             keyProperty="schoolId">
-         insert into edu_school(school_name, admin_id, longitude, latitude, image, school_char, is_using)
-         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude}, #{image}, #{schoolChar}, #{isUsing})
+         insert into edu_school(school_name, admin_id, longitude, latitude, image, school_char, is_using, slideshow)
+         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude}, #{image}, #{schoolChar}, #{isUsing}, #{slideshow})
     </insert>
 
 
@@ -72,7 +73,8 @@
     </select>
     <select id="selectSchoolAll" resultType="com.ovft.configure.sys.bean.School">
        SELECT  school_id as schoolId, school_name as schoolName,school_char as schoolChar, image
-       from  edu_school;
+       from  edu_school
+       where is_using = 1;
     </select>
       <update id="switchSchoolID" parameterType="int">
               update edu_user
