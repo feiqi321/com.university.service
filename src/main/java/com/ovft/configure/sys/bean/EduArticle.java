@@ -76,18 +76,26 @@ public class EduArticle implements Serializable {
      * 类型
      */
     private String type;
-
     /**
      * 收藏
      */
+
     private String collect;
 
     /**
      * 文章正文
      */
     private String content;
+    /**
+     * 学校id
+     */
+    private Integer schoolId;
 
     private static final long serialVersionUID = 1L;
+
+    public void setSchoolId(Integer schoolId) { this.schoolId = schoolId; }
+
+    public Integer getSchoolId() { return schoolId; }
 
     public String getId() {
         return id;
@@ -272,28 +280,24 @@ public class EduArticle implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", userid=").append(userid);
-        sb.append(", title=").append(title);
-        sb.append(", image=").append(image);
-        sb.append(", createtime=").append(createtime);
-        sb.append(", updatetime=").append(updatetime);
-        sb.append(", ispublic=").append(ispublic);
-        sb.append(", istop=").append(istop);
-        sb.append(", visits=").append(visits);
-        sb.append(", thumbup=").append(thumbup);
-        sb.append(", comment=").append(comment);
-        sb.append(", state=").append(state);
-        sb.append(", url=").append(url);
-        sb.append(", type=").append(type);
-        sb.append(", collect=").append(collect);
-        sb.append(", content=").append(content);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return "EduArticle{" +
+                "id='" + id + '\'' +
+                ", userid='" + userid + '\'' +
+                ", title='" + title + '\'' +
+                ", image='" + image + '\'' +
+                ", createtime=" + createtime +
+                ", updatetime=" + updatetime +
+                ", ispublic='" + ispublic + '\'' +
+                ", istop='" + istop + '\'' +
+                ", visits=" + visits +
+                ", thumbup=" + thumbup +
+                ", comment=" + comment +
+                ", state='" + state + '\'' +
+                ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
+                ", collect='" + collect + '\'' +
+                ", content='" + content + '\'' +
+                ", schoolId=" + schoolId +
+                '}';
     }
 }

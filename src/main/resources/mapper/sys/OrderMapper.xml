@@ -2,20 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.OrderMapper">
     <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.Order">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="order_sn" jdbcType="VARCHAR" property="orderSn"/>
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="order_status" jdbcType="INTEGER" property="orderStatus"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
-        <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime"/>
-        <result column="total_amount" jdbcType="BIGINT" property="totalAmount"/>
-        <result column="payment_way" jdbcType="VARCHAR" property="paymentWay"/>
-        <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo"/>
-        <result column="trade_body" jdbcType="VARCHAR" property="tradeBody"/>
-        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
-        <result column="consignee" jdbcType="VARCHAR" property="consignee"/>
-    </resultMap>
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="order_sn" jdbcType="VARCHAR" property="orderSn"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="order_status" jdbcType="INTEGER" property="orderStatus"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
+    <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime"/>
+    <result column="total_amount" jdbcType="BIGINT" property="totalAmount"/>
+    <result column="payment_way" jdbcType="VARCHAR" property="paymentWay"/>
+    <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo"/>
+    <result column="trade_body" jdbcType="VARCHAR" property="tradeBody"/>
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+    <result column="consignee" jdbcType="VARCHAR" property="consignee"/>
+</resultMap>
     <sql id="Example_Where_Clause">
         <where>
             <foreach collection="oredCriteria" item="criteria" separator="or">

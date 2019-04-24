@@ -269,7 +269,7 @@ public class UserServiceImpl  implements UserService {
                return new WebResult("400","手机号已存在");
            }
         //短信验证码
-        Object value = redisUtil.get("sendSms-" + user.getPhone());
+        Object value = redisUtil.get("sendSms-" + newPhone);
         if(value == null) {
             return new WebResult("400", "验证码失效");
         }

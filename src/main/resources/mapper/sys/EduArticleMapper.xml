@@ -469,5 +469,76 @@
 
     </select>
 
+    <!--后台增加文章信息-->
+    <insert id="adminAddNotice" parameterType="com.ovft.configure.sys.bean.EduArticle" >
+        insert  into edu_article values(#{eduArticle.id},#{eduArticle.userid},#{eduArticle.title},#{eduArticle.content},#{eduArticle.image},#{eduArticle.createtime}，
+        #{eduArticle.updatetime},#{eduArticle.ispublic},#{eduArticle.istop},#{eduArticle.visits},#{eduArticle.thumbup}, #{eduArticle.comment},
+        #{eduArticle.state},#{eduArticle.url},#{eduArticle.type},#{eduArticle.collect},#{eduArticle.schoolId}
+        );
+    </insert>
+
+    <!--<sql id="Base_Column_List">-->
+    <!--id, userid, title, content, image, createtime, updatetime,ispublic,istop,visits,thumbup,comment,state,url,type,-->
+    <!--collect, schoolId-->
+  <!--</sql>-->
+    <!--&lt;!&ndash;后台条件查询文章&ndash;&gt;-->
+    <!--<resultMap id="BaseResultMap"  type="com.ovft.configure.sys.bean.EduArticle ">-->
+        <!--<id column="id" jdbcType="VARCHAR" property="id"/>-->
+        <!--<result column="userid" jdbcType="VARCHAR" property="userid"/>-->
+        <!--<result column="title" jdbcType="VARCHAR" property="title"/>-->
+        <!--<result column="content" jdbcType="VARCHAR" property="content"/>-->
+        <!--<result column="image" jdbcType="VARCHAR" property="image"/>-->
+        <!--<result column="createtime" jdbcType="DATE" property="createtime"/>-->
+        <!--<result column="updatetime" jdbcType="DATE" property="updatetime"/>-->
+        <!--<result column="ispublic" jdbcType="VARCHAR" property="ispublic"/>-->
+        <!--<result column="istop" jdbcType="VARCHAR" property="istop"/>-->
+        <!--<result column="visits" jdbcType="INTEGER" property="visits"/>-->
+        <!--<result column="thumbup" jdbcType="INTEGER" property="thumbup"/>-->
+        <!--<result column="comment" jdbcType="INTEGER" property="comment"/>-->
+        <!--<result column="state" jdbcType="VARCHAR" property="state"/>-->
+        <!--<result column="url" jdbcType="VARCHAR" property="url"/>-->
+        <!--<result column="type" jdbcType="VARCHAR" property="type"/>-->
+        <!--<result column="collect" jdbcType="VARCHAR" property="collect"/>-->
+        <!--<result column="school_id" jdbcType="INTEGER" property="schoolId"/>-->
+    <!--</resultMap>-->
+    <!--<select id="findNoticeAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from edu_article-->
+        <!--where type = #{type}-->
+        <!--<if test="search != null and search != ''">-->
+            <!--AND title like CONCAT('%',#{search},'%')-->
+        <!--</if>-->
+    <!--</select>-->
+
+    <!--后台删除文章信息-->
+    <delete id="deleteNotice" parameterType="int">
+      delete
+         from edu_article
+           where  id={id}
+    </delete>
+
+    <!--后台批量删除文章信息-->
+    <delete id="deleteMoreEmp" parameterType="int[]">
+        <!-- delete from emp where empno in(7789,7790) -->
+        <!-- forEach : 用来循环 collection : 用来指定循环的数据的类型 可以填的值有：array,list,map item
+            : 循环中为每个循环的数据指定一个别名 index : 循环中循环的下标 open : 开始 close : 结束 separator : 数组中元素之间的分隔符 -->
+        delete from edu_article where id in
+        <foreach collection="array" item="ids" index="no" open="("
+                 separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--后台修改文章信息-->
+    <update id="updateNotice" parameterType="com.ovft.configure.sys.bean.EduArticle" >
+       update  edu_article
+         set  userid=#{eduArticle.userid},title=#{eduArticle.title},content=#{eduArticle.content},i=#{eduArticle.image},createtime=#{eduArticle.createtime},upadettime=#{eduArticle.updatetime}
+         ispublic=#{eduArticle.ispublic},istop=#{eduArticle.istop},visit=#{eduArticle.visits},thumbup=#{eduArticle.thumbup},comment=#{eduArticle.comment},state=#{eduArticle.state},
+         url=#{eduArticle.url},type=#{eduArticle.type},collect=#{eduArticle.collect},school_id=#{eduArticle.schoolId}
+        where  id=#{id}
+    </update>
+
+
 
 </mapper>

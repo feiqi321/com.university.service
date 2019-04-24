@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 public class SchoolController {
     @Autowired
     private SchoolService schoolService;
-
     /**
      * 添加学校
      * @param school
@@ -72,6 +71,5 @@ public class SchoolController {
         Integer adminId = (Integer) request.getAttribute("adminId");
         return schoolService.schoolList(adminId, pageVo);
     }
-
 
 }
