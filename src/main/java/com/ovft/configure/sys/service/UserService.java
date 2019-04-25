@@ -8,11 +8,24 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
     public WebResult addUser(User user);
+
     public WebResult findUser(User user);
-    public WebResult updatePassword( String phone, String newPassword, String nextPass,String securityCode);
-    public WebResult updatePasswordByOldPass(String oldPass,String newPass,String nextPass);
+
+    public WebResult updatePassword(String phone, String newPassword, String nextPass, String securityCode);
+
+    public WebResult updatePasswordByOldPass(String oldPass, String newPass, String nextPass);
+
     public WebResult savaInfo(User user);
-    public WebResult updatePhone(String oldPhone,String newPhone,String securityCode);
+
+    public WebResult updatePhone(String oldPhone, String newPhone, String securityCode);
+
     public WebResult userQuit(String token);
-    public WebResult selectInfo( User user);
+
+    public WebResult selectInfo(User user);
+
+    //查找头像地址
+    public String queryAllAddress(Integer userId);
+
+    //上传头像
+    public void updateAddress(User user);
 }

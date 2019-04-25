@@ -16,14 +16,10 @@ import java.io.IOException;
 public class FastUtil {
     public static StorageClient client = null;
 
-
-   /* @Value("${fastdfs.tracker_servers}")
-    private static String tracker_servers;*/
-
     static {
 
         try {
-            ClientGlobal.initByTrackers("192.168.17.128 :22122");
+            ClientGlobal.initByTrackers("120.27.16.130:22122");
             TrackerClient trackerClient = new TrackerClient();
             TrackerServer trackerService = trackerClient.getConnection();
             client = new StorageClient(trackerService, null);
@@ -46,30 +42,6 @@ public class FastUtil {
 
         return filePath;
     }
-
-    public static void uploadFile() throws IOException, MyException {
-        String file_buff = "d://1.png";
-        String file_ext_name="png";
-        String[] upload_appender_file = client.upload_appender_file(file_buff, file_ext_name, null);
-        System.out.println(upload_appender_file[0]);
-        System.out.println(upload_appender_file[1]);
-
-        System.out.println("文件路径为："+upload_appender_file[0]+"/"+upload_appender_file[1]);
-
-
-    }
-
-    public static void main(String[] args) {
-        try {
-            uploadFile();
-        } catch (IOException | MyException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-
-
 
 
 }

@@ -103,6 +103,16 @@ public class User {
 
     private Integer userItemId;
 
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Integer getUserItemId() {
         return userItemId;
     }

@@ -89,7 +89,8 @@
     </update>
 
     <!--增加edu_user_item表里面该用户记录-->
-    <insert id="saveInfoItems" parameterType="com.ovft.configure.sys.bean.User" useGeneratedKeys="true" keyProperty="userItemId">
+    <insert id="saveInfoItems" parameterType="com.ovft.configure.sys.bean.User" useGeneratedKeys="true"
+            keyProperty="userItemId">
         insert into edu_user_item (user_id,user_name,
         sex,school_id,telephone,area,address,
         political,educational,position,retired,
@@ -102,5 +103,18 @@
           #{checkin},#{identityCard},#{volunteer}
           )
     </insert>
+
+    <!--查询用户头像地址-vvtxw-->
+    <select id="queryAllAddress" parameterType="int" resultType="String">
+        select
+        image
+        from edu_user
+        WHERE user_id=#{userId}
+    </select>
+
+    <!--用户头像地址-vvtxw-->
+    <update id="updateAddress" parameterType="com.ovft.configure.sys.bean.User">
+        UPDATE edu_user SET  image=#{user.image} where user_Id=#{user.userId}
+    </update>
 
 </mapper>

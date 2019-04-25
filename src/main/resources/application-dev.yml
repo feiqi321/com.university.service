@@ -1,5 +1,5 @@
 server:
-  port: 8850
+  port: 8830
 
 logging:
   level:
@@ -16,13 +16,13 @@ logging:
 
 spring:
   application:
-    name: game
+    name: old-university
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.31.200/elderly_edu?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://120.27.16.130/elderly_edu?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     username: root
-    password: root
+    password: 20190425
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -34,7 +34,7 @@ spring:
       max-file-size: 1MB
       max-request-size: 10MB
 redis:
-    host: 192.168.31.200
+    host: 120.27.16.130
     port: 6379
     pool:
       max-active: 300
@@ -50,11 +50,8 @@ ftp:
   imgpath: /home/ftpadmin/dev/images
 
 fastdfs:
-    connect_timeout_in_seconds: 5
-    netword_timeout_in_seconds: 30
     charset: UTF-8
-    tracker_servers: 192.168.17.128 :22122
-    storage.url: http://192.168.17.128/
+    tracker_servers: 120.27.16.130:22122
 
 
 

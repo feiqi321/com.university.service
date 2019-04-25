@@ -14,36 +14,54 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
     //用户注册
     public void addUser(@Param("user") User user);
+
     //通过电话号码查找用户1
     public User findUserByPhone(@Param("user") User user);
+
     //通过电话号码查找用户2
     public User findUserByPhone2(@Param("phone") String phone);
+
     //通过密码查找用户
     public User findUserByPassword(@Param("user") User user);
+
     //修改密码
     public void updateByPhone(@Param("phone") String phone, @Param("password") String password);
+
     //保存基本信息
     public void savaInfo(@Param("user") User user);
+
     //更换手机
-    public void updatePhone(@Param("phone") String phone,@Param("newPhone") String newPhone);
+    public void updatePhone(@Param("phone") String phone, @Param("newPhone") String newPhone);
+
     //根据id查找用户
     public User selectById(@Param("userId") Integer userId);
+
     //根据id查找全部用户信息
     public User selectByIdAll(@Param("userId") Integer userId);
+
     //根据原密码查找用户
     public User selectByOldPass(@Param("oldPass") String oldPass);
+
     //修改密码
-    public void updateByOldPass(@Param("newPass") String newPass,@Param("oldPass") String oldPass);
+    public void updateByOldPass(@Param("newPass") String newPass, @Param("oldPass") String oldPass);
+
     //查询用户所对应的学员分类-vvtxw
     public String queryemployerByUserId(Integer userId);
+
     //查询对应学员是否已选择该学校
-    public User queryByItemsIdAndSchoolId(@Param("userId")Integer userId,@Param("schoolId")Integer schoolId);
+    public User queryByItemsIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
+
     //更换学校时保存信息
     public void updateInfoItems(User user);
+
     //增加更换学校时信息
     public void saveInfoItems(User user);
 
+    //查找头像地址
+    public String queryAllAddress(Integer userId);
 
+    //上传头像
+    public void updateAddress(@Param("user") User user);
 
 
 }

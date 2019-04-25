@@ -19,21 +19,17 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 public class UploadUtil {
-    @Value("${fastdfs.storage.url}")
-    private static String storageHost;
 
     public static String uploadImge(Base64File base64File) {
         System.out.println(base64File.getContent());
         MultipartFile multipartFile = BASE64DecodedMultipartFile.base64Convert(base64File.getContent());
         String originalFilename = multipartFile.getOriginalFilename();
         System.out.println(originalFilename);
-        System.out.println(storageHost);
         String extName = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         System.out.println(extName);
         String filePath = null;
         try {
             filePath = FastUtil.uploadFile(multipartFile.getBytes(), extName);
-            filePath = storageHost + filePath;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
