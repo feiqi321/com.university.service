@@ -191,11 +191,7 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public WebResult teacherList(PageVo pageVo) {
-        Integer schoolId = pageVo.getId();
-//        if(schoolId == null) {
-//            return new WebResult("400", "请选择学校", "");
-//        }
-
+        Integer schoolId = pageVo.getSchoolId();
         if(pageVo.getPageSize() == 0) {
             List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
             return new WebResult("200", "查询成功", teacherList);
@@ -228,7 +224,7 @@ public class AdminServiceImpl implements AdminService {
         }
         //添加教师时学校id不能为空
         if(role == 2) {
-            if(admin.getSchoolId() != null) {
+            if(admin.getSchoolId() == null) {
                 return new WebResult("400", "请选择学校", "");
             }
         }

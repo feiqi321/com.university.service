@@ -36,6 +36,17 @@ public class EduArticleController {
     }
 
     /**
+     * 进入文章
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/article/queryNotice")
+    public WebResult queryNoticeById(@RequestParam(value = "id", required = true) Integer id) {
+        return eduArticleService.findNotice(id);
+    }
+
+    /**
      * 后台添加 修改  1-通知公告, 3-校园介绍,  4-联盟资讯,   5-政策法规
      *
      * @param eduArticle

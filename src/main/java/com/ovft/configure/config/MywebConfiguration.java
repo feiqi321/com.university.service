@@ -32,7 +32,7 @@ public class MywebConfiguration extends WebMvcConfigurerAdapter {
                 .addPathPatterns("/**")
                 //TODO    放行路径待修改
                 .excludePathPatterns("/server/admin/login", "/user/login", "/user/regist", "/sms/sendSms",
-                        "/apply/showCategory", "/article/notice");
+                        "/apply/showCategory", "/article/**");
         super.addInterceptors(registry);
     }
 }

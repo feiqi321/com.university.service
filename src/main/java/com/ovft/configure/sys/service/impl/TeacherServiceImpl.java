@@ -190,11 +190,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult courseList(PageVo pageVo) {
         if(pageVo.getPageSize() == 0) {
-            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getId(), pageVo.getSearch());
+            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getSchoolId(), pageVo.getSearch());
             return new WebResult("200","查询成功", courseList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "course_id");
-        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getId(), pageVo.getSearch());
+        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getSchoolId(), pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(courseList);
 
         return new WebResult("200","查询成功", pageInfo);
@@ -217,12 +217,6 @@ public class TeacherServiceImpl implements TeacherService {
         courseVo.setSchoolName(school==null?"":school.getSchoolName());
         Admin admin = adminMapper.selectById(Integer.valueOf(courseVo.getCourseTeacher()));
         courseVo.setTeacherName(admin==null?"":admin.getName());
-
-//        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(Integer.valueOf(courseVo.getSchoolId()));
-//
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("courseVo", courseVo);
-//        map.put("teacherList", teacherList);
 
         return new WebResult("200","查询成功", courseVo);
     }

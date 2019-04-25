@@ -82,7 +82,7 @@ public class UserController {
      */
     @PostMapping(value = "/userQuit")
     public WebResult userQuit(HttpServletRequest request){
-        String token=(String) request.getAttribute("token");
+        String token=request.getHeader("token");
         return userService.userQuit(token);
     }
     /**
