@@ -274,4 +274,28 @@
 			 where
 			 user_id =#{user_id}
   </select>
+
+    <!--查询当日的打卡课程相关信息-->
+    <select id="queryNowDayRecord" parameterType="String" resultType="com.ovft.configure.sys.vo.EduCheckVo">
+	   select
+            q.*
+            from
+            (
+            select
+                c.course_name,
+                c.place_class,
+                c.start_date,
+                s.start_time,
+                s.end_time,
+                order_id
+                from
+                    edu_course  c
+                    INNER JOIN edu_class_schedule s on c.course_id = s.course_ids
+                    INNER JOIN edu_order_item  i on i.course_id = c.course_id
+                ) q
+                LEFT JOIN edu_payment_info f on f.order_id=q.order_id
+            where payment_status=1 and start_date=#{start_date}
+  </select>
+
+
 </mapper>

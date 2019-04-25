@@ -69,6 +69,18 @@ public class EduCheckController {
     }
 
     /**
+     * 查询当日打卡信息课程
+     *
+     * @return
+     */
+    @GetMapping(value = "showdaycourse")
+    public WebResult queryAllDayCourse() {
+        List<EduCheckVo> eduCheckVos = eduCheckService.queryNowDayRecord();
+        return new WebResult(StatusCode.OK, "查询成功", eduCheckVos);
+    }
+
+
+    /**
      * 打卡记录
      *
      * @return

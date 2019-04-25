@@ -42,5 +42,13 @@ public interface EduCheckMapper {
      */
     List<EduCheckVo> queryAllPunchRecord(Integer userId);
 
+    /**
+     * 查询当天的打开课程信息
+     * @return
+     */
+    List<EduCheckVo> queryNowDayRecord(String nowDay);
+
+
+
 
 }

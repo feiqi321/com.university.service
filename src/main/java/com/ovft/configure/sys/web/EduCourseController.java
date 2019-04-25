@@ -6,6 +6,7 @@ import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.service.EduCourseService;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,9 @@ public class EduCourseController {
     @Autowired
     private EduCourseService eduCourseService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 按学校的id来查找专业类别信息
      *
@@ -31,8 +35,10 @@ public class EduCourseController {
      */
     @GetMapping(value = "showCategory")
     public WebResult queryAllCourse(HttpServletRequest request) {
-        String schoolId1 = request.getHeader("schoolId");
-        Integer schoolId = Integer.parseInt(schoolId1);
+//        String schoolId1 = request.getHeader("schoolId");
+//        Integer schoolId = Integer.parseInt(schoolId1);
+        Integer schoolId = 1;
+
         if (schoolId == null) {
             return new WebResult(StatusCode.ERROR, "学校id不能为空", "");
         }
@@ -45,7 +51,11 @@ public class EduCourseController {
         if (courseId == null) {
             return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
         }
-        EduCourseVo eduCourseVos = eduCourseService.queryCourseByCategory(courseId);
+        EduCourseVo eduCourseVos = (EduCourseVo) redisTemplate.opsForValue().get("course" + courseId);
+        if (eduCourseVos == null) {
+            eduCourseVos = eduCourseService.queryCourseByCategory(courseId);
+            redisTemplate.opsForValue().set("course" + courseId, eduCourseVos);
+        }
         return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
     }
 
