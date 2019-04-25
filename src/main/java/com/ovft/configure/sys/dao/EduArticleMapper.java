@@ -1,20 +1,18 @@
 package com.ovft.configure.sys.dao;
 
-import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.bean.EduArticleExample;
+import com.ovft.configure.sys.vo.EduArticleVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-
-import com.ovft.configure.sys.vo.PageVo;
-import org.apache.ibatis.annotations.Param;
 
 public interface EduArticleMapper {
     long countByExample(EduArticleExample example);
 
     int deleteByExample(EduArticleExample example);
 
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(EduArticle record);
 
@@ -45,20 +43,14 @@ public interface EduArticleMapper {
      * @return
      */
     public List<EduArticle> queryAllNotice(String type);
-    /**
-     * 后台添加文章
-     *
-     * @param eduArticle
-     * @return
-     */
-    public void adminAddNotice(EduArticle eduArticle);
+
     /**
      * 后台条件查询文章
      *
      * @param type
      * @return
      */
-    public List<EduArticle> findNoticeAll(@Param("type")String type, @Param("search") String search);
+    public List<EduArticleVo> findNoticeAll(@Param("id")Integer id, @Param("schoolId")Integer schoolId, @Param("type")String type, @Param("search") String search);
     /**
      * 后台删除文章
      *

@@ -22,6 +22,7 @@
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ovft.configure.sys.bean.EduArticle">
         <result column="content" jdbcType="LONGVARCHAR" property="content"/>
     </resultMap>
+
     <sql id="Example_Where_Clause">
         <where>
             <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -137,9 +138,9 @@
         from edu_article
         where id = #{id,jdbcType=VARCHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <delete id="deleteByPrimaryKey">
     delete from edu_article
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduArticleExample">
         delete from edu_article
@@ -147,21 +148,18 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduArticle">
-        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
+    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduArticle" useGeneratedKeys="true" keyProperty="id">
         insert into edu_article (userid, title, image,
         createtime, updatetime, ispublic,
         istop, visits, thumbup,
         comment, state, url,
-        type, collect, content
+        type, collect, content, school_id
         )
         values (#{userid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
         #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{ispublic,jdbcType=VARCHAR},
         #{istop,jdbcType=VARCHAR}, #{visits,jdbcType=INTEGER}, #{thumbup,jdbcType=INTEGER},
         #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
-        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
+        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}
         )
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduArticle">
@@ -418,8 +416,11 @@
             <if test="content != null">
                 content = #{content,jdbcType=LONGVARCHAR},
             </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=INTEGER},
+            </if>
         </set>
-        where id = #{id,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ovft.configure.sys.bean.EduArticle">
     update edu_article
@@ -471,46 +472,36 @@
     </select>
 
     <!--后台增加文章信息-->
-    <insert id="adminAddNotice" parameterType="com.ovft.configure.sys.bean.EduArticle" >
-        insert  into edu_article values(#{eduArticle.id},#{eduArticle.userid},#{eduArticle.title},#{eduArticle.content},#{eduArticle.image},#{eduArticle.createtime}，
-        #{eduArticle.updatetime},#{eduArticle.ispublic},#{eduArticle.istop},#{eduArticle.visits},#{eduArticle.thumbup}, #{eduArticle.comment},
-        #{eduArticle.state},#{eduArticle.url},#{eduArticle.type},#{eduArticle.collect},#{eduArticle.schoolId}
-        );
-    </insert>
 
-    <!--<sql id="Base_Column_List">-->
-    <!--id, userid, title, content, image, createtime, updatetime,ispublic,istop,visits,thumbup,comment,state,url,type,-->
-    <!--collect, schoolId-->
-  <!--</sql>-->
-    <!--&lt;!&ndash;后台条件查询文章&ndash;&gt;-->
-    <!--<resultMap id="BaseResultMap"  type="com.ovft.configure.sys.bean.EduArticle ">-->
-        <!--<id column="id" jdbcType="VARCHAR" property="id"/>-->
-        <!--<result column="userid" jdbcType="VARCHAR" property="userid"/>-->
-        <!--<result column="title" jdbcType="VARCHAR" property="title"/>-->
-        <!--<result column="content" jdbcType="VARCHAR" property="content"/>-->
-        <!--<result column="image" jdbcType="VARCHAR" property="image"/>-->
-        <!--<result column="createtime" jdbcType="DATE" property="createtime"/>-->
-        <!--<result column="updatetime" jdbcType="DATE" property="updatetime"/>-->
-        <!--<result column="ispublic" jdbcType="VARCHAR" property="ispublic"/>-->
-        <!--<result column="istop" jdbcType="VARCHAR" property="istop"/>-->
-        <!--<result column="visits" jdbcType="INTEGER" property="visits"/>-->
-        <!--<result column="thumbup" jdbcType="INTEGER" property="thumbup"/>-->
-        <!--<result column="comment" jdbcType="INTEGER" property="comment"/>-->
-        <!--<result column="state" jdbcType="VARCHAR" property="state"/>-->
-        <!--<result column="url" jdbcType="VARCHAR" property="url"/>-->
-        <!--<result column="type" jdbcType="VARCHAR" property="type"/>-->
-        <!--<result column="collect" jdbcType="VARCHAR" property="collect"/>-->
-        <!--<result column="school_id" jdbcType="INTEGER" property="schoolId"/>-->
-    <!--</resultMap>-->
-    <!--<select id="findNoticeAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">-->
-        <!--select-->
-        <!--<include refid="Base_Column_List"/>-->
-        <!--from edu_article-->
-        <!--where type = #{type}-->
-        <!--<if test="search != null and search != ''">-->
-            <!--AND title like CONCAT('%',#{search},'%')-->
-        <!--</if>-->
-    <!--</select>-->
+    <resultMap extends="ResultMapWithBLOBs" id="EduArticleVoResultMap" type="com.ovft.configure.sys.vo.EduArticleVo">
+
+    </resultMap>
+
+     <sql id="EduArticleVo_Column_List">
+        id, userid, title, image, createtime, updatetime, ispublic, istop, visits, thumbup,
+        comment, state, url, type, collect, school_id as schoolId, content,
+     </sql>
+    <!--后台条件查询文章-->
+    <select id="findNoticeAll"  resultType="com.ovft.configure.sys.vo.EduArticleVo">
+        select a.id, a.userid, a.title, a.image, a.createtime, a.updatetime, a.ispublic, a.istop, a.visits, a.thumbup,
+        a.comment, a.state, a.url, a.type, a.collect, a.school_id as schoolId, a.content, s.school_name as schoolName
+        from edu_article a
+        left join  edu_school s on a.school_id = s.school_id
+        where 1=1
+        <if test="id != null and id != ''">
+            AND a.id = #{id}
+        </if>
+        <if test="schoolId != null and schoolId != ''">
+            AND a.school_id = #{schoolId}
+        </if>
+        <if test="type != null and type != ''">
+            AND a.type = #{type}
+        </if>
+        <if test="search != null and search != ''">
+            AND a.title like CONCAT('%',#{search},'%')
+        </if>
+        ORDER BY a.istop DESC,a.updatetime DESC
+    </select>
 
     <!--后台删除文章信息-->
     <delete id="deleteNotice" parameterType="int">

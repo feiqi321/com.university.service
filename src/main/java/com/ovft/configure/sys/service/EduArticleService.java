@@ -3,8 +3,6 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.vo.PageVo;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -30,10 +28,10 @@ public interface EduArticleService {
     /**
      * 后台查询所有文章
      *
-     * @param type
+     * @param pageVo
      * @return
      */
-    public WebResult findNoticeAll(String type, PageVo pageVo);
+    public WebResult findNoticeAll(PageVo pageVo);
     /**
      *  后台删除文章
      *
@@ -48,16 +46,11 @@ public interface EduArticleService {
      * @return
      */
     public WebResult bigDeleteNotice(Integer [] ids);
+
     /**
-     *  后台修改文章
-     *
-     * @param eduArticle
+     * 进入文章修改页面
+     * @param id
      * @return
      */
-    public WebResult updateNotice(EduArticle eduArticle);
-
-
-
-
-
+    public WebResult findNotice(Integer id);
 }

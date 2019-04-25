@@ -10,7 +10,9 @@ public class EduArticle implements Serializable {
     /**
      * ID
      */
-    private String id;
+    private Integer id;
+
+    private Integer schoolId;
 
     /**
      * 用户ID
@@ -89,11 +91,19 @@ public class EduArticle implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getId() {
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

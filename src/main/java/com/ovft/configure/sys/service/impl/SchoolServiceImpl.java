@@ -70,6 +70,9 @@ public class SchoolServiceImpl implements SchoolService {
     @Transactional
     @Override
     public WebResult updateSchool(School school) {
+        if(school.getSchoolId() == null) {
+            return new WebResult("400", "请选择学校", "");
+        }
         if(StringUtils.isBlank(school.getSchoolName())) {
             return new WebResult("400", "学校名称不能为空", "");
         }

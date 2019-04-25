@@ -5,11 +5,14 @@ import com.github.pagehelper.PageInfo;
 import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
+import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.dao.AdminMapper;
+import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.service.AdminService;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.utils.SecurityUtils;
+import com.ovft.configure.sys.vo.AdminVo;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.web.AdminController;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +40,8 @@ public class AdminServiceImpl implements AdminService {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     @Resource
     private AdminMapper adminMapper;
+    @Resource
+    private SchoolMapper schoolMapper;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -138,7 +143,10 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public WebResult findTeacher(Integer adminId) {
         Admin admin = adminMapper.selectById(adminId);
-        return new WebResult("200", "查询成功", admin);
+        School school = schoolMapper.selectById(admin.getSchoolId());
+        AdminVo adminVo = new AdminVo(admin);
+        adminVo.setSchoolName(school==null?"":school.getSchoolName());
+        return new WebResult("200", "查询成功", adminVo);
     }
 
     /**

@@ -13,7 +13,7 @@ public interface SchoolMapper {
     //添加学校
     public void createSchool(School school);
 
-    //修改学校名称
+    //修改学校
     public void updateSchool(School school);
 
     /**
