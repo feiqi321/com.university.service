@@ -4,8 +4,6 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.vo.PageVo;
 
-import java.util.List;
-
 /**
  * @author vvtxw
  * @create 2019-04-21 19:58
@@ -17,7 +15,7 @@ public interface EduArticleService {
      * @param type
      * @return
      */
-    public List<EduArticle> queryAllNotice(String type);
+    public WebResult queryAllNotice(Integer schoolId, String type);
     /**
      * 后台添加文章
      *

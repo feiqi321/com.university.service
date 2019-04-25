@@ -95,11 +95,21 @@ public class User {
     /**
      * 学员审批
      */
-    private Integer checkIn;
+    private Integer checkin;
     //身份证
-    private String identity_card;
+    private String identityCard;
     //短信验证码
     private String securityCode;
+
+    private Integer userItemId;
+
+    public Integer getUserItemId() {
+        return userItemId;
+    }
+
+    public void setUserItemId(Integer userItemId) {
+        this.userItemId = userItemId;
+    }
 
     public Integer getVolunteer() {
         return volunteer;
@@ -141,12 +151,12 @@ public class User {
         this.nextPass = nextPass;
     }
 
-    public String getIdentity_card() {
-        return identity_card;
+    public String getIdentityCard() {
+        return identityCard;
     }
 
-    public void setIdentity_card(String identity_card) {
-        this.identity_card = identity_card;
+    public void setIdentityCard(String identityCard) {
+        this.identityCard = identityCard;
     }
 
     public Integer getUserId() {
@@ -305,11 +315,11 @@ public class User {
         this.emergencyPhone2 = emergencyPhone2;
     }
 
-    public Integer getCheckIn() {
-        return checkIn;
+    public Integer getCheckin() {
+        return checkin;
     }
 
-    public void setCheckIn(Integer checkIn) {
-        this.checkIn = checkIn;
+    public void setCheckin(Integer checkin) {
+        this.checkin = checkin;
     }
 }

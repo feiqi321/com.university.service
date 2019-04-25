@@ -62,36 +62,45 @@
             from edu_user
             WHERE user_id=#{userId}
     </select>
-    <!--查询对应edu_user表里面是否存在该用户记录-->
-    <select id="queryByUserIdAndSchoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
-        select
-           *
-            from edu_user
-             WHERE user_id=#{userId} and school_id=#{schoolId}
-    </select>
+
     <!--查询对应edu_user_item表里面是否存在该用户记录-->
     <select id="queryByItemsIdAndSchoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
-        select
-           *
-            from edu_user_item
-             WHERE user_id=#{userId} and school_id=#{schoolId}
+        select u.user_id userId,i.user_name userName,u.phone,u.image,
+        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.political,i.educational,i.position,i.retired,
+        i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
+        i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
+        i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
+        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        from edu_user_item i
+        left join edu_user u on u.user_id = i.user_id
+        where i.user_id = #{userId} and  i.school_id = #{schoolId}
     </select>
-    <!--修改edu_user_item表里面该用户记录-->
-    <update id="savaInfoItems" parameterType="com.ovft.configure.sys.bean.User">
-          update edu_user_item set area=#{user.area},
-           address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},volunteer=#{user.volunteer},
-           employer=#{user.employer},position=#{user.position},job=#{user.job},emergency_contact1=#{user.emergencyContact1},
-           emergency_relation1=#{user.emergencyRelation1},emergency_phone1=#{user.emergencyPhone1},
-           emergency_contact2=#{user.emergencyContact2},emergency_relation2=#{user.emergencyRelation2},
-           emergency_phone2=#{user.emergencyPhone2} where user_id=#{user.userId} and school_id=#{user.schoolId}
-    </update>
-    <!--增加edu_user_item表里面该用户记录-->
-    <insert id="addInfoItems" parameterType="com.ovft.configure.sys.bean.User" >
-        INSERT  INTO edu_user_item VALUES (DEFAULT,#{user.userId},#{user.schoolId},#{user.area},#{user.address},#{user.political},#{user.educational},#{user.volunteer},
-          #{user.retired},#{user.employer},#{user.position},#{user.job},#{user.emergencyContact1},#{user.emergencyRelation1},#{user.emergencyRelation1},
-         #{user.emergencyRelation1}, #{user.emergencyPhone1},#{user.emergencyContact2},#{user.emergencyRelation2},#{user.emergencyPhone2}
-          )
 
+    <!--修改edu_user_item表里面该用户记录-->
+    <update id="updateInfoItems" parameterType="com.ovft.configure.sys.bean.User">
+          update edu_user_item set user_name=#{userName},sex=#{sex},telephone=#{telephone},area=#{area},
+           address=#{address},political=#{political},educational=#{educational},position=#{position},retired=#{retired},
+           employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
+           emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
+           emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
+           emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard}
+           where user_id=#{userId} and school_id=#{schoolId}
+    </update>
+
+    <!--增加edu_user_item表里面该用户记录-->
+    <insert id="saveInfoItems" parameterType="com.ovft.configure.sys.bean.User" useGeneratedKeys="true" keyProperty="userItemId">
+        insert into edu_user_item (user_id,user_name,
+        sex,school_id,telephone,area,address,
+        political,educational,position,retired,
+        job,employer,emergency_contact1,emergency_relation1,
+        emergency_phone1,emergency_contact2,
+        emergency_relation2,emergency_phone2,checkin,identity_card,volunteer)
+        values (#{userId},#{userName},#{sex},#{schoolId},#{telephone},#{area},#{address},#{political},#{educational},#{position},
+          #{retired},#{job},#{employer},#{emergencyContact1},#{emergencyRelation1},#{emergencyPhone1},
+          #{emergencyContact2},#{emergencyRelation2},#{emergencyPhone2},
+          #{checkin},#{identityCard},#{volunteer}
+          )
     </insert>
 
 </mapper>

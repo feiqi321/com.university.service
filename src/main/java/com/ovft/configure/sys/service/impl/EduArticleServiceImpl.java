@@ -29,9 +29,9 @@ public class EduArticleServiceImpl implements EduArticleService {
     //通知公告
 
     @Override
-    public List<EduArticle> queryAllNotice(String type) {
-        List<EduArticle> eduArticles = eduArticleMapper.queryAllNotice(type);
-        return eduArticles;
+    public WebResult queryAllNotice(Integer schoolId, String type) {
+        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, null);
+        return new WebResult("200", "查询成功", noticeList);
     }
 
     private WebResult security(EduArticle eduArticle) {
@@ -43,6 +43,12 @@ public class EduArticleServiceImpl implements EduArticleService {
         }
         if(StringUtils.isBlank(eduArticle.getType())) {
             return new WebResult("400", "类型不能为空", "");
+        }
+        if("3".equals(eduArticle.getType())) {
+            List<EduArticleVo> noticeAll = eduArticleMapper.findNoticeAll(null, eduArticle.getSchoolId(), eduArticle.getType(), null);
+            if(noticeAll != null || noticeAll.size() != 0) {
+                return new WebResult("400", "当前学校只能添加一个校园介绍", "");
+            }
         }
         if(StringUtils.isBlank(eduArticle.getContent())) {
             return new WebResult("400", "文章正文不能为空", "");

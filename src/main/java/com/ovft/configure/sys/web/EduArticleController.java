@@ -1,14 +1,14 @@
 package com.ovft.configure.sys.web;
 
-import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.vo.PageVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author vvtxw
@@ -21,15 +21,18 @@ public class EduArticleController {
     private EduArticleService eduArticleService;
 
     /**
-     * 通知公告
+     * 1-通知公告, 3-校园介绍,  4-联盟资讯,   5-政策法规
      *
      * @param type
      * @return
      */
     @GetMapping(value = "/article/notice")
-    public WebResult queryAllNotice(@RequestParam(value = "type", required = true) String type) {
-        List<EduArticle> eduArticles = eduArticleService.queryAllNotice(type);
-        return new WebResult(StatusCode.OK, "查询成功", eduArticles);
+    public WebResult queryAllNotice(HttpServletRequest request, @RequestParam(value = "type", required = true) String type) {
+        String schoolId = request.getHeader("schoolId");
+        if (StringUtils.isBlank(schoolId)) {
+            return new WebResult("400", "学校id不能为空", "");
+        }
+        return eduArticleService.queryAllNotice(Integer.valueOf(schoolId), type);
     }
 
     /**
@@ -50,7 +53,7 @@ public class EduArticleController {
      * @return
      */
     @GetMapping(value = "/server/article/findNotice")
-    public WebResult findNoticeAll(@RequestParam(value = "id", required = true) Integer id) {
+    public WebResult findNotice(@RequestParam(value = "id", required = true) Integer id) {
         return eduArticleService.findNotice(id);
     }
 

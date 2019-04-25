@@ -2,19 +2,12 @@
 package com.ovft.configure.sys.web;
 
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.UserInfoBean;
 import com.ovft.configure.sys.bean.User;
-import com.ovft.configure.sys.service.UserInfoService;
 import com.ovft.configure.sys.service.UserService;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Created by looyer on 2019/4/2.
@@ -59,14 +52,14 @@ public class UserController {
         return userService.updatePassword(phone,newPassword,nextpass,securityCode);
     }
     /**
-     * 基本信息保存
+     * 基本信息保存、修改
      * @param  user
      * @return
      */
     @PostMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user,HttpServletRequest request){
-        System.out.println(user);
-        System.out.println("========================>"+request.getHeader("schoolId"));
+//        System.out.println(user);
+//        System.out.println("========================>"+request.getHeader("schoolId"));
         user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
         user.setUserId(Integer.parseInt(request.getHeader("userId")));
         return userService.savaInfo(user);
@@ -110,12 +103,9 @@ public class UserController {
     @GetMapping(value = "/selectInfo")
     public WebResult selectInfo(HttpServletRequest request){
         User user=new User();
-        System.out.println("userId是："+ request.getHeader("userId"));
         String userId= request.getHeader("userId");
-
         user.setUserId(Integer.parseInt(userId));
         user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
-        System.out.println("===================================>>"+userId+"=====>"+user.getSchoolId());
         return userService.selectInfo(user);
     }
 

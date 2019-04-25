@@ -36,14 +36,12 @@ public interface UserMapper {
     public void updateByOldPass(@Param("newPass") String newPass,@Param("oldPass") String oldPass);
     //查询用户所对应的学员分类-vvtxw
     public String queryemployerByUserId(Integer userId);
-    //查询对应学员
-    public User queryByUserIdAndSchoolId(@Param("userId")Integer userId,@Param("schoolId")Integer schoolId);
     //查询对应学员是否已选择该学校
     public User queryByItemsIdAndSchoolId(@Param("userId")Integer userId,@Param("schoolId")Integer schoolId);
     //更换学校时保存信息
-    public void savaInfoItems(@Param("user") User user);
+    public void updateInfoItems(User user);
     //增加更换学校时信息
-    public void addInfoItems(@Param("user") User user);
+    public void saveInfoItems(User user);
 
 
 

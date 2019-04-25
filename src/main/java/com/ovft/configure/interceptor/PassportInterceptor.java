@@ -39,9 +39,6 @@ public class PassportInterceptor implements HandlerInterceptor {
 //            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
 //            httpServletRequest.setAttribute("adminId", id);
             httpServletRequest.setAttribute("adminId", 1);
-        } else {
-            httpServletRequest.setAttribute("userId", id);
-            httpServletRequest.setAttribute("schoolId", Integer.valueOf(schoolId));
         }
         return true;
     }

@@ -1,19 +1,13 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.alibaba.druid.sql.visitor.functions.If;
-import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
-
 import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
-
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -210,11 +204,10 @@ public class UserServiceImpl  implements UserService {
     @Transactional
     @Override
     public WebResult savaInfo(User user) {
-        user.setCheckIn(0);
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
         if (!phoneResult.getCode().equals("200")){
-            return new WebResult("400",phoneResult.getMsg());
+            return new WebResult("400",phoneResult.getMsg(),"");
         }
         //固定电话的验证
         PhoneTest phoneTest=new PhoneTest();
@@ -222,62 +215,57 @@ public class UserServiceImpl  implements UserService {
         if (isPhone==false){
             return new WebResult("400", "输入电话格式有误", "");
         }
-
         //紧急联系人一手机号验证
         if (StringUtils.isBlank(user.getEmergencyPhone1())) {
             return new WebResult("400", "紧急联系人1电话不能为空");
         }
         String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
         if (user.getEmergencyPhone1().length() != 11) {
-            return new WebResult("400", "紧急联系人手机号应为11位");
+            return new WebResult("400", "紧急联系人手机号应为11位","");
         } else {
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(user.getEmergencyPhone1());
             boolean isMatch = m.matches();
 
             if (!isMatch) {
-                return new WebResult("400", "请输入正确手机号");
+                return new WebResult("400", "请输入正确手机号","");
             }
         }
         //紧急联系人二手机号验证
         if (user.getEmergencyPhone2()!=null){
             if (user.getEmergencyPhone2().length() != 11) {
-                return new WebResult("400", "紧急联系人手机号应为11位");
+                return new WebResult("400", "紧急联系人手机号应为11位","");
             } else {
                 Pattern p = Pattern.compile(regex);
                 Matcher m = p.matcher(user.getEmergencyPhone2());
                 boolean isMatch = m.matches();
 
                 if (!isMatch) {
-                    return new WebResult("400", "请输入正确手机号");
+                    return new WebResult("400", "请输入正确手机号","");
                 }
             }
         }
+        if(StringUtils.isBlank(user.getEmergencyContact1())) {
+            return new WebResult("400", "请输入紧急联系人","");
+        }
+        if(StringUtils.isBlank(user.getEmergencyRelation1())) {
+            return new WebResult("400", "请输入紧急联系人关系","");
+        }
         //身份证格式校验
-        boolean testCard = this.isIDNumber(user.getIdentity_card());
+        boolean testCard = this.isIDNumber(user.getIdentityCard());
         if (testCard == false) {
-            return new WebResult("400", "输入身份证格式有误");
+            return new WebResult("400", "输入身份证格式有误","");
         }
         //保存
-        User findUser=userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
-        if (findUser!=null){
-            userMapper.savaInfo(user);
-            return new WebResult("200", "保存成功",user);
+        User findUser=userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+        if (findUser==null){
+            user.setCheckin(0);
+            userMapper.saveInfoItems(user);
+            return new WebResult("200", "保存成功","");
         }else{
-
-
-            User findUserItems =userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-            if (findUserItems==null){
-                //新增
-                userMapper.addInfoItems(user);
-                return new WebResult("200", "保存成功",user);
-            }else{
-                //修改
-                userMapper.savaInfoItems(user);
-                return new WebResult("200", "保存成功",user);
-            }
+            userMapper.updateInfoItems(user);
+            return new WebResult("200", "修改成功","");
         }
-
     }
     /**
      * 更换手机号
@@ -315,38 +303,15 @@ public class UserServiceImpl  implements UserService {
         redisUtil.setRemove(token);
         return new WebResult("200","退出成功","");
     }
+
      //查询基本信息接口    TODO 身份证字段数据没查出来
     @Override
     public WebResult selectInfo(User user) {
-        if (user.getUserId()==null||user.getSchoolId()==null){
-
+        if (user.getUserId()==null){
+            return new WebResult("400", "请选择学校", "");
         }
-        User findUserInfo=userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
-        if (findUserInfo==null){
-            //待优化
-            User findUserInfoById=userMapper.selectByIdAll(user.getUserId());
-            User findItemInfoById= userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-            findUserInfoById.setPassword(null);
-            findUserInfoById.setSchoolId(findItemInfoById.getSchoolId());
-            findUserInfoById.setArea(findItemInfoById.getArea());
-            findUserInfoById.setAddress(findItemInfoById.getAddress());
-            findUserInfoById.setPolitical(findItemInfoById.getPolitical());
-            findUserInfoById.setRetired(findItemInfoById.getRetired());
-            findUserInfoById.setJob(findItemInfoById.getJob());
-            findUserInfoById.setEmployer(findItemInfoById.getEmployer());
-            findUserInfoById.setEmergencyContact1(findItemInfoById.getEmergencyContact1());
-            findUserInfoById.setEmergencyRelation1(findItemInfoById.getEmergencyRelation1());
-            findUserInfoById.setEmergencyPhone1(findItemInfoById.getEmergencyPhone1());
-            findUserInfoById.setEducational(findItemInfoById.getEducational());
-            findUserInfoById.setEmergencyContact2(findItemInfoById.getEmergencyContact2());
-            findUserInfoById.setEmergencyRelation2(findItemInfoById.getEmergencyRelation2());
-            findUserInfoById.setEmergencyPhone2(findItemInfoById.getEmergencyPhone2());
-            findUserInfoById.setCheckIn(findItemInfoById.getCheckIn());
-            return  new WebResult("200","获取成功",findUserInfoById);
-        }else{
-//         User user1= userMapper.queryByUserIdAndSchoolId(user.getUserId(),user.getSchoolId());
-            return  new WebResult("200","获取成功",findUserInfo);
-        }
+        User findUserInfo=userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+        return  new WebResult("200","获取成功",findUserInfo);
     }
 
 

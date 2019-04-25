@@ -28,10 +28,11 @@ public class MywebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//      registry.addInterceptor(passportInterceptor())
-//                .addPathPatterns("/**")
-//                //TODO    放行路径待修改
-//               .excludePathPatterns("/server/admin/login","/user/login","/user/regist","/sms/sendSms");
-//        super.addInterceptors(registry);
+      registry.addInterceptor(passportInterceptor())
+                .addPathPatterns("/**")
+                //TODO    放行路径待修改
+               .excludePathPatterns("/server/admin/login","/user/login","/user/regist","/sms/sendSms",
+                   "/apply/showCategory","/article/notice");
+        super.addInterceptors(registry);
     }
 }
