@@ -7,6 +7,7 @@ import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.vo.PhoneVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
         if (!isSet) {
             return new WebResult("400", "登录失败");
         }
-        map.put("token", token);
+        boolean b = redisUtil.hasKey(token);
         WebResult result = new WebResult("200", "", map);
         return result;
     }
@@ -133,7 +134,11 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public WebResult updatePassword(String phone, String newPassword, String nextPass, String securityCode) {
+    public WebResult updatePassword(PhoneVo phoneVo) {
+        //String phone, String newPassword, String nextPass, String securityCode
+        String newPassword = phoneVo.getNewPass();
+        String nextPass = phoneVo.getNextPass();
+        String phone = phoneVo.getPhone();
         User user = new User();
         user.setPhone(phone);
         //手机号码格式验证
@@ -142,14 +147,14 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", phoneResult.getMsg());
         }
         //密码验证
+        if (StringUtils.isBlank(newPassword) || StringUtils.isBlank(nextPass)) {
+            return new WebResult("400", "密码不能为空");
+        }
         int l = newPassword.length();
         if (l < 6 || l > 16) {
             return new WebResult("400", "密码长度必须要在6-16之间");
         }
 
-        if (StringUtils.isBlank(nextPass)) {
-            return new WebResult("400", "密码不能为空");
-        }
         User findUser = userMapper.findUserByPhone2(phone);
         //判段手机号是否错误
         if (findUser == null) {
@@ -165,7 +170,7 @@ public class UserServiceImpl implements UserService {
         if (value == null) {
             return new WebResult("400", "验证码失效");
         }
-        if (!securityCode.equals(value.toString())) {
+        if (!phoneVo.getSecurityCode().equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
         userMapper.updateByPhone(phone, newPasswordMd5);
@@ -183,17 +188,26 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public WebResult updatePasswordByOldPass(String oldPass, String newPass, String nextPass) {
-        User findUserByOldPass = userMapper.selectByOldPass(oldPass);
+    public WebResult updatePasswordByOldPass(PhoneVo phoneVo) {
+        User findUserByOldPass = userMapper.selectById(phoneVo.getUserId());
         if (findUserByOldPass == null) {
+            return new WebResult("400", "用户不存在");
+        }
+        String oldPass = MD5Utils.md5Password(phoneVo.getOldPass());
+        if(!findUserByOldPass.getPassword().equals(oldPass)) {
             return new WebResult("400", "原密码错误");
         }
+        String newPass = phoneVo.getNewPass();
+        String nextPass = phoneVo.getNextPass();
+        if(StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
+            return new WebResult("400", "新密码不能为空");
+        }
+
         if (!newPass.equals(nextPass)) {
             return new WebResult("400", "输入的两次密码不一致");
         }
 
-
-        userMapper.updateByOldPass(newPass, newPass);
+        userMapper.updateByPhone(findUserByOldPass.getPhone(), MD5Utils.md5Password(newPass));
         return new WebResult("200", "修改成功");
     }
 
@@ -213,9 +227,11 @@ public class UserServiceImpl implements UserService {
         }
         //固定电话的验证
         PhoneTest phoneTest = new PhoneTest();
-        Boolean isPhone = phoneTest.isPhone(user.getTelephone());
-        if (isPhone == false) {
-            return new WebResult("400", "输入电话格式有误", "");
+        if(!StringUtils.isBlank(user.getTelephone())) {
+            Boolean isPhone = phoneTest.isPhone(user.getTelephone());
+            if (isPhone == false) {
+                return new WebResult("400", "输入电话格式有误", "");
+            }
         }
         //紧急联系人一手机号验证
         if (StringUtils.isBlank(user.getEmergencyPhone1())) {
@@ -278,7 +294,10 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public WebResult updatePhone(String oldPhone, String newPhone, String securityCode) {
+    public WebResult updatePhone(PhoneVo phoneVo) {
+        String newPhone = phoneVo.getNewPhone();
+        String oldPhone = phoneVo.getOldPhone();
+        String securityCode = phoneVo.getSecurityCode();
         User user = new User();
         user.setPhone(newPhone);
         WebResult phoneResult = isTure(user);
@@ -303,11 +322,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public WebResult userQuit(String token) {
-        redisUtil.setRemove(token);
+        redisUtil.delete(token);
         return new WebResult("200", "退出成功", "");
     }
 
-    //查询基本信息接口    TODO 身份证字段数据没查出来
+    //查询基本信息接口
     @Override
     public WebResult selectInfo(User user) {
         if (user.getUserId() == null) {

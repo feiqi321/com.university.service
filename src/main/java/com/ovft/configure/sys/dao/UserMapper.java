@@ -39,12 +39,6 @@ public interface UserMapper {
     //根据id查找全部用户信息
     public User selectByIdAll(@Param("userId") Integer userId);
 
-    //根据原密码查找用户
-    public User selectByOldPass(@Param("oldPass") String oldPass);
-
-    //修改密码
-    public void updateByOldPass(@Param("newPass") String newPass, @Param("oldPass") String oldPass);
-
     //查询对应学员是否已选择该学校
     public User queryByItemsIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 

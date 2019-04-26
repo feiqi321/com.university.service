@@ -4,6 +4,7 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.UserService;
+import com.ovft.configure.sys.vo.PhoneVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,11 +46,8 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/updatePassword")
-    public WebResult updatePassword( @RequestParam(value = "phone")String phone, @RequestParam(value = "newPassword")String newPassword,
-                                     @RequestParam(value = "nextpass")String nextpass,@RequestParam(value = "securityCode")String securityCode ){
-
-        System.out.print("短信验证码"+securityCode);
-        return userService.updatePassword(phone,newPassword,nextpass,securityCode);
+    public WebResult updatePassword(@RequestBody PhoneVo phoneVo){
+        return userService.updatePassword(phoneVo);
     }
     /**
      * 基本信息保存、修改
@@ -70,10 +68,8 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/updatePhone")
-    public WebResult updatePhone(@RequestParam(value = "oldPhone")String oldPhone,@RequestParam(value = "newPhone")String newPhone,
-                                 @RequestParam(value = "securityCode")String securityCode
-    ){
-        return userService.updatePhone(oldPhone,newPhone,securityCode);
+    public WebResult updatePhone(@RequestBody PhoneVo phoneVo){
+        return userService.updatePhone(phoneVo);
     }
     /**
      * 退出登录
@@ -91,9 +87,9 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/updatePasswordByOldpass")
-    public WebResult updatePasswordByOldpass( @RequestParam(value = "oldPassword")String oldPassword,
-                                              @RequestParam(value = "newpass")String newPass,@RequestParam(value = "nextpass")String nextpass ){
-        return userService.updatePasswordByOldPass(oldPassword,newPass,nextpass);
+    public WebResult updatePasswordByOldpass(@RequestBody PhoneVo phoneVo, HttpServletRequest request){
+        phoneVo.setUserId(Integer.parseInt(request.getHeader("userId")));
+        return userService.updatePasswordByOldPass(phoneVo);
     }
     /**
      * 信息回显
