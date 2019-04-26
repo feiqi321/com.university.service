@@ -38,16 +38,19 @@ public class EduCourseController {
 //        String schoolId1 = request.getHeader("schoolId");
 //        Integer schoolId = Integer.parseInt(schoolId1);
         Integer schoolId = 1;
-
         if (schoolId == null) {
             return new WebResult(StatusCode.ERROR, "学校id不能为空", "");
         }
-        List<EduCourse> eduCourses = eduCourseService.listCourseCategoryByShoolId(schoolId);
-        return new WebResult(StatusCode.OK, "查找成功", eduCourses);
+        EduCourseVo eduCourseVo = (EduCourseVo) redisTemplate.opsForValue().get("schoolId" + schoolId);
+        if (eduCourseVo == null) {
+            eduCourseVo = eduCourseService.queryCourseByCategory(schoolId);
+            redisTemplate.opsForValue().set("course" + schoolId, eduCourseVo);
+        }
+        return new WebResult(StatusCode.OK, "查找成功", eduCourseVo);
     }
 
     @GetMapping(value = "showInfo")
-    public WebResult queryAllInfo(@RequestParam(value = "courseId", required = true) Integer courseId, HttpServletRequest request) {
+    public WebResult queryAllInfo(@RequestParam(value = "courseId") Integer courseId, HttpServletRequest request) {
         if (courseId == null) {
             return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
         }
