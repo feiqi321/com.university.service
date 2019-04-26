@@ -288,18 +288,23 @@
 
     <!--1.查找专业类别-->
     <select id="listCourseCategoryByShoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduCourse">
-        select * from edu_course where school_id =#{school_id}
+        select course_id from edu_course where school_id =#{school_id}
     </select>
 
 
     <!--2.查找专业相关报名信息-->
     <select id="queryCourseByCourseId" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCourseVo">
-        select
-        c.course_name,
-        c.course_price,
-        e1.school_name schoolId,
-        e2.name course_teacher,
-        c.place_class
+       select
+            c.course_name,
+            c.course_price,
+            e1.school_name schoolId,
+            e2.name course_teacher,
+            c.place_class,
+			c.course_price,
+			c.place_class,
+			c.start_date,
+			c.end_date,
+			c.people_number
         from edu_course c
         left join edu_school e1 on c.school_id=e1.school_id
         left join edu_admin e2 on c.course_teacher=e2.admin_id

@@ -37,10 +37,6 @@ public class RedisConfiguration {
     @Value("${spring.redis.timeout}")
     private int timeout;
 
-
-
-
-
     /*  */
 
     /**

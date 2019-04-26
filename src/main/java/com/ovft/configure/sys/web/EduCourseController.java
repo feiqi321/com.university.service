@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,18 +36,23 @@ public class EduCourseController {
      */
     @GetMapping(value = "showCategory")
     public WebResult queryAllCourse(HttpServletRequest request) {
-//        String schoolId1 = request.getHeader("schoolId");
-//        Integer schoolId = Integer.parseInt(schoolId1);
-        Integer schoolId = 1;
+        String schoolId1 = request.getHeader("schoolId");
+        Integer schoolId = Integer.parseInt(schoolId1);
+
         if (schoolId == null) {
             return new WebResult(StatusCode.ERROR, "学校id不能为空", "");
         }
+        List<EduCourse> eduCourseId = eduCourseService.listCourseCategoryByShoolId(schoolId);
         EduCourseVo eduCourseVo = (EduCourseVo) redisTemplate.opsForValue().get("schoolId" + schoolId);
+        ArrayList<Object> courseVos = new ArrayList<>();
         if (eduCourseVo == null) {
-            eduCourseVo = eduCourseService.queryCourseByCategory(schoolId);
+            for (EduCourse eduCourse : eduCourseId) {
+                eduCourseVo = eduCourseService.queryCourseByCategory(eduCourse.getCourseId());
+                courseVos.add(eduCourseVo);
+            }
             redisTemplate.opsForValue().set("course" + schoolId, eduCourseVo);
         }
-        return new WebResult(StatusCode.OK, "查找成功", eduCourseVo);
+        return new WebResult(StatusCode.OK, "查找成功", courseVos);
     }
 
     @GetMapping(value = "showInfo")
