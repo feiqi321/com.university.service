@@ -67,5 +67,4 @@ public class FileController {
         return new WebResult(StatusCode.OK, "查询成功", url);
     }
 
-
 }
