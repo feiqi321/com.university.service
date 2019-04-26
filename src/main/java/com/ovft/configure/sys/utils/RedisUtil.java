@@ -122,7 +122,7 @@ public class RedisUtil {
     public boolean set(String key, Object value, long time) {
         try {
             if (time > 0) {
-                /*redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);*/
+                redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
             } else {
                 set(key, value);
             }
@@ -404,6 +404,14 @@ public class RedisUtil {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    public void delete(String key) {
+        try {
+                redisTemplate.delete(key);
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
     //===============================list=================================  
