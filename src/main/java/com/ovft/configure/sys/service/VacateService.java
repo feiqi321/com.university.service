@@ -6,7 +6,7 @@ import com.ovft.configure.sys.bean.Vacate;
 public interface VacateService {
     public WebResult applyVacate(Vacate vacate);
 
-    public WebResult intoVacate(Integer userId);
+    public WebResult intoVacate(Integer userId, Integer schoolId);
 
     public WebResult vacateList(Integer userId);
 

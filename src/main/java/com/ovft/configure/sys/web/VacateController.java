@@ -19,8 +19,9 @@ public class VacateController {
      */
     @GetMapping("/vacate/into")
     public WebResult intoVacate(HttpServletRequest request) {
-        Integer userId = (Integer) request.getAttribute("userId");
-        return  vacateService.intoVacate(userId);
+        String userId = request.getHeader("userId");
+        String schoolId =  request.getHeader("schoolId");
+        return  vacateService.intoVacate(Integer.valueOf(userId), Integer.valueOf(schoolId));
     }
 
     /**
@@ -30,8 +31,8 @@ public class VacateController {
      */
     @PostMapping(value = "/vacate/apply")
     public WebResult applyVacate(HttpServletRequest request, @RequestBody Vacate vacate)  {
-        Integer userId = (Integer) request.getAttribute("userId");
-        vacate.setUserId(userId);
+        String userId = request.getHeader("userId");
+        vacate.setUserId(Integer.valueOf(userId));
         return  vacateService.applyVacate(vacate);
     }
 
@@ -42,8 +43,8 @@ public class VacateController {
      */
     @GetMapping(value = "/vacate/vacateList")
     public WebResult vacateList(HttpServletRequest request) {
-        Integer userId = (Integer) request.getAttribute("userId");
-        return  vacateService.vacateList(userId);
+        String userId = request.getHeader("userId");
+        return  vacateService.vacateList(Integer.valueOf(userId));
     }
 
 }

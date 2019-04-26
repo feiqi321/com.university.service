@@ -70,11 +70,10 @@ public class VacateServiceImpl implements VacateService {
      * @return
      */
     @Override
-    public WebResult intoVacate(Integer userId) {
-        userId = 1;
+    public WebResult intoVacate(Integer userId, Integer schoolId) {
         HashMap<String, Object> map = new HashMap<>();
         //获取用户信息
-        User user = userMapper.selectById(userId);
+        User user = userMapper.queryByItemsIdAndSchoolId(userId, schoolId);
 
         //获取课程列表
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
