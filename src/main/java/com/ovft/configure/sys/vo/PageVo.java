@@ -11,7 +11,7 @@ public class PageVo {
 
     private String search;
 
-    private Integer id;
+    private Integer schoolId;
 
     private String type;
 
@@ -23,12 +23,12 @@ public class PageVo {
         this.type = type;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getSchoolId() {
+        return schoolId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
     }
 
     public int getPageSize() {

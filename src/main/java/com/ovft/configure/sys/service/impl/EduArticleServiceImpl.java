@@ -44,12 +44,7 @@ public class EduArticleServiceImpl implements EduArticleService {
         if(StringUtils.isBlank(eduArticle.getType())) {
             return new WebResult("400", "类型不能为空", "");
         }
-        if("3".equals(eduArticle.getType())) {
-            List<EduArticleVo> noticeAll = eduArticleMapper.findNoticeAll(null, eduArticle.getSchoolId(), eduArticle.getType(), null);
-            if(noticeAll != null || noticeAll.size() != 0) {
-                return new WebResult("400", "当前学校只能添加一个校园介绍", "");
-            }
-        }
+
         if(StringUtils.isBlank(eduArticle.getContent())) {
             return new WebResult("400", "文章正文不能为空", "");
         }
@@ -77,6 +72,12 @@ public class EduArticleServiceImpl implements EduArticleService {
             return security;
         }
         if(eduArticle.getId() == null) {
+            if("3".equals(eduArticle.getType())) {
+                List<EduArticleVo> noticeAll = eduArticleMapper.findNoticeAll(null, eduArticle.getSchoolId(), eduArticle.getType(), null);
+                if(noticeAll != null && noticeAll.size() != 0) {
+                    return new WebResult("400", "当前学校只能添加一个校园介绍", "");
+                }
+            }
             eduArticle.setCreatetime(new Date());
             eduArticle.setUpdatetime(new Date());
             eduArticle.setVisits(0);
@@ -97,11 +98,11 @@ public class EduArticleServiceImpl implements EduArticleService {
     @Override
     public WebResult findNoticeAll(PageVo pageVo) {
         if(pageVo.getPageSize() == 0) {
-            List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, pageVo.getId(), pageVo.getType(),pageVo.getSearch());
+            List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, pageVo.getSchoolId(), pageVo.getType(),pageVo.getSearch());
             return new WebResult("200", "查询成功", noticeList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, pageVo.getId(), pageVo.getType(), pageVo.getSearch());
+        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, pageVo.getSchoolId(), pageVo.getType(), pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(noticeList);
         return new WebResult("200", "查询成功", pageInfo);
     }
@@ -131,7 +132,10 @@ public class EduArticleServiceImpl implements EduArticleService {
     @Override
     public WebResult findNotice(Integer id) {
         List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(id, null, null, null);
-        return new WebResult("200", "查询成功", noticeList==null?"":noticeList.get(0));
+        if(noticeList==null && noticeList.size() == 0) {
+            return new WebResult("200", "查询成功", "");
+        }
+        return new WebResult("200", "查询成功", noticeList.get(0));
     }
 
 }
