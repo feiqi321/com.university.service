@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         //验证手机号是否被注册
         User finduserbyphone = userMapper.findUserByPhone(user);
         if (finduserbyphone != null) {
-            return new WebResult("400", "用户已注册！");
+            return new WebResult("400", "该用户已注册");
         }
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 修改密码 （根据原密码修改）
      *
-     * @param oldPass, newPassword, nextpass
+     * @param phoneVo
      * @return
      */
     @Transactional
@@ -294,7 +294,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 更换手机号
      *
-     * @param oldPhone,newPhone
+     * @param phoneVo
      * @return
      */
     @Transactional
@@ -311,7 +311,7 @@ public class UserServiceImpl implements UserService {
         }
         User findUser = userMapper.findUserByPhone2(newPhone);
         if (findUser != null) {
-            return new WebResult("400", "手机号已存在");
+            return new WebResult("400", "该手机号已被使用");
         }
         //短信验证码
         Object value = redisUtil.get("sendSms-" + newPhone);
@@ -324,13 +324,12 @@ public class UserServiceImpl implements UserService {
         userMapper.updatePhone(oldPhone, newPhone);
         return new WebResult("200", "更换成功");
     }
-
+    //退出登录
     @Override
     public WebResult userQuit(String token) {
         redisUtil.delete(token);
         return new WebResult("200", "退出成功", "");
     }
-
     //查询基本信息接口
     @Override
     public WebResult selectInfo(User user) {
