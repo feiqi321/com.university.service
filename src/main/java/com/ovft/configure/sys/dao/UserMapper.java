@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.dao;
 
+import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -56,6 +57,7 @@ public interface UserMapper {
 
     //上传头像-vvtxw
     public void updateAddress(@Param("user") User user);
-
+    //添加个性签名
+    public void createMycontext(@Param("user") User user);
 
 }

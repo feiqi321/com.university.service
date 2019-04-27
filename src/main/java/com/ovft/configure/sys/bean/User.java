@@ -80,7 +80,6 @@ public class User {
      * 紧急联系人关系1
      */
     private String emergencyRelation1;
-
     /**
      * 紧急联系人电话1
      */
@@ -100,10 +99,21 @@ public class User {
     private String identityCard;
     //短信验证码
     private String securityCode;
-
+    //用户信息表2id
     private Integer userItemId;
-
+    //用户头像
     private String image;
+    //用户个性签名
+     private String mycontext;
+
+    public String getMycontext() {
+        return mycontext;
+    }
+
+    public void setMycontext(String mycontext) {
+        this.mycontext = mycontext;
+    }
+
 
     public String getImage() {
         return image;

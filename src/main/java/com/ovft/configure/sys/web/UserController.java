@@ -44,7 +44,7 @@ public class UserController {
     }
     /**
      * 修改密码
-     * @param  phone,newPassword,nextpass,identifying_code
+     * @param  phoneVo
      * @return
      */
     @PostMapping(value = "/updatePassword")
@@ -66,7 +66,7 @@ public class UserController {
     }
     /**
      * 变更手机
-     * @param  oldPhone,newPhone
+     * @param  phoneVo
      * @return
      */
     @PostMapping(value = "/updatePhone")
@@ -105,6 +105,17 @@ public class UserController {
         user.setUserId(Integer.parseInt(userId));
         user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
         return userService.selectInfo(user);
+    }
+    /**
+     * 个性签名
+     * @param  request
+     * @return
+     */
+    @PostMapping(value = "/createMycontext")
+    public WebResult createMycontext(@RequestBody User user,HttpServletRequest request){
+        String userId=request.getHeader("userId" );
+         userService.createMycontext(user,Integer.parseInt(userId));
+          return  new WebResult("200","发表成功");
     }
 
 }

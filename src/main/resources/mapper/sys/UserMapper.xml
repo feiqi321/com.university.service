@@ -117,5 +117,8 @@
     <update id="updateAddress" parameterType="com.ovft.configure.sys.bean.User">
         UPDATE edu_user SET  image=#{user.image} where user_Id=#{user.userId}
     </update>
-
+    <!--添加个性签名-->
+    <update id="createMycontext" parameterType="com.ovft.configure.sys.bean.User">
+             update edu_user SET  mycontext=#{user.mycontext} where user_Id=#{user.userId}
+    </update>
 </mapper>

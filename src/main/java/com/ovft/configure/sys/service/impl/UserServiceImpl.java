@@ -465,4 +465,15 @@ public class UserServiceImpl implements UserService {
         userMapper.updateAddress(user);
     }
 
+    /**
+     * 添加个性签名
+     * @param user
+     */
+    @Transactional
+    @Override
+    public void createMycontext(User user, Integer userId) {
+             user.setUserId(userId);
+          userMapper.createMycontext(user);
+    }
+
 }
