@@ -9,8 +9,6 @@ import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @ClassName TeacherController
  * @Author zqx
@@ -26,13 +24,12 @@ public class TeacherController {
     public TeacherService teacherService;
 
     /**
-     * 请假申请教师审批列表
+     * 请假申请列表
      * @return
      */
-    @GetMapping(value = "/vacateChackList")
-    public WebResult vacateChackList(HttpServletRequest request) {
-        Integer adminId = (Integer) request.getAttribute("adminId");
-        return  teacherService.vacateChackList(adminId);
+    @PostMapping(value = "/vacateList")
+    public WebResult vacateList(@RequestBody PageVo pageVo) {
+        return  teacherService.vacateChackList(pageVo);
     }
 
     /**

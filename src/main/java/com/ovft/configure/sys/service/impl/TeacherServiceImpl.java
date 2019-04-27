@@ -44,17 +44,19 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 请假申请列表
-     * @param adminId
+     * @param pageVo
      * @return
      */
     @Override
-    public WebResult vacateChackList(Integer adminId) {
-        if(adminId == null) {
-            return new WebResult("400", "请登录","");
+    public WebResult vacateChackList(PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<Map<String, Object>> maps = teacherMapper.seleceVacateList(pageVo.getSchoolId());
+            return new WebResult("200","查询成功", maps);
         }
-        List<Map<String, Object>> maps = teacherMapper.seleceVacateByTeacherId(adminId);
-
-        return new WebResult("200", "请求成功", maps);
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<Map<String, Object>> maps = teacherMapper.seleceVacateList(pageVo.getSchoolId());
+        PageInfo pageInfo = new PageInfo<>(maps);
+        return new WebResult("200","查询成功", pageInfo);
     }
 
     /**

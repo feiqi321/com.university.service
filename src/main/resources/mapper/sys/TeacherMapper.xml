@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.TeacherMapper" >
 
-    <!--根据教师id获取请假列表-->
-    <select id="seleceVacateByTeacherId"  resultType="java.util.HashMap">
+    <!--后台获取请假列表-->
+    <select id="seleceVacateList"  resultType="java.util.HashMap">
          select co.course_name as courseName,
             va.vacate_id as vacateId,
             va.vacate_time as vacateTime,
@@ -12,11 +12,14 @@
             va.contacts_phone as contactsPhone,
             va.vacate_name as vacateName,
             va.vacate_cause as vacateCause,
-            (select dict_name from edu_dict where dict_type='IS_CHACK_STATUS' and dict_value = va.is_check) as isCheck,
             (select dict_name from edu_dict where dict_type='VACATE_TYPE' and dict_value = va.vacate_type) as vacateTypeName
-          from edu_vacate as va LEFT JOIN edu_course as co ON va.course_id = co.course_id
-          where co.course_teacher = #{adminId}
-         order by va.is_check DESC
+            from edu_vacate as va
+			LEFT JOIN edu_course as co ON va.course_id = co.course_id
+            where 1=1
+            <if test="schoolId != null and schoolId != ''">
+                AND co.school_id = #{schoolId}
+            </if>
+			order by va.vacate_time DESC
     </select>
 
     <sql id="Base_Column_List">
