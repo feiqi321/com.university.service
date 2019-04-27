@@ -15,7 +15,7 @@ import java.util.Map;
 @Mapper
 public interface TeacherMapper {
 
-    public List<Map<String,Object>> seleceVacateByTeacherId(@Param("adminId") Integer adminId);
+    public List<Map<String,Object>> seleceVacateList(@Param("schoolId") Integer schoolId);
 
     //添加课程
     public void insertCourse(EduCourse course);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TeacherService {
 
-    public WebResult vacateChackList(Integer adminId);
+    public WebResult vacateChackList(PageVo pageVo);
 
     public WebResult intoCourse(Integer schoolId);
 
