@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "登录失败");
         }
         boolean b = redisUtil.hasKey(token);
+        map.put("token",token) ;
         WebResult result = new WebResult("200", "", map);
         return result;
     }
@@ -173,6 +174,7 @@ public class UserServiceImpl implements UserService {
         if (!phoneVo.getSecurityCode().equals(value.toString())) {
             return new WebResult("400", "验证码错误");
         }
+
         userMapper.updateByPhone(phone, newPasswordMd5);
         WebResult result = new WebResult();
         result.setCode("200");
@@ -199,14 +201,17 @@ public class UserServiceImpl implements UserService {
         }
         String newPass = phoneVo.getNewPass();
         String nextPass = phoneVo.getNextPass();
+        //密码验证
+        int l = newPass.length();
+        if (l < 6 || l > 16) {
+            return new WebResult("400", "密码长度必须要在6-16之间");
+        }
         if(StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
             return new WebResult("400", "新密码不能为空");
         }
-
         if (!newPass.equals(nextPass)) {
             return new WebResult("400", "输入的两次密码不一致");
         }
-
         userMapper.updateByPhone(findUserByOldPass.getPhone(), MD5Utils.md5Password(newPass));
         return new WebResult("200", "修改成功");
     }
