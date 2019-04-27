@@ -123,14 +123,14 @@ public class UserServiceImpl implements UserService {
         }
         boolean b = redisUtil.hasKey(token);
         map.put("token",token) ;
-        WebResult result = new WebResult("200", "", map);
+        WebResult result = new WebResult("200", "登录成功", map);
         return result;
     }
 
     /**
      * 修改密码
      *
-     * @param phone, newPassword, nextpass
+     * @param phoneVo
      * @return
      */
     @Transactional
