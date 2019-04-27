@@ -222,15 +222,15 @@
 
     <!--查询课程时间信息-->
     <select id="queryCourseTimeByCourseId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduClass">
-    select
-    c.start_date,
-    c.end_date,
-    e2.dict_name week,
-    e3.start_time,
-    e3.end_time
-    from edu_class_schedule  e3
-    inner JOIN edu_dict e2 on e2.dict_value=e3.week
-    inner JOIN edu_course c on e3.course_ids=c.course_id
-    where course_id =#{courseId}
+        select
+        c.start_date,
+        c.end_date,
+        e2.dict_name week,
+        e3.start_time,
+        e3.end_time
+        from edu_class_schedule  e3
+        LEFT JOIN edu_dict e2 on e2.dict_value=e3.week
+        LEFT JOIN edu_course c on e3.course_ids=c.course_id
+        where course_id =#{courseId}
   </select>
 </mapper>

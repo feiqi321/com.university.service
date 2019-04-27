@@ -14,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 public class MywebConfiguration extends WebMvcConfigurerAdapter {
-
     @Bean
     public PassportInterceptor passportInterceptor() {
         return new PassportInterceptor();
@@ -22,17 +21,17 @@ public class MywebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*")
-                .allowedHeaders("*").allowedMethods("*");
+        registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST")
+                .allowedHeaders("*").allowCredentials(true);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-/*        registry.addInterceptor(passportInterceptor())
+        registry.addInterceptor(passportInterceptor())
                 .addPathPatterns("/**")
                 //TODO    放行路径待修改
                 .excludePathPatterns("/server/admin/login", "/user/login", "/user/regist", "/sms/sendSms",
                         "/apply/showCategory", "/article/**");
-        super.addInterceptors(registry);*/
+        super.addInterceptors(registry);
     }
 }

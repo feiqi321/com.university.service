@@ -28,7 +28,7 @@ public interface EduCourseService {
      * @param courseId
      * @return
      */
-    public Map<String, EduCourseVo> queryCourseByCourseId(Integer user_id, Integer courseId);
+    public Map<String, EduCourseVo> queryCourseByCourseId(Integer user_id, Integer courseId,HttpServletRequest request);
 
     EduCourseVo queryCourseByCategory(Integer courseId);
 }

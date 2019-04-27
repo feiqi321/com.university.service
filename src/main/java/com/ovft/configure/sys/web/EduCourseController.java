@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.web;
 
+import com.jfinal.aop.Before;
+import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduCourse;
@@ -19,6 +21,7 @@ import java.util.Map;
  * @author vvtxw
  * @create 2019-04-14 7:43
  */
+@Before(CORSInterceptor.class)
 @RestController
 @RequestMapping("apply")
 public class EduCourseController {
@@ -82,6 +85,8 @@ public class EduCourseController {
 //        Integer userId = (Integer) request.getAttribute("userId");
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
+//        Integer userId = 1;
+
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
         }
@@ -89,7 +94,7 @@ public class EduCourseController {
             return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
         }
         //获取请求头的userId
-        Map<String, EduCourseVo> map = eduCourseService.queryCourseByCourseId(userId, courseId);
+        Map<String, EduCourseVo> map = eduCourseService.queryCourseByCourseId(userId, courseId, request);
         Iterator<String> it = map.keySet().iterator();
         if (it != null) {
             while (it.hasNext()) {

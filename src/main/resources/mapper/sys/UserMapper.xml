@@ -60,7 +60,7 @@
     <select id="queryemployerByUserId" parameterType="java.lang.Integer" resultType="String">
         select
             employer
-            from edu_user
+            from edu_user_item
             WHERE user_id=#{userId}
     </select>
 

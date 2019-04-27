@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.web;
 
+import com.jfinal.aop.Before;
+import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Base64File;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author vvtxw
  * @create 2019-04-23 15:06
  */
+@Before(CORSInterceptor.class)
 @RestController
 @RequestMapping("pic")
 public class FileController {

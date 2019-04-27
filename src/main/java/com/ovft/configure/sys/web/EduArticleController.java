@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.web;
 
+import com.jfinal.aop.Before;
+import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.service.EduArticleService;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author vvtxw
  * @create 2019-04-21 20:07
  */
+@Before(CORSInterceptor.class)
 @RestController
 public class EduArticleController {
 

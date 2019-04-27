@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.web;
 
+import com.jfinal.aop.Before;
+import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.EduCourseVo;
@@ -15,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date 2019/4/10 15:45
  * @Version 1.0
  **/
-
+@Before(CORSInterceptor.class)
 @RestController
 @RequestMapping("/server/teacher")
 public class TeacherController {

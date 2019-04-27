@@ -2,10 +2,7 @@ package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.constant.EmployerStatus;
 import com.ovft.configure.constant.OrderStatus;
-import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.EduCourse;
-import com.ovft.configure.sys.bean.Order;
-import com.ovft.configure.sys.bean.OrderDetail;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.EduCourseService;
 import com.ovft.configure.sys.vo.EduCourseVo;
@@ -61,14 +58,17 @@ public class EduCourseServiceImpl implements EduCourseService {
      * @return
      */
     @Override
-    public Map<String, EduCourseVo> queryCourseByCourseId(Integer userId, Integer courseId) {
+    public Map<String, EduCourseVo> queryCourseByCourseId(Integer userId, Integer courseId, HttpServletRequest request) {
         Map<String, EduCourseVo> map = new HashMap<>();
         Map<String, Object> param = new HashMap<>();
         Map<String, Object> param2 = new HashMap<>();
+
+        String schoolId1 = request.getHeader("schoolId");
+        Integer schoolId = Integer.parseInt(schoolId1);
         //查询用户所对应的学员分类人数
-        String employer = userMapper.queryemployerByUserId(userId);
-        if (employer == null || employer == "") {
-            employer = EmployerStatus.NO4;
+        User user = userMapper.queryByItemsIdAndSchoolId(userId, schoolId);
+        if (user.getEmployer() == null || user.getEmployer() == "") {
+            user.setEmployer(EmployerStatus.NO4);
         }
         param.put("course_id", courseId);
         param.put("payment_status", OrderStatus.PAY);
@@ -89,20 +89,20 @@ public class EduCourseServiceImpl implements EduCourseService {
         //可报名剩余人数
         int nowtotal = acceptNum - payNum;
 
-        if (employer.equals(EmployerStatus.NO1) && nowtotal > 0) {
+        if (user.getEmployer().equals(EmployerStatus.NO1) && nowtotal > 0) {
             EduCourseVo courseInfo = applyCourse(userId, courseId);
             nowtotal--;
             map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
         }
-        if (employer.equals(EmployerStatus.NO2) && payEmployerNumNo1 >= acceptNum / 2) {
+        if (user.getEmployer().equals(EmployerStatus.NO2) && payEmployerNumNo1 >= acceptNum / 2) {
             EduCourseVo courseInfo = applyCourse(userId, courseId);
             map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
         }
-        if (employer.equals(EmployerStatus.NO3) && payNum >= acceptNum / 2 + 1) {
+        if (user.getEmployer().equals(EmployerStatus.NO3) && payNum >= acceptNum / 2 + 1) {
             EduCourseVo courseInfo = applyCourse(userId, courseId);
             map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
         }
-        if (employer.equals(EmployerStatus.NO4) && payNum >= acceptNum / 2 + 2) {
+        if (user.getEmployer().equals(EmployerStatus.NO4) && payNum >= acceptNum / 2 + 2) {
             EduCourseVo courseInfo = applyCourse(userId, courseId);
             map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
         }

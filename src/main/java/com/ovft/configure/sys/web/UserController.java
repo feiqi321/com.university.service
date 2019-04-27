@@ -1,6 +1,8 @@
 
 package com.ovft.configure.sys.web;
 
+import com.jfinal.aop.Before;
+import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.UserService;
@@ -14,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by looyer on 2019/4/2.
  */
 @RestController
-
+@Before(CORSInterceptor.class)
 @RequestMapping("/user")
 public class UserController {
 

@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.web;
 
+import com.jfinal.aop.Before;
+import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import java.util.Map;
 /**
  * 发送短信
  */
+@Before(CORSInterceptor.class)
 @RestController
 @RequestMapping("/sms")
 public class SmsControll {

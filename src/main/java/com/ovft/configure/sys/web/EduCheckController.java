@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.web;
 
+import com.jfinal.aop.Before;
+import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.constant.OrderStatus;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
@@ -28,6 +30,7 @@ import java.util.*;
  * @author vvtxw
  * @create 2019-04-15 21:51
  */
+@Before(CORSInterceptor.class)
 @RestController
 @RequestMapping("doCheck")
 public class EduCheckController {
@@ -64,7 +67,7 @@ public class EduCheckController {
             WebResult orNoCheck = isOrNoCheck(orderVos, userId, x, y);
             return orNoCheck;
         } else {
-            return new WebResult(StatusCode.OK, "你还未购买课程，无法课时打卡");
+            return new WebResult(StatusCode.ERROR, "你还未购买课程，无法课时打卡");
         }
     }
 
