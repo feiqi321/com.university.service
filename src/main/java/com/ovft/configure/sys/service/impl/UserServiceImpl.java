@@ -195,19 +195,22 @@ public class UserServiceImpl implements UserService {
         if (findUserByOldPass == null) {
             return new WebResult("400", "用户不存在");
         }
+        String newPass = phoneVo.getNewPass();
+        String nextPass = phoneVo.getNextPass();
+        if(StringUtils.isBlank(phoneVo.getOldPass())) {
+            return new WebResult("400", "原密码不能为空");
+        }
+        if(StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
+            return new WebResult("400", "新密码不能为空");
+        }
         String oldPass = MD5Utils.md5Password(phoneVo.getOldPass());
         if(!findUserByOldPass.getPassword().equals(oldPass)) {
             return new WebResult("400", "原密码错误");
         }
-        String newPass = phoneVo.getNewPass();
-        String nextPass = phoneVo.getNextPass();
         //密码验证
         int l = newPass.length();
         if (l < 6 || l > 16) {
             return new WebResult("400", "密码长度必须要在6-16之间");
-        }
-        if(StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
-            return new WebResult("400", "新密码不能为空");
         }
         if (!newPass.equals(nextPass)) {
             return new WebResult("400", "输入的两次密码不一致");
