@@ -46,7 +46,7 @@ public class EduArticleController {
      */
     @GetMapping(value = "/article/queryNotice")
     public WebResult queryNoticeById(@RequestParam(value = "id", required = true) Integer id) {
-        return eduArticleService.findNotice(id);
+        return eduArticleService.queryNoticeById(id);
     }
 
     /**

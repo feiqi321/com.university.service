@@ -1,7 +1,7 @@
 package com.ovft.configure.sys.dao;
 
-import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.vo.EduCourseVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -59,5 +59,6 @@ public interface UserMapper {
     public void updateAddress(@Param("user") User user);
     //添加个性签名
     public void createMycontext(@Param("user") User user);
-
+    //查找课程的详细信息
+    public EduCourseVo queryCourseByCourseId(Integer courseId);
 }

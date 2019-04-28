@@ -3,9 +3,6 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.PhoneVo;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
     //用户注册
@@ -30,4 +27,7 @@ public interface UserService {
     public void updateAddress(User user);
     //添加个性签名
     public void createMycontext(User user,Integer userId);
+
+    //获取我的课程详情
+    public WebResult myCourse(Integer userId);
 }

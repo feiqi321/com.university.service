@@ -118,4 +118,15 @@ public class UserController {
           return  new WebResult("200","发表成功");
     }
 
+    /**
+     * 获取我的课程详情
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/myCourse")
+    public  WebResult myCourse(HttpServletRequest request) {
+        String userId=request.getHeader("userId" );
+        return userService.myCourse(Integer.valueOf(userId));
+    }
+
 }

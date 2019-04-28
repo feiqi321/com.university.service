@@ -74,4 +74,5 @@ public interface EduArticleMapper {
     public void updateNotice(EduArticle eduArticle);
 
 
+    void updateVisites(@Param("id") Integer id, @Param("visits")Integer visits);
 }

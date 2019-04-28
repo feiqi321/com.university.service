@@ -51,4 +51,11 @@ public interface EduArticleService {
      * @return
      */
     public WebResult findNotice(Integer id);
+
+    /**
+     * 进入文章
+     * @param id
+     * @return
+     */
+    public WebResult queryNoticeById(Integer id);
 }
