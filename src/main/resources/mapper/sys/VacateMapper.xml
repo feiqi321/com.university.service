@@ -39,8 +39,11 @@
         LEFT JOIN edu_course c on i.course_id = c.course_id
         where o.user_id = #{userId}
         and p.payment_status = 1
-        <![CDATA[ and  c.start_date <= #{today}]]>
-        <![CDATA[ and c.end_date >= #{today}]]>
+        <if test="today != null">
+            <![CDATA[ and  c.start_date <= #{today}]]>
+            <![CDATA[ and c.end_date >= #{today}]]>
+        </if>
+
     </select>
 
 </mapper>

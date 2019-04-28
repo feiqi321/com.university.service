@@ -121,4 +121,13 @@
     <update id="createMycontext" parameterType="com.ovft.configure.sys.bean.User">
              update edu_user SET  mycontext=#{user.mycontext} where user_Id=#{user.userId}
     </update>
+
+    <!--查找课程的详细信息-->
+    <select id="queryCourseByCourseId" resultType="com.ovft.configure.sys.vo.EduCourseVo">
+        SELECT c.course_id, c.course_name, a.`name` as teacherName, c.place_class, s.school_name
+        FROM edu_course c
+        LEFT JOIN edu_school s on s.school_id = c.school_id
+        LEFT JOIN edu_admin a on a.admin_id = c.course_teacher
+        where course_id = #{courseId}
+    </select>
 </mapper>

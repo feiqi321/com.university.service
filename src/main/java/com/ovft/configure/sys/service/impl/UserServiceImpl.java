@@ -1,12 +1,16 @@
 package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.UserMapper;
+import com.ovft.configure.sys.dao.VacateMapper;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +35,10 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private RedisUtil redisUtil;
+    @Resource
+    private VacateMapper vacateMapper;
+    @Resource
+    private EduClassMapper eduClassMapper;
 
     /**
      * 用户注册
@@ -474,6 +481,22 @@ public class UserServiceImpl implements UserService {
     public void createMycontext(User user, Integer userId) {
              user.setUserId(userId);
           userMapper.createMycontext(user);
+    }
+
+    @Override
+    public WebResult myCourse(Integer userId) {
+        List<Map<String, Object>> course = vacateMapper.selectUserCourse(userId, null);
+        LinkedList<EduCourseVo> courseVos = new LinkedList<>();
+        if(course != null) {
+            for (Map<String, Object> map : course) {
+                Object courseId = map.get("courseId");
+                EduCourseVo courseVo = userMapper.queryCourseByCourseId((Integer) courseId);
+                List<EduClass> eduClasses = eduClassMapper.queryCourseTimeByCourseId((Integer) courseId);
+                courseVo.setClassList(eduClasses);
+                courseVos.push(courseVo);
+            }
+        }
+        return new WebResult("200", "查询成功", courseVos);
     }
 
 }

@@ -72,12 +72,13 @@ public class EduArticleServiceImpl implements EduArticleService {
             return security;
         }
         if(eduArticle.getId() == null) {
-            if("3".equals(eduArticle.getType())) {
+            //校园介绍只能有一个   需求修改,能添加多条校园介绍
+            /*if("3".equals(eduArticle.getType())) {
                 List<EduArticleVo> noticeAll = eduArticleMapper.findNoticeAll(null, eduArticle.getSchoolId(), eduArticle.getType(), null);
                 if(noticeAll != null && noticeAll.size() != 0) {
                     return new WebResult("400", "当前学校只能添加一个校园介绍", "");
                 }
-            }
+            }*/
             eduArticle.setCreatetime(new Date());
             eduArticle.setUpdatetime(new Date());
             eduArticle.setVisits(0);
@@ -135,6 +136,19 @@ public class EduArticleServiceImpl implements EduArticleService {
         if(noticeList==null && noticeList.size() == 0) {
             return new WebResult("200", "查询成功", "");
         }
+        return new WebResult("200", "查询成功", noticeList.get(0));
+    }
+
+    @Transactional
+    @Override
+    public WebResult queryNoticeById(Integer id) {
+        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(id, null, null, null);
+        if(noticeList==null && noticeList.size() == 0) {
+            return new WebResult("200", "查询成功", "");
+        }
+        EduArticle article = noticeList.get(0);
+        article.setVisits(article.getVisits() + 1);
+        eduArticleMapper.updateVisites(article.getId(), article.getVisits());
         return new WebResult("200", "查询成功", noticeList.get(0));
     }
 

@@ -526,8 +526,14 @@
     <update id="updateNotice" parameterType="com.ovft.configure.sys.bean.EduArticle" >
        update  edu_article
          set  userid=#{eduArticle.userid},title=#{eduArticle.title},content=#{eduArticle.content},i=#{eduArticle.image},createtime=#{eduArticle.createtime},upadettime=#{eduArticle.updatetime}
-         ispublic=#{eduArticle.ispublic},istop=#{eduArticle.istop},visit=#{eduArticle.visits},thumbup=#{eduArticle.thumbup},comment=#{eduArticle.comment},state=#{eduArticle.state},
+         ispublic=#{eduArticle.ispublic},istop=#{eduArticle.istop},visits=#{eduArticle.visits},thumbup=#{eduArticle.thumbup},comment=#{eduArticle.comment},state=#{eduArticle.state},
          url=#{eduArticle.url},type=#{eduArticle.type},collect=#{eduArticle.collect},school_id=#{eduArticle.schoolId}
+        where  id=#{id}
+    </update>
+
+    <update id="updateVisites"  >
+        update  edu_article
+        set  visits=#{visits}
         where  id=#{id}
     </update>
 
