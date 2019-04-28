@@ -25,7 +25,7 @@ public interface SchoolService {
     public WebResult schoolList(Integer adminId, PageVo pageVo);
 
     public WebResult deleteSchool(Integer schoolId);
-     //查找对应学校找应轮播图
+     //查找学校对应轮播图
     public School findSlideshowAll(Integer schoolId);
 
 }
