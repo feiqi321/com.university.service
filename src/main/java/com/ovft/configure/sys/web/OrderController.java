@@ -19,7 +19,7 @@ import java.util.List;
  * @author vvtxw
  * @create 2019-04-12 13:38
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("pay")
 public class OrderController {

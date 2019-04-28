@@ -18,7 +18,7 @@ import java.util.List;
  * @author vvtxw
  * @create 2019-04-14 18:05
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("notice")
 public class CourseManagerController {

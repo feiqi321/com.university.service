@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by looyer on 2019/4/2.
  */
-@Before(CORSInterceptor.class)
+/*@Before(CORSInterceptor.class)*/
 @RestController
 @RequestMapping("/user")
 public class UserInfoController {

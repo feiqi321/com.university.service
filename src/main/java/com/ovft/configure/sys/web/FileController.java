@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author vvtxw
  * @create 2019-04-23 15:06
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("pic")
 public class FileController {

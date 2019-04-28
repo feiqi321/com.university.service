@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Before(CORSInterceptor.class)
+/*@Before(CORSInterceptor.class)*/
 @RestController
 public class VacateController {
 

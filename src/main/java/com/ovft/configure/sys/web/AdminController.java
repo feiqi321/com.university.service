@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date 2019/4/10 15:45
  * @Version 1.0
  **/
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("/server/admin")
 public class AdminController {

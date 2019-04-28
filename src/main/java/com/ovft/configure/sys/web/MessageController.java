@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author zqx
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("/message")
 public class MessageController {

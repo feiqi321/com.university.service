@@ -21,7 +21,7 @@ import java.util.Map;
  * @author vvtxw
  * @create 2019-04-14 7:43
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("apply")
 public class EduCourseController {

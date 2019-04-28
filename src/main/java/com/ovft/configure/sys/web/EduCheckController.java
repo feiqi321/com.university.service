@@ -30,7 +30,7 @@ import java.util.*;
  * @author vvtxw
  * @create 2019-04-15 21:51
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("doCheck")
 public class EduCheckController {

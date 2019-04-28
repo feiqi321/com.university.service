@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author vvtxw
  * @create 2019-04-21 20:07
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 public class EduArticleController {
 

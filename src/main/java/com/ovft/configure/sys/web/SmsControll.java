@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 发送短信
  */
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("/sms")
 public class SmsControll {

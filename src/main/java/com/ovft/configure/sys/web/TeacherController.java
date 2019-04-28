@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @Date 2019/4/10 15:45
  * @Version 1.0
  **/
-@Before(CORSInterceptor.class)
+
 @RestController
 @RequestMapping("/server/teacher")
 public class TeacherController {
