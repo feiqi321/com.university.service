@@ -181,5 +181,14 @@ public class SchoolServiceImpl implements SchoolService {
         schoolmapper.isUsingSchool(schoolId, 0);
         return new WebResult("200", "删除成功", "");
     }
+    /**
+     * 查找指定学校对应的轮播图
+     * @param schoolId
+     * @return
+     */
+    @Override
+    public School findSlideshowAll(Integer schoolId) {
+        return schoolmapper.findSlideshowAll(schoolId);
+    }
 
 }

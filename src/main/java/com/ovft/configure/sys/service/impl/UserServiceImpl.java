@@ -228,6 +228,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult savaInfo(User user) {
+        if (StringUtils.isBlank(user.getUserName())){
+            return  new WebResult("400","用户名不能为空");
+        }
+        if (StringUtils.isBlank(user.getIdentityCard())){
+            return  new WebResult("400","身份证号码不能为空");
+        }
+            if (user.getSex()==null){
+            return  new WebResult("400","性别未填*");
+            }
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
         if (!phoneResult.getCode().equals("200")) {
@@ -265,17 +274,16 @@ public class UserServiceImpl implements UserService {
                 Pattern p = Pattern.compile(regex);
                 Matcher m = p.matcher(user.getEmergencyPhone2());
                 boolean isMatch = m.matches();
-
                 if (!isMatch) {
                     return new WebResult("400", "请输入正确手机号", "");
                 }
             }
         }
         if (StringUtils.isBlank(user.getEmergencyContact1())) {
-            return new WebResult("400", "请输入紧急联系人", "");
+            return new WebResult("400", "请输入紧急联系人1", "");
         }
         if (StringUtils.isBlank(user.getEmergencyRelation1())) {
-            return new WebResult("400", "请输入紧急联系人关系", "");
+            return new WebResult("400", "请输入紧急联系人关系1", "");
         }
         //身份证格式校验
         boolean testCard = this.isIDNumber(user.getIdentityCard());

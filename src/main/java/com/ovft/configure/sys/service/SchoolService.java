@@ -3,6 +3,7 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.vo.PageVo;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface SchoolService {
     public WebResult createSchool(School school);
@@ -24,5 +25,7 @@ public interface SchoolService {
     public WebResult schoolList(Integer adminId, PageVo pageVo);
 
     public WebResult deleteSchool(Integer schoolId);
+     //查找对应学校找应轮播图
+    public School findSlideshowAll(Integer schoolId);
 
 }

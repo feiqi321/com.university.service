@@ -9,7 +9,8 @@ import java.util.List;
 
 @Mapper
 public interface SchoolMapper {
-
+    //查找对应学校的所有轮播图
+    public School findSlideshowAll(Integer schoolId);
     //添加学校
     public void createSchool(School school);
 

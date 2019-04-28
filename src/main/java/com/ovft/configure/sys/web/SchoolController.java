@@ -94,6 +94,19 @@ public class SchoolController {
     public WebResult deleteSchool(@RequestParam(value = "schoolId")Integer schoolId) {
         return schoolService.deleteSchool(schoolId);
     }
-
-
+    /**
+     * 查阅指定学校轮播图
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/school/findSlideshowAll")
+    public WebResult findSlideshowAll(HttpServletRequest request) {
+        School school = schoolService.findSlideshowAll(Integer.parseInt(request.getHeader("schoolId")));
+        String slideshow = school.getSlideshow();
+        if (slideshow==null){
+            return  new WebResult("400","未获取到该资源", "");
+        }
+        String[] strs = slideshow.split(",");
+        return  new WebResult("200","获取成功", strs);
+    }
 }

@@ -81,5 +81,12 @@
               set  school_id=#{schoolId}
               where  user_id=#{userId}
       </update>
+    <!--查询学校坐标-vvtxw-->
+    <select id="findSlideshowAll" parameterType="int" resultType="com.ovft.configure.sys.bean.School">
+          select *
+          from   edu_school
+          where school_id=#{schoolId}
+
+    </select>
 
 </mapper>
