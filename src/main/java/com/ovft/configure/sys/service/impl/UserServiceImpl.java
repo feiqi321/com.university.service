@@ -200,7 +200,7 @@ public class UserServiceImpl implements UserService {
     public WebResult updatePasswordByOldPass(PhoneVo phoneVo) {
         User findUserByOldPass = userMapper.selectById(phoneVo.getUserId());
         if (findUserByOldPass == null) {
-            return new WebResult("400", "用户不存在");
+            return new WebResult("400", "未找到对应用户");
         }
         String newPass = phoneVo.getNewPass();
         String nextPass = phoneVo.getNextPass();
@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "输入的两次密码不一致");
         }
         userMapper.updateByPhone(findUserByOldPass.getPhone(), MD5Utils.md5Password(newPass));
-        return new WebResult("200", "修改成功");
+            return new WebResult("200", "修改成功");
     }
 
     /**
@@ -235,6 +235,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult savaInfo(User user) {
+        if (StringUtils.isBlank(user.getIdentityCard())){
+            return  new WebResult("400","身份证号码不能为空");
+        }
         if (StringUtils.isBlank(user.getUserName())){
             return  new WebResult("400","用户名不能为空");
         }
