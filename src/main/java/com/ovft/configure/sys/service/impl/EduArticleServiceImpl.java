@@ -32,7 +32,7 @@ public class EduArticleServiceImpl implements EduArticleService {
     public WebResult queryAllNotice(Integer schoolId, String type) {
         //查询：1-通知公告, 3-校园介绍, 4-联盟资讯, 5-政策法规
         //可以看见所有学校联盟资讯
-        if("4".equals(type)) {
+        if("4".equals(type) || "5".equals(type)) {
             schoolId = null;
         }
         List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, null);

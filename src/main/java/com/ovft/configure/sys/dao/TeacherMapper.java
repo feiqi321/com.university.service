@@ -2,6 +2,7 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
+import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -37,6 +38,8 @@ public interface TeacherMapper {
 
     //根据课程id删除课程
     public void deleteCourseById(@Param("courseId") Integer courseId);
+
+    public List<User> selectUserList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
 
 }

@@ -1,7 +1,5 @@
 package com.ovft.configure.sys.web;
 
-import com.jfinal.aop.Before;
-import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.EduCourseVo;
@@ -22,6 +20,15 @@ public class TeacherController {
 
     @Autowired
     public TeacherService teacherService;
+
+    /**
+     * 学员列表
+     * @return
+     */
+    @PostMapping(value = "/userList")
+    public WebResult userList(@RequestBody PageVo pageVo) {
+        return teacherService.userList(pageVo);
+    }
 
     /**
      * 请假申请列表

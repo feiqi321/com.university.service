@@ -24,4 +24,5 @@ public interface TeacherService {
 
     public WebResult deleteCourse(Integer courseId);
 
+    public WebResult userList(PageVo pageVo);
 }

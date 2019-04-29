@@ -122,7 +122,7 @@
         </set>
         where course_id = #{courseId,jdbcType=INTEGER}
     </update>
-    
+
     <delete id="deleteClassByCourseId">
         delete from edu_class_schedule where course_ids = #{courseId}
     </delete>
@@ -131,6 +131,27 @@
     delete from edu_course
     where course_id = #{courseId,jdbcType=INTEGER}
   </delete>
+
+
+    <!--根据schoolId查询学校用户记录-->
+    <select id="selectUserList" resultType="com.ovft.configure.sys.bean.User">
+        select u.user_id userId,i.user_name userName,u.phone,u.image,
+        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.political,i.educational,i.position,i.retired,
+        i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
+        i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
+        i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
+        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        from edu_user_item i
+        left join edu_user u on u.user_id = i.user_id
+        where 1 =1
+        <if test="schoolId != null">
+            and i.school_id = #{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
 
 
 </mapper>

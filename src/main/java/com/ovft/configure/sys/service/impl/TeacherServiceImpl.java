@@ -3,10 +3,7 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.Admin;
-import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.EduCourse;
-import com.ovft.configure.sys.bean.School;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.EduCourseVo;
@@ -159,7 +156,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * 添加课程
+     * 添加/修改  课程
      * @param courseVo
      * @return
      */
@@ -168,14 +165,18 @@ public class TeacherServiceImpl implements TeacherService {
     public WebResult createCourse(EduCourseVo courseVo) {
         EduCourse course = new EduCourse();
         WebResult security = security(courseVo, course);
-
         if(security != null) {
             return security;
         }
-
-        teacherMapper.insertCourse(course);
         Integer courseId = course.getCourseId();
-
+        if(courseId != null) {
+            course.setCourseId(courseId);
+            teacherMapper.updateCourseByCourseId(course);
+            //先删除原有的详细信息
+            teacherMapper.deleteClassByCourseId(course.getCourseId());
+        } else  {
+            teacherMapper.insertCourse(course);
+        }
         List<EduClass> classList = courseVo.getClassList();
         for (EduClass eduClass : classList) {
             eduClass.setCourseIds(courseId);
@@ -261,6 +262,22 @@ public class TeacherServiceImpl implements TeacherService {
         teacherMapper.deleteClassByCourseId(courseId);
         teacherMapper.deleteCourseById(courseId);
         return new WebResult("200","删除成功","");
+    }
+
+    /**
+     * 学员列表
+     * @return
+     */
+    @Override
+    public WebResult userList(PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
+            return new WebResult("200","查询成功", users);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
+        PageInfo pageInfo = new PageInfo<>(users);
+        return new WebResult("200","查询成功", pageInfo);
     }
 
 
