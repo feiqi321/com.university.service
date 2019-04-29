@@ -204,13 +204,13 @@ public class UserServiceImpl implements UserService {
         }
         String newPass = phoneVo.getNewPass();
         String nextPass = phoneVo.getNextPass();
-        if(StringUtils.isBlank(phoneVo.getOldPass())) {
+        if(StringUtils.isBlank(phoneVo.getOldPassWord())) {
             return new WebResult("400", "原密码不能为空");
         }
         if(StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
             return new WebResult("400", "新密码不能为空");
         }
-        String oldPass = MD5Utils.md5Password(phoneVo.getOldPass());
+        String oldPass = MD5Utils.md5Password(phoneVo.getOldPassWord());
         if(!findUserByOldPass.getPassword().equals(oldPass)) {
             return new WebResult("400", "原密码错误");
         }
