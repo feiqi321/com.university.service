@@ -28,7 +28,20 @@ public interface EduCourseService {
      * @param courseId
      * @return
      */
-    public Map<String, EduCourseVo> queryCourseByCourseId(Integer user_id, Integer courseId,HttpServletRequest request);
+    public Map<String, Object> queryCourseByCourseId(Integer user_id, Integer courseId, HttpServletRequest request);
 
     EduCourseVo queryCourseByCategory(Integer courseId);
+
+
+    /**
+     * 查询课程表相关信息
+     *
+     * @param week
+     * @param schoolId
+     * @return
+     */
+    List<EduCourseVo> queryAllTimetable(String week, String schoolId);
+
+
+
 }

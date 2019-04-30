@@ -29,8 +29,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public WebResult findMessage(Integer userId, Integer schoolId, Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum==null?0:pageNum, pageSize==null?10:pageSize);
-        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, null, null);
+        PageHelper.startPage(pageNum == null ? 0 : pageNum, pageSize == null ? 10 : pageSize);
+        List<EduArticleVo> noticeList = eduArticleMapper.findNoticeAll(null, schoolId, null, null);
         PageInfo pageInfo = new PageInfo<>(noticeList);
         return new WebResult("200", "查询成功", pageInfo);
     }

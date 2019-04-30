@@ -320,4 +320,29 @@
         WHERE course_id=#{course_id}
     </select>
 
+
+    <!--4.课程表-->
+    <select id="queryAllTimetable" resultType="com.ovft.configure.sys.vo.EduCourseVo">
+     		SELECT
+					*
+				from
+				(
+					 select
+                        c.course_id,
+						e1.school_id,
+						e1.school_name school_name,
+						e3.week,
+                        c.course_name,
+                        e2.name course_teacher,
+                        c.place_class,
+						e3.start_time,
+						e3.end_time
+             from edu_course c
+                left join edu_school e1 on c.school_id=e1.school_id
+                left join edu_admin e2 on c.course_teacher=e2.admin_id
+				LEFT JOIN edu_class_schedule e3 on e3.course_ids=c.course_id
+				) p
+				where week=#{week} and school_id=#{schoolId};
+    </select>
+
 </mapper>

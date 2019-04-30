@@ -3,6 +3,7 @@ package com.ovft.configure.sys.dao;
 import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -38,4 +39,14 @@ public interface EduCourseMapper {
      * @return
      */
     int queryAcceptNum(Integer courseId);
+
+    /**
+     * 查询课程表相关信息
+     *
+     * @param week
+     * @param schoolId
+     * @return
+     */
+    List<EduCourseVo> queryAllTimetable(@Param("week") String week, @Param("schoolId") String schoolId);
+
 }

@@ -16,8 +16,18 @@ public class EduCourseVo extends EduCourse {
     private String schoolName;
     private String teacherName;
 
+    private String week;
     private String startTime;
     private String endTime;
+
+
+    public String getWeek() {
+        return week;
+    }
+
+    public void setWeek(String week) {
+        this.week = week;
+    }
 
     public String getTeacherName() {
         return teacherName;

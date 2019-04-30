@@ -20,10 +20,10 @@ public class PassportInterceptor implements HandlerInterceptor {
     public RedisUtil redisUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(PassportInterceptor.class);
- 
+
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        String token = httpServletRequest.getHeader("token");
+/*        String token = httpServletRequest.getHeader("token");
         String schoolId = httpServletRequest.getHeader("schoolId");
         //验证token
         if(StringUtils.isBlank(token)) {
@@ -43,17 +43,18 @@ public class PassportInterceptor implements HandlerInterceptor {
             httpServletRequest.setAttribute("adminId", id);
 //            httpServletRequest.setAttribute("adminId", 1);
         }
+        return true;*/
         return true;
     }
- 
+
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
- 
- 
+
+
     }
- 
+
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
- 
+
     }
 }

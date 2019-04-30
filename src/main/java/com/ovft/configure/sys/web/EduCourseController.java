@@ -58,6 +58,13 @@ public class EduCourseController {
         return new WebResult(StatusCode.OK, "查找成功", courseVos);
     }
 
+    /**
+     * 展示课程详情  ---未使用
+     *
+     * @param courseId
+     * @param request
+     * @return
+     */
     @GetMapping(value = "showInfo")
     public WebResult queryAllInfo(@RequestParam(value = "courseId") Integer courseId, HttpServletRequest request) {
         if (courseId == null) {
@@ -70,6 +77,7 @@ public class EduCourseController {
         }
         return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
     }
+
 
     /**
      * 立即报名
@@ -85,7 +93,7 @@ public class EduCourseController {
 //        Integer userId = (Integer) request.getAttribute("userId");
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-//        Integer userId = 1;
+        /*Integer userId = 4;*/
 
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
@@ -94,16 +102,34 @@ public class EduCourseController {
             return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
         }
         //获取请求头的userId
-        Map<String, EduCourseVo> map = eduCourseService.queryCourseByCourseId(userId, courseId, request);
+        Map<String, Object> map = eduCourseService.queryCourseByCourseId(userId, courseId, request);
         Iterator<String> it = map.keySet().iterator();
         if (it != null) {
             while (it.hasNext()) {
                 String message = it.next();
-                EduCourseVo eduCourseVo = map.get(message);
+                Object eduCourseVo = map.get(message);
+                if (eduCourseVo == null || eduCourseVo == "") {
+                    return new WebResult(StatusCode.ERROR, message, "");
+                }
                 return new WebResult(StatusCode.OK, message, eduCourseVo);
             }
         }
-        return new WebResult(StatusCode.ERROR, "查询没有数据", null);
+        return new WebResult(StatusCode.ERROR, "查询没有数据", "");
+    }
+
+    /**
+     * 课程表
+     *
+     * @param week
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "timetable")
+    public WebResult queryAllTimeRecord(@RequestParam(value = "week") String week, HttpServletRequest request) {
+//        String schoolId = request.getHeader("schoolId");
+        String schoolId = "1";
+        List<EduCourseVo> eduCourseVos = eduCourseService.queryAllTimetable(week, schoolId);
+        return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
     }
 
 
