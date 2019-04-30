@@ -301,7 +301,7 @@ public class UserServiceImpl implements UserService {
         }
         //保存
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(), user.getSchoolId());
-        if (findUser == null) {
+        if (findUser == null || findUser.getSchoolId() == null) {
             user.setCheckin(0);
             userMapper.saveInfoItems(user);
             return new WebResult("200", "保存成功", "");
