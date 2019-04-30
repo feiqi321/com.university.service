@@ -168,7 +168,7 @@ public class TeacherServiceImpl implements TeacherService {
         if(security != null) {
             return security;
         }
-        Integer courseId = course.getCourseId();
+        Integer courseId = courseVo.getCourseId();
         if(courseId != null) {
             course.setCourseId(courseId);
             teacherMapper.updateCourseByCourseId(course);
