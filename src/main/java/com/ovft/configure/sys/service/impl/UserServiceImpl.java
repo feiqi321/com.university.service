@@ -72,7 +72,6 @@ public class UserServiceImpl implements UserService {
         }
         if (!user.getPassword().equals(user.getNextPass())) {
             return new WebResult("400", "输入的两次密码不一致");
-
         }
         String password = user.getPassword();
         user.setPassword(MD5Utils.md5Password(password));
@@ -204,13 +203,13 @@ public class UserServiceImpl implements UserService {
         }
         String newPass = phoneVo.getNewPass();
         String nextPass = phoneVo.getNextPass();
-        if(StringUtils.isBlank(phoneVo.getOldPassWord())) {
+        if(StringUtils.isBlank(phoneVo.getOldPass())) {
             return new WebResult("400", "原密码不能为空");
         }
         if(StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
             return new WebResult("400", "新密码不能为空");
         }
-        String oldPass = MD5Utils.md5Password(phoneVo.getOldPassWord());
+        String oldPass = MD5Utils.md5Password(phoneVo.getOldPass());
         if(!findUserByOldPass.getPassword().equals(oldPass)) {
             return new WebResult("400", "原密码错误");
         }

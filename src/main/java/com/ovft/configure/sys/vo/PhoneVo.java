@@ -11,7 +11,7 @@ public class PhoneVo {
     private String oldPhone;
     private String newPhone;
     private String securityCode;
-    private String oldPassWord;
+    private String oldPass;
     private String newPass;
     private String nextPass;
     private String phone;
@@ -24,12 +24,12 @@ public class PhoneVo {
         this.phone = phone;
     }
 
-    public void setOldPassWord(String oldPassWord) {
-        this.oldPassWord = oldPassWord;
+    public void setOldPass(String oldPass) {
+        this.oldPass = oldPass;
     }
 
-    public String getOldPassWord() {
-        return oldPassWord;
+    public String getOldPass() {
+        return oldPass;
     }
 
     public String getNewPass() {
