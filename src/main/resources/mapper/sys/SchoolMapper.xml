@@ -88,5 +88,9 @@
           where school_id=#{schoolId}
 
     </select>
+    <!--查询所有学校名和对应学校ID-vvtxw-->
+       <select id="findSchoolAll" resultType="com.ovft.configure.sys.bean.School">
+   select  * from edu_school
+       </select>
 
 </mapper>

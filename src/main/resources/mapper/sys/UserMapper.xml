@@ -130,4 +130,15 @@
         LEFT JOIN edu_admin a on a.admin_id = c.course_teacher
         where course_id = #{courseId}
     </select>
+    <!--用户添加注销申请-->
+    <insert id="addWithdraw" parameterType="com.ovft.configure.sys.vo.WithdrawVo">
+           insert
+             into edu_withdraw
+               values (#{withdrawVo.wid},#{withdrawVo.uid},#{withdrawVo.school},#{withdrawVo.content},#{withdrawVo.checkin})
+
+    </insert>
+    <!--获取用户添加注销申请结果-->
+    <select id="selectWithdraw" parameterType="int" resultType="int">
+        select checkin from  edu_withdraw
+    </select>
 </mapper>

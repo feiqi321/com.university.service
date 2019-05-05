@@ -12,6 +12,7 @@ import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PhoneVo;
+import com.ovft.configure.sys.vo.WithdrawVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -508,5 +509,23 @@ public class UserServiceImpl implements UserService {
         }
         return new WebResult("200", "查询成功", courseVos);
     }
+    /**
+     * 添加用户注销申请
+     * @param withdrawVo
+     */
+    @Transactional
+    @Override
+    public void addWithdraw(WithdrawVo withdrawVo) {
+        userMapper.addWithdraw(withdrawVo);
+    }
+    /**
+     * 获取用户注销申请结果状态
+     * @param userId
+     */
+    @Override
+    public int selectWithdraw(Integer userId) {
+        return userMapper.selectWithdraw(userId);
+    }
+
 
 }

@@ -1,7 +1,9 @@
 package com.ovft.configure.sys.dao;
 
+import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.WithdrawVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -57,8 +59,16 @@ public interface UserMapper {
 
     //上传头像-vvtxw
     public void updateAddress(@Param("user") User user);
+
     //添加个性签名
     public void createMycontext(@Param("user") User user);
+
     //查找课程的详细信息
     public EduCourseVo queryCourseByCourseId(Integer courseId);
+
+    //用户注销申请
+    public void addWithdraw(WithdrawVo withdrawVo);
+
+    //获取用户注销申请结果状态
+    public int selectWithdraw(Integer uid);
 }
