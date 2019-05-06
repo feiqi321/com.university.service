@@ -287,6 +287,21 @@ public class TeacherServiceImpl implements TeacherService {
         PageInfo pageInfo = new PageInfo<>(users);
         return new WebResult("200","查询成功", pageInfo);
     }
+    /**
+     * 学员注销申请列表
+     * @return
+     */
+    @Override
+    public WebResult userWithdrawVoList(PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<User> users = teacherMapper.selectUserList(pageVo.getWid(), null);
+            return new WebResult("200","查询成功", users);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<User> users = teacherMapper.selectUserList(pageVo.getWid(), null);
+        PageInfo pageInfo = new PageInfo<>(users);
+        return new WebResult("200","查询成功", pageInfo);
+    }
 
     @Transactional
     @Override
@@ -307,6 +322,26 @@ public class TeacherServiceImpl implements TeacherService {
         }
         WebResult webResult = userService.savaInfo(user);
         return webResult;
+    }
+    /**
+     * 学员审核状态修改
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult updateCheckIn(Integer userId,Integer checkin) {
+        teacherMapper.updateCheckIn(userId,checkin);
+        return new WebResult("200","操作成功","");
+    }
+    /**
+     * 学员注销状态修改
+     * @return
+     */
+    @Transactional
+    @Override
+    public WebResult updateWithdrawCheckIn(Integer wid,Integer checkin) {
+        teacherMapper.updateWithdrawCheckIn(wid,checkin);
+        return new WebResult("200","操作成功","");
     }
 
 }

@@ -163,4 +163,8 @@
     <delete id="deleteUser" parameterType="int">
       delete  from  edu_user_item where user_id=#{userId}
     </delete>
+    <!--后台删除用户注销申请记录-->
+    <delete id="deleteWithdraw" parameterType="int">
+      delete  from  edu_withdraw where wid=#{wid}
+    </delete>
 </mapper>

@@ -13,9 +13,19 @@ public class PageVo {
 
     private Integer schoolId;
 
+    private Integer wid;
+
     private String type;
 
     private Integer role;
+
+    public Integer getWid() {
+        return wid;
+    }
+
+    public void setWid(Integer wid) {
+        this.wid = wid;
+    }
 
     public Integer getRole() {
         return role;

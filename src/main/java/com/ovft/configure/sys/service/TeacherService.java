@@ -28,4 +28,10 @@ public interface TeacherService {
     public WebResult userList(PageVo pageVo);
 
     public WebResult savaUserInfo(User user);
+    //学员报校审核状态修改
+    public WebResult updateCheckIn(Integer userId,Integer checkin);
+    //学员注销审核状态修改
+    public WebResult updateWithdrawCheckIn(Integer wid,Integer checkin);
+
+    public WebResult userWithdrawVoList(PageVo pageVo);
 }

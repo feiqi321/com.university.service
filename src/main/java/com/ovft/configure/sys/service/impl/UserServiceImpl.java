@@ -307,8 +307,8 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "输入身份证格式有误", "");
         }
         //保存
-        User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(), user.getSchoolId());
-        if (findUser == null) {
+        User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+        if (findUser == null||findUser.getSchoolId()==null) {
             user.setCheckin(0);
             userMapper.saveInfoItems(user);
             return new WebResult("200", "保存成功", "");
@@ -530,7 +530,7 @@ public class UserServiceImpl implements UserService {
         userMapper.addWithdraw(withdrawVo);
     }
     /**
-     * 获取用户注销申请结果状态
+     * 查询用户注销记录信息
      * @param userId
      */
     @Override
@@ -538,7 +538,8 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectWithdrawOne(userId);
     }
     /**
-     * 查询用户注销记录信息
+     *
+     * 获取用户注销申请结果状态
      * @param userId
      */
     @Override
@@ -549,6 +550,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Integer userId) {
         userMapper.deleteUser(userId);
+    }
+
+    @Override
+    public void deleteWithdraw(Integer wid) {
+          userMapper.deleteWithdraw(wid);
     }
 
 

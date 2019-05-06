@@ -34,10 +34,12 @@ public interface UserService {
     public void addWithdraw(WithdrawVo withdrawVo);
     //获取我的用户申请记录状态结果
     public int selectWithdraw(Integer userId);
-    //查询我的用户申请记录
+    //查询我的用户注销申请记录
     public WithdrawVo selectWithdrawOne(Integer userId);
     //删除学员
     public void deleteUser(Integer userId);
+    //删除一条注销记录
+    public void deleteWithdraw(Integer wid);
 
 
 }

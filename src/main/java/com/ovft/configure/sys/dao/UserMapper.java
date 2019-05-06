@@ -73,9 +73,11 @@ public interface UserMapper {
 
     //获取用户注销申请结果状态
     public int selectWithdraw(Integer uid);
-    //获取用户注销申请结果状态
+    //获取一个用户注销申请
     public WithdrawVo selectWithdrawOne(Integer uid);
-
     //后台删除用户
     public  void deleteUser(Integer userId);
+    //后台删除用户
+    public  void deleteWithdraw(Integer wid);
+
 }

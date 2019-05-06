@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.dao;
 
+import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
@@ -41,5 +42,10 @@ public interface TeacherMapper {
 
     public List<User> selectUserList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
+    public List<User> selectWithdrawList(@Param("wid") Integer wid, @Param("search") String search);
+
+    public void updateCheckIn(@Param("userId") Integer userId,@Param("checkin") Integer checkin);
+
+    public void updateWithdrawCheckIn(@Param("wid") Integer wid,@Param("checkin") Integer checkin);
 
 }

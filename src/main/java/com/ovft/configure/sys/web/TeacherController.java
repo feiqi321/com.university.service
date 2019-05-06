@@ -53,6 +53,14 @@ public class TeacherController {
             return new WebResult("400", "请先登录", "");
         }
     }
+    /**
+     * 学员注销申请列表
+     * @return
+     */
+    @PostMapping(value = "/userWithdrawList")
+    public WebResult userWithdrawList(HttpServletRequest request, @RequestBody PageVo pageVo) {
+            return teacherService.userWithdrawVoList(pageVo);
+    }
 
     /**
      * 进入 学员修改页面
@@ -109,7 +117,32 @@ public class TeacherController {
            userService.deleteUser(user.getUserId());
            return new WebResult("200","删除成功","");
     }
-
+    /**
+     * 学员审核状态更改
+     * @return
+     */
+    @PostMapping(value = "/auditUser")
+    public WebResult auditUser(HttpServletRequest request){
+        Integer checkin=Integer.parseInt(request.getHeader("checkin"));
+            if (checkin==2){
+                userService.deleteUser(Integer.parseInt(request.getHeader("userId")));
+                return teacherService.updateCheckIn(Integer.parseInt(request.getHeader("userId")),checkin);
+            }
+        return teacherService.updateCheckIn(Integer.parseInt(request.getHeader("userId")),checkin);
+    }
+    /**
+     * 学员注销审核状态更改
+     * @return
+     */
+    @PostMapping(value = "/auditWithdraw")
+    public WebResult auditWithdraw(HttpServletRequest request){
+        Integer checkin=Integer.parseInt(request.getHeader("checkin"));
+            if (checkin==2){
+                userService.deleteWithdraw(Integer.parseInt(request.getHeader("wid")));
+                return teacherService.updateWithdrawCheckIn(Integer.parseInt(request.getHeader("wid")),checkin);
+            }
+        return teacherService.updateWithdrawCheckIn(Integer.parseInt(request.getHeader("wid")),checkin);
+    }
     /**
      * 请假申请列表
      * @return

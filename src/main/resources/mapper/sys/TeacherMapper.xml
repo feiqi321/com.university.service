@@ -152,6 +152,25 @@
             AND user_name like CONCAT('%',#{search},'%')
         </if>
     </select>
+    <!--根据wid查询用户注销申请记录-->
+    <select id="selectWithdrawList" resultType="com.ovft.configure.sys.vo.WithdrawVo">
+        select * from edu_withdraw
+        where 1 =1
+        <if test="wid != null">
+            and wid = #{wid}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
 
+    </select>
+    <!--学员审核状态修改-->
+    <update id="updateCheckIn" parameterType="int" >
+            update edu_user_item set  checkin=#{checkin} where user_id=#{userId}
+    </update>
+    <!--学员注销审核状态修改-->
+    <update id="updateWithdrawCheckIn" parameterType="int" >
+            update edu_withdraw set  checkin=#{checkin} where wid=#{wid}
+    </update>
 
 </mapper>

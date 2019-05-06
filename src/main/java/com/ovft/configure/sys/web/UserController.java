@@ -136,7 +136,6 @@ public class UserController {
         User user = new User();
         String userId = request.getHeader("userId");
         user.setUserId(Integer.parseInt(userId));
-
         return userService.selectInfo(user);
     }
 
