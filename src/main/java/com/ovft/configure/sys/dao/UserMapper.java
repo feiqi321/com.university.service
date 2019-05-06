@@ -1,6 +1,5 @@
 package com.ovft.configure.sys.dao;
 
-import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -16,7 +15,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserMapper {
     //用户注册
-    public void addUser(@Param("user") User user);
+    public void addUser(User user);
 
     //通过电话号码查找用户1
     public User findUserByPhone(@Param("user") User user);
@@ -77,5 +76,5 @@ public interface UserMapper {
     public WithdrawVo selectWithdrawOne(Integer uid);
 
     //后台删除用户
-    public  void deleteUser(Integer userId);
+    public void deleteUserItem(@Param("userItemId") Integer userItemId);
 }

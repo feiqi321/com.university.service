@@ -28,4 +28,5 @@ public interface TeacherService {
     public WebResult userList(PageVo pageVo);
 
     public WebResult savaUserInfo(User user);
+
 }

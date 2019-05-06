@@ -546,9 +546,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectWithdraw(userId);
     }
 
+    @Transactional
     @Override
-    public void deleteUser(Integer userId) {
-        userMapper.deleteUser(userId);
+    public WebResult deleteUserItem(Integer userItemId) {
+        userMapper.deleteUserItem(userItemId);
+        return new WebResult("200","删除成功","");
     }
 
 

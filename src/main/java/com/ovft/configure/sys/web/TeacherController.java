@@ -101,13 +101,12 @@ public class TeacherController {
     }
     /**
      * 删除 学员
-     * @param user
+     * @param userItemId
      * @return
      */
-    @PostMapping(value = "/deleteUser")
-    public WebResult deleteUser( @RequestBody User user) {
-           userService.deleteUser(user.getUserId());
-           return new WebResult("200","删除成功","");
+    @GetMapping(value = "/deleteUser")
+    public WebResult deleteUser(@RequestParam(value = "userItemId")Integer userItemId) {
+        return userService.deleteUserItem(userItemId);
     }
 
     /**
