@@ -1,6 +1,7 @@
 
 package com.ovft.configure.sys.web;
 
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.jfinal.aop.Before;
 import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
@@ -174,6 +175,10 @@ public class UserController {
     public WebResult addWithdraw(@RequestBody WithdrawVo withdrawVo, HttpServletRequest request) {
         String userId = request.getHeader("userId");
 
+        WithdrawVo findWithdrawVo = userService.selectWithdrawOne(Integer.parseInt(userId));
+            if (findWithdrawVo!=null){
+                   return new WebResult("400","已在审核中","");
+            }
         withdrawVo.setUid(Integer.parseInt(userId));
         userService.addWithdraw(withdrawVo);
         return new WebResult("200", "注销申请成功", "");

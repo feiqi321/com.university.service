@@ -32,8 +32,10 @@ public interface UserService {
     public WebResult myCourse(Integer userId);
     //用户注销申请
     public void addWithdraw(WithdrawVo withdrawVo);
-    //获取我的课程详情
+    //获取我的用户申请记录状态结果
     public int selectWithdraw(Integer userId);
+    //查询我的用户申请记录
+    public WithdrawVo selectWithdrawOne(Integer userId);
     //删除学员
     public void deleteUser(Integer userId);
 
