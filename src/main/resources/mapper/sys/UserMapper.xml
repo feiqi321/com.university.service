@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.UserMapper">
-    <insert id="addUser" parameterType="com.ovft.configure.sys.bean.User">
+    <insert id="addUser" parameterType="com.ovft.configure.sys.bean.User" useGeneratedKeys="true"
+            keyProperty="userId">
           insert  into edu_user(user_name,phone,password) values(#{user.userName},#{user.phone},#{user.password});
     </insert>
     <select id="findUserByPhone" parameterType="com.ovft.configure.sys.bean.User"

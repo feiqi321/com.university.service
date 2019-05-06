@@ -2,10 +2,14 @@ package com.ovft.configure.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
+import com.ovft.configure.sys.service.UserService;
+import com.ovft.configure.sys.utils.MD5Utils;
+import com.ovft.configure.sys.utils.SecurityUtils;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +42,10 @@ public class TeacherServiceImpl implements TeacherService {
     public AdminMapper adminMapper;
     @Resource
     public SchoolMapper schoolMapper;
+    @Resource
+    public UserMapper userMapper;
+    @Resource
+    public UserService userService;
 
     /**
      * 请假申请列表
@@ -151,7 +159,7 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public WebResult intoCourse(Integer schoolId) {
-        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
+        List<Map<String, Object>> teacherList = adminMapper.selectBySchool(ConstantClassField.ROLE_TEACHER_STATUS, schoolId);
         return new WebResult("200","查询成功", teacherList);
     }
 
@@ -278,6 +286,27 @@ public class TeacherServiceImpl implements TeacherService {
         List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
         PageInfo pageInfo = new PageInfo<>(users);
         return new WebResult("200","查询成功", pageInfo);
+    }
+
+    @Transactional
+    @Override
+    public WebResult savaUserInfo(User user) {
+        //手机号码格式验证
+        if(!SecurityUtils.securityPhone(user.getPhone())) {
+            return new WebResult("400", "请输入正确的手机号", "");
+        }
+        //验证手机号是否被注册
+        User finduserbyphone = userMapper.findUserByPhone(user);
+        if (finduserbyphone == null) {
+            //初始密码为000000
+            String password = "000000";
+            user.setPassword(MD5Utils.md5Password(password));
+            userMapper.addUser(user);
+        } else {
+            user.setUserId(finduserbyphone.getUserId());
+        }
+        WebResult webResult = userService.savaInfo(user);
+        return webResult;
     }
 
 }
