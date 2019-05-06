@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @ClassName SchoolController
@@ -143,5 +146,17 @@ public class SchoolController {
         }
         String[] strs = slideshow.split(",");
         return  new WebResult("200","获取成功", strs);
+    }
+
+    /**
+     * 查询所有学校（学校名字和学校Id）
+     *
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/school/findSchoolAll")
+    public WebResult findSchoolAll() {
+        List<Map<String, String>> schoolAll = schoolService.findSchoolAll();
+        return new WebResult("200","查询成功",schoolAll);
     }
 }

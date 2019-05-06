@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @ClassName SchoolServiceImpl
@@ -188,6 +186,19 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public School findSlideshowAll(Integer schoolId) {
         return schoolmapper.findSlideshowAll(schoolId);
+    }
+
+    @Override
+    public List<Map<String, String>> findSchoolAll() {
+        List<Map<String, String>> list = new LinkedList();
+        List<School> schoolAll = schoolmapper.findSchoolAll();
+        for (School school : schoolAll) {
+            Map<String, String> map = new HashMap<>();
+            map.put("text", school.getSchoolName());
+            map.put("value", school.getSchoolId().toString());
+            list.add(map);
+        }
+        return list;
     }
 
 }
