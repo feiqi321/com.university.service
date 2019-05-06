@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import java.io.Serializable;
+
 /**
  * 管理员
  * @ClassName Admin
@@ -7,7 +9,7 @@ package com.ovft.configure.sys.bean;
  * @Date 2019/4/10 11:39
  * @Version 1.0
  **/
-public class Admin {
+public class Admin implements Serializable {
 
     private Integer adminId;
     private String name;

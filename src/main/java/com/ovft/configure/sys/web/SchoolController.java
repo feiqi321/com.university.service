@@ -1,10 +1,11 @@
 package com.ovft.configure.sys.web;
 
-import com.jfinal.aop.Before;
-import com.ovft.configure.config.CORSInterceptor;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.service.SchoolService;
+import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,8 @@ import java.util.TreeMap;
 public class SchoolController {
     @Autowired
     private SchoolService schoolService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 添加学校
@@ -34,9 +37,20 @@ public class SchoolController {
      */
     @PostMapping(value = "/server/school/create")
     public WebResult createAdmin(HttpServletRequest request, @RequestBody School school) {
-        Integer adminId = (Integer) request.getAttribute("adminId");
-        school.setAdminId(adminId);
-        return schoolService.createSchool(school);
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                return new WebResult("400", "暂无该权限", "");
+            }
+            return schoolService.createSchool(school);
+        }else {
+            return new WebResult("400", "请先登录", "");
+        }
     }
 
     /**
@@ -92,8 +106,20 @@ public class SchoolController {
      */
     @PostMapping(value = "/server/school/schoolList")
     public WebResult schoolList(HttpServletRequest request, @RequestBody PageVo pageVo) {
-        Integer adminId = (Integer) request.getAttribute("adminId");
-        return schoolService.schoolList(adminId, pageVo);
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                pageVo.setSchoolId(hget.getSchoolId());
+            }
+            return schoolService.schoolList(pageVo);
+        }else {
+            return new WebResult("400", "请先登录", "");
+        }
     }
 
     /**

@@ -1,12 +1,13 @@
 package com.ovft.configure.sys.web;
 
-import com.jfinal.aop.Before;
-import com.ovft.configure.config.CORSInterceptor;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.service.AdminService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/server/admin")
 public class AdminController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private AdminService adminService;
@@ -74,8 +77,6 @@ public class AdminController {
      */
     @PostMapping(value = "/create")
     public WebResult createAdmin(HttpServletRequest request, @RequestBody Admin admin) {
-        Integer adminId = (Integer) request.getAttribute("adminId");
-        admin.setAdminId(adminId);
         return adminService.createAdmin(admin, 1);
     }
 
@@ -86,8 +87,21 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/teacherList")
-    public WebResult teacherList(@RequestBody PageVo pageVo) {
-        return adminService.teacherList(pageVo);
+    public WebResult teacherList(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                pageVo.setSchoolId(hget.getSchoolId());
+            }
+            return adminService.teacherList(pageVo);
+        }else {
+            return new WebResult("400", "请先登录", "");
+        }
     }
 
     /**
@@ -98,9 +112,20 @@ public class AdminController {
      */
     @PostMapping(value = "/createTeacher")
     public WebResult createTeacher(HttpServletRequest request, @RequestBody Admin admin) {
-        Integer adminId = (Integer) request.getAttribute("adminId");
-        admin.setAdminId(adminId);
-        return adminService.createAdmin(admin, 2);
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                admin.setSchoolId(hget.getSchoolId());
+            }
+            return adminService.createAdmin(admin, 2);
+        }else {
+            return new WebResult("400", "请先登录", "");
+        }
     }
 
     /**

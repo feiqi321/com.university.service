@@ -1,10 +1,11 @@
 package com.ovft.configure.sys.web;
 
-import com.jfinal.aop.Before;
-import com.ovft.configure.config.CORSInterceptor;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.service.EduArticleService;
+import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class EduArticleController {
 
     @Autowired
     private EduArticleService eduArticleService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 1-通知公告, 3-校园介绍,  4-联盟资讯,   5-政策法规
@@ -56,8 +59,21 @@ public class EduArticleController {
      * @return
      */
     @PostMapping(value = "/server/article/addNotice")
-    public WebResult adminAddNotice(@RequestBody EduArticle eduArticle) {
-        return eduArticleService.adminAddNotice(eduArticle);
+    public WebResult adminAddNotice(HttpServletRequest request, @RequestBody EduArticle eduArticle) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                eduArticle.setSchoolId(hget.getSchoolId());
+            }
+            return eduArticleService.adminAddNotice(eduArticle);
+        }else {
+            return new WebResult("400", "请先登录", "");
+        }
     }
 
     /**
@@ -78,8 +94,21 @@ public class EduArticleController {
      * @return
      */
     @PostMapping(value = "/server/article/findNoticeAll")
-    public WebResult findNoticeAll(@RequestBody PageVo pageVo) {
-        return eduArticleService.findNoticeAll(pageVo);
+    public WebResult findNoticeAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                pageVo.setSchoolId(hget.getSchoolId());
+            }
+            return eduArticleService.findNoticeAll(pageVo);
+        }else {
+            return new WebResult("400", "请先登录", "");
+        }
     }
 
     /**
