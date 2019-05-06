@@ -106,14 +106,15 @@ public class User {
     //用户个性签名
      private String mycontext;
     //用户所在学校名称
-     private String shchoolName;
+     private String schoolName;
 
-    public String getShchoolName() {
-        return shchoolName;
+    public String getSchoolName() {
+        return schoolName;
     }
 
-    public void setShchoolName(String shchoolName) {
-        this.shchoolName = shchoolName;
+    public void setSchoolName(String schoolName) {
+
+        this.schoolName = schoolName;
     }
 
     public String getMycontext() {

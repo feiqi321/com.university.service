@@ -99,6 +99,16 @@ public class TeacherController {
             return new WebResult("400", "请先登录", "");
         }
     }
+    /**
+     * 删除 学员
+     * @param user
+     * @return
+     */
+    @PostMapping(value = "/deleteUser")
+    public WebResult deleteUser( @RequestBody User user) {
+           userService.deleteUser(user.getUserId());
+           return new WebResult("200","删除成功","");
+    }
 
     /**
      * 请假申请列表

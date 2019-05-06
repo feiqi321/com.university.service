@@ -135,7 +135,7 @@ public class UserController {
         User user = new User();
         String userId = request.getHeader("userId");
         user.setUserId(Integer.parseInt(userId));
-        user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
+
         return userService.selectInfo(user);
     }
 
@@ -170,10 +170,10 @@ public class UserController {
      * @param withdrawVo,request
      * @return
      */
-    @GetMapping(value = "/withdraw")
+    @PostMapping(value = "/addWithdraw")
     public WebResult addWithdraw(@RequestBody WithdrawVo withdrawVo, HttpServletRequest request) {
         String userId = request.getHeader("userId");
-        withdrawVo.setWid(Integer.parseInt(request.getHeader("uid")));
+        withdrawVo.setWid(Integer.parseInt(userId));
         userService.addWithdraw(withdrawVo);
         return new WebResult("200", "注销申请成功", "");
     }

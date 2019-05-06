@@ -69,8 +69,11 @@ public interface UserMapper {
     public EduCourseVo queryCourseByCourseId(Integer courseId);
 
     //用户注销申请
-    public void addWithdraw(WithdrawVo withdrawVo);
+    public void addWithdraw(@Param("withdrawVo") WithdrawVo withdrawVo);
 
     //获取用户注销申请结果状态
     public int selectWithdraw(Integer uid);
+
+    //后台删除用户
+    public  void deleteUser(Integer userId);
 }

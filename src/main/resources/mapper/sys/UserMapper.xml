@@ -93,13 +93,13 @@
 
     <!--修改edu_user_item表里面该用户记录-->
     <update id="updateInfoItems" parameterType="com.ovft.configure.sys.bean.User">
-          update edu_user_item set user_name=#{userName},sex=#{sex},telephone=#{telephone},area=#{area},
+          update edu_user_item set school_id=#{schoolId}, user_name=#{userName},sex=#{sex},telephone=#{telephone},area=#{area},
            address=#{address},political=#{political},educational=#{educational},position=#{position},retired=#{retired},
            employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
            emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
            emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
            emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard}
-           where user_id=#{userId} and school_id=#{schoolId}
+           where user_id=#{userId}
     </update>
 
     <!--增加edu_user_item表里面该用户记录-->
@@ -154,4 +154,8 @@
     <select id="selectWithdraw" parameterType="int" resultType="int">
         select checkin from  edu_withdraw
     </select>
+    <!--后台删除用户-->
+    <delete id="deleteUser" parameterType="int">
+      delete  from  edu_user_item where user_id=#{userId}
+    </delete>
 </mapper>

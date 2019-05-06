@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
         User finduserbyphone = userMapper.findUserByPhone(user);
         User user1 = userMapper.queryByItemsId(finduserbyphone.getUserId());
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
-        finduserbyphone.setShchoolName(schoolName);
+        finduserbyphone.setSchoolName(schoolName);
         if (finduserbyphone == null) {
             return new WebResult("400", "您的手机号尚未注册！");
         }
@@ -365,8 +365,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User findUserInfo = userMapper.queryByItemsId(user.getUserId());
-        String school = schoolMapper.findSchoolById(findUserInfo.getUserId());
-        findUserInfo.setShchoolName(school);
+
+        String school = schoolMapper.findSchoolById(findUserInfo.getSchoolId());
+        findUserInfo.setSchoolName(school);
         return new WebResult("200", "获取成功", findUserInfo);
     }
 
@@ -534,6 +535,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public int selectWithdraw(Integer userId) {
         return userMapper.selectWithdraw(userId);
+    }
+
+    @Override
+    public void deleteUser(Integer userId) {
+
     }
 
 
