@@ -34,5 +34,8 @@ public interface UserService {
     public void addWithdraw(WithdrawVo withdrawVo);
     //获取我的课程详情
     public int selectWithdraw(Integer userId);
+    //删除学员
+    public void deleteUser(Integer userId);
+
 
 }

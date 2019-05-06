@@ -93,5 +93,10 @@
        <select id="findSchoolAll" resultType="com.ovft.configure.sys.bean.School">
    select  * from edu_school
        </select>
+    <!--根据学校Id查找对应的学校-vvtxw-->
+       <select id="findSchoolById" parameterType="int" resultType="java.lang.String">
+   select school_name  from edu_school where school_id=#{schoolId}
+       </select>
+
 
 </mapper>

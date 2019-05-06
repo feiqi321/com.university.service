@@ -201,4 +201,9 @@ public class SchoolServiceImpl implements SchoolService {
         return list;
     }
 
+    @Override
+    public String findSchoolById(Integer schoolId) {
+        return schoolmapper.findSchoolById(schoolId);
+    }
+
 }

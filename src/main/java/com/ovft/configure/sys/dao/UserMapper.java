@@ -44,6 +44,8 @@ public interface UserMapper {
 
     //查询对应学员是否已选择该学校
     public User queryByItemsIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
+    //查询对应学员是否已选择该学校
+    public User queryByItemsId(@Param("userId") Integer userId);
 
     //更换学校时保存信息
     public void updateInfoItems(User user);
@@ -67,8 +69,11 @@ public interface UserMapper {
     public EduCourseVo queryCourseByCourseId(Integer courseId);
 
     //用户注销申请
-    public void addWithdraw(WithdrawVo withdrawVo);
+    public void addWithdraw(@Param("withdrawVo") WithdrawVo withdrawVo);
 
     //获取用户注销申请结果状态
     public int selectWithdraw(Integer uid);
+
+    //后台删除用户
+    public  void deleteUser(Integer userId);
 }

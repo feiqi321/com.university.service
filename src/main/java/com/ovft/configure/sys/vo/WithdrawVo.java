@@ -7,16 +7,23 @@ public class WithdrawVo {
     private String content;
     private int checkin;
 
-    @Override
-    public String toString() {
-        return "WithdrawVo{" +
-                "wid=" + wid +
-                ", uid=" + uid +
-                ", school='" + school + '\'' +
-                ", content='" + content + '\'' +
-                ", checkin=" + checkin +
-                '}';
+    public int getUid() {
+        return uid;
     }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public int getCheckin() {
+        return checkin;
+    }
+
+
 
     public int getWid() {
         return wid;
