@@ -62,7 +62,7 @@ public class AdminServiceImpl implements AdminService {
         //查询该手机号是否已经存在
         Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
         if (adminPhone == null) {
-            return new WebResult("400", "手机号不存在", "");
+            return new WebResult("400", "手机号未注册", "");
         }
         String pasword = MD5Utils.md5Password(admin.getPassword());
         if (!pasword.equals(adminPhone.getPassword())) {
@@ -79,6 +79,25 @@ public class AdminServiceImpl implements AdminService {
             return new WebResult("400", "登录失败", "");
         }
         map.put("token", token);
+
+        //单点登录功能 single sign on   SSO
+        Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON, adminPhone.getAdminId().toString());
+        if(hget != null) {
+            String oldToken = (String) hget;
+            redisUtil.delete(oldToken);
+        }
+        redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON, adminPhone.getAdminId().toString(), token);
+
+        //存放用户信息
+        boolean bo = redisUtil.hset(ConstantClassField.ADMIN_INFO, adminPhone.getAdminId().toString(), adminPhone);
+
+        if(adminPhone.getSchoolId() != null) {
+            School school = schoolMapper.selectById(adminPhone.getSchoolId());
+            map.put("schoolName", school.getSchoolName());
+        } else {
+            map.put("schoolName", "");
+        }
+
         WebResult result = new WebResult("200", "登录成功", map);
         return result;
     }

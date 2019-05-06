@@ -35,7 +35,7 @@
     </select>
 
     <select id="selectByPhone"  resultType="com.ovft.configure.sys.bean.Admin">
-         select admin_id as adminId, name, password, phone, image, role from edu_admin where phone = #{phone}
+         select admin_id as adminId, name, password, phone, image, role, school_id as schoolId from edu_admin where phone = #{phone}
     </select>
 
     <insert id="creatAdmin" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="adminId">

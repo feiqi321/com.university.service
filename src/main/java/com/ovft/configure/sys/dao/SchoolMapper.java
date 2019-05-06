@@ -29,7 +29,7 @@ public interface SchoolMapper {
      //更换学校ID
     public WebResult switchSchoolID(Integer SchoolId,Integer userId);
 
-    public List<School> selectSchoolByAdminId(@Param("adminId") Integer adminId, @Param("search") String search);
+    public List<School> selectSchoolList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
     public School selectById(@Param("schoolId") Integer schoolId);
 

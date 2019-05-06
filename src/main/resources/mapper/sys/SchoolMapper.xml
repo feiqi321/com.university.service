@@ -26,14 +26,15 @@
          where school_id = #{schoolId}
     </select>
 
-    <select id="selectSchoolByAdminId" resultMap="BaseResultMap">
+    <select id="selectSchoolList" resultMap="BaseResultMap">
          select
         <include refid="Base_Column_List"/>
          from edu_school
          where is_using = 1
-        <if test="adminId != null and adminId != ''">
-            AND admin_id = #{adminId}
-        </if><if test="search != null and search != ''">
+        <if test="schoolId != null and schoolId != ''">
+            AND school_id = #{schoolId}
+        </if>
+        <if test="search != null and search != ''">
             AND school_name like CONCAT('%',#{search},'%')
         </if>
     </select>

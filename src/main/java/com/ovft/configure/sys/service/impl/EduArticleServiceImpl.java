@@ -76,6 +76,7 @@ public class EduArticleServiceImpl implements EduArticleService {
         if(security != null) {
             return security;
         }
+        String[] types = eduArticle.getType().split(",");
         if(eduArticle.getId() == null) {
             //校园介绍只能有一个   需求修改,能添加多条校园介绍
             /*if("3".equals(eduArticle.getType())) {
@@ -84,19 +85,25 @@ public class EduArticleServiceImpl implements EduArticleService {
                     return new WebResult("400", "当前学校只能添加一个校园介绍", "");
                 }
             }*/
-            eduArticle.setCreatetime(new Date());
-            eduArticle.setUpdatetime(new Date());
-            eduArticle.setVisits(0);
-            eduArticle.setThumbup(0);
-            eduArticle.setComment(0);
-            eduArticleMapper.insert(eduArticle);
+            for (String type : types) {
+                eduArticle.setType(type);
+                eduArticle.setCreatetime(new Date());
+                eduArticle.setUpdatetime(new Date());
+                eduArticle.setVisits(0);
+                eduArticle.setThumbup(0);
+                eduArticle.setComment(0);
+                eduArticleMapper.insert(eduArticle);
+            }
             return new WebResult("200", "添加成功", "");
         } else {
-            eduArticle.setUpdatetime(new Date());
-            eduArticleMapper.updateByPrimaryKeySelective(eduArticle);
+            for (String type : types) {
+                eduArticle.setType(type);
+                eduArticle.setUpdatetime(new Date());
+                eduArticleMapper.updateByPrimaryKeySelective(eduArticle);
+            }
             return new WebResult("200", "修改成功", "");
-        }
 
+        }
     }
 
 
