@@ -44,6 +44,8 @@ public interface UserMapper {
 
     //查询对应学员是否已选择该学校
     public User queryByItemsIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
+    //查询对应学员是否已选择该学校
+    public User queryByItemsId(@Param("userId") Integer userId);
 
     //更换学校时保存信息
     public void updateInfoItems(User user);

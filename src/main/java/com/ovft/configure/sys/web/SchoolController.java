@@ -133,4 +133,16 @@ public class SchoolController {
         List<Map<String, String>> schoolAll = schoolService.findSchoolAll();
         return new WebResult("200","查询成功",schoolAll);
     }
+    /**
+     * 查询对应学校（通过学校id）
+     *
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/school/findSchoolById")
+    public WebResult findSchoolById(HttpServletRequest request) {
+        String school = schoolService.findSchoolById(Integer.parseInt(request.getHeader("schoolId")));
+           return  new WebResult("200","查询学校成功",school);
+
+    }
 }

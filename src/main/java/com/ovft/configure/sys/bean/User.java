@@ -105,6 +105,16 @@ public class User {
     private String image;
     //用户个性签名
      private String mycontext;
+    //用户所在学校名称
+     private String shchoolName;
+
+    public String getShchoolName() {
+        return shchoolName;
+    }
+
+    public void setShchoolName(String shchoolName) {
+        this.shchoolName = shchoolName;
+    }
 
     public String getMycontext() {
         return mycontext;

@@ -82,11 +82,10 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/savaInfo")
-    public WebResult savaInfo(@RequestBody User user, HttpServletRequest request) {
+    public WebResult savaInfo(@RequestBody User user,HttpServletRequest request) {
 //        System.out.println(user);
 //        System.out.println("========================>"+request.getHeader("schoolId"));
-        user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
-        user.setUserId(Integer.parseInt(request.getHeader("userId")));
+         user.setUserId(Integer.parseInt(request.getHeader("userId")));
         return userService.savaInfo(user);
     }
 

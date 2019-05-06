@@ -4,6 +4,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduClassMapper;
+import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.dao.VacateMapper;
 import com.ovft.configure.sys.service.UserService;
@@ -40,6 +41,8 @@ public class UserServiceImpl implements UserService {
     private VacateMapper vacateMapper;
     @Resource
     private EduClassMapper eduClassMapper;
+    @Resource
+    private SchoolMapper schoolMapper;
 
     /**
      * 用户注册
@@ -110,6 +113,9 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "密码不能为空");
         }
         User finduserbyphone = userMapper.findUserByPhone(user);
+        User user1 = userMapper.queryByItemsId(finduserbyphone.getUserId());
+        String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
+        finduserbyphone.setShchoolName(schoolName);
         if (finduserbyphone == null) {
             return new WebResult("400", "您的手机号尚未注册！");
         }
@@ -302,7 +308,7 @@ public class UserServiceImpl implements UserService {
         }
         //保存
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(), user.getSchoolId());
-        if (findUser == null || findUser.getSchoolId() == null) {
+        if (findUser == null) {
             user.setCheckin(0);
             userMapper.saveInfoItems(user);
             return new WebResult("200", "保存成功", "");
@@ -357,7 +363,10 @@ public class UserServiceImpl implements UserService {
         if (user.getUserId() == null) {
             return new WebResult("400", "请选择学校", "");
         }
-        User findUserInfo = userMapper.queryByItemsIdAndSchoolId(user.getUserId(), user.getSchoolId());
+
+        User findUserInfo = userMapper.queryByItemsId(user.getUserId());
+        String school = schoolMapper.findSchoolById(findUserInfo.getUserId());
+        findUserInfo.setShchoolName(school);
         return new WebResult("200", "获取成功", findUserInfo);
     }
 

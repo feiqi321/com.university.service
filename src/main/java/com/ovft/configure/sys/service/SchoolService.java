@@ -29,9 +29,11 @@ public interface SchoolService {
     public WebResult schoolList(Integer adminId, PageVo pageVo);
 
     public WebResult deleteSchool(Integer schoolId);
-     //查找学校对应轮播图
+    //查找学校对应轮播图
     public School findSlideshowAll(Integer schoolId);
-     //查询所有学校
+    //查询所有学校
     public List<Map<String, String>> findSchoolAll();
+    //根据学校id查找对应学校
+    public String findSchoolById(Integer schoolId);
 
 }

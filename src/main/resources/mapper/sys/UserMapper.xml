@@ -77,6 +77,19 @@
         left join edu_user_item i on u.user_id = i.user_id and i.school_id = #{schoolId}
         where u.user_id = #{userId}
     </select>
+    <!--查询对应edu_user_item表里面是否存在该用户记录-->
+    <select id="queryByItemsId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
+        select u.user_id userId,i.user_name userName,u.phone,u.image,
+        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.political,i.educational,i.position,i.retired,
+        i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
+        i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
+        i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
+        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        from edu_user u
+        left join edu_user_item i on u.user_id = i.user_id
+        where u.user_id = #{userId}
+    </select>
 
     <!--修改edu_user_item表里面该用户记录-->
     <update id="updateInfoItems" parameterType="com.ovft.configure.sys.bean.User">

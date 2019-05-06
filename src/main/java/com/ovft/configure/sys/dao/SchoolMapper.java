@@ -42,4 +42,6 @@ public interface SchoolMapper {
     public void  isUsingSchool(@Param("schoolId") Integer schoolId, @Param("isUsing") Integer isUsing);
     //查询所有学校（返回学校名和学校Id）
     public List<School> findSchoolAll();
+    //根据学校id查找对应学校
+    public String findSchoolById(Integer schoolId);
 }
