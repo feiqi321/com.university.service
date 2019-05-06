@@ -349,10 +349,10 @@ public class TeacherServiceImpl implements TeacherService {
             }
             if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())==0) {
                 userMapper.updateInfoItems(user);
-                return new WebResult("400", "修改成功", "");
+                return new WebResult("200", "修改成功", "");
             }
             userMapper.saveInfoItems(user);
-            return new WebResult("400", "保存成功", "");
+            return new WebResult("200", "保存成功", "");
         }
     }
 
