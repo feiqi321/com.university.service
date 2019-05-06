@@ -20,7 +20,7 @@ public interface AdminMapper {
 
     public Admin selectByPhone(@Param("phone") String phone);
 
-    public List<Map<String, Object>> selectTeacherBySchool(@Param("schoolId") Integer schoolId);
+    public List<Map<String, Object>> selectBySchool(@Param("role") Integer role, @Param("schoolId") Integer schoolId);
 
     public void creatAdmin(Admin admin);
 

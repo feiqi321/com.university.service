@@ -15,6 +15,16 @@ public class PageVo {
 
     private String type;
 
+    private Integer role;
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
+    }
+
     public String getType() {
         return type;
     }

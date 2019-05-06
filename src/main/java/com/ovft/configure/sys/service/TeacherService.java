@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.stereotype.Service;
@@ -25,4 +26,6 @@ public interface TeacherService {
     public WebResult deleteCourse(Integer courseId);
 
     public WebResult userList(PageVo pageVo);
+
+    public WebResult savaUserInfo(User user);
 }

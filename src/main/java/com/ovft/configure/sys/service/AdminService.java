@@ -6,7 +6,7 @@ import com.ovft.configure.sys.vo.PageVo;
 
 public interface AdminService {
 
-    public WebResult createAdmin(Admin admin, int role);
+    public WebResult createAdmin(Admin admin);
 
     public WebResult login(Admin admin);
 
@@ -14,11 +14,9 @@ public interface AdminService {
 
     public WebResult updatePhone(Integer adminId, String newPhone, String securityCode);
 
-    public WebResult findTeacher(Integer adminId);
-
-    public WebResult updateAdmin(Admin admin);
+    public WebResult findAdmin(Integer adminId);
 
     public WebResult deleteAdmin(Integer adminId);
 
-    public WebResult teacherList(PageVo pageVo);
+    public WebResult adminList(PageVo pageVo);
 }

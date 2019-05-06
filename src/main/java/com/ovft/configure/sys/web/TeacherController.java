@@ -94,7 +94,7 @@ public class TeacherController {
             if(hget.getRole() != 0) {
                 user.setSchoolId(hget.getSchoolId());
             }
-            return userService.savaInfo(user);
+            return teacherService.savaUserInfo(user);
         }else {
             return new WebResult("400", "请先登录", "");
         }

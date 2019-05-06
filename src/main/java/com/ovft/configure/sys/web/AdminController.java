@@ -70,24 +70,13 @@ public class AdminController {
     }
 
     /**
-     * 添加管理员
-     *
-     * @param admin
-     * @return
-     */
-    @PostMapping(value = "/create")
-    public WebResult createAdmin(HttpServletRequest request, @RequestBody Admin admin) {
-        return adminService.createAdmin(admin, 1);
-    }
-
-    /**
-     * 教师列表
+     * 管理员/教师列表
      *
      * @param pageVo
      * @return
      */
-    @PostMapping(value = "/teacherList")
-    public WebResult teacherList(HttpServletRequest request, @RequestBody PageVo pageVo) {
+    @PostMapping(value = "/adminList")
+    public WebResult adminList(HttpServletRequest request, @RequestBody PageVo pageVo) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
         if(o != null) {
@@ -98,20 +87,20 @@ public class AdminController {
             if(hget.getRole() != 0) {
                 pageVo.setSchoolId(hget.getSchoolId());
             }
-            return adminService.teacherList(pageVo);
+            return adminService.adminList(pageVo);
         }else {
             return new WebResult("400", "请先登录", "");
         }
     }
 
     /**
-     * 添加教师
+     * 添加 管理员/教师
      *
      * @param admin
      * @return
      */
-    @PostMapping(value = "/createTeacher")
-    public WebResult createTeacher(HttpServletRequest request, @RequestBody Admin admin) {
+    @PostMapping(value = "/createAdmin")
+    public WebResult createAdmin(HttpServletRequest request, @RequestBody Admin admin) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
         if(o != null) {
@@ -122,33 +111,23 @@ public class AdminController {
             if(hget.getRole() != 0) {
                 admin.setSchoolId(hget.getSchoolId());
             }
-            return adminService.createAdmin(admin, 2);
+            return adminService.createAdmin(admin);
         }else {
             return new WebResult("400", "请先登录", "");
         }
     }
 
     /**
-     * 进入修改教师页面
+     * 进入修改 管理员/教师页面
      *
      * @param adminId
      * @return
      */
-    @GetMapping(value = "/findTeacher")
-    public WebResult findTeacher(@RequestParam(value = "adminId") Integer adminId) {
-        return adminService.findTeacher(adminId);
+    @GetMapping(value = "/findAdmin")
+    public WebResult findAdmin(@RequestParam(value = "adminId") Integer adminId) {
+        return adminService.findAdmin(adminId);
     }
 
-    /**
-     * 修改管理员、教师
-     *
-     * @param admin
-     * @return
-     */
-    @PostMapping(value = "/updateAdmin")
-    public WebResult updateAdmin(@RequestBody Admin admin) {
-        return adminService.updateAdmin(admin);
-    }
 
     /**
      * 删除管理员、教师

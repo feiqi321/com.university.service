@@ -163,36 +163,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public WebResult findTeacher(Integer adminId) {
+    public WebResult findAdmin(Integer adminId) {
         Admin admin = adminMapper.selectById(adminId);
         School school = schoolMapper.selectById(admin.getSchoolId());
         AdminVo adminVo = new AdminVo(admin);
         adminVo.setSchoolName(school == null ? "" : school.getSchoolName());
         return new WebResult("200", "查询成功", adminVo);
-    }
-
-    /**
-     * 修改管理员、教师
-     *
-     * @param admin
-     * @return
-     */
-    @Transactional
-    @Override
-    public WebResult updateAdmin(Admin admin) {
-        if (StringUtils.isBlank(admin.getName())) {
-            return new WebResult("400", "姓名不能为空", "");
-        }
-        if (!SecurityUtils.securityPhone(admin.getPhone())) {
-            return new WebResult("400", "请输入正确的手机号", "");
-        }
-        //查询该手机号是否已经存在
-        Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
-        if (adminPhone != null && adminPhone.getAdminId() != admin.getAdminId()) {
-            return new WebResult("400", "手机号已存在", "");
-        }
-        adminMapper.updateByPrimary(admin);
-        return new WebResult("200", "修改成功", "");
     }
 
     /**
@@ -209,62 +185,65 @@ public class AdminServiceImpl implements AdminService {
     }
 
     /**
-     * 教师列表
+     * 管理员/教师列表
      *
      * @param pageVo
      * @return
      */
     @Override
-    public WebResult teacherList(PageVo pageVo) {
+    public WebResult adminList(PageVo pageVo) {
         Integer schoolId = pageVo.getSchoolId();
         if (pageVo.getPageSize() == 0) {
-            List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
+            List<Map<String, Object>> teacherList = adminMapper.selectBySchool(pageVo.getRole(), schoolId);
             return new WebResult("200", "查询成功", teacherList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "a.admin_id");
-        List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(schoolId);
+        List<Map<String, Object>> teacherList = adminMapper.selectBySchool(pageVo.getRole(), schoolId);
         PageInfo pageInfo = new PageInfo<>(teacherList);
         return new WebResult("200", "查询成功", pageInfo);
     }
 
     /**
-     * 添加管理员、教师
+     * 添加/修改  管理员、教师
      *
      * @param admin
      * @return
      */
     @Transactional
     @Override
-    public WebResult createAdmin(Admin admin, int role) {
-        WebResult result = new WebResult();
+    public WebResult createAdmin(Admin admin) {
         if (StringUtils.isBlank(admin.getName())) {
-            return new WebResult("400", "用户名不能为空", "");
+            return new WebResult("400", "姓名不能为空", "");
         }
         if (!SecurityUtils.securityPhone(admin.getPhone())) {
             return new WebResult("400", "请输入正确的手机号", "");
         }
-        //查询该手机号是否已经存在
-        Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
-        if (adminPhone != null) {
-            return new WebResult("400", "手机号已存在", "");
+        //添加 管理员、教师时学校id不能为空
+        if (admin.getSchoolId() == null) {
+            return new WebResult("400", "请选择学校", "");
         }
-        //添加教师时学校id不能为空
-        if (role == 2) {
-            if (admin.getSchoolId() == null) {
-                return new WebResult("400", "请选择学校", "");
+        if(admin.getAdminId() == null) {
+            //查询该手机号是否已经存在
+            Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
+            if (adminPhone != null) {
+                return new WebResult("400", "手机号已存在", "");
             }
-        }
 
-        //管理员初始密码为000000
-        String password = "000000";
-        admin.setPassword(MD5Utils.md5Password(password));
-        //添加角色    1-管理员,2-教师
-        admin.setRole(role);
-        adminMapper.creatAdmin(admin);
-        result.setCode("200");
-        result.setMsg("添加成功");
-        result.setData(admin);
-        return result;
+            //管理员初始密码为000000
+            String password = "000000";
+            admin.setPassword(MD5Utils.md5Password(password));
+
+            adminMapper.creatAdmin(admin);
+            return new WebResult("200", "添加成功", "");
+        } else {
+            //查询该手机号是否已经存在
+            Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
+            if (adminPhone != null && adminPhone.getAdminId() != admin.getAdminId()) {
+                return new WebResult("400", "手机号已存在", "");
+            }
+            adminMapper.updateByPrimary(admin);
+            return new WebResult("200", "修改成功", "");
+        }
     }
 
 
