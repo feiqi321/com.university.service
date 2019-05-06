@@ -4,7 +4,7 @@
 <mapper namespace="com.ovft.configure.sys.dao.UserMapper">
     <insert id="addUser" parameterType="com.ovft.configure.sys.bean.User" useGeneratedKeys="true"
             keyProperty="userId">
-          insert  into edu_user(user_name,phone,password) values(#{user.userName},#{user.phone},#{user.password});
+          insert  into edu_user(user_name,phone,password) values(#{userName},#{phone},#{password});
     </insert>
     <select id="findUserByPhone" parameterType="com.ovft.configure.sys.bean.User"
             resultType="com.ovft.configure.sys.bean.User">
@@ -160,8 +160,8 @@
         select * from  edu_withdraw
     </select>
     <!--后台删除用户-->
-    <delete id="deleteUser" parameterType="int">
-      delete  from  edu_user_item where user_id=#{userId}
+    <delete id="deleteUserItem">
+      delete  from  edu_user_item where user_item_id=#{userItemId}
     </delete>
     <!--后台删除用户注销申请记录-->
     <delete id="deleteWithdraw" parameterType="int">
