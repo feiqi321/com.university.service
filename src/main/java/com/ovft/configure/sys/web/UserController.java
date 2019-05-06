@@ -173,7 +173,8 @@ public class UserController {
     @PostMapping(value = "/addWithdraw")
     public WebResult addWithdraw(@RequestBody WithdrawVo withdrawVo, HttpServletRequest request) {
         String userId = request.getHeader("userId");
-        withdrawVo.setWid(Integer.parseInt(userId));
+
+        withdrawVo.setUid(Integer.parseInt(userId));
         userService.addWithdraw(withdrawVo);
         return new WebResult("200", "注销申请成功", "");
     }
