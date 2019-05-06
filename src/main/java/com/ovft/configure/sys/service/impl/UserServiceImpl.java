@@ -526,10 +526,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void addWithdraw(WithdrawVo withdrawVo) {
+
         userMapper.addWithdraw(withdrawVo);
     }
     /**
      * 获取用户注销申请结果状态
+     * @param userId
+     */
+    @Override
+    public WithdrawVo selectWithdrawOne(Integer userId) {
+        return userMapper.selectWithdrawOne(userId);
+    }
+    /**
+     * 查询用户注销记录信息
      * @param userId
      */
     @Override
@@ -539,7 +548,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer userId) {
-
+        userMapper.deleteUser(userId);
     }
 
 

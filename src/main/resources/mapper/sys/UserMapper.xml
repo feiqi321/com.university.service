@@ -155,6 +155,10 @@
     <select id="selectWithdraw" parameterType="int" resultType="int">
         select checkin from  edu_withdraw
     </select>
+    <!--查询用户注销申请-->
+    <select id="selectWithdrawOne" parameterType="int" resultType="com.ovft.configure.sys.vo.WithdrawVo">
+        select * from  edu_withdraw
+    </select>
     <!--后台删除用户-->
     <delete id="deleteUser" parameterType="int">
       delete  from  edu_user_item where user_id=#{userId}
