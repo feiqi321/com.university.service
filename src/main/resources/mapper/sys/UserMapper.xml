@@ -167,4 +167,9 @@
     <delete id="deleteWithdraw" parameterType="int">
       delete  from  edu_withdraw where wid=#{wid}
     </delete>
+
+    <!--后台修改用户信息-->
+    <update id="updateByUserId" >
+        UPDATE edu_user SET  phone=#{phone} where user_Id=#{userId}
+    </update>
 </mapper>
