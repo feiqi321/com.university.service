@@ -51,7 +51,12 @@
         set school_name = #{schoolName},
         longitude = #{longitude},
         latitude = #{latitude},
-        image = #{image},
+        <if test="image != null and image != ''">
+            image = #{image},
+        </if>
+        <if test="slideshow != null and slideshow != ''">
+            slideshow = #{slideshow},
+        </if>
         school_char = #{schoolChar}
         where school_id = #{schoolId}
     </update>
@@ -98,5 +103,8 @@
    select school_name  from edu_school where school_id=#{schoolId}
        </select>
 
+    <delete id="deleteSchool">
+        delete from edu_school where school_id = #{schoolId}
+    </delete>
 
 </mapper>

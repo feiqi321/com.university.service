@@ -94,4 +94,7 @@ public interface UserMapper {
 
     //修改用户报名学校的ID
     public Void UpdateUserSchoolId(Integer userId);
+    //后台修改用户信息
+    public  void updateByUserId(@Param("phone") String phone, @Param("userId") Integer userId);
+
 }

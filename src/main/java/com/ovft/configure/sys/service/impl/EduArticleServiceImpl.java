@@ -158,10 +158,17 @@ public class EduArticleServiceImpl implements EduArticleService {
         if(noticeList==null && noticeList.size() == 0) {
             return new WebResult("200", "查询成功", "");
         }
+        //浏览量加1
         EduArticle article = noticeList.get(0);
         article.setVisits(article.getVisits() + 1);
         eduArticleMapper.updateVisites(article.getId(), article.getVisits());
         return new WebResult("200", "查询成功", noticeList.get(0));
+    }
+
+    @Override
+    public WebResult newsNotice() {
+
+        return null;
     }
 
 }

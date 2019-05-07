@@ -193,7 +193,7 @@ public class TeacherServiceImpl implements TeacherService {
         }
         List<EduClass> classList = courseVo.getClassList();
         for (EduClass eduClass : classList) {
-            eduClass.setCourseIds(courseId);
+            eduClass.setCourseIds(course.getCourseId());
             classMapper.insert(eduClass);
         }
         return new WebResult("200", "课程添加成功", "");
@@ -332,6 +332,11 @@ public class TeacherServiceImpl implements TeacherService {
         return new WebResult("200","查询成功", pageInfo);
     }
 
+    /**
+     * 添加/修改 学员
+     * @param user
+     * @return
+     */
     @Transactional
     @Override
     public WebResult savaUserInfo(User user) {
@@ -365,29 +370,45 @@ public class TeacherServiceImpl implements TeacherService {
         }
         user.setCheckin(1);
         //验证手机号是否被注册
+        /**
+         * 学员添加修改
+         * 1. finduserbyphone == null && userId == null  新注册的学员
+         * 2. finduserbyphone == null && userId != null  原已经注册过的学员,修改了手机号
+         * 3. finduserbyphone != null && userId != null  已注册过的学员,没有修改手机号
+         */
         User finduserbyphone = userMapper.findUserByPhone(user);
         if (finduserbyphone == null) {
-            //初始密码为000000
-            String password = "000000";
-            user.setPassword(MD5Utils.md5Password(password));
-            userMapper.addUser(user);
-            userMapper.saveInfoItems(user);
-            return new WebResult("200", "保存成功", "");
-        } else {
-            user.setUserId(finduserbyphone.getUserId());
-            User findUser = userMapper.queryByItemsId(user.getUserId());
-            Integer schoolId = findUser.getSchoolId();
-            Integer schoolId1 = user.getSchoolId();
-            if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())!=0) {
-                return new WebResult("400", "该用户已是其他学校学员", "");
+            if(user.getUserId() == null) {
+                //1. finduserbyphone == null && userId == null  新注册的学员
+                //初始密码为000000
+                String password = "000000";
+                user.setPassword(MD5Utils.md5Password(password));
+                userMapper.addUser(user);
+                userMapper.saveInfoItems(user);
+                return new WebResult("200", "保存成功", "");
+            } else {
+                //2. finduserbyphone == null && userId != null  原已经注册过的学员,修改了手机号
+                userMapper.updateByUserId(user.getPhone(), user.getUserId());
             }
-            if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())==0) {
-                userMapper.updateInfoItems(user);
-                return new WebResult("200", "修改成功", "");
-            }
-            userMapper.saveInfoItems(user);
-            return new WebResult("200", "保存成功", "");
         }
+
+        if(finduserbyphone != null && user.getUserId() != null && user.getUserId().compareTo(finduserbyphone.getUserId())!= 0) {
+            return new WebResult("400", "该手机号已注册", "");
+        }
+        user.setUserId(finduserbyphone.getUserId());
+        User findUser = userMapper.queryByItemsId(user.getUserId());
+        Integer schoolId = findUser.getSchoolId();
+        Integer schoolId1 = user.getSchoolId();
+        if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())!=0) {
+            return new WebResult("400", "该用户已是其他学校学员", "");
+        }
+        if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())==0) {
+            userMapper.updateInfoItems(user);
+            return new WebResult("200", "修改成功", "");
+        }
+        userMapper.saveInfoItems(user);
+        return new WebResult("200", "保存成功", "");
+
     }
     /**
      * 学员审核状态修改

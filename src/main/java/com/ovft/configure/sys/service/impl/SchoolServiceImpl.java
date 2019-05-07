@@ -175,7 +175,7 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public WebResult deleteSchool(Integer schoolId) {
         //停用
-        schoolmapper.isUsingSchool(schoolId, 0);
+        schoolmapper.deleteSchool(schoolId);
         return new WebResult("200", "删除成功", "");
     }
     /**

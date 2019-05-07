@@ -204,4 +204,9 @@
          update edu_user_item set school_id=null where user_id=#{userId}
     </update>
 
+
+    <!--后台修改用户信息-->
+    <update id="updateByUserId" >
+        UPDATE edu_user SET  phone=#{phone} where user_Id=#{userId}
+    </update>
 </mapper>
