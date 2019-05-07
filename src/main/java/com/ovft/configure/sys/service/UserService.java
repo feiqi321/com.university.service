@@ -4,6 +4,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public interface UserService {
     //用户注册
@@ -20,6 +21,8 @@ public interface UserService {
     public WebResult updatePhone(PhoneVo phoneVo);
     //退出登录
     public WebResult userQuit(String token);
+    //通过用户id查找相应字段
+    public User selectById(Integer userId);
     //查询信息接口
     public WebResult selectInfo(User user);
     //查找头像地址
@@ -40,6 +43,12 @@ public interface UserService {
     public WebResult deleteUserItem(Integer userItemId);
     //删除一条注销记录
     public void deleteWithdraw(Integer wid);
+    //根据checkin和schoolId条件进行学员审核查找
+    public WebResult findUserByCheckinAndSchoolId(User user);
+    //根据checkin和schoolId条件进行学员注销审核查找
+    public WebResult findWithdrawByCheckinAndSchoolId(WithdrawVo withdrawVo);
+    //学员注销
+    public WebResult UpdateUserSchoolId(Integer userId);
 
 
 }

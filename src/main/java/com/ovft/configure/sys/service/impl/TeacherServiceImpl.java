@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -288,14 +289,32 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public WebResult userList(PageVo pageVo) {
-        if (pageVo.getPageSize() == 0) {
-            List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
-            return new WebResult("200", "查询成功", users);
-        }
-        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-        List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
-        PageInfo pageInfo = new PageInfo<>(users);
-        return new WebResult("200", "查询成功", pageInfo);
+
+              if (pageVo.getPageSize() == 0) {
+                  List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
+                  return new WebResult("200", "查询成功", users);
+              }
+        if (pageVo.getCheckin()==null) {
+              PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+              List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
+
+              PageInfo pageInfo = new PageInfo<>(users);
+              return new WebResult("200", "查询成功", pageInfo);
+          }else{
+                    User user=new User();
+                    user.setSchoolId(pageVo.getSchoolId());
+                    user.setCheckin(pageVo.getCheckin());
+               if (user.getSchoolId()==null)  {
+                   List<User> user1 = userMapper.findUserByCheckin(user);
+                   PageInfo pageInfo = new PageInfo<>(user1);
+                   return new WebResult("200", "查询成功", pageInfo);
+               }
+              List<User> users2 = userMapper.findUserByCheckinAndSchoolId(user);
+            PageInfo pageInfo = new PageInfo<>(users2);
+            return new WebResult("200", "查询成功", pageInfo);
+
+          }
+
     }
     /**
      * 学员注销申请列表
@@ -304,11 +323,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult userWithdrawVoList(PageVo pageVo) {
         if(pageVo.getPageSize() == 0) {
-            List<User> users = teacherMapper.selectUserList(pageVo.getWid(), null);
+            List<User> users = teacherMapper.selectWithdrawList(pageVo.getSchoolId(), null);
             return new WebResult("200","查询成功", users);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-        List<User> users = teacherMapper.selectUserList(pageVo.getWid(), null);
+        List<User> users = teacherMapper.selectWithdrawList(pageVo.getSchoolId(), null);
         PageInfo pageInfo = new PageInfo<>(users);
         return new WebResult("200","查询成功", pageInfo);
     }

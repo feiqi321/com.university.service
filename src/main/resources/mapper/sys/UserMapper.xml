@@ -148,7 +148,7 @@
     <insert id="addWithdraw" parameterType="com.ovft.configure.sys.vo.WithdrawVo">
            insert
              into edu_withdraw
-               values (#{withdrawVo.wid},#{withdrawVo.uid},#{withdrawVo.school},#{withdrawVo.content},#{withdrawVo.checkin})
+               values (#{withdrawVo.wid},#{withdrawVo.uid},#{withdrawVo.schoolId},#{withdrawVo.school},#{withdrawVo.content},#{withdrawVo.checkin},#{withdrawVo.userName})
 
     </insert>
     <!--获取用户添加注销申请结果-->
@@ -167,4 +167,41 @@
     <delete id="deleteWithdraw" parameterType="int">
       delete  from  edu_withdraw where wid=#{wid}
     </delete>
+    <!--CheckinAndSchoolId条件查询用户信息申请-->
+    <select id="findUserByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+       select u.user_id userId,i.user_name userName,u.phone,u.image,
+        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.political,i.educational,i.position,i.retired,
+        i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
+        i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
+        i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
+        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        from edu_user u
+        left join edu_user_item i on u.user_id = i.user_id and i.school_id = #{user.schoolId}
+        where i.checkin = #{user.checkin}
+    </select>
+    <!--Checkin条件查询用户信息申请-->
+    <select id="findUserByCheckin" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+       select u.user_id userId,i.user_name userName,u.phone,u.image,
+        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.political,i.educational,i.position,i.retired,
+        i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
+        i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
+        i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
+        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        from edu_user u
+        left join edu_user_item i on u.user_id = i.user_id
+        where i.checkin = #{user.checkin}
+    </select>
+    <!--CheckinAndSchoolId条件查询用户注销信息申请-->
+    <select id="findWithdrawByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.vo.WithdrawVo" resultType="com.ovft.configure.sys.vo.WithdrawVo">
+       select  w.wid wid,w.uid uid,w.school_id,w.school school,w.content content,w.checkin checkin
+         from  edu_withdraw w
+            where w.school_id=#{schoolId} and w.checkin=#{checkin}
+    </select>
+    <!--学员注销-->
+    <update id="UpdateUserSchoolId" parameterType="int">
+         update edu_user_item set school_id=null where user_id=#{userId}
+    </update>
+
 </mapper>

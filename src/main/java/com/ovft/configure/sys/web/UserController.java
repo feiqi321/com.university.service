@@ -173,15 +173,18 @@ public class UserController {
     @PostMapping(value = "/addWithdraw")
     public WebResult addWithdraw(@RequestBody WithdrawVo withdrawVo, HttpServletRequest request) {
         String userId = request.getHeader("userId");
-
+        User selectById = userService.selectById(Integer.parseInt(userId));
         WithdrawVo findWithdrawVo = userService.selectWithdrawOne(Integer.parseInt(userId));
             if (findWithdrawVo!=null){
                    return new WebResult("400","已在审核中","");
             }
+         withdrawVo.setCheckin(1);
         withdrawVo.setUid(Integer.parseInt(userId));
+        withdrawVo.setUserName(selectById.getUserName());
         userService.addWithdraw(withdrawVo);
         return new WebResult("200", "注销申请成功", "");
     }
+
 
     /**
      * 获取用户注销申请处理状态
@@ -192,13 +195,22 @@ public class UserController {
     @GetMapping(value = "/selectWithdraw")
     public WebResult selectWithdraw(HttpServletRequest request) {
         String userId = request.getHeader("userId");
+        WithdrawVo withdrawOne = userService.selectWithdrawOne(Integer.parseInt(userId));
+        if (withdrawOne==null){
+           return new WebResult("400","您尚未申请注销","");
+        }
         int i = userService.selectWithdraw(Integer.parseInt(userId));
-        if (i == 1) {
+        if (i == 0) {
+
             return new WebResult("200", "注销成功", "");
         }
-        if (i == 0) {
+        if (i == 1) {
             return new WebResult("200", "待审核", "");
         }
+        if (i == 2) {
+            return new WebResult("200", "拒绝审核", "");
+        }
+
         return null;
     }
 }

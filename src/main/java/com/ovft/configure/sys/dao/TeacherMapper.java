@@ -42,7 +42,7 @@ public interface TeacherMapper {
 
     public List<User> selectUserList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
-    public List<User> selectWithdrawList(@Param("wid") Integer wid, @Param("search") String search);
+    public List<User> selectWithdrawList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
     public void updateCheckIn(@Param("userId") Integer userId,@Param("checkin") Integer checkin);
 

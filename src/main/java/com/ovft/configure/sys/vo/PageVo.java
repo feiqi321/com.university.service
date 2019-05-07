@@ -13,11 +13,21 @@ public class PageVo {
 
     private Integer schoolId;
 
+    private Integer checkin;
+
     private Integer wid;
 
     private String type;
 
     private Integer role;
+
+    public Integer getCheckin() {
+        return checkin;
+    }
+
+    public void setCheckin(Integer checkin) {
+        this.checkin = checkin;
+    }
 
     public Integer getWid() {
         return wid;

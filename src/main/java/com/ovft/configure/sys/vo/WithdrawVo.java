@@ -3,9 +3,27 @@ package com.ovft.configure.sys.vo;
 public class WithdrawVo {
     private int wid;
     private int uid;
+    private int schoolId;
     private String school;
     private String content;
     private int checkin;
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public int getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(int schoolId) {
+        this.schoolId = schoolId;
+    }
 
     public int getUid() {
         return uid;

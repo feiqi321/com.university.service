@@ -7,6 +7,8 @@ import com.ovft.configure.sys.vo.WithdrawVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @ClassName UserMapper
  * @Author xzy
@@ -73,7 +75,7 @@ public interface UserMapper {
 
     //获取用户注销申请结果状态
     public int selectWithdraw(Integer uid);
-    //获取用户注销申请结果状态
+    //获取一个用户注销记录
     public WithdrawVo selectWithdrawOne(Integer uid);
 
     //后台删除用户
@@ -82,4 +84,14 @@ public interface UserMapper {
     //后台删除用户
     public  void deleteWithdraw(Integer wid);
 
+    //根据checkin和schoolId条件进行学员审核查找
+    public List<User> findUserByCheckinAndSchoolId(@Param("user") User user);
+    //根据checkin条件进行学员审核查找
+    public List<User> findUserByCheckin(@Param("user") User user);
+
+    //根据checkin和schoolId条件进行学员注销审核查找
+    public List<WithdrawVo> findWithdrawByCheckinAndSchoolId(@Param("withdrawVo") WithdrawVo withdrawVo);
+
+    //修改用户报名学校的ID
+    public Void UpdateUserSchoolId(Integer userId);
 }

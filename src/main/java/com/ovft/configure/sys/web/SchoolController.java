@@ -141,7 +141,7 @@ public class SchoolController {
         School school = schoolService.findSlideshowAll(Integer.parseInt(request.getHeader("schoolId")));
         String slideshow = school.getSlideshow();
         if (slideshow==null){
-            return  new WebResult("400","未获取到该资源", "");
+            return  new WebResult("400","获取轮播图资源为空", "");
         }
         String[] strs = slideshow.split(",");
         return  new WebResult("200","获取成功", strs);

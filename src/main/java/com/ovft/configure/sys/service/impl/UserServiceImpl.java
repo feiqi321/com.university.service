@@ -309,7 +309,7 @@ public class UserServiceImpl implements UserService {
         //保存
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
         if (findUser == null||findUser.getSchoolId()==null) {
-            user.setCheckin(0);
+            user.setCheckin(1);
             userMapper.saveInfoItems(user);
             return new WebResult("200", "保存成功", "");
         } else {
@@ -546,18 +546,42 @@ public class UserServiceImpl implements UserService {
     public int selectWithdraw(Integer userId) {
         return userMapper.selectWithdraw(userId);
     }
-
+     //删除用户报名学校信息
     @Transactional
     @Override
     public WebResult deleteUserItem(Integer userItemId) {
         userMapper.deleteUserItem(userItemId);
         return new WebResult("200","删除成功","");
     }
-
+    //删除一条学员注销申请记录
     @Override
     public void deleteWithdraw(Integer wid) {
           userMapper.deleteWithdraw(wid);
     }
+   //根据checkin和schoolId条件进行学员审核查找
+    @Override
+    public WebResult findUserByCheckinAndSchoolId(User user) {
+        List<User> users = userMapper.findUserByCheckinAndSchoolId(user);
+             return new WebResult("200","查找成功",users);
+    }
+   //根据checkin和schoolId条件进行学员注销审核查找
+    @Override
+    public WebResult findWithdrawByCheckinAndSchoolId(WithdrawVo withdrawVo) {
+        List<WithdrawVo> withdrawVos = userMapper.findWithdrawByCheckinAndSchoolId(withdrawVo);
+             return new WebResult("200","查找成功",withdrawVos);
+    }
+   //学员注销
+    @Transactional
+    @Override
+    public WebResult UpdateUserSchoolId(Integer userId) {
+        return null;
+    }
 
+    //通过用户Id查找用户对应字段信息
+    @Override
+    public User selectById(Integer userId){
+        return userMapper.selectById(userId);
+
+    }
 
 }

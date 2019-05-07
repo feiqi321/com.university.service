@@ -9,6 +9,7 @@ import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
+import com.ovft.configure.sys.vo.WithdrawVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,20 @@ public class TeacherController {
      */
     @PostMapping(value = "/userWithdrawList")
     public WebResult userWithdrawList(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                pageVo.setSchoolId(hget.getSchoolId());
+            }
             return teacherService.userWithdrawVoList(pageVo);
+        }else {
+            return new WebResult("400", "请先登录", "");
+        }
     }
 
     /**
@@ -118,29 +132,36 @@ public class TeacherController {
     }
     /**
      * 学员审核状态更改
+     *
+     * 状态说明   "0"：通过，"1"待审核，"2"拒绝
      * @return
      */
     @PostMapping(value = "/auditUser")
-    public WebResult auditUser(HttpServletRequest request){
-        Integer checkin=Integer.parseInt(request.getHeader("checkin"));
+    public WebResult auditUser(@RequestBody User user){
+        Integer checkin=user.getCheckin();
+        Integer userId=user.getUserId();
             if (checkin==2){
-                userService.deleteUser(Integer.parseInt(request.getHeader("userId")));
-                return teacherService.updateCheckIn(Integer.parseInt(request.getHeader("userId")),checkin);
+                userService.UpdateUserSchoolId(userId);
+                return teacherService.updateCheckIn(userId,checkin);
             }
-        return teacherService.updateCheckIn(Integer.parseInt(request.getHeader("userId")),checkin);
+        return teacherService.updateCheckIn(userId,checkin);
     }
     /**
      * 学员注销审核状态更改
+     * 状态说明   "0"：通过，"1"待审核，"2"拒绝
      * @return
      */
     @PostMapping(value = "/auditWithdraw")
-    public WebResult auditWithdraw(HttpServletRequest request){
-        Integer checkin=Integer.parseInt(request.getHeader("checkin"));
-            if (checkin==2){
-                userService.deleteWithdraw(Integer.parseInt(request.getHeader("wid")));
-                return teacherService.updateWithdrawCheckIn(Integer.parseInt(request.getHeader("wid")),checkin);
+    public WebResult auditWithdraw(@RequestBody WithdrawVo withdrawVo){
+             Integer  checkin=withdrawVo.getCheckin();
+             Integer  wid=withdrawVo.getWid();
+
+            if (checkin==0){
+                userService.deleteWithdraw(wid);
+                userService.UpdateUserSchoolId(withdrawVo.getUid());
+                return teacherService.updateWithdrawCheckIn(wid,checkin);
             }
-        return teacherService.updateWithdrawCheckIn(Integer.parseInt(request.getHeader("wid")),checkin);
+        return teacherService.updateWithdrawCheckIn(wid,checkin);
     }
     /**
      * 请假申请列表
@@ -261,4 +282,26 @@ public class TeacherController {
         return teacherService.deleteCourse(courseId);
     }
 
+    /**
+     * 根据checkin和schoolId条件进行学员审核查找
+     *
+     * @param user
+     * @return
+     */
+    @GetMapping(value = "/findUserByCheckinAndSchoolId")
+    public WebResult findUserByCheckinAndSchoolId(@RequestBody User user){
+
+        return userService.findUserByCheckinAndSchoolId(user);
+    }
+    /**
+     * 根据checkin和schoolId条件进行学员注销审核查找
+     *
+     * @param withdrawVo
+     * @return
+     */
+    @GetMapping(value = "/findWithdrawByCheckinAndSchoolId")
+    public WebResult findWithdrawByCheckinAndSchoolId(@RequestBody WithdrawVo withdrawVo){
+
+        return userService.findWithdrawByCheckinAndSchoolId(withdrawVo);
+    }
 }
