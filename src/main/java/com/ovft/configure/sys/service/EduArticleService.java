@@ -58,4 +58,10 @@ public interface EduArticleService {
      * @return
      */
     public WebResult queryNoticeById(Integer id);
+
+    /**
+     *首页新闻
+     * @return
+     */
+    public WebResult newsNotice();
 }

@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.TreeMap;
 
 @Mapper
 public interface SchoolMapper {
@@ -40,6 +39,9 @@ public interface SchoolMapper {
      * @param isUsing  0-停用， 1-启用
      */
     public void  isUsingSchool(@Param("schoolId") Integer schoolId, @Param("isUsing") Integer isUsing);
+
+    public void deleteSchool(@Param("schoolId") Integer schoolId);
+
     //查询所有学校（返回学校名和学校Id）
     public List<School> findSchoolAll();
     //根据学校id查找对应学校

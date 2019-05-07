@@ -122,15 +122,18 @@ public class EduArticleController {
         return eduArticleService.deleteNotice(id);
     }
 
-//    /**
-//     * 后台批量删除文章
-//     *
-//     * @param ids
-//     * @return TODO
-//     */
-//    @PostMapping(value = "/server/article/bigDeleteNotice")
-//    public WebResult bigDeleteNotice(@RequestParam Integer [] ids) {
-//        return eduArticleService.bigDeleteNotice(ids);
-//    }
+    /**
+     *首页轮播新闻
+     * @return
+     */
+    @PostMapping(value = "/article/newsNotice")
+    public WebResult newsNotice(HttpServletRequest request) {
+        String schoolId = request.getHeader("schoolId");
+//        if (StringUtils.isBlank(schoolId)) {
+//            return new WebResult("400", "学校id不能为空", "");
+//        }
+        return eduArticleService.newsNotice();
+    }
+
 
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.AddressMapper" >
+
+    <sql id="Base_Column_List">
+        address_id as addressId, user_id as userId, consignee_name as consigneeName, phone, area, address, postal_code as postalCode, isdefault
+    </sql>
+
+    <select id="selectByAddressId"  resultType="com.ovft.configure.sys.bean.Address">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_address
+        where address_id = #{addressId}
+    </select>
+
+    <select id="selectByUserId"  resultType="com.ovft.configure.sys.bean.Address">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_address
+        where user_id = #{userId}
+        order by isdefault desc
+    </select>
+
+    <insert id="createAddress" parameterType="com.ovft.configure.sys.bean.Address" useGeneratedKeys="true"
+            keyProperty="addressId">
+         insert into edu_address(user_id, consignee_name, phone, area, address, postal_code, isdefault)
+         values (#{userId}, #{consigneeName}, #{phone}, #{area}, #{address}, #{postalCode}, #{isdefault})
+    </insert>
+
+    <update id="updateAddress" parameterType="com.ovft.configure.sys.bean.Address">
+        update edu_address
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="consigneeName != null">
+                consignee_name = #{consigneeName},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="area != null">
+                area = #{area},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="postalCode != null">
+                postal_code = #{postalCode},
+            </if>
+            <if test="isdefault != null">
+                isdefault = #{isdefault},
+            </if>
+        </set>
+        where address_id = #{addressId}
+    </update>
+
+    <delete id="deleteAddress">
+        delete from edu_address where address_id = #{addressId}
+    </delete>
+
+</mapper>

@@ -73,6 +73,16 @@ public interface EduArticleMapper {
      */
     public void updateNotice(EduArticle eduArticle);
 
+    /**
+     * 浏览量加 1
+     * @param id
+     * @param visits
+     */
+    public void updateVisites(@Param("id") Integer id, @Param("visits")Integer visits);
 
-    void updateVisites(@Param("id") Integer id, @Param("visits")Integer visits);
+    /**
+     * 首页轮播新闻
+     * @return
+     */
+    public List<EduArticle> newsNotice();
 }
