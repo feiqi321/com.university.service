@@ -113,12 +113,12 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "密码不能为空");
         }
         User finduserbyphone = userMapper.findUserByPhone(user);
-        User user1 = userMapper.queryByItemsId(finduserbyphone.getUserId());
-        String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
-        finduserbyphone.setSchoolName(schoolName);
         if (finduserbyphone == null) {
             return new WebResult("400", "您的手机号尚未注册！");
         }
+        User user1 = userMapper.queryByItemsId(finduserbyphone.getUserId());
+        String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
+        finduserbyphone.setSchoolName(schoolName);
 
         String pasword = MD5Utils.md5Password(user.getPassword());
         if (!pasword.equals(finduserbyphone.getPassword())) {

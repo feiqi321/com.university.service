@@ -18,7 +18,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     //用户注册
-    public void addUser(@Param("user") User user);
+    public void addUser(User user);
 
     //通过电话号码查找用户1
     public User findUserByPhone(@Param("user") User user);
