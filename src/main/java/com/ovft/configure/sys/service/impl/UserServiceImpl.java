@@ -279,7 +279,7 @@ public class UserServiceImpl implements UserService {
             boolean isMatch = m.matches();
 
             if (!isMatch) {
-                return new WebResult("400", "请输入正确手机号", "");
+                return new WebResult("400", "请输入正确紧急联系人手机号", "");
             }
         }
         //紧急联系人二手机号验证
@@ -291,7 +291,7 @@ public class UserServiceImpl implements UserService {
                 Matcher m = p.matcher(user.getEmergencyPhone2());
                 boolean isMatch = m.matches();
                 if (!isMatch) {
-                    return new WebResult("400", "请输入正确手机号", "");
+                    return new WebResult("400", "请输入正确紧急联系人手机号", "");
                 }
             }
         }
