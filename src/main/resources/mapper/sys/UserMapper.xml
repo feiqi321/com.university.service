@@ -85,7 +85,7 @@
         left join edu_user_item i on u.user_id = i.user_id and i.school_id = #{schoolId}
         where u.user_id = #{userId}
     </select>
-    <!--查询对应edu_user_item表里面是否存在该用户记录-->
+    <!--查询对应edu_user_item表里面该用户记录-->
     <select id="queryByItemsId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
         select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,

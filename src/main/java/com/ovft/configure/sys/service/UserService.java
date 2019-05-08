@@ -49,6 +49,8 @@ public interface UserService {
     public WebResult findWithdrawByCheckinAndSchoolId(WithdrawVo withdrawVo);
     //学员所报信息假删
     public WebResult UpdateUserSchoolId(Integer userId);
+    //通过学员id查找报名学校（user_Item）表信息
+    public User queryByItemsId(Integer userId);
 
 
 }

@@ -156,7 +156,8 @@ public class TeacherController {
              Integer  checkin=withdrawVo.getCheckin();
              Integer  wid=withdrawVo.getWid();
 
-            if (checkin==0){
+
+        if (checkin==0){
                 userService.deleteWithdraw(wid);
                 userService.UpdateUserSchoolId(withdrawVo.getUid());
                 return teacherService.updateWithdrawCheckIn(wid,checkin);

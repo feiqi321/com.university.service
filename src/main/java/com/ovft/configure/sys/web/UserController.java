@@ -173,11 +173,18 @@ public class UserController {
     @PostMapping(value = "/addWithdraw")
     public WebResult addWithdraw(@RequestBody WithdrawVo withdrawVo, HttpServletRequest request) {
         String userId = request.getHeader("userId");
+        User queryByItemsUser = userService.queryByItemsId(Integer.parseInt(userId));
+        if (queryByItemsUser.getCheckin()!=0){
+            return new WebResult("400","您所报名的学校还在审核中");
+        }
         User selectById = userService.selectById(Integer.parseInt(userId));
         WithdrawVo findWithdrawVo = userService.selectWithdrawOne(Integer.parseInt(userId));
             if (findWithdrawVo!=null){
                    return new WebResult("400","已在审核中","");
             }
+        if (withdrawVo.getContent()==null||withdrawVo.getContent()==""){
+            return new WebResult("400","注销原因不能为空","");
+        }
          withdrawVo.setCheckin(1);
         withdrawVo.setUid(Integer.parseInt(userId));
         withdrawVo.setUserName(selectById.getUserName());

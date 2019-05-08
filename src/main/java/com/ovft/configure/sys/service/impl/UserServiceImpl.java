@@ -583,7 +583,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User selectById(Integer userId){
         return userMapper.selectById(userId);
-
     }
+      //通过学员id查找报名学校（user_Item）表相关信息
+     public User queryByItemsId(Integer userId){
+      return userMapper.queryByItemsId(userId);
+     }
+
 
 }
