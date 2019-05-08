@@ -213,4 +213,17 @@ public class UserController {
 
         return null;
     }
+
+    /**
+     * 学员所报信息假删
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping(value = "/UpdateUserSchoolId")
+     public WebResult UpdateUserSchoolId(@RequestBody User user){
+
+          userService.UpdateUserSchoolId(user.getUserId());
+          return new WebResult("200","删除成功","");
+     }
 }

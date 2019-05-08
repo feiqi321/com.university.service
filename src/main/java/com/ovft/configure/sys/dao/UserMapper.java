@@ -46,6 +46,7 @@ public interface UserMapper {
 
     //查询对应学员是否已选择该学校
     public User queryByItemsIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
+
     //查询对应学员是否已选择该学校
     public User queryByItemsId(@Param("userId") Integer userId);
 
@@ -86,6 +87,7 @@ public interface UserMapper {
 
     //根据checkin和schoolId条件进行学员审核查找
     public List<User> findUserByCheckinAndSchoolId(@Param("user") User user);
+
     //根据checkin条件进行学员审核查找
     public List<User> findUserByCheckin(@Param("user") User user);
 
@@ -93,7 +95,8 @@ public interface UserMapper {
     public List<WithdrawVo> findWithdrawByCheckinAndSchoolId(@Param("withdrawVo") WithdrawVo withdrawVo);
 
     //修改用户报名学校的ID
-    public Void UpdateUserSchoolId(Integer userId);
+    public void UpdateUserSchoolId(Integer userId);
+
     //后台修改用户信息
     public  void updateByUserId(@Param("phone") String phone, @Param("userId") Integer userId);
 

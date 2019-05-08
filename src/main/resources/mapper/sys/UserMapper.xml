@@ -2,23 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.UserMapper">
+    <!--用户注册-->
     <insert id="addUser" parameterType="com.ovft.configure.sys.bean.User" useGeneratedKeys="true"
             keyProperty="userId">
           insert  into edu_user(user_name,phone,password) values(#{userName},#{phone},#{password});
     </insert>
+    <!--通过电话号码查找用户-->
     <select id="findUserByPhone" parameterType="com.ovft.configure.sys.bean.User"
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where phone=#{user.phone};
          </select>
+    <!--通过电话号码查找用户2-->
     <select id="findUserByPhone2" parameterType="com.ovft.configure.sys.bean.User"
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where phone=#{phone};
          </select>
+    <!--通过密码查找用户（不常用）-->
     <select id="findUserByPassword" parameterType="com.ovft.configure.sys.bean.User"
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where  password=#{user.password};
          </select>
-
+    <!--通过userId查询相应字段-->
     <select id="selectById" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
             select user_id as auserId,
             user_name as userName,
@@ -28,15 +32,17 @@
             from  edu_user
             where  user_id=#{userId};
          </select>
+    <!--通过userId查询所有-->
     <select id="selectByIdAll" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
             select *
             from  edu_user
             where  user_id=#{userId};
          </select>
-
+    <!--通过手机更改密码-->
     <update id="updateByPhone">
           update edu_user set password = #{password} where phone=#{phone}
     </update>
+
     <update id="savaInfo" parameterType="com.ovft.configure.sys.bean.User">
           update edu_user set user_name=#{user.userName},sex=#{user.sex},school_id=#{user.schoolId},area=#{user.area},volunteer=#{user.volunteer},
           identity_card=#{user.identity_card},address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},
@@ -45,6 +51,7 @@
            emergency_contact2=#{user.emergencyContact2},emergency_relation2=#{user.emergencyRelation2},
            emergency_phone2=#{user.emergencyPhone2} where phone=#{user.phone}
     </update>
+    <!--更换手机-->
     <update id="updatePhone" parameterType="java.lang.String">
               update  edu_user set phone=#{newPhone} where  phone=#{phone}
     </update>
@@ -199,12 +206,10 @@
          from  edu_withdraw w
             where w.school_id=#{schoolId} and w.checkin=#{checkin}
     </select>
-    <!--学员注销-->
+    <!--学员注销(学员假删)-->
     <update id="UpdateUserSchoolId" parameterType="int">
          update edu_user_item set school_id=null where user_id=#{userId}
     </update>
-
-
     <!--后台修改用户信息-->
     <update id="updateByUserId" >
         UPDATE edu_user SET  phone=#{phone} where user_Id=#{userId}

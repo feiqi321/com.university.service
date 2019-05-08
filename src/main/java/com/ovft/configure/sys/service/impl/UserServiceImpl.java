@@ -574,7 +574,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult UpdateUserSchoolId(Integer userId) {
-        return null;
+       userMapper.UpdateUserSchoolId(userId);
+        return new WebResult("200","删除成功","");
+
     }
 
     //通过用户Id查找用户对应字段信息
