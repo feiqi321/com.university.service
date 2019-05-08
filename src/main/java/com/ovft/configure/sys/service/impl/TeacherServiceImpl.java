@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -344,26 +343,33 @@ public class TeacherServiceImpl implements TeacherService {
         if (!SecurityUtils.securityPhone(user.getPhone())) {
             return new WebResult("400", "请输入正确的手机号", "");
         }
-        if (!SecurityUtils.securityPhone(user.getEmergencyPhone1())) {
-            return new WebResult("400", "紧急联系人1电话不能为空", "");
+        //需求修改,紧急联系人1改为选填
+        /*if (!SecurityUtils.securityPhone(user.getEmergencyPhone1())) {
+            return new WebResult("400", "请输入正确的紧急联系人1电话", "");
         }
         if (StringUtils.isBlank(user.getEmergencyContact1())) {
             return new WebResult("400", "请输入紧急联系人1", "");
         }
         if (StringUtils.isBlank(user.getEmergencyRelation1())) {
             return new WebResult("400", "请输入紧急联系人关系1", "");
+        }*/
+        //紧急联系人1手机号验证
+        if (user.getEmergencyPhone1() != null) {
+            if (!SecurityUtils.securityPhone(user.getEmergencyPhone1())) {
+                return new WebResult("400", "请输入正确的紧急联系人1电话", "");
+            }
         }
         //紧急联系人二手机号验证
         if (user.getEmergencyPhone2() != null) {
             if (!SecurityUtils.securityPhone(user.getEmergencyPhone2())) {
-                return new WebResult("400", "紧急联系人2电话不能为空", "");
+                return new WebResult("400", "请输入正确的紧急联系人2电话", "");
             }
         }
         if (StringUtils.isBlank(user.getUserName())) {
             return new WebResult("400", "用户名不能为空");
         }
-        if (StringUtils.isBlank(user.getIdentityCard())) {
-            return new WebResult("400", "身份证号码不能为空");
+        if (!SecurityUtils.securityIdCard(user.getIdentityCard())) {
+            return new WebResult("400", "请输入正确的身份证号码", "");
         }
         if (user.getSex() == null) {
             return new WebResult("400", "性别不能为空");
@@ -393,7 +399,7 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         if(finduserbyphone != null && user.getUserId() != null && user.getUserId().compareTo(finduserbyphone.getUserId())!= 0) {
-            return new WebResult("400", "该手机号已注册", "");
+            return new WebResult("400", "该手机号已被注册", "");
         }
         user.setUserId(finduserbyphone.getUserId());
         User findUser = userMapper.queryByItemsId(user.getUserId());
