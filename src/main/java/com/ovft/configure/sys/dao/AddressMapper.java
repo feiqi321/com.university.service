@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName AddressMapper
@@ -15,6 +16,8 @@ import java.util.List;
 public interface AddressMapper {
 
     public Address selectByAddressId(@Param("addressId") Integer addressId);
+
+    public List<Map<String, Object>> selectByUserIdMap(@Param("userId") Integer userId);
 
     public List<Address> selectByUserId(@Param("userId") Integer userId);
 

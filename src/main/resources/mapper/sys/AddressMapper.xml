@@ -22,6 +22,13 @@
         order by isdefault desc
     </select>
 
+    <select id="selectByUserIdMap"  resultType="java.util.Map">
+        select address_id as id, consignee_name as name, phone as tel, concat(area,address) as address
+        from edu_address
+        where user_id = #{userId}
+        order by isdefault desc
+    </select>
+
     <insert id="createAddress" parameterType="com.ovft.configure.sys.bean.Address" useGeneratedKeys="true"
             keyProperty="addressId">
          insert into edu_address(user_id, consignee_name, phone, area, address, postal_code, isdefault)

@@ -89,7 +89,7 @@ public class AdminController {
             }
             return adminService.adminList(pageVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -113,7 +113,7 @@ public class AdminController {
             }
             return adminService.createAdmin(admin);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 

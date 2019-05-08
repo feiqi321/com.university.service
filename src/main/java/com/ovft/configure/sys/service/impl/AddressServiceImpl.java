@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName AddressService
@@ -50,14 +51,14 @@ public class AddressServiceImpl implements AddressService {
 
         //如果原先没有收货地址,添加的第一条默认为默认收货地址
         List<Address> addressList = addressMapper.selectByUserId(address.getUserId());
-        if(addressList == null || addressList.size() == 0) {
-            address.setIsdefault(1);
-        } else {
+        if(addressList.size() != 0) {
             //如果新添加的地址是默认地址,先修改原先默认地址为0
             if(address.getIsdefault().compareTo(1) == 0) {
                 Address isDefaultAddress = addressList.get(0);
-                isDefaultAddress.setIsdefault(0);
-                addressMapper.updateAddress(isDefaultAddress);
+                if(isDefaultAddress.getIsdefault() == 1) {
+                    isDefaultAddress.setIsdefault(0);
+                    addressMapper.updateAddress(isDefaultAddress);
+                }
             }
         }
 
@@ -78,7 +79,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public WebResult addressList(Integer userId) {
-        List<Address> addressList = addressMapper.selectByUserId(userId);
+        List<Map<String, Object>> addressList = addressMapper.selectByUserIdMap(userId);
         return new WebResult("200", "查询成功", addressList);
     }
 
