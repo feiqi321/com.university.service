@@ -72,7 +72,7 @@ public class EduArticleController {
             }
             return eduArticleService.adminAddNotice(eduArticle);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -107,7 +107,7 @@ public class EduArticleController {
             }
             return eduArticleService.findNoticeAll(pageVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 

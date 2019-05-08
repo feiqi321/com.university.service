@@ -51,7 +51,7 @@ public class TeacherController {
             }
             return teacherService.userList(pageVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
     /**
@@ -72,7 +72,7 @@ public class TeacherController {
             }
             return teacherService.userWithdrawVoList(pageVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -95,7 +95,7 @@ public class TeacherController {
             }
             return userService.selectInfo(user);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -118,7 +118,7 @@ public class TeacherController {
             }
             return teacherService.savaUserInfo(user);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
     /**
@@ -181,7 +181,7 @@ public class TeacherController {
             }
             return  teacherService.vacateChackList(pageVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -215,7 +215,7 @@ public class TeacherController {
             }
             return  teacherService.courseList(pageVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -248,7 +248,7 @@ public class TeacherController {
             }
             return  teacherService.createCourse(courseVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -261,16 +261,6 @@ public class TeacherController {
     public WebResult findCourse(@RequestParam(value = "courseId")Integer courseId) {
         return teacherService.findCourse(courseId);
     }
-
-    /**
-     * 修改课程
-     * @param courseVo
-     * @return
-     */
-//    @PostMapping(value = "/updateCourse")
-//    public WebResult updateCourse(@RequestBody EduCourseVo courseVo) {
-//        return teacherService.updateCourse(courseVo);
-//    }
 
     /**
      * 删除课程

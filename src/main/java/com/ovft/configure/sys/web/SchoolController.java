@@ -48,7 +48,7 @@ public class SchoolController {
             }
             return schoolService.createSchool(school);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
@@ -117,7 +117,7 @@ public class SchoolController {
             }
             return schoolService.schoolList(pageVo);
         }else {
-            return new WebResult("400", "请先登录", "");
+            return new WebResult("50012", "请先登录", "");
         }
     }
 
