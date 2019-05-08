@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.BankCardMapper" >
+
+    <sql id="Base_Column_List">
+        card_id as cardId, user_id as userId, card_type as cardType, card_number as cardNumber, user_name as userName, id_card as idCard, phone, password
+    </sql>
+
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.BankCard">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_bankcard
+        where card_id = #{cardId}
+    </select>
+
+    <select id="selectByUserId"  resultType="com.ovft.configure.sys.bean.BankCard">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_bankcard
+        where user_id = #{userId}
+    </select>
+
+    <insert id="createBankCard" parameterType="com.ovft.configure.sys.bean.BankCard" useGeneratedKeys="true"
+            keyProperty="cardId">
+         insert into edu_bankcard(user_id, card_type, card_number, user_name, id_card, phone, password)
+         values (#{userId}, #{cardType}, #{cardNumber}, #{userName}, #{idCard}, #{phone}, #{password})
+    </insert>
+
+    <!--<update id="updateAddress" parameterType="com.ovft.configure.sys.bean.BankCard">
+        update edu_bankcard
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="cardType != null">
+                card_type = #{cardType},
+            </if>
+            <if test="cardNumber != null">
+                card_number = #{cardNumber},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="idCard != null">
+                id_card = #{idCard},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+        </set>
+        where card_id = #{cardId}
+    </update>-->
+
+    <delete id="deleteAddress">
+        delete from edu_bankcard where card_id = #{cardId}
+    </delete>
+
+</mapper>

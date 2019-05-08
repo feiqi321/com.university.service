@@ -5,7 +5,6 @@ import com.ovft.configure.sys.bean.Address;
 import com.ovft.configure.sys.dao.AddressMapper;
 import com.ovft.configure.sys.service.AddressService;
 import com.ovft.configure.sys.utils.SecurityUtils;
-import com.ovft.configure.sys.web.AdminController;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import java.util.Map;
 @Service
 public class AddressServiceImpl implements AddressService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AddressServiceImpl.class);
 
     @Resource
     private AddressMapper addressMapper;
