@@ -128,6 +128,8 @@ public class TeacherController {
      */
     @GetMapping(value = "/deleteUser")
     public WebResult deleteUser(@RequestParam(value = "userItemId")Integer userItemId) {
+
+
         return userService.deleteUserItem(userItemId);
     }
     /**

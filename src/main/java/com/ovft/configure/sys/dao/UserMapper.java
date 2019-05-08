@@ -49,6 +49,10 @@ public interface UserMapper {
 
     //查询对应学员是否已选择该学校
     public User queryByItemsId(@Param("userId") Integer userId);
+    //  <!--查询对应edu_user_item表里面该用户记录(i.school_id is not null)-->
+    public User queryByItemsId2(@Param("userId") Integer userId);
+    //查询对应学员是否已选择该学校
+    public List<User> queryByItemsIdList(@Param("userId") Integer userId);
 
     //更换学校时保存信息
     public void updateInfoItems(User user);

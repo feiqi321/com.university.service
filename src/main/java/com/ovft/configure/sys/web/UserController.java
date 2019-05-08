@@ -61,20 +61,20 @@ public class UserController {
         return userService.updatePassword(phoneVo);
     }
 
-    /**
-     * 基本信息保存、修改
-     *
-     * @param user
-     * @return
-     */
-    @PostMapping(value = "/savaInfoOld")
-    public WebResult savaInfoOld(@RequestBody User user, HttpServletRequest request) {
-//        System.out.println(user);
-//        System.out.println("========================>"+request.getHeader("schoolId"));
-        user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
-        user.setUserId(Integer.parseInt(request.getHeader("userId")));
-        return userService.savaInfo(user);
-    }
+//    /**
+//     * 基本信息保存、修改
+//     *
+//     * @param user
+//     * @return
+//     */
+//    @PostMapping(value = "/savaInfoOld")
+//    public WebResult savaInfoOld(@RequestBody User user, HttpServletRequest request) {
+////        System.out.println(user);
+////        System.out.println("========================>"+request.getHeader("schoolId"));
+//        user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
+//        user.setUserId(Integer.parseInt(request.getHeader("userId")));
+//        return userService.savaInfo(user);
+//    }
 
     /**
      * 基本信息保存、修改
@@ -84,9 +84,9 @@ public class UserController {
      */
     @PostMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user,HttpServletRequest request) {
-//        System.out.println(user);
-//        System.out.println("========================>"+request.getHeader("schoolId"));
+
          user.setUserId(Integer.parseInt(request.getHeader("userId")));
+        user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
         return userService.savaInfo(user);
     }
 
@@ -135,7 +135,9 @@ public class UserController {
     public WebResult selectInfo(HttpServletRequest request) {
         User user = new User();
         String userId = request.getHeader("userId");
+        String schoolId =request.getHeader("schoolId");
         user.setUserId(Integer.parseInt(userId));
+        user.setSchoolId(Integer.parseInt(schoolId));
         return userService.selectInfo(user);
     }
 
@@ -173,7 +175,10 @@ public class UserController {
     @PostMapping(value = "/addWithdraw")
     public WebResult addWithdraw(@RequestBody WithdrawVo withdrawVo, HttpServletRequest request) {
         String userId = request.getHeader("userId");
-        User queryByItemsUser = userService.queryByItemsId(Integer.parseInt(userId));
+        User queryByItemsUser = userService.queryByItemsIdAndSchoolId(Integer.parseInt(userId),withdrawVo.getSchoolId());
+           if (queryByItemsUser==null){
+          return new WebResult("400","未找到您所报的学校相关信息");
+           }
         if (queryByItemsUser.getCheckin()!=0){
             return new WebResult("400","您所报名的学校还在审核中");
         }
