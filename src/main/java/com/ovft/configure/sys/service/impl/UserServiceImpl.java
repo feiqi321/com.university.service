@@ -588,5 +588,4 @@ public class UserServiceImpl implements UserService {
         return userMapper.queryByItemsIdAndSchoolId(userId,schoolId);
     }
 
-
 }

@@ -190,7 +190,7 @@ public class UserController {
         if (withdrawVo.getContent()==null||withdrawVo.getContent()==""){
             return new WebResult("400","注销原因不能为空","");
         }
-         withdrawVo.setCheckin(1);
+        withdrawVo.setCheckin(1);
         withdrawVo.setUid(Integer.parseInt(userId));
         withdrawVo.setUserName(selectById.getUserName());
         userService.addWithdraw(withdrawVo);

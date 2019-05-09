@@ -127,10 +127,24 @@ public class TeacherController {
      * @return
      */
     @GetMapping(value = "/deleteUser")
-    public WebResult deleteUser(@RequestParam(value = "userItemId")Integer userItemId) {
-
-
-        return userService.deleteUserItem(userItemId);
+    public WebResult deleteUser(@RequestParam(value = "userItemId")Integer userItemId,Integer userId,HttpServletRequest request) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() == 0) {
+              userService.deleteUserItem(userItemId);
+            }
+            if(hget.getRole() != 0){
+              userService.UpdateUserSchoolId(userId);
+            }
+        }else {
+            return new WebResult("50012", "请先登录", "");
+        }
+        return null;
     }
     /**
      * 学员审核状态更改
