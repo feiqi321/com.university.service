@@ -140,6 +140,10 @@
         where course_id = #{courseId,jdbcType=INTEGER}
     </delete>
 
+    <delete id="deleteVacate">
+        delete from edu_vacate where vacate_id = #{vacateId}
+    </delete>
+
 
     <!--根据schoolId查询学校用户记录-->
     <select id="selectUserList" resultType="com.ovft.configure.sys.bean.User">

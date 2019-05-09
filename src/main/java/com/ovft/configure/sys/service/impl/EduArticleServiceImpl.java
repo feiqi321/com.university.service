@@ -30,13 +30,25 @@ public class EduArticleServiceImpl implements EduArticleService {
 
     //通知公告
     @Override
-    public WebResult queryAllNotice(Integer schoolId, String type) {
+    public WebResult queryAllNotice(String schoolIdStr, String type, int pageNum, int pageSize) {
         //查询：1-通知公告, 3-校园介绍, 4-联盟资讯, 5-政策法规
         //可以看见所有学校联盟资讯
+        Integer schoolId = null;
         if("4".equals(type) || "5".equals(type)) {
             schoolId = null;
+        } else if(StringUtils.isBlank(schoolIdStr)) {
+            return new WebResult("400", "请选择学校", "");
+        } else {
+            schoolId = Integer.valueOf(schoolIdStr);
         }
+
+        if(pageSize == 0) {
+            List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, null);
+            return new WebResult("200", "查询成功", noticeList);
+        }
+        PageHelper.startPage(pageNum, pageSize);
         List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, null);
+        PageInfo pageInfo = new PageInfo<>(noticeList);
         return new WebResult("200", "查询成功", noticeList);
     }
 

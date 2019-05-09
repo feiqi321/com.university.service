@@ -39,6 +39,9 @@ public interface TeacherMapper {
     //根据课程id删除课程
     public void deleteCourseById(@Param("courseId") Integer courseId);
 
+    //根据id 删除请假申请
+    public void deleteVacate(@Param("vacateId") Integer vacateId);
+
     public List<User> selectUserList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
     public List<User> selectWithdrawList(@Param("schoolId") Integer schoolId, @Param("search") String search);

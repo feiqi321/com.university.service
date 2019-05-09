@@ -36,4 +36,6 @@ public interface TeacherService {
 
     //课程 启用/停用 页面
     public WebResult updateIsenable(EduCourse course);
+
+    public WebResult deleteVacate(Integer vacateId);
 }

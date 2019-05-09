@@ -204,6 +204,14 @@ public class TeacherController {
     }
 
     /**
+     * 删除请假申请
+     */
+    @GetMapping(value = "/deleteVacate")
+    public WebResult deleteVacate(@RequestParam(value = "vacateId")Integer vacateId) {
+        return teacherService.deleteVacate(vacateId);
+    }
+
+    /**
      * 请假审批
      * @param isCheck
      * @param vacateId

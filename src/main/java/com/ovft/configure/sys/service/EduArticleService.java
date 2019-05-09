@@ -15,7 +15,7 @@ public interface EduArticleService {
      * @param type
      * @return
      */
-    public WebResult queryAllNotice(Integer schoolId, String type);
+    public WebResult queryAllNotice(String schoolId, String type, int pageNum, int pageSize);
     /**
      * 后台添加文章
      *

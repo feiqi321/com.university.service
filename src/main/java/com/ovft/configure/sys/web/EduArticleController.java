@@ -7,7 +7,6 @@ import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,12 +32,10 @@ public class EduArticleController {
      * @return
      */
     @GetMapping(value = "/article/notice")
-    public WebResult queryAllNotice(HttpServletRequest request, @RequestParam(value = "type", required = true) String type) {
+    public WebResult queryAllNotice(HttpServletRequest request, @RequestParam(value = "type", required = true) String type,
+        @RequestParam(value = "pageSize") int pageSize, @RequestParam(value = "pageNum") int pageNum) {
         String schoolId = request.getHeader("schoolId");
-        if (StringUtils.isBlank(schoolId)) {
-            return new WebResult("400", "学校id不能为空", "");
-        }
-        return eduArticleService.queryAllNotice(Integer.valueOf(schoolId), type);
+        return eduArticleService.queryAllNotice(schoolId, type, pageNum, pageSize);
     }
 
     /**

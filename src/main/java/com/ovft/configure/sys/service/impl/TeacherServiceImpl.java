@@ -85,11 +85,56 @@ public class TeacherServiceImpl implements TeacherService {
      * 课程相关信息验证
      *
      * @param courseVo
-     * @param course
      * @return
      */
-    public WebResult security(EduCourseVo courseVo, EduCourse course) {
-
+    public WebResult security(EduCourse courseVo, List<EduClass> classList) {
+        Date startDate = courseVo.getStartDate();
+        Date endDate = courseVo.getEndDate();
+        //检查是否有相同的课程已经启用
+        List<EduCourse> eqName = teacherMapper.selectCourseListBySchoolId(Integer.valueOf(courseVo.getSchoolId()), courseVo.getIsenable(), courseVo.getCourseName());
+        for (EduCourse eduCourse : eqName) {
+            if(eduCourse.getCourseName().equals(courseVo.getCourseName())) {
+                if(courseVo.getCourseId() == null) {
+                    return new WebResult("400", "已有“"+courseVo.getCourseName() + "”,请先停用！", "");
+                }
+                if(!courseVo.getCourseId().equals(eduCourse.getCourseId())) {
+                    return new WebResult("400", "已有“"+courseVo.getCourseName() + "”,请先停用！", "");
+                }
+            }
+        }
+        if (classList == null || classList.size() == 0) {
+            return new WebResult("400", "请选择上课时间", "");
+        }
+        if (courseVo.getCoursePrice() == null || courseVo.getCoursePrice().compareTo(BigDecimal.ZERO) < 0) {
+            return new WebResult("400", "课程价格不正确", "");
+        }
+        if (StringUtils.isBlank(courseVo.getPlaceClass())) {
+            return new WebResult("400", "请添加上课地点", "");
+        }
+        if (startDate == null || endDate == null) {
+            return new WebResult("400", "请添加课程日期", "");
+        }
+        if (startDate.after(endDate)) {
+            return new WebResult("400", "结束日期不能早于开课日期", "");
+        }
+        if (courseVo.getPeopleNumber() == null || courseVo.getPeopleNumber().compareTo(0) <= 0) {
+            return new WebResult("400", "请添加课程人数", "");
+        }
+        //判断“HH:mm”
+        Pattern p = Pattern.compile("([0-1]?[0-9]|2[0-3]):([0-5][0-9])");
+        for (EduClass eduClass : classList) {
+            String startTime = eduClass.getStartTime();
+            String endTime = eduClass.getEndTime();
+            if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)) {
+                return new WebResult("400", "请添加课程时间", "");
+            }
+            if (!p.matcher(startTime).matches() || !p.matcher(endTime).matches()) {
+                return new WebResult("400", "请添加课程时间", "");
+            }
+            if (StringUtils.isBlank(eduClass.getWeek())) {
+                return new WebResult("400", "请选择周几上课", "");
+            }
+        }
         return null;
     }
 
@@ -133,50 +178,9 @@ public class TeacherServiceImpl implements TeacherService {
 
         //如果课程启用, 相关字段验证
         if(courseVo.getIsenable().compareTo(1) == 0) {
-            //检查是否有相同的课程已经启用
-            List<EduCourse> eqName = teacherMapper.selectCourseListBySchoolId(Integer.valueOf(courseVo.getSchoolId()), courseVo.getIsenable(), courseVo.getCourseName());
-            for (EduCourse eduCourse : eqName) {
-                if(eduCourse.getCourseName().equals(courseVo.getCourseName())) {
-                    if(courseVo.getCourseId() == null) {
-                        return new WebResult("400", "已有“"+courseVo.getCourseName() + "”,请先停用！", "");
-                    }
-                    if(!courseVo.getCourseId().equals(eduCourse.getCourseId())) {
-                        return new WebResult("400", "已有“"+courseVo.getCourseName() + "”,请先停用！", "");
-                    }
-                }
-            }
-            if (classList == null || classList.size() == 0) {
-                return new WebResult("400", "请选择上课时间", "");
-            }
-            if (courseVo.getCoursePrice() == null || courseVo.getCoursePrice().compareTo(BigDecimal.ZERO) < 0) {
-                return new WebResult("400", "课程价格不正确", "");
-            }
-            if (StringUtils.isBlank(courseVo.getPlaceClass())) {
-                return new WebResult("400", "请添加上课地点", "");
-            }
-            if (startDate == null || endDate == null) {
-                return new WebResult("400", "请添加课程日期", "");
-            }
-            if (startDate.after(endDate)) {
-                return new WebResult("400", "结束日期不能早于开课日期", "");
-            }
-            if (courseVo.getPeopleNumber() == null || courseVo.getPeopleNumber().compareTo(0) <= 0) {
-                return new WebResult("400", "请添加课程人数", "");
-            }
-            //判断“HH:mm”
-            Pattern p = Pattern.compile("([0-1]?[0-9]|2[0-3]):([0-5][0-9])");
-            for (EduClass eduClass : classList) {
-                String startTime = eduClass.getStartTime();
-                String endTime = eduClass.getEndTime();
-                if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)) {
-                    return new WebResult("400", "请添加课程时间", "");
-                }
-                if (!p.matcher(startTime).matches() || !p.matcher(endTime).matches()) {
-                    return new WebResult("400", "请添加课程时间", "");
-                }
-                if (StringUtils.isBlank(eduClass.getWeek())) {
-                    return new WebResult("400", "请选择周几上课", "");
-                }
+            WebResult security = security(courseVo, classList);
+            if(security != null) {
+                return security;
             }
         }
         course.setCourseName(courseVo.getCourseName());
@@ -325,6 +329,11 @@ public class TeacherServiceImpl implements TeacherService {
         if(course.getIsenable().equals(1)) {
             //检查是否有相同的课程已经启用
             EduCourse eqName = teacherMapper.selectByCourseId(course.getCourseId());
+            List<EduClass> classList = teacherMapper.selectClassByCourseId(eqName.getCourseId());
+            WebResult security = security(eqName, classList);
+            if(security != null) {
+                return security;
+            }
             List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(Integer.valueOf(eqName.getSchoolId()), course.getIsenable(), eqName.getCourseName());
             for (EduCourse eduCourse : courseList) {
                 if (eduCourse.getCourseName().equals(eqName.getCourseName())) {
@@ -336,6 +345,12 @@ public class TeacherServiceImpl implements TeacherService {
         }
         teacherMapper.updateCourseByCourseId(course);
         return new WebResult("200", "修改成功", "");
+    }
+
+    @Override
+    public WebResult deleteVacate(Integer vacateId) {
+        teacherMapper.deleteVacate(vacateId);
+        return new WebResult("200", "删除成功", "");
     }
 
     /**
@@ -409,7 +424,7 @@ public class TeacherServiceImpl implements TeacherService {
             return new WebResult("400", "该手机号已被注册", "");
         }
         user.setUserId(finduserbyphone.getUserId());
-        User findUser = userMapper.queryByItemsId(user.getUserId());
+        User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(), user.getSchoolId());
         Integer schoolId = findUser.getSchoolId();
         Integer schoolId1 = user.getSchoolId();
         if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())!=0) {

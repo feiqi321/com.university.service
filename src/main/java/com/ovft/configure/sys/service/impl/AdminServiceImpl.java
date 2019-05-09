@@ -229,8 +229,11 @@ public class AdminServiceImpl implements AdminService {
                 return new WebResult("400", "手机号已存在", "");
             }
 
-            //管理员初始密码为000000
+            //教师初始密码为000000
             String password = "000000";
+            if(admin.getRole() != 2) {
+                password = admin.getPassword();
+            }
             admin.setPassword(MD5Utils.md5Password(password));
 
             adminMapper.creatAdmin(admin);
@@ -240,6 +243,9 @@ public class AdminServiceImpl implements AdminService {
             Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
             if (adminPhone != null && adminPhone.getAdminId() != admin.getAdminId()) {
                 return new WebResult("400", "手机号已存在", "");
+            }
+            if(!StringUtils.isBlank(admin.getPassword())) {
+                admin.setPassword(MD5Utils.md5Password(admin.getPassword()));
             }
             adminMapper.updateByPrimary(admin);
             return new WebResult("200", "修改成功", "");
