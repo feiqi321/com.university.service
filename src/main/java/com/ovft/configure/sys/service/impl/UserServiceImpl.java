@@ -113,20 +113,25 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "密码不能为空");
         }
         User finduserbyphone = userMapper.findUserByPhone(user);
+        HashMap<String, Object> map = new HashMap();
         if (finduserbyphone == null) {
             return new WebResult("400", "您的手机号尚未注册！");
         }
 
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
+        if (user1==null){
+            map.put("user", finduserbyphone);
+            return new WebResult("200", "登录成功", map);
+        }
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
-        finduserbyphone.setSchoolName(schoolName);
+
+        user1.setSchoolName(schoolName);
 
         String pasword = MD5Utils.md5Password(user.getPassword());
         if (!pasword.equals(finduserbyphone.getPassword())) {
             return new WebResult("400", "帐号或密码错误");
         }
-        HashMap<String, Object> map = new HashMap();
-        map.put("user", finduserbyphone);
+        map.put("user", user1);
 
         //添加token
         String token = UUID.randomUUID().toString();
@@ -299,10 +304,22 @@ public class UserServiceImpl implements UserService {
         if (testCard == false) {
             return new WebResult("400", "输入身份证格式有误", "");
         }
+
         //保存
         //       userId不为空与schoolId为null
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-        if ((findUser.getUserId() == null&&findUser.getSchoolId()==null)||(findUser.getUserId() != null&&findUser.getSchoolId()==null)) {
+        if (findUser == null) {
+            user.setCheckin(1);
+            userMapper.saveInfoItems(user);
+            return new WebResult("200", "保存成功", "");
+        }
+
+        if (findUser.getUserId() != null&&findUser.getSchoolId()==0){
+            userMapper.updateInfoItems(user);
+            return new WebResult("200", "修改成功", "");
+        }
+        if ((findUser.getUserId() == null&&findUser.getSchoolId()==null)||(findUser.getUserId() != null&&findUser.getSchoolId()==null)
+                ) {
                 user.setCheckin(1);
                 userMapper.saveInfoItems(user);
                 return new WebResult("200", "保存成功", "");
@@ -354,14 +371,14 @@ public class UserServiceImpl implements UserService {
     //查询基本信息接口
     @Override
     public WebResult selectInfo(User user) {
-        if (user.getSchoolId()== null) {
-            return new WebResult("400", "请选择学校", "");
-        }
 
         User findUserInfo = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-
+    if (findUserInfo.getSchoolId()==0){
+        findUserInfo.setSchoolId(null);
+    }else {
         String school = schoolMapper.findSchoolById(findUserInfo.getSchoolId());
         findUserInfo.setSchoolName(school);
+    }
         return new WebResult("200", "获取成功", findUserInfo);
     }
 
@@ -587,6 +604,5 @@ public class UserServiceImpl implements UserService {
     public User queryByItemsIdAndSchoolId(Integer userId, Integer schoolId) {
         return userMapper.queryByItemsIdAndSchoolId(userId,schoolId);
     }
-
 
 }

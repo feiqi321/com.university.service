@@ -86,7 +86,12 @@ public class UserController {
     public WebResult savaInfo(@RequestBody User user,HttpServletRequest request) {
 
          user.setUserId(Integer.parseInt(request.getHeader("userId")));
-        user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
+          if (request.getHeader("schoolId")==""){
+             user.setSchoolId(0);
+          }else {
+              Integer schoolId = Integer.parseInt(request.getHeader("schoolId"));
+              user.setSchoolId(schoolId);
+          }
         return userService.savaInfo(user);
     }
 
@@ -136,8 +141,12 @@ public class UserController {
         User user = new User();
         String userId = request.getHeader("userId");
         String schoolId =request.getHeader("schoolId");
+        if (schoolId==""){
+           user.setSchoolId(0);
+        }else{
+            user.setSchoolId(Integer.parseInt(schoolId));
+        }
         user.setUserId(Integer.parseInt(userId));
-        user.setSchoolId(Integer.parseInt(schoolId));
         return userService.selectInfo(user);
     }
 
@@ -190,7 +199,7 @@ public class UserController {
         if (withdrawVo.getContent()==null||withdrawVo.getContent()==""){
             return new WebResult("400","注销原因不能为空","");
         }
-         withdrawVo.setCheckin(1);
+        withdrawVo.setCheckin(1);
         withdrawVo.setUid(Integer.parseInt(userId));
         withdrawVo.setUserName(selectById.getUserName());
         userService.addWithdraw(withdrawVo);
