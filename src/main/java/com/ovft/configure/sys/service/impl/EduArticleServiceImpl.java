@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author vvtxw
@@ -27,7 +29,6 @@ public class EduArticleServiceImpl implements EduArticleService {
     private EduArticleMapper eduArticleMapper;
 
     //通知公告
-
     @Override
     public WebResult queryAllNotice(Integer schoolId, String type) {
         //查询：1-通知公告, 3-校园介绍, 4-联盟资讯, 5-政策法规
@@ -166,9 +167,17 @@ public class EduArticleServiceImpl implements EduArticleService {
     }
 
     @Override
-    public WebResult newsNotice() {
+    public WebResult newsNotice(Integer schoolId) {
+        //查询：1-通知公告, 3-校园介绍, 4-联盟资讯, 5-政策法规
+        //可以看见所有学校联盟资讯
+        PageHelper.startPage(1, 3);
+        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, "1",null);
+        List<EduArticleVo> informationList =  eduArticleMapper.findNoticeAll(null, null, "4",null);
 
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("noticeList", noticeList);
+        map.put("informationList", informationList);
+        return new WebResult("200", "查询成功", map);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
@@ -21,8 +22,6 @@ public interface TeacherService {
 
     public WebResult findCourse(Integer courseId);
 
-    public WebResult updateCourse(EduCourseVo courseVo);
-
     public WebResult deleteCourse(Integer courseId);
 
     public WebResult userList(PageVo pageVo);
@@ -34,4 +33,7 @@ public interface TeacherService {
     public WebResult updateWithdrawCheckIn(Integer wid,Integer checkin);
 
     public WebResult userWithdrawVoList(PageVo pageVo);
+
+    //课程 启用/停用 页面
+    public WebResult updateIsenable(EduCourse course);
 }

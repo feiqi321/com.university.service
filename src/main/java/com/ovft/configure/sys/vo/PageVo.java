@@ -21,6 +21,16 @@ public class PageVo {
 
     private Integer role;
 
+    private Integer isenable;
+
+    public Integer getIsenable() {
+        return isenable;
+    }
+
+    public void setIsenable(Integer isenable) {
+        this.isenable = isenable;
+    }
+
     public Integer getCheckin() {
         return checkin;
     }

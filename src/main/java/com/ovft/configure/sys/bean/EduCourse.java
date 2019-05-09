@@ -45,6 +45,19 @@ public class EduCourse implements Serializable {
 
     private String schoolId;
 
+    /**
+     *  是否启用
+     */
+    private Integer isenable;
+
+    public Integer getIsenable() {
+        return isenable;
+    }
+
+    public void setIsenable(Integer isenable) {
+        this.isenable = isenable;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getCourseId() {
