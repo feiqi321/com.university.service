@@ -87,6 +87,7 @@ public class UserController {
 
          user.setUserId(Integer.parseInt(request.getHeader("userId")));
         user.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
+
         return userService.savaInfo(user);
     }
 

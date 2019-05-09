@@ -113,11 +113,16 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "密码不能为空");
         }
         User finduserbyphone = userMapper.findUserByPhone(user);
+        HashMap<String, Object> map = new HashMap();
         if (finduserbyphone == null) {
             return new WebResult("400", "您的手机号尚未注册！");
         }
 
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
+        if (user1==null){
+            map.put("user", finduserbyphone);
+            return new WebResult("200", "登录成功", map);
+        }
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
 
         user1.setSchoolName(schoolName);
@@ -126,7 +131,6 @@ public class UserServiceImpl implements UserService {
         if (!pasword.equals(finduserbyphone.getPassword())) {
             return new WebResult("400", "帐号或密码错误");
         }
-        HashMap<String, Object> map = new HashMap();
         map.put("user", user1);
 
         //添加token
@@ -303,7 +307,12 @@ public class UserServiceImpl implements UserService {
         //保存
         //       userId不为空与schoolId为null
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-        if ((findUser.getUserId() == null&&findUser.getSchoolId()==null)||(findUser.getUserId() != null&&findUser.getSchoolId()==null)) {
+        if (findUser.getUserId() != null&&findUser.getSchoolId()==0){
+            userMapper.updateInfoItems(user);
+            return new WebResult("200", "修改成功", "");
+        }
+        if ((findUser.getUserId() == null&&findUser.getSchoolId()==null)||(findUser.getUserId() != null&&findUser.getSchoolId()==null)
+                ) {
                 user.setCheckin(1);
                 userMapper.saveInfoItems(user);
                 return new WebResult("200", "保存成功", "");
@@ -356,7 +365,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public WebResult selectInfo(User user) {
         if (user.getSchoolId()== null) {
-            return new WebResult("400", "请选择学校", "");
+              user.setSchoolId(0);
         }
 
         User findUserInfo = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
