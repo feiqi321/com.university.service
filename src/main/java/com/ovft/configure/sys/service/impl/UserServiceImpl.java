@@ -119,14 +119,15 @@ public class UserServiceImpl implements UserService {
 
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
-        finduserbyphone.setSchoolName(schoolName);
+
+        user1.setSchoolName(schoolName);
 
         String pasword = MD5Utils.md5Password(user.getPassword());
         if (!pasword.equals(finduserbyphone.getPassword())) {
             return new WebResult("400", "帐号或密码错误");
         }
         HashMap<String, Object> map = new HashMap();
-        map.put("user", finduserbyphone);
+        map.put("user", user1);
 
         //添加token
         String token = UUID.randomUUID().toString();
