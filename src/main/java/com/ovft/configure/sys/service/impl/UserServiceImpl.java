@@ -304,9 +304,16 @@ public class UserServiceImpl implements UserService {
         if (testCard == false) {
             return new WebResult("400", "输入身份证格式有误", "");
         }
+
         //保存
         //       userId不为空与schoolId为null
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+        if (findUser == null) {
+            user.setCheckin(1);
+            userMapper.saveInfoItems(user);
+            return new WebResult("200", "保存成功", "");
+        }
+
         if (findUser.getUserId() != null&&findUser.getSchoolId()==0){
             userMapper.updateInfoItems(user);
             return new WebResult("200", "修改成功", "");
@@ -364,14 +371,14 @@ public class UserServiceImpl implements UserService {
     //查询基本信息接口
     @Override
     public WebResult selectInfo(User user) {
-        if (user.getSchoolId()== null) {
-              user.setSchoolId(0);
-        }
 
         User findUserInfo = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
-
+    if (findUserInfo.getSchoolId()==0){
+        findUserInfo.setSchoolId(null);
+    }else {
         String school = schoolMapper.findSchoolById(findUserInfo.getSchoolId());
         findUserInfo.setSchoolName(school);
+    }
         return new WebResult("200", "获取成功", findUserInfo);
     }
 
