@@ -1,6 +1,5 @@
 package com.ovft.configure.sys.dao;
 
-import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
@@ -26,7 +25,7 @@ public interface TeacherMapper {
     public void updateCourseByCourseId(EduCourse course);
 
     //根据学校id查找课程列表
-    public List<EduCourse> selectCourseListBySchoolId(@Param("schoolId") Integer schoolId, @Param("search") String search);
+    public List<EduCourse> selectCourseListBySchoolId(@Param("schoolId") Integer schoolId, @Param("isenable") Integer isenable, @Param("search") String search);
 
     //根据课程id查找课程
     public EduCourseVo selectByCourseId(@Param("courseId") Integer courseId);

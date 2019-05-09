@@ -24,7 +24,7 @@
 
     <sql id="Base_Column_List">
         course_id, course_name, course_price, course_teacher, place_class, start_date, end_date,
-        people_number, school_id
+        people_number, school_id, isenable
       </sql>
     <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduCourse">
         <id column="course_id" jdbcType="INTEGER" property="courseId"/>
@@ -36,6 +36,7 @@
         <result column="end_date" jdbcType="DATE" property="endDate"/>
         <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
         <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
+        <result column="isenable" jdbcType="INTEGER" property="isenable"/>
     </resultMap>
 
     <resultMap id="EduCourseVoResultMap" type="com.ovft.configure.sys.vo.EduCourseVo">
@@ -48,6 +49,7 @@
         <result column="end_date" jdbcType="DATE" property="endDate"/>
         <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
         <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
+        <result column="isenable" jdbcType="INTEGER" property="isenable"/>
     </resultMap>
 
     <select id="selectCourseListBySchoolId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -57,6 +59,9 @@
         where 1=1
         <if test="schoolId != null and schoolId != ''">
             AND school_id = #{schoolId}
+        </if>
+        <if test="isenable != null">
+            AND isenable = #{isenable}
         </if>
         <if test="search != null and search != ''">
             AND course_name like CONCAT('%',#{search},'%')
@@ -68,11 +73,11 @@
             useGeneratedKeys="true" keyProperty="courseId">
         insert into edu_course (course_name, course_price,
           course_teacher, place_class, start_date,
-          end_date, people_number, school_id
+          end_date, people_number, school_id, isenable
           )
         values (#{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
           #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
-          #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
+          #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}, #{isenable,jdbcType=INTEGER}
           )
     </insert>
 
@@ -119,6 +124,9 @@
             <if test="schoolId != null">
                 school_id = #{schoolId,jdbcType=VARCHAR},
             </if>
+            <if test="isenable != null">
+                isenable = #{isenable,jdbcType=INTEGER},
+            </if>
         </set>
         where course_id = #{courseId,jdbcType=INTEGER}
     </update>
@@ -128,9 +136,9 @@
     </delete>
 
     <delete id="deleteCourseById" parameterType="java.lang.Integer">
-    delete from edu_course
-    where course_id = #{courseId,jdbcType=INTEGER}
-  </delete>
+        delete from edu_course
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </delete>
 
 
     <!--根据schoolId查询学校用户记录-->

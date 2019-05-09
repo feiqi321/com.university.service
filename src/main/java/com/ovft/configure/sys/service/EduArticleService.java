@@ -63,5 +63,5 @@ public interface EduArticleService {
      *首页新闻
      * @return
      */
-    public WebResult newsNotice();
+    public WebResult newsNotice(Integer schoolId);
 }

@@ -123,16 +123,13 @@ public class EduArticleController {
     }
 
     /**
-     *首页轮播新闻
+     *首页轮播新闻/通知/联盟资讯
      * @return
      */
     @PostMapping(value = "/article/newsNotice")
     public WebResult newsNotice(HttpServletRequest request) {
         String schoolId = request.getHeader("schoolId");
-//        if (StringUtils.isBlank(schoolId)) {
-//            return new WebResult("400", "学校id不能为空", "");
-//        }
-        return eduArticleService.newsNotice();
+        return eduArticleService.newsNotice(Integer.valueOf(schoolId));
     }
 
 

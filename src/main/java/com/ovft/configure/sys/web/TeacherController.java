@@ -3,6 +3,7 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
+import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.service.UserService;
@@ -234,6 +235,16 @@ public class TeacherController {
         }else {
             return new WebResult("50012", "请先登录", "");
         }
+    }
+
+    /**
+     * 课程 启用/停用 功能
+     * @param course
+     * @return
+     */
+    @PostMapping(value = "/updateIsenable")
+    public WebResult updateIsenable(@RequestBody EduCourse course) {
+        return teacherService.updateIsenable(course);
     }
 
     /**
