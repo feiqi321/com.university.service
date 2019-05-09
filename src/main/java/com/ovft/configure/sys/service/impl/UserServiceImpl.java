@@ -274,15 +274,17 @@ public class UserServiceImpl implements UserService {
         }
         //紧急联系人一手机号验证
         String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
-        if (user.getEmergencyPhone1().length() != 11) {
-            return new WebResult("400", "紧急联系人手机号应为11位", "");
-        } else {
-            Pattern p = Pattern.compile(regex);
-            Matcher m = p.matcher(user.getEmergencyPhone1());
-            boolean isMatch = m.matches();
+        if (user.getEmergencyPhone1() != null&&user.getEmergencyPhone1() !="") {
+            if (user.getEmergencyPhone1().length() != 11) {
+                return new WebResult("400", "紧急联系人手机号应为11位", "");
+            } else {
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(user.getEmergencyPhone1());
+                boolean isMatch = m.matches();
 
-            if (!isMatch) {
-                return new WebResult("400", "请输入正确紧急联系人手机号", "");
+                if (!isMatch) {
+                    return new WebResult("400", "请输入正确紧急联系人手机号", "");
+                }
             }
         }
         //紧急联系人二手机号验证
@@ -315,7 +317,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (findUser.getUserId() != null&&findUser.getSchoolId()==0){
-            userMapper.updateInfoItems(user);
+                userMapper.updateInfoItems(user);
             return new WebResult("200", "修改成功", "");
         }
         if ((findUser.getUserId() == null&&findUser.getSchoolId()==null)||(findUser.getUserId() != null&&findUser.getSchoolId()==null)
