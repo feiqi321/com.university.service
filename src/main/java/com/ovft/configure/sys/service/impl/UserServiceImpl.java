@@ -124,9 +124,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("200", "登录成功", map);
         }
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
-
         user1.setSchoolName(schoolName);
-
         String pasword = MD5Utils.md5Password(user.getPassword());
         if (!pasword.equals(finduserbyphone.getPassword())) {
             return new WebResult("400", "帐号或密码错误");
