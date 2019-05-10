@@ -254,6 +254,9 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(user.getIdentityCard())){
             return  new WebResult("400","身份证号码不能为空");
         }
+        if (StringUtils.isBlank(user.getEmployer())){
+            return  new WebResult("400","学员分类未填");
+        }
             if (user.getSex()==null){
             return  new WebResult("400","性别未填*");
             }
@@ -373,6 +376,11 @@ public class UserServiceImpl implements UserService {
     public WebResult selectInfo(User user) {
 
         User findUserInfo = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+
+         if (findUserInfo==null){
+             User selectUserById = userMapper.selectById(user.getUserId());
+             return new WebResult("200", "获取成功", selectUserById);
+         }
     if (findUserInfo.getSchoolId()==0){
         findUserInfo.setSchoolId(null);
     }else {
@@ -488,6 +496,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+
     public String queryAllAddress(Integer userId) {
         return userMapper.queryAllAddress(userId);
     }
