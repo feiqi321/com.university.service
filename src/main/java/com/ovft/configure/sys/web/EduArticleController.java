@@ -33,7 +33,7 @@ public class EduArticleController {
      */
     @GetMapping(value = "/article/notice")
     public WebResult queryAllNotice(HttpServletRequest request, @RequestParam(value = "type", required = true) String type,
-        @RequestParam(value = "pageSize") int pageSize, @RequestParam(value = "pageNum") int pageNum) {
+        @RequestParam(value = "pageSize", required = false) int pageSize, @RequestParam(value = "pageNum", required = false) int pageNum) {
         String schoolId = request.getHeader("schoolId");
         return eduArticleService.queryAllNotice(schoolId, type, pageNum, pageSize);
     }

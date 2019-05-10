@@ -229,9 +229,9 @@ public class AdminServiceImpl implements AdminService {
                 return new WebResult("400", "手机号已存在", "");
             }
 
-            //教师初始密码为000000
+            //初始密码为000000
             String password = "000000";
-            if(admin.getRole() != 2) {
+            if(!StringUtils.isBlank(admin.getPassword()) && admin.getRole() != 2) {
                 password = admin.getPassword();
             }
             admin.setPassword(MD5Utils.md5Password(password));
