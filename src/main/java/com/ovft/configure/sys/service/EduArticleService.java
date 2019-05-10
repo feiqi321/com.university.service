@@ -12,10 +12,10 @@ public interface EduArticleService {
     /**
      * 展示通知公告
      *
-     * @param type
+     * @param  pageVo
      * @return
      */
-    public WebResult queryAllNotice(String schoolId, String type, int pageNum, int pageSize);
+    public WebResult queryAllNotice(PageVo pageVo);
     /**
      * 后台添加文章
      *

@@ -3,7 +3,6 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
-import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.service.UserService;
@@ -251,7 +250,7 @@ public class TeacherController {
      * @return
      */
     @PostMapping(value = "/updateIsenable")
-    public WebResult updateIsenable(@RequestBody EduCourse course) {
+    public WebResult updateIsenable(@RequestBody EduCourseVo course) {
         return teacherService.updateIsenable(course);
     }
 
@@ -300,12 +299,12 @@ public class TeacherController {
 
     /**
      * 删除课程
-     * @param courseId
+     * @param courseVo
      * @return
      */
-    @GetMapping(value = "/deleteCourse")
-    public WebResult deleteCourse(@RequestParam(value = "courseId")Integer courseId) {
-        return teacherService.deleteCourse(courseId);
+    @PostMapping(value = "/deleteCourse")
+    public WebResult deleteCourse(@RequestBody EduCourseVo courseVo) {
+        return teacherService.deleteCourse(courseVo.getCourseIds());
     }
 
     /**

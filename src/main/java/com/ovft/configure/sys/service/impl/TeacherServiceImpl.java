@@ -103,22 +103,22 @@ public class TeacherServiceImpl implements TeacherService {
             }
         }
         if (classList == null || classList.size() == 0) {
-            return new WebResult("400", "请选择上课时间", "");
+            return new WebResult("400", "请选择‘" + courseVo.getCourseName() + "’的上课时间", "");
         }
         if (courseVo.getCoursePrice() == null || courseVo.getCoursePrice().compareTo(BigDecimal.ZERO) < 0) {
-            return new WebResult("400", "课程价格不正确", "");
+            return new WebResult("400", "课程‘" + courseVo.getCourseName() + "’的价格不正确", "");
         }
         if (StringUtils.isBlank(courseVo.getPlaceClass())) {
-            return new WebResult("400", "请添加上课地点", "");
+            return new WebResult("400", "请添加‘" + courseVo.getCourseName() + "’的上课地点", "");
         }
         if (startDate == null || endDate == null) {
-            return new WebResult("400", "请添加课程日期", "");
+            return new WebResult("400", "请添加课程‘" + courseVo.getCourseName() + "’的日期", "");
         }
         if (startDate.after(endDate)) {
-            return new WebResult("400", "结束日期不能早于开课日期", "");
+            return new WebResult("400", "‘" + courseVo.getCourseName() + "’的结束日期不能早于开课日期", "");
         }
         if (courseVo.getPeopleNumber() == null || courseVo.getPeopleNumber().compareTo(0) <= 0) {
-            return new WebResult("400", "请添加课程人数", "");
+            return new WebResult("400", "请添加课程‘" + courseVo.getCourseName() + "’的人数", "");
         }
         //判断“HH:mm”
         Pattern p = Pattern.compile("([0-1]?[0-9]|2[0-3]):([0-5][0-9])");
@@ -226,7 +226,7 @@ public class TeacherServiceImpl implements TeacherService {
             List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getSchoolId(), pageVo.getIsenable(), pageVo.getSearch());
             return new WebResult("200", "查询成功", courseList);
         }
-        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "course_id");
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getSchoolId(), pageVo.getIsenable(), pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(courseList);
 
@@ -258,13 +258,20 @@ public class TeacherServiceImpl implements TeacherService {
     /**
      * 删除课程
      *
-     * @param courseId
+     * @param courseIds
      * @return
      */
     @Override
-    public WebResult deleteCourse(Integer courseId) {
-        teacherMapper.deleteClassByCourseId(courseId);
-        teacherMapper.deleteCourseById(courseId);
+    public WebResult deleteCourse(String[] courseIds) {
+        if(courseIds == null || courseIds.length == 0) {
+            return new WebResult("400", "请选择课程", "");
+        }
+        for (String s : courseIds) {
+            Integer courseId = Integer.valueOf(s);
+            teacherMapper.deleteClassByCourseId(courseId);
+            teacherMapper.deleteCourseById(courseId);
+        }
+
         return new WebResult("200", "删除成功", "");
     }
 
@@ -325,25 +332,33 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Transactional
     @Override
-    public WebResult updateIsenable(EduCourse course) {
-        if(course.getIsenable().equals(1)) {
-            //检查是否有相同的课程已经启用
-            EduCourse eqName = teacherMapper.selectByCourseId(course.getCourseId());
-            List<EduClass> classList = teacherMapper.selectClassByCourseId(eqName.getCourseId());
-            WebResult security = security(eqName, classList);
-            if(security != null) {
-                return security;
-            }
-            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(Integer.valueOf(eqName.getSchoolId()), course.getIsenable(), eqName.getCourseName());
-            for (EduCourse eduCourse : courseList) {
-                if (eduCourse.getCourseName().equals(eqName.getCourseName())) {
-                    if (!eqName.getCourseId().equals(eduCourse.getCourseId())) {
-                        return new WebResult("400", "已有“" + eqName.getCourseName() + "”,请先停用！", "");
+    public WebResult updateIsenable(EduCourseVo course) {
+        String[] courseIds = course.getCourseIds();
+        if(courseIds == null || courseIds.length == 0) {
+            return new WebResult("400", "请选择课程", "");
+        }
+        for (String s : courseIds) {
+            Integer courseId = Integer.valueOf(s);
+            course.setCourseId(courseId);
+            if(course.getIsenable().equals(1)) {
+                //检查是否有相同的课程已经启用
+                EduCourse eqName = teacherMapper.selectByCourseId(courseId);
+                List<EduClass> classList = teacherMapper.selectClassByCourseId(eqName.getCourseId());
+                WebResult security = security(eqName, classList);
+                if(security != null) {
+                    return security;
+                }
+                List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(Integer.valueOf(eqName.getSchoolId()), course.getIsenable(), eqName.getCourseName());
+                for (EduCourse eduCourse : courseList) {
+                    if (eduCourse.getCourseName().equals(eqName.getCourseName())) {
+                        if (!eqName.getCourseId().equals(eduCourse.getCourseId())) {
+                            return new WebResult("400", "已有“" + eqName.getCourseName() + "”,请先停用！", "");
+                        }
                     }
                 }
             }
+            teacherMapper.updateCourseByCourseId(course);
         }
-        teacherMapper.updateCourseByCourseId(course);
         return new WebResult("200", "修改成功", "");
     }
 

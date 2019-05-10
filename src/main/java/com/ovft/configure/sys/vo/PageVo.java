@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.vo;
 
+import java.util.Date;
+
 /**
  * @author zqx
  * @create 2019-04-17 10:37
@@ -22,6 +24,35 @@ public class PageVo {
     private Integer role;
 
     private Integer isenable;
+
+    private String filePath;
+
+    private Date startDate;
+    private Date endDate;
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public Integer getIsenable() {
         return isenable;

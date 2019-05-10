@@ -66,6 +66,7 @@
         <if test="search != null and search != ''">
             AND course_name like CONCAT('%',#{search},'%')
         </if>
+        order by isenable desc, start_date desc
     </select>
 
     <!--添加课程-->

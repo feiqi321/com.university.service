@@ -157,6 +157,13 @@
             <version>2.2</version>
         </dependency>
 
+        <!--添加Apache POI库-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10-FINAL</version>
+        </dependency>
+
     </dependencies>
 
     <build>
