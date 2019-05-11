@@ -1,7 +1,7 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.ovft.configure.constant.EmployerStatus;
 import com.ovft.configure.constant.OrderStatus;
+import com.ovft.configure.constant.Status;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
@@ -50,12 +50,12 @@ public class EduCourseServiceImpl implements EduCourseService {
     /**
      * 按学校的id来查找专业类别
      *
-     * @param schoolId
+     * @param eduCourse
      * @return
      */
     @Override
-    public List<EduCourse> listCourseCategoryByShoolId(int schoolId) {
-        return eduCourseMapper.listCourseCategoryByShoolId(schoolId);
+    public List<EduCourse> listCourseCategoryByShoolId(EduCourse eduCourse) {
+        return eduCourseMapper.listCourseCategoryByShoolId(eduCourse);
     }
 
     /**
@@ -72,7 +72,7 @@ public class EduCourseServiceImpl implements EduCourseService {
 
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
-
+//        Integer schoolId = 1;
 
         //0.可以报名的人数
         //查询专业接受报名的人数
@@ -84,44 +84,79 @@ public class EduCourseServiceImpl implements EduCourseService {
         param.put("course_id", courseId);
         param.put("payment_status", OrderStatus.PAY);
         int payNum = orderMapper.countPayCourseNum(param);
+
         if (payNum >= acceptNum) {
             map.put("人数已满，请下期再报名", "");
             return map;
         }
+
         //可报名剩余人数
         int nowtotal = acceptNum - payNum;
 
-
-        //1.限制可报名的报名时间
-        //获取当前的时间
-        Date now = new Date();
-        long nowTime = now.getTime();//当前时间戳
-
+        EduRegist eduRegist = eduRegistMapper.selectByCourseId(courseId);
         try {
-            EduRegist eduRegist = eduRegistMapper.selectByCourseId(courseId);
-
-
+            //该课程没有任何条件制约，可以报名
             if (eduRegist == null) {
                 EduCourseVo courseInfo = applyCourse(userId, courseId);
                 nowtotal--;
                 map.put("该课程没有任何条件制约，可以报名,报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
                 return map;
             }
+
+            //如果传入的id为0，为全部设置
+            EduRegist AllCourserCondition = eduRegistMapper.selectByCourseId(Status.ALLCOURSE);
+
+            if (AllCourserCondition != null) {
+                if (AllCourserCondition.getCourseId() == 0) {
+                    //查询根据学校id,查询所有的课程id
+                    List<Integer> courseIds = eduCourseMapper.selectCourseIdBySchoolId(schoolId);
+                    //根据传入的id，是否包含在设置的条件里面，如果包含，就可以报名
+                    for (Integer id : courseIds) {
+                        if (id == courseId) {
+                            //设置全部
+                            map = decideApply(map, eduRegist, userId, schoolId, nowtotal, courseId);
+                            return map;
+                        }
+                    }
+                }
+            }
+            //TODO decideApply
+        } catch (Exception e) {
+            map.put("后台课程设置条件重复，请管理员修改", "");
+        }
+
+        //单个课程的设置条件
+        map = decideApply(map, eduRegist, userId, schoolId, nowtotal, courseId);
+        return map;
+    }
+
+    private Map<String, Object> decideApply(Map<String, Object> map, EduRegist eduRegist, Integer userId, Integer schoolId, Integer nowtotal, Integer courseId) {
+        try {
+            //1.限制可报名的报名时间
+            //获取当前的时间
+            Date now = new Date();
+            long nowTime = now.getTime();//当前时间戳
             Date startTime = eduRegist.getRegiststartTime();
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+            String startTime1 = date.format(startTime);//获取当天日期字符串
             Date endTime = eduRegist.getRegistendTime();
+            String endTime1 = date.format(endTime);//获取当天日期字符串
             if (startTime.getTime() > nowTime || nowTime > endTime.getTime()) {
-                map.put("请在报名截止时间内报名：" + startTime + "至" + endTime + "方可报名", "");
+                map.put("请在报名截止时间内报名：" + startTime1 + "至" + endTime1 + "方可报名", "");
+                return map;
             }
             //2.限制可报名年龄
             User user = userMapper.queryByItemsIdAndSchoolId(userId, schoolId);
             if (user == null) {
-                map.put("请完善好自己的基本信息，再来报名！", "");
+                map.put("请在学员中心的基本信息填写必要信息：身份证，再来报名！", "");
+                return map;
             }
             Integer startAge = eduRegist.getStartAge();
             Integer endAge = eduRegist.getEndAge();
             String identity = user.getIdentityCard();
+
             if (identity == null || identity == "") {
-                map.put("请完善好自己的基本信息，再来报名！", "");
+                map.put("请在学员中心的基本信息填写必要信息：学员类别，再来报名！", "");
                 return map;
             }
             int age = AgeUtil.IdNOToAge(identity);
@@ -183,10 +218,9 @@ public class EduCourseServiceImpl implements EduCourseService {
         } catch (Exception e) {
             map.put("后台课程设置条件重复，请管理员修改", "");
         }
-
-
         return map;
     }
+
 
     @Override
     public EduCourseVo queryCourseByCategory(Integer courseId) {
@@ -220,7 +254,7 @@ public class EduCourseServiceImpl implements EduCourseService {
         courseInfo.setClassList(eduClasses);
 
 
-        //4.生成订单关联
+      /*  //4.生成订单关联
         Order order = new Order();
         //生成订单的订单号
         order.setOrderSn(OrderIdUtil.getOrderIdByTime());
@@ -238,7 +272,7 @@ public class EduCourseServiceImpl implements EduCourseService {
         orderDetail.setCourseName(courseInfo.getCourseName());
         orderDetail.setOrderPrice(courseInfo.getCoursePrice());
         orderDetail.setNum(1);
-        orderDetailMapper.insertSelective(orderDetail);
+        orderDetailMapper.insertSelective(orderDetail);*/
         return courseInfo;
     }
 

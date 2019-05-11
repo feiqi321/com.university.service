@@ -1,7 +1,5 @@
 package com.ovft.configure.sys.web;
 
-import com.jfinal.aop.Before;
-import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Vacate;
 import com.ovft.configure.sys.service.VacateService;

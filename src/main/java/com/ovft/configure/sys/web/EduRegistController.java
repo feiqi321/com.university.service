@@ -1,6 +1,5 @@
 package com.ovft.configure.sys.web;
 
-import com.github.pagehelper.PageHelper;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduRegist;
@@ -32,12 +31,29 @@ public class EduRegistController {
     @PostMapping(value = "condition")
     public WebResult addRegistCondition(@RequestBody EduRegist eduRegist) {
         eduRegist.setUpateTime(new Date());
+        EduRegist oldEduRegist = eduRegistService.queryById(eduRegist.getCourseId());
+        if (oldEduRegist != null) {
+            return new WebResult(StatusCode.ERROR, "课程设置重复，请删除已有再设置", "");
+        }
         int result = eduRegistService.addRegistCondition(eduRegist);
         if (result > 0) {
             return new WebResult(StatusCode.OK, "条件设置成功", "");
         }
         return new WebResult(StatusCode.ERROR, "条件设置失败", "");
     }
+//    @PostMapping(value = "condition")
+//    public WebResult addAllRegistCondition(@RequestBody EduRegist eduRegist) {
+//        eduRegist.setUpateTime(new Date());
+//        EduRegist oldEduRegist = eduRegistService.queryById(eduRegist.getCourseId());
+//        if (oldEduRegist != null) {
+//            return new WebResult(StatusCode.ERROR, "课程设置重复，请删除已有再设置", "");
+//        }
+//        int result = eduRegistService.addRegistCondition(eduRegist);
+//        if (result > 0) {
+//            return new WebResult(StatusCode.OK, "条件设置成功", "");
+//        }
+//        return new WebResult(StatusCode.ERROR, "条件设置失败", "");
+//    }
 
     /**
      * 查询条件
@@ -47,7 +63,11 @@ public class EduRegistController {
      * @return
      */
     @GetMapping(value = "show")
-    public WebResult queryAllCodition(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size) {
+    public WebResult queryAllCodition(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId) {
+        if (!schoolId.equals("null")) {
+            PageBean pageBean = eduRegistService.queryAllCoditionBySchoold(size, page, Integer.parseInt(schoolId));
+            return new WebResult(StatusCode.OK, "查询成功", pageBean);
+        }
         PageBean pageBean = eduRegistService.queryAllCodition(size, page);
         return new WebResult(StatusCode.OK, "查询成功", pageBean);
     }

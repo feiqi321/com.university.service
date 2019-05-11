@@ -14,6 +14,8 @@ public interface EduRegistService {
     //分页全查询
     public PageBean queryAllCodition(Integer size, Integer page);
 
+    public PageBean queryAllCoditionBySchoold(Integer size, Integer page, Integer schoolId);
+
     //修改条件
     int updateCodition(EduRegist eduRegist);
 

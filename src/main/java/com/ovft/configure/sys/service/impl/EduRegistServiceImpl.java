@@ -3,15 +3,14 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.ovft.configure.sys.bean.EduRegist;
+import com.ovft.configure.sys.bean.EduRegistExample;
 import com.ovft.configure.sys.dao.EduRegistMapper;
 import com.ovft.configure.sys.service.EduRegistService;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import java.rmi.registry.Registry;
 import java.util.List;
 
 /**
@@ -33,9 +32,17 @@ public class EduRegistServiceImpl implements EduRegistService {
     @Transactional
     @Override
     public int addRegistCondition(EduRegist eduRegist) {
-
         return eduRegistMapper.insert(eduRegist);
     }
+
+    @Override
+    public PageBean queryAllCodition(Integer size, Integer page) {
+        Page<Object> pageAll = PageHelper.startPage(page, size);
+        List<EduRegist> eduRegists = eduRegistMapper.selectByExample(null);
+        long total = pageAll.getTotal();
+        return new PageBean(page, size, total, eduRegists);
+    }
+
 
     /**
      * 分页查询条件
@@ -45,17 +52,20 @@ public class EduRegistServiceImpl implements EduRegistService {
      * @return
      */
     @Override
-    public PageBean queryAllCodition(Integer size, Integer page) {
+    public PageBean queryAllCoditionBySchoold(Integer size, Integer page, Integer schoolId) {
         Page<Object> pageAll = PageHelper.startPage(page, size);
-        List<EduRegist> eduRegists = eduRegistMapper.selectByExample(null);
+        EduRegistExample eduRegistExample = new EduRegistExample();
+        eduRegistExample.createCriteria().andSchoolIdEqualTo(schoolId);
+        List<EduRegist> eduRegists = eduRegistMapper.selectByExample(eduRegistExample);
         long total = pageAll.getTotal();
         return new PageBean(page, size, total, eduRegists);
     }
 
+    @Transactional
     @Override
     public int updateCodition(EduRegist eduRegist) {
-
-        return eduRegistMapper.updateByPrimaryKeySelective(eduRegist);
+        //updateByPrimaryKey修改全部
+        return eduRegistMapper.updateByPrimaryKey(eduRegist);
     }
 
     @Override

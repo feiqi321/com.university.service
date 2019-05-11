@@ -77,6 +77,16 @@ public class EduRegist implements Serializable {
      */
     private Integer courseId;
 
+    /**
+     * 学校名称
+     */
+    private String schoolName;
+
+    /**
+     * 课程名称
+     */
+    private String courseName;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -191,6 +201,22 @@ public class EduRegist implements Serializable {
         this.courseId = courseId;
     }
 
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -216,7 +242,9 @@ public class EduRegist implements Serializable {
             && (this.getRegistCategorySix() == null ? other.getRegistCategorySix() == null : this.getRegistCategorySix().equals(other.getRegistCategorySix()))
             && (this.getUpateTime() == null ? other.getUpateTime() == null : this.getUpateTime().equals(other.getUpateTime()))
             && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
-            && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()));
+            && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()))
+            && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()))
+            && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()));
     }
 
     @Override
@@ -237,6 +265,8 @@ public class EduRegist implements Serializable {
         result = prime * result + ((getUpateTime() == null) ? 0 : getUpateTime().hashCode());
         result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
         result = prime * result + ((getCourseId() == null) ? 0 : getCourseId().hashCode());
+        result = prime * result + ((getSchoolName() == null) ? 0 : getSchoolName().hashCode());
+        result = prime * result + ((getCourseName() == null) ? 0 : getCourseName().hashCode());
         return result;
     }
 
@@ -260,6 +290,8 @@ public class EduRegist implements Serializable {
         sb.append(", upateTime=").append(upateTime);
         sb.append(", schoolId=").append(schoolId);
         sb.append(", courseId=").append(courseId);
+        sb.append(", schoolName=").append(schoolName);
+        sb.append(", courseName=").append(courseName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

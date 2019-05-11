@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.service;
 
+import com.ovft.configure.sys.bean.Order;
 import com.ovft.configure.sys.vo.OrderVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,18 @@ public interface OrderService {
      * @return
      */
     public List<OrderVo> queryAllRecord(Integer userId);
+
+    /**
+     * 根据订单id查询订单详情
+     *
+     * @param orderId
+     * @return
+     */
+    Order getOrderInfo(String orderId);
+
+
+
+
 
 
 

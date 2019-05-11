@@ -17,6 +17,7 @@ public class PageVo {
 
     private Integer schoolId;
 
+
     private Integer checkin;
 
     private Integer wid;
