@@ -88,7 +88,7 @@
     <!--查询对应edu_user_item表里面该用户记录（通过userId查找）-->
     <select id="queryByItemsId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
         select u.user_id userId,i.user_name userName,u.phone,u.image,
-        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.sex,i.school_id schoolId,i.telephone,i.areaId,i.area,i.address,
         i.political,i.educational,i.position,i.retired,
         i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
@@ -100,10 +100,18 @@
     </select>
     <!--查询对应edu_user_item表里面该用户记录(i.school_id is not null，也不能等于0)-->
     <select id="queryByItemsId2" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
-        select u.user_id userId,i.user_name userName,u.phone,u.image,
-        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
-        i.political,i.educational,i.position,i.retired,
-        i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
+        select
+            u.user_id userId,
+            i.user_name userName,
+            u.phone,
+            u.image,
+            i.sex,
+            i.school_id schoolId,
+            i.telephone,
+            i.areaId,
+            i.area,i.address,
+            i.political,i.educational,i.position,i.retired,
+            i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
         i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
         i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
@@ -114,12 +122,22 @@
 
     <!--修改edu_user_item表里面该用户记录-->
     <update id="updateInfoItems" parameterType="com.ovft.configure.sys.bean.User">
-          update edu_user_item set  user_name=#{userName},sex=#{sex},telephone=#{telephone},area=#{area},
+          update
+        edu_user_item
+        <set>
+           user_name=#{userName},sex=#{sex},telephone=#{telephone},areaId=#{areaId},area=#{area},
            address=#{address},political=#{political},educational=#{educational},position=#{position},retired=#{retired},
            employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
            emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
            emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
-           emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},school_job=#{schoolJob},remark=#{remark}
+           emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},
+        <if test="schoolJob!=null" >
+            school_job=#{schoolJob},
+        </if>
+        <if test="remark!=null" >
+            remark=#{remark}
+        </if>
+        </set>
            where user_id=#{userId} and school_id=#{schoolId}
     </update>
 
@@ -127,12 +145,12 @@
     <insert id="saveInfoItems" parameterType="com.ovft.configure.sys.bean.User" useGeneratedKeys="true"
             keyProperty="userItemId">
         insert into edu_user_item (user_id,user_name,
-        sex,school_id,telephone,area,address,
+        sex,school_id,telephone,areaId,area,address,
         political,educational,position,retired,
         job,employer,emergency_contact1,emergency_relation1,
         emergency_phone1,emergency_contact2,
         emergency_relation2,emergency_phone2,checkin,identity_card,volunteer,school_job,remark)
-        values (#{userId},#{userName},#{sex},#{schoolId},#{telephone},#{area},#{address},#{political},#{educational},#{position},
+        values (#{userId},#{userName},#{sex},#{schoolId},#{telephone},#{areaId},#{area},#{address},#{political},#{educational},#{position},
           #{retired},#{job},#{employer},#{emergencyContact1},#{emergencyRelation1},#{emergencyPhone1},
           #{emergencyContact2},#{emergencyRelation2},#{emergencyPhone2},
           #{checkin},#{identityCard},#{volunteer},#{schoolJob},#{remark}
@@ -168,7 +186,7 @@
     <insert id="addWithdraw" parameterType="com.ovft.configure.sys.vo.WithdrawVo">
            insert
              into edu_withdraw
-               values (#{withdrawVo.wid},#{withdrawVo.uid},#{withdrawVo.schoolId},#{withdrawVo.school},#{withdrawVo.content},#{withdrawVo.checkin},#{withdrawVo.userName})
+               values (#{withdrawVo.wid},#{withdrawVo.uid},#{withdrawVo.schoolId},#{withdrawVo.school},#{withdrawVo.content},#{withdrawVo.checkin},#{withdrawVo.userName},#{withdrawVo.userItemId})
 
     </insert>
     <!--获取用户添加注销申请结果-->

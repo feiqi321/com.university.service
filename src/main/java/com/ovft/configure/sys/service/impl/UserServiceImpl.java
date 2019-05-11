@@ -382,6 +382,7 @@ public class UserServiceImpl implements UserService {
 
 
          }
+         //
         User findUserInfo = userMapper.queryByItemsId(user.getUserId());
 
          if (findUserInfo==null){

@@ -28,6 +28,18 @@ public class User {
 
     private String area;
 
+    /**
+     * 居住地
+     */
+    private String areaId;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     /**
      * 地址

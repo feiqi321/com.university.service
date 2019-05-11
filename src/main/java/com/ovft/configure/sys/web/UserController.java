@@ -201,6 +201,8 @@ public class UserController {
         }
         withdrawVo.setCheckin(1);
         withdrawVo.setUid(Integer.parseInt(userId));
+        User findUser = userService.queryByItemsId(Integer.parseInt(userId));
+        withdrawVo.setUserItemId(findUser.getUserItemId());
         withdrawVo.setUserName(selectById.getUserName());
         userService.addWithdraw(withdrawVo);
         return new WebResult("200", "注销申请成功", "");
