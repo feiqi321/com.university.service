@@ -125,13 +125,13 @@ public class FileDownServiceImpl implements FileDownService {
         fileName =  dateTime +  "_" + fileName;
 
         String filePath = pageVo.getFilePath() + "\\" + fileName;
-        filePath="d:\\nfj\\" + fileName;//文件路径
+        filePath="C:\\Users\\Administrator\\Desktop\\" + fileName;//文件路径
 
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(filePath);
             workbook.write(out);//保存Excel文件
-            return new WebResult("200", "下载成功", "");
+            return new WebResult("200", "下载成功,已保存在桌面!", "");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
