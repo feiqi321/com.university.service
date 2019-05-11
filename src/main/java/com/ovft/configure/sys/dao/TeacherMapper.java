@@ -4,6 +4,7 @@ import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,7 +26,7 @@ public interface TeacherMapper {
     public void updateCourseByCourseId(EduCourse course);
 
     //根据学校id查找课程列表
-    public List<EduCourse> selectCourseListBySchoolId(@Param("schoolId") Integer schoolId, @Param("isenable") Integer isenable, @Param("search") String search);
+    public List<EduCourse> selectCourseListBySchoolId(PageVo pageVo);
 
     //根据课程id查找课程
     public EduCourseVo selectByCourseId(@Param("courseId") Integer courseId);

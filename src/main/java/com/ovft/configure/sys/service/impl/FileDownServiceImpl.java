@@ -75,7 +75,7 @@ public class FileDownServiceImpl implements FileDownService {
 
         String cellValue = "课程ID,教师名称,课程名,上课地址,开课时间,结课时间,课程价格,状态,课程人数";
         createTitle(workbook, sheet, cellValue);
-        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getSchoolId(), pageVo.getIsenable(), pageVo.getSearch());
+        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo);
 
         //设置日期格式
         HSSFCellStyle style=workbook.createCellStyle();

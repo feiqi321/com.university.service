@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -27,7 +29,10 @@ public class PageVo {
 
     private String filePath;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     public Date getStartDate() {
