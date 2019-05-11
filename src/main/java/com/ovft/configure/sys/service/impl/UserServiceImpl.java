@@ -120,6 +120,10 @@ public class UserServiceImpl implements UserService {
 
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
         if (user1==null){
+            String pasword = MD5Utils.md5Password(user.getPassword());
+            if (!pasword.equals(finduserbyphone.getPassword())) {
+                return new WebResult("400", "帐号或密码错误");
+            }
             map.put("user", finduserbyphone);
             return new WebResult("200", "登录成功", map);
         }
@@ -374,8 +378,11 @@ public class UserServiceImpl implements UserService {
     //查询基本信息接口
     @Override
     public WebResult selectInfo(User user) {
+         if (user.getSchoolJob()==null||user.getRemark()==null){
 
-        User findUserInfo = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+
+         }
+        User findUserInfo = userMapper.queryByItemsId(user.getUserId());
 
          if (findUserInfo==null){
              User selectUserById = userMapper.selectById(user.getUserId());

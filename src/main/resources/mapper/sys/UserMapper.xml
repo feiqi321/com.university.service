@@ -72,7 +72,7 @@
             WHERE user_id=#{userId}
     </select>
 
-    <!--查询对应edu_user_item表里面是否存在该用户记录-->
+    <!--查询对应edu_user_item表里面是否存在该用户记录（通过学校userId和schoolId进行查找）-->
     <select id="queryByItemsIdAndSchoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
         select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
@@ -85,7 +85,7 @@
         left join edu_user_item i on u.user_id = i.user_id
         where u.user_id = #{userId} and i.school_id = #{schoolId}
     </select>
-    <!--查询对应edu_user_item表里面该用户记录-->
+    <!--查询对应edu_user_item表里面该用户记录（通过userId查找）-->
     <select id="queryByItemsId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
         select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
@@ -93,12 +93,12 @@
         i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
         i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
-        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId,i.school_job,i.remark
         from edu_user u
         left join edu_user_item i on u.user_id = i.user_id
         where u.user_id = #{userId}
     </select>
-    <!--查询对应edu_user_item表里面该用户记录(i.school_id is not null)-->
+    <!--查询对应edu_user_item表里面该用户记录(i.school_id is not null，也不能等于0)-->
     <select id="queryByItemsId2" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
         select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
@@ -119,7 +119,7 @@
            employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
            emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
            emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
-           emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard}
+           emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},school_job=#{schoolJob},remark=#{remark}
            where user_id=#{userId} and school_id=#{schoolId}
     </update>
 
@@ -131,11 +131,11 @@
         political,educational,position,retired,
         job,employer,emergency_contact1,emergency_relation1,
         emergency_phone1,emergency_contact2,
-        emergency_relation2,emergency_phone2,checkin,identity_card,volunteer)
+        emergency_relation2,emergency_phone2,checkin,identity_card,volunteer,school_job,remark)
         values (#{userId},#{userName},#{sex},#{schoolId},#{telephone},#{area},#{address},#{political},#{educational},#{position},
           #{retired},#{job},#{employer},#{emergencyContact1},#{emergencyRelation1},#{emergencyPhone1},
           #{emergencyContact2},#{emergencyRelation2},#{emergencyPhone2},
-          #{checkin},#{identityCard},#{volunteer}
+          #{checkin},#{identityCard},#{volunteer},#{schoolJob},#{remark}
           )
     </insert>
 

@@ -139,7 +139,8 @@ public class TeacherController {
               userService.deleteUserItem(userItemId);
             }
             if(hget.getRole() != 0){
-              userService.UpdateUserSchoolId(userId);
+              userService.deleteUserItem(userItemId);
+                return new WebResult("200", "删除成功", "");
             }
         }else {
             return new WebResult("50012", "请先登录", "");
@@ -175,7 +176,7 @@ public class TeacherController {
 
         if (checkin==0){
                 userService.deleteWithdraw(wid);
-                userService.UpdateUserSchoolId(withdrawVo.getUid());
+                userService.deleteUserItem(withdrawVo.getUserItemId());
                 return teacherService.updateWithdrawCheckIn(wid,checkin);
             }
         return teacherService.updateWithdrawCheckIn(wid,checkin);

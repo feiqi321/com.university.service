@@ -8,6 +8,15 @@ public class WithdrawVo {
     private String content;
     private int checkin;
     private String userName;
+    private Integer userItemId;
+
+    public void setUserItemId(Integer userItemId) {
+        this.userItemId = userItemId;
+    }
+
+    public Integer getUserItemId() {
+        return userItemId;
+    }
 
     public String getUserName() {
         return userName;

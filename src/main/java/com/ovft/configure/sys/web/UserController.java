@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ *
  * Created by looyer on 2019/4/2.
  */
 @RestController
@@ -142,7 +143,7 @@ public class UserController {
         String schoolId =request.getHeader("schoolId");
         user.setUserId(Integer.parseInt(userId));
         if (schoolId==""||schoolId==null){
-            user.setSchoolId(0);
+            user.setSchoolId(0); //若不填报名学校时的状态
         }else{
             user.setSchoolId(Integer.parseInt(schoolId));
         }
@@ -234,16 +235,28 @@ public class UserController {
         return null;
     }
 
+//    /**
+//     * 学员所报学校信息假删（1）
+//     *
+//     * @param user
+//     * @return
+//     */
+//    @PostMapping(value = "/UpdateUserSchoolId")
+//     public WebResult UpdateUserSchoolId(@ RequestBody User user){
+//
+//          userService.UpdateUserSchoolId(user.getUserId());
+//          return new WebResult("200","删除成功","");
+//     }
     /**
      * 学员所报学校信息假删
      *
      * @param user
      * @return
      */
-    @PostMapping(value = "/UpdateUserSchoolId")
-     public WebResult UpdateUserSchoolId(@ RequestBody User user){
-
-          userService.UpdateUserSchoolId(user.getUserId());
+    @PostMapping(value = "/deleteUserItem")
+     public WebResult deleteUserItem(@ RequestBody User user){
+          userService.deleteUserItem(user.getUserItemId());
           return new WebResult("200","删除成功","");
      }
+
 }

@@ -107,6 +107,26 @@ public class User {
      private String mycontext;
     //用户所在学校名称
      private String schoolName;
+     //在校任职
+    private String schoolJob;
+    //备注
+    private String remark;
+
+    public String getSchoolJob() {
+        return schoolJob;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setSchoolJob(String schoolJob) {
+        this.schoolJob = schoolJob;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getSchoolName() {
         return schoolName;
