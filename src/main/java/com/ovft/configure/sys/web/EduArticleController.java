@@ -7,6 +7,7 @@ import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,9 @@ public class EduArticleController {
     @PostMapping(value = "/article/notice")
     public WebResult queryAllNotice(HttpServletRequest request, @RequestBody PageVo pageVo) {
         String schoolId = request.getHeader("schoolId");
-        pageVo.setSchoolId(Integer.valueOf(schoolId));
+        if(!StringUtils.isBlank(schoolId) && !schoolId.equals("null")) {
+            pageVo.setSchoolId(Integer.valueOf(schoolId));
+        }
         return eduArticleService.queryAllNotice(pageVo);
     }
 

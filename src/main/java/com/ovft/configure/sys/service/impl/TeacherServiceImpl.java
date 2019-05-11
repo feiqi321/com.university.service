@@ -91,7 +91,11 @@ public class TeacherServiceImpl implements TeacherService {
         Date startDate = courseVo.getStartDate();
         Date endDate = courseVo.getEndDate();
         //检查是否有相同的课程已经启用
-        List<EduCourse> eqName = teacherMapper.selectCourseListBySchoolId(Integer.valueOf(courseVo.getSchoolId()), courseVo.getIsenable(), courseVo.getCourseName());
+        PageVo pageVo = new PageVo();
+        pageVo.setSchoolId(Integer.valueOf(courseVo.getSchoolId()));
+        pageVo.setIsenable(courseVo.getIsenable());
+        pageVo.setSearch(courseVo.getCourseName());
+        List<EduCourse> eqName = teacherMapper.selectCourseListBySchoolId(pageVo);
         for (EduCourse eduCourse : eqName) {
             if(eduCourse.getCourseName().equals(courseVo.getCourseName())) {
                 if(courseVo.getCourseId() == null) {
@@ -223,11 +227,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult courseList(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
-            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getSchoolId(), pageVo.getIsenable(), pageVo.getSearch());
+            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo);
             return new WebResult("200", "查询成功", courseList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo.getSchoolId(), pageVo.getIsenable(), pageVo.getSearch());
+        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo);
         PageInfo pageInfo = new PageInfo<>(courseList);
 
         return new WebResult("200", "查询成功", pageInfo);
@@ -337,6 +341,7 @@ public class TeacherServiceImpl implements TeacherService {
         if(courseIds == null || courseIds.length == 0) {
             return new WebResult("400", "请选择课程", "");
         }
+        PageVo pageVo = new PageVo();
         for (String s : courseIds) {
             Integer courseId = Integer.valueOf(s);
             course.setCourseId(courseId);
@@ -348,7 +353,10 @@ public class TeacherServiceImpl implements TeacherService {
                 if(security != null) {
                     return security;
                 }
-                List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(Integer.valueOf(eqName.getSchoolId()), course.getIsenable(), eqName.getCourseName());
+                pageVo.setSchoolId(Integer.valueOf(eqName.getSchoolId()));
+                pageVo.setIsenable(course.getIsenable());
+                pageVo.setSearch(eqName.getCourseName());
+                List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo);
                 for (EduCourse eduCourse : courseList) {
                     if (eduCourse.getCourseName().equals(eqName.getCourseName())) {
                         if (!eqName.getCourseId().equals(eduCourse.getCourseId())) {
