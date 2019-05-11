@@ -75,7 +75,7 @@
     <!--查询对应edu_user_item表里面是否存在该用户记录（通过学校userId和schoolId进行查找）-->
     <select id="queryByItemsIdAndSchoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
         select u.user_id userId,i.user_name userName,u.phone,u.image,
-        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.sex,i.school_id schoolId,i.telephone,i.areaId,i.area,i.address,
         i.political,i.educational,i.position,i.retired,
         i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
