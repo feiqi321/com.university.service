@@ -23,7 +23,7 @@ public interface UserService {
     public WebResult userQuit(String token);
     //通过用户id查找相应字段
     public User selectById(Integer userId);
-    //查询信息接口
+    //查询基本信息接口
     public WebResult selectInfo(User user);
     //查找头像地址
     public String queryAllAddress(Integer userId);
@@ -47,8 +47,10 @@ public interface UserService {
     public WebResult findUserByCheckinAndSchoolId(User user);
     //根据checkin和schoolId条件进行学员注销审核查找
     public WebResult findWithdrawByCheckinAndSchoolId(WithdrawVo withdrawVo);
-    //学员所报信息假删
-    public WebResult UpdateUserSchoolId(Integer userId);
+
+   //学员所报信息假删（弃用）
+     public WebResult UpdateUserSchoolId(Integer userId);
+
     //通过学员id查找报名学校（user_Item）表信息
     public User queryByItemsId(Integer userId);
     //通过学员id,schoolId查找报名学校（user_Item）表信息

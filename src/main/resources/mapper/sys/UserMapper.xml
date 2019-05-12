@@ -42,7 +42,7 @@
     <update id="updateByPhone">
           update edu_user set password = #{password} where phone=#{phone}
     </update>
-
+    <!--保存user表1全部信息(不常用)-->
     <update id="savaInfo" parameterType="com.ovft.configure.sys.bean.User">
           update edu_user set user_name=#{user.userName},sex=#{user.sex},school_id=#{user.schoolId},area=#{user.area},volunteer=#{user.volunteer},
           identity_card=#{user.identity_card},address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},
@@ -110,7 +110,9 @@
             i.telephone,
             i.areaId,
             i.area,i.address,
-            i.political,i.educational,i.position,i.retired,
+            i.political,
+            i.educational,
+            i.position,i.retired,
             i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
         i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
@@ -237,12 +239,12 @@
          from  edu_withdraw w
             where w.school_id=#{schoolId} and w.checkin=#{checkin}
     </select>
-    <!--学员注销(学员假删)-->
+    <!--学员注销(学员假删)<暂时弃用>-->
     <update id="UpdateUserSchoolId" parameterType="int">
          update edu_user_item set school_id=null where user_id=#{userId}
     </update>
     <!--后台修改用户信息-->
-    <update id="updateByUserId" >
+    <update id="updateByUserId">
         UPDATE edu_user SET  phone=#{phone} where user_Id=#{userId}
     </update>
 </mapper>

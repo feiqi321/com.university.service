@@ -27,7 +27,7 @@ public interface UserMapper {
     public User findUserByPhone2(@Param("phone") String phone);
 
     //通过密码查找用户
-    public User findUserByPassword(@Param("user") User user);
+     public User findUserByPassword(@Param("user") User user);
 
     //修改密码
     public void updateByPhone(@Param("phone") String phone, @Param("password") String password);
@@ -41,20 +41,20 @@ public interface UserMapper {
     //根据id查找用户
     public User selectById(@Param("userId") Integer userId);
 
-    //根据id查找全部用户信息
+    //根据id查找edu_user（用户表1，即只包含帐号密码等信息）全部用户信息
     public User selectByIdAll(@Param("userId") Integer userId);
 
     //查询对应学员是否已选择该学校
     public User queryByItemsIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 
-    //查询对应学员是否已选择该学校
+    //查询对应学员是否已选择该学校（通过userId）
     public User queryByItemsId(@Param("userId") Integer userId);
-    //  <!--查询对应edu_user_item表里面该用户记录(i.school_id is not null)-->
+    //  <!--查询对应edu_user_item表里面该用户记录(i.school_id is not null且i.school_id不为0)-->
     public User queryByItemsId2(@Param("userId") Integer userId);
     //查询对应学员是否已选择该学校
     public List<User> queryByItemsIdList(@Param("userId") Integer userId);
 
-    //更换学校时保存信息
+    //修改学校时保存信息
     public void updateInfoItems(User user);
 
     //增加更换学校时信息
@@ -86,7 +86,7 @@ public interface UserMapper {
     //后台删除用户
     public void deleteUserItem(@Param("userItemId") Integer userItemId);
 
-    //后台删除用户
+    //后台删除用户注销申请记录
     public  void deleteWithdraw(Integer wid);
 
     //根据checkin和schoolId条件进行学员审核查找

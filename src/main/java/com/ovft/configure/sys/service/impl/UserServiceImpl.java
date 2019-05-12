@@ -112,21 +112,26 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(user.getPassword())) {
             return new WebResult("400", "密码不能为空");
         }
+        //通过手机号码查找用户是否注册
         User finduserbyphone = userMapper.findUserByPhone(user);
         HashMap<String, Object> map = new HashMap();
         if (finduserbyphone == null) {
             return new WebResult("400", "您的手机号尚未注册！");
         }
 
+        //情况2.根据用户userId查找Item表（用户表2），判断用户是否已报名过学校记录
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
         if (user1==null){
             String pasword = MD5Utils.md5Password(user.getPassword());
             if (!pasword.equals(finduserbyphone.getPassword())) {
                 return new WebResult("400", "帐号或密码错误");
             }
+            //如果不存在，则返回finduserbyphone
             map.put("user", finduserbyphone);
             return new WebResult("200", "登录成功", map);
         }
+
+          //如果存在，则返回user1
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
         user1.setSchoolName(schoolName);
         String pasword = MD5Utils.md5Password(user.getPassword());
@@ -313,8 +318,8 @@ public class UserServiceImpl implements UserService {
         }
 
         //保存
-        //       userId不为空与schoolId为null
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+
         if (findUser == null) {
             user.setCheckin(1);
             userMapper.saveInfoItems(user);
@@ -378,17 +383,14 @@ public class UserServiceImpl implements UserService {
     //查询基本信息接口
     @Override
     public WebResult selectInfo(User user) {
-         if (user.getSchoolJob()==null||user.getRemark()==null){
-
-
-         }
-         //
+        //通过userId查询Item表里面的相关信息
         User findUserInfo = userMapper.queryByItemsId(user.getUserId());
-
          if (findUserInfo==null){
+             //如果没有查到Item表里面的相关信息，则返回selectUserById
              User selectUserById = userMapper.selectById(user.getUserId());
              return new WebResult("200", "获取成功", selectUserById);
          }
+         //考虑到用户未选择学校的情况,状态:schoolId=0
     if (findUserInfo.getSchoolId()==0){
         findUserInfo.setSchoolId(null);
     }else {
@@ -567,7 +569,7 @@ public class UserServiceImpl implements UserService {
     }
     /**
      *
-     * 获取用户注销申请结果状态
+     * 获取用户注销申请结果状态 "0":通过，"1"：在审核中，"2":拒绝
      * @param userId
      */
     @Override
@@ -616,7 +618,7 @@ public class UserServiceImpl implements UserService {
      public User queryByItemsId(Integer userId){
       return userMapper.queryByItemsId(userId);
      }
-
+    //通过用户Id和学校Id查找用户信息
     @Override
     public User queryByItemsIdAndSchoolId(Integer userId, Integer schoolId) {
         return userMapper.queryByItemsIdAndSchoolId(userId,schoolId);
