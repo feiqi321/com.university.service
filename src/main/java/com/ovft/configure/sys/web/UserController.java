@@ -140,13 +140,7 @@ public class UserController {
     public WebResult selectInfo(HttpServletRequest request) {
         User user = new User();
         String userId = request.getHeader("userId");
-        String schoolId =request.getHeader("schoolId");
         user.setUserId(Integer.parseInt(userId));
-        if (schoolId==""||schoolId==null){
-            user.setSchoolId(0); //若不填报名学校时的状态
-        }else{
-            user.setSchoolId(Integer.parseInt(schoolId));
-        }
         return userService.selectInfo(user);
     }
 
