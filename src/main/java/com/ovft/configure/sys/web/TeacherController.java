@@ -179,7 +179,8 @@ public class TeacherController {
                 userService.deleteUserItem(withdrawVo.getUserItemId());
                 return teacherService.updateWithdrawCheckIn(wid,checkin);
             }
-        return teacherService.updateWithdrawCheckIn(wid,checkin);
+        userService.deleteWithdraw(wid);
+        return new WebResult("200", "拒绝成功", "");
     }
     /**
      * 请假申请列表
