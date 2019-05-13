@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -103,5 +104,9 @@ public interface UserMapper {
 
     //后台修改用户信息
     public  void updateByUserId(@Param("phone") String phone, @Param("userId") Integer userId);
+    //添加学员投稿
+    public void addUserContribute(Contribute contribute);
+    //查询学员投稿申请审核状态
+    public Contribute queryUserContribute(Contribute contribute);
 
 }

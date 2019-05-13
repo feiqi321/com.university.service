@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduClassMapper;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -622,6 +624,34 @@ public class UserServiceImpl implements UserService {
     @Override
     public User queryByItemsIdAndSchoolId(Integer userId, Integer schoolId) {
         return userMapper.queryByItemsIdAndSchoolId(userId,schoolId);
+    }
+    //添加学员投稿
+    @Transactional
+    @Override
+    public WebResult addUserContribute(Contribute contribute) {
+        if (StringUtils.isBlank(contribute.getTitle())){
+            return new WebResult("400","投稿标题不能为空");
+        }
+        if (StringUtils.isBlank(contribute.getContent())){
+            return new WebResult("400","投稿正文不能为空");
+        }
+           contribute.setCheckin(1);
+           Date date=new Date();
+          contribute.setCreatetime(date);
+       userMapper.addUserContribute(contribute);
+       return new WebResult("200","投稿申请成功");
+    }
+
+    @Override
+    public WebResult queryUserContributeCheckin(Contribute contribute) {
+        Contribute contribute1 = userMapper.queryUserContribute(contribute);
+        if (contribute1.getCheckin()==1){
+           return new WebResult("200","稿件还在审核中");
+            }
+            if (contribute1.getCheckin()==0){
+           return new WebResult("200","投稿成功");
+            }
+            return null;
     }
 
 }

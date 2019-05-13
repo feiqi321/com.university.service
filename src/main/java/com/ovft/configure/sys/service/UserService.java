@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -55,6 +56,10 @@ public interface UserService {
     public User queryByItemsId(Integer userId);
     //通过学员id,schoolId查找报名学校（user_Item）表信息
     public User queryByItemsIdAndSchoolId(Integer userId,Integer schoolId);
+    //学员添加投稿申请
+    public WebResult addUserContribute(Contribute contribute);
+    //查询学员投稿申请状态
+    public WebResult queryUserContributeCheckin(Contribute contribute);
 
 
 }
