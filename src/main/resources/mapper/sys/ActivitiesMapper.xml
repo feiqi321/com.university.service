@@ -7,7 +7,7 @@
         a.activities_id as activitiesId, a.admin_id as adminId, a.user_id as userId, a.school_id as schoolId,
         a.title, a.content, a.image, a.scenario, a.number, a.place, a.type, a.category,
         a.start_time as startTime, a.end_time as endTime, a.regist_start_time as registStartTime, a.regist_end_time as registEndTime,
-        a.start_age as startAge, a.end_age as endAge, b.school_name as schoolName
+        a.start_age as startAge, a.end_age as endAge, s.school_name as schoolName
         from edu_activities a left join edu_school s on a.school_id = s.school_id
     </sql>
 
@@ -27,7 +27,7 @@
         <if test="search != null and search != ''">
             AND a.title like CONCAT('%',#{search},'%')
         </if>
-        order by a.regist_start_time desc, activities_id desc
+        order by a.regist_start_time desc, a.activities_id desc
     </select>
 
     <insert id="createActivities" parameterType="com.ovft.configure.sys.bean.Activities" useGeneratedKeys="true"
