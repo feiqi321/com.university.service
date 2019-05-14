@@ -4,6 +4,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -107,6 +108,8 @@ public interface UserMapper {
     //添加学员投稿
     public void addUserContribute(Contribute contribute);
     //查询学员投稿申请审核状态
-    public Contribute queryUserContribute(Contribute contribute);
+    public List<Contribute> queryUserContribute(PageVo pageVo);
+    //删除一条用户投稿记录
+    public WebResult deleteUserContribute(Contribute contribute);
 
 }

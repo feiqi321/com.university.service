@@ -291,6 +291,8 @@ public class TeacherServiceImpl implements TeacherService {
                   List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
                   return new WebResult("200", "查询成功", users);
               }
+
+              //筛选查询（按checkin条件进行查询）
         if (pageVo.getCheckin()==null) {
               PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
               List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
@@ -299,8 +301,8 @@ public class TeacherServiceImpl implements TeacherService {
               return new WebResult("200", "查询成功", pageInfo);
           }else{
                     User user=new User();
-                    user.setSchoolId(pageVo.getSchoolId());
-                    user.setCheckin(pageVo.getCheckin());
+            user.setSchoolId(pageVo.getSchoolId());
+            user.setCheckin(pageVo.getCheckin());
                if (user.getSchoolId()==null)  {
                    List<User> user1 = userMapper.findUserByCheckin(user);
                    PageInfo pageInfo = new PageInfo<>(user1);

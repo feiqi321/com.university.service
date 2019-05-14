@@ -3,6 +3,7 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,7 +60,9 @@ public interface UserService {
     //学员添加投稿申请
     public WebResult addUserContribute(Contribute contribute);
     //查询学员投稿申请状态
-    public WebResult queryUserContributeCheckin(Contribute contribute);
+    public WebResult queryUserContributeCheckin(PageVo pageVo);
+    //学员投稿申请删除
+    public WebResult deleteUserContribute(Contribute contribute);
 
 
 }

@@ -1,8 +1,11 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.EduClass;
+import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.SchoolMapper;
@@ -13,6 +16,7 @@ import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
 import org.apache.commons.lang3.StringUtils;
@@ -641,17 +645,24 @@ public class UserServiceImpl implements UserService {
        userMapper.addUserContribute(contribute);
        return new WebResult("200","投稿申请成功");
     }
-
+    //查询投稿记录状态
     @Override
-    public WebResult queryUserContributeCheckin(Contribute contribute) {
-        Contribute contribute1 = userMapper.queryUserContribute(contribute);
-        if (contribute1.getCheckin()==1){
-           return new WebResult("200","稿件还在审核中");
-            }
-            if (contribute1.getCheckin()==0){
-           return new WebResult("200","投稿成功");
-            }
-            return null;
+    public WebResult queryUserContributeCheckin(PageVo pageVo) {
+        if (pageVo.getPageSize() == 0) {
+            List<Contribute> contributes = userMapper.queryUserContribute(pageVo);
+            return new WebResult("200", "查询成功", contributes);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<Contribute> contributes = userMapper.queryUserContribute(pageVo);
+        PageInfo pageInfo = new PageInfo<>(contributes);
+        return new WebResult("200","查询成功", pageInfo);
     }
+    //删除一条用户投稿记录
+    @Transactional
+    @Override
+    public WebResult deleteUserContribute(Contribute contribute) {
+        return userMapper.deleteUserContribute(contribute);
+    }
+    //
 
 }

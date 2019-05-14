@@ -8,6 +8,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.UserService;
+import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -268,15 +269,27 @@ public class UserController {
            return userService.addUserContribute(contribute);
      }
     /**
-     * 查询学员投稿申请审核状态
+     * 学员投稿申请审核状态列表
+     *
+     * @param pageVo,request
+     * @return
+     */
+    @PostMapping(value = "/queryUserContribute")
+     public WebResult queryUserContributeCheckin(@ RequestBody PageVo pageVo,HttpServletRequest request){
+             Integer userId=Integer.parseInt(request.getHeader("userId"));
+               pageVo.setUserId(userId);
+           return userService.queryUserContributeCheckin(pageVo);
+     }
+
+    /**
+     * 删除学员投稿申请
      *
      * @param contribute
      * @return
      */
-    @PostMapping(value = "/queryUserContribute")
-     public WebResult queryUserContribute(@ RequestBody Contribute contribute){
+    @PostMapping(value = "/deleteUserContribute")
+    public WebResult deleteUserContribute(@ RequestBody Contribute contribute){
 
-           return userService.queryUserContributeCheckin(contribute);
-     }
-
+        return userService.deleteUserContribute(contribute);
+    }
 }

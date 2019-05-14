@@ -92,6 +92,10 @@ public class EduArticle implements Serializable {
      *  音频
      */
     private String audio;
+    /**
+     *  视频
+     */
+    private String vedio;
 
     public String getAudio() {
         return audio;

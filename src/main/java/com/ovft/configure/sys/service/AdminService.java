@@ -19,4 +19,6 @@ public interface AdminService {
     public WebResult deleteAdmin(Integer adminId);
 
     public WebResult adminList(PageVo pageVo);
+
+
 }
