@@ -12,4 +12,7 @@ public class Status {
     public static final String NO5 = "本社区居民";
     public static final String NO6 = "其他";
     public static final Integer ALLCOURSE = 0;
+    public static final Integer PRIORITYONE = 1;
+    public static final Integer PRIORITYTWO = 2;
+
 }

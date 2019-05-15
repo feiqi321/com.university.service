@@ -104,13 +104,23 @@ public class EduCourseController {
         Integer userId = Integer.parseInt(userId1);
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
+//        Integer schoolId = 11;
+
         //判断报名的学校不能为空
         if (schoolId1.equals("null")) {
             return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");
         }
-//        Integer userId = 4;
+//        Integer userId = 40;
+//        User user = userService.queryByItemsIdAndSchoolId(userId, schoolId);
+        User user = userService.queryUserInfo(userId);
+        if (user == null) {
+            return new WebResult(StatusCode.ERROR, "请到学员中心完善好自己的报名学校，方可报名！", "");
+        }
+
         //判断是否是通过正式学员，没有通过则不能报名
-        User user = userService.queryByItemsIdAndSchoolId(userId, schoolId);
+        if (user.getSchoolId() != schoolId) {
+            return new WebResult(StatusCode.ERROR, "您填写报名的学校是:【" + user.getSchoolName() + "】——————请到基本信息切换正确的报名学校，方可报名！", "");
+        }
         if (user.getCheckin() != 0) {
             return new WebResult(StatusCode.ERROR, "您还不是正式学员，正在审核中，请耐心等待", "");
         }
@@ -154,6 +164,20 @@ public class EduCourseController {
         }
         List<EduCourseVo> eduCourseVos = eduCourseService.queryAllTimetable(week, schoolId);
         return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
+    }
+
+    @PostMapping(value = "updatetime")
+    public WebResult updateAlltime(@RequestBody EduCourse eduCourse) {
+        EduCourse course = new EduCourse();
+        course.setSchoolId(String.valueOf(eduCourse.getSchoolId()));
+        course.setIsenable(ConstantClassField.ISONLINE);
+        course.setStartDate(eduCourse.getStartDate());
+        course.setEndDate(eduCourse.getEndDate());
+        int i = eduCourseService.updateAllTime(course);
+        if (i > 0) {
+            return new WebResult(StatusCode.OK, "全部设置成功");
+        }
+        return new WebResult(StatusCode.ERROR, "全部设置失败");
     }
 
 

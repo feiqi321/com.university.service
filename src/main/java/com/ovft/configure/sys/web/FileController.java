@@ -125,11 +125,11 @@ public class FileController {
             filePath = FastUtil.uploadFile(uploadFile.getBytes(), extName);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error", 1);
+            result.put("error", "500");
             result.put("message", e);
             return result;
         }
-        result.put("error", 0);
+        result.put("code", "200");
         result.put("url", filePath);
         return result;
     }

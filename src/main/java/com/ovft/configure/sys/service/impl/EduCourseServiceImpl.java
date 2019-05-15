@@ -72,7 +72,7 @@ public class EduCourseServiceImpl implements EduCourseService {
 
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
-//        Integer schoolId = 1;
+//        Integer schoolId = 11;
 
         //0.可以报名的人数
         //查询专业接受报名的人数
@@ -104,9 +104,9 @@ public class EduCourseServiceImpl implements EduCourseService {
             }
 
             //如果传入的id为0，为全部设置
-            EduRegist AllCourserCondition = eduRegistMapper.selectByCourseId(Status.ALLCOURSE);
+//            EduRegist AllCourserCondition = eduRegistMapper.selectByCourseId(Status.ALLCOURSE);
 
-            if (AllCourserCondition != null) {
+          /*  if (AllCourserCondition != null) {
                 if (AllCourserCondition.getCourseId() == 0) {
                     //查询根据学校id,查询所有的课程id
                     List<Integer> courseIds = eduCourseMapper.selectCourseIdBySchoolId(schoolId);
@@ -119,10 +119,10 @@ public class EduCourseServiceImpl implements EduCourseService {
                         }
                     }
                 }
-            }
+            }*/
             //TODO decideApply
         } catch (Exception e) {
-            map.put("后台课程设置条件重复，请管理员修改", "");
+            map.put("后台设置错误，请重新设置", "");
         }
 
         //单个课程的设置条件
@@ -178,13 +178,19 @@ public class EduCourseServiceImpl implements EduCourseService {
                     map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
                 }
 
+            } else {
+                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
+                return map;
             }
             if (eduRegist.getRegistCategoryTwo() != null && eduRegist.getRegistCategoryTwo().equals(user.getEmployer())) {
                 if (nowtotal > 0) {
                     EduCourseVo courseInfo = applyCourse(userId, courseId);
                     nowtotal--;
                     map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
+                    return map;
                 }
+            } else {
+                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
             }
             if (eduRegist.getRegistCategoryThree() != null && eduRegist.getRegistCategoryThree().equals(user.getEmployer())) {
                 if (nowtotal > 0) {
@@ -192,6 +198,9 @@ public class EduCourseServiceImpl implements EduCourseService {
                     nowtotal--;
                     map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
                 }
+            } else {
+                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
+                return map;
             }
             if (eduRegist.getRegistCategoryFour() != null && eduRegist.getRegistCategoryFour().equals(user.getEmployer())) {
                 if (nowtotal > 0) {
@@ -199,6 +208,9 @@ public class EduCourseServiceImpl implements EduCourseService {
                     nowtotal--;
                     map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
                 }
+            } else {
+                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
+                return map;
             }
             if (eduRegist.getRegistCategoryFive() != null && eduRegist.getRegistCategoryFive().equals(user.getEmployer())) {
                 if (nowtotal > 0) {
@@ -206,6 +218,9 @@ public class EduCourseServiceImpl implements EduCourseService {
                     nowtotal--;
                     map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
                 }
+            } else {
+                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
+                return map;
             }
             if (eduRegist.getRegistCategorySix() != null && eduRegist.getRegistCategorySix().equals(user.getEmployer())) {
                 if (nowtotal > 0) {
@@ -213,10 +228,14 @@ public class EduCourseServiceImpl implements EduCourseService {
                     nowtotal--;
                     map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
                 }
+            } else {
+                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
+                return map;
             }
 
         } catch (Exception e) {
             map.put("后台课程设置条件重复，请管理员修改", "");
+            return map;
         }
         return map;
     }
@@ -243,6 +262,26 @@ public class EduCourseServiceImpl implements EduCourseService {
     @Override
     public List<EduCourseVo> queryAllTimetable(String week, String schoolId) {
         return eduCourseMapper.queryAllTimetable(week, schoolId);
+    }
+
+
+    @Override
+    public int updateAllTime(EduCourse eduCourse) {
+        //先查询出所有学校的课程
+        List<EduCourse> eduCourses = eduCourseMapper.listCourseCategoryByShoolId(eduCourse);
+        EduCourse updateCourse = new EduCourse();
+        updateCourse.setStartDate(eduCourse.getStartDate());
+        updateCourse.setEndDate(eduCourse.getEndDate());
+        int i = 1;
+        for (EduCourse eduCours : eduCourses) {
+            updateCourse.setCourseId(eduCours.getCourseId());
+            //然后对所有学校课程的时间进行修改
+            i = eduCourseMapper.updateByPrimaryKeySelective(updateCourse);
+            if (i < 1) {
+                return -1;
+            }
+        }
+        return i;
     }
 
     public EduCourseVo applyCourse(Integer userId, Integer courseId) {

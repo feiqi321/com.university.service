@@ -1164,6 +1164,76 @@ public class EduRegistExample {
             addCriterion("course_name not between", value1, value2, "courseName");
             return (Criteria) this;
         }
+
+        public Criteria andRegistPriorityIsNull() {
+            addCriterion("regist_priority is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityIsNotNull() {
+            addCriterion("regist_priority is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityEqualTo(String value) {
+            addCriterion("regist_priority =", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityNotEqualTo(String value) {
+            addCriterion("regist_priority <>", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityGreaterThan(String value) {
+            addCriterion("regist_priority >", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityGreaterThanOrEqualTo(String value) {
+            addCriterion("regist_priority >=", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityLessThan(String value) {
+            addCriterion("regist_priority <", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityLessThanOrEqualTo(String value) {
+            addCriterion("regist_priority <=", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityLike(String value) {
+            addCriterion("regist_priority like", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityNotLike(String value) {
+            addCriterion("regist_priority not like", value, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityIn(List<String> values) {
+            addCriterion("regist_priority in", values, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityNotIn(List<String> values) {
+            addCriterion("regist_priority not in", values, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityBetween(String value1, String value2) {
+            addCriterion("regist_priority between", value1, value2, "registPriority");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistPriorityNotBetween(String value1, String value2) {
+            addCriterion("regist_priority not between", value1, value2, "registPriority");
+            return (Criteria) this;
+        }
     }
 
     /**

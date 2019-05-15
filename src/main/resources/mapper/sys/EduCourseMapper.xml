@@ -304,7 +304,7 @@
     <!--1.查找专业类别-->
     <select id="listCourseCategoryByShoolId" parameterType="com.ovft.configure.sys.bean.EduCourse"
             resultType="com.ovft.configure.sys.bean.EduCourse">
-        select course_id from edu_course where school_id =#{schoolId} and isenable=#{isenable}
+        select * from edu_course where school_id =#{schoolId} and isenable=#{isenable}
     </select>
 
 

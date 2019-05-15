@@ -124,23 +124,23 @@
 
     <!--修改edu_user_item表里面该用户记录-->
     <update id="updateInfoItems" parameterType="com.ovft.configure.sys.bean.User">
-          update
+        update
         edu_user_item
         <set>
-           user_name=#{userName},sex=#{sex},telephone=#{telephone},areaId=#{areaId},area=#{area},
-           address=#{address},political=#{political},educational=#{educational},position=#{position},retired=#{retired},
-           employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
-           emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
-           emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
-           emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},
-        <if test="schoolJob!=null" >
-            school_job=#{schoolJob},
-        </if>
-        <if test="remark!=null" >
-            remark=#{remark}
-        </if>
+            user_name=#{userName},sex=#{sex},telephone=#{telephone},areaId=#{areaId},area=#{area},
+            address=#{address},political=#{political},educational=#{educational},position=#{position},retired=#{retired},
+            employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
+            emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
+            emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
+            emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},
+            <if test="schoolJob!=null">
+                school_job=#{schoolJob},
+            </if>
+            <if test="remark!=null">
+                remark=#{remark}
+            </if>
         </set>
-           where user_id=#{userId} and school_id=#{schoolId}
+        where user_id=#{userId} and school_id=#{schoolId}
     </update>
 
     <!--增加edu_user_item表里面该用户记录-->
@@ -161,10 +161,23 @@
 
     <!--查询用户头像地址-vvtxw-->
     <select id="queryAllAddress" parameterType="int" resultType="String">
-        select
+         select
         image
         from edu_user
         WHERE user_id=#{userId}
+    </select>
+
+
+    <!--获取报名课程的信息-vvtxw-->
+    <select id="queryUserInfo" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
+        	select
+			s.school_name,
+            i.school_id,
+            i.checkin
+          FROM
+           edu_user_item i
+			LEFT JOIN edu_school s on s.school_id=i.school_id
+          WHERE user_id=#{user_id}
     </select>
 
     <!--用户头像地址-vvtxw-->
@@ -208,7 +221,8 @@
       delete  from  edu_withdraw where wid=#{wid}
     </delete>
     <!--CheckinAndSchoolId条件查询用户信息申请-->
-    <select id="findUserByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+    <select id="findUserByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
        select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
         i.political,i.educational,i.position,i.retired,
@@ -221,7 +235,8 @@
         where i.checkin = #{user.checkin}
     </select>
     <!--Checkin条件查询用户信息申请-->
-    <select id="findUserByCheckin" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+    <select id="findUserByCheckin" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
        select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
         i.political,i.educational,i.position,i.retired,
@@ -234,7 +249,8 @@
         where i.checkin = #{user.checkin}
     </select>
     <!--CheckinAndSchoolId条件查询用户注销信息申请-->
-    <select id="findWithdrawByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.vo.WithdrawVo" resultType="com.ovft.configure.sys.vo.WithdrawVo">
+    <select id="findWithdrawByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.vo.WithdrawVo"
+            resultType="com.ovft.configure.sys.vo.WithdrawVo">
        select  w.wid wid,w.uid uid,w.school_id,w.school school,w.content content,w.checkin checkin
          from  edu_withdraw w
             where w.school_id=#{schoolId} and w.checkin=#{checkin}

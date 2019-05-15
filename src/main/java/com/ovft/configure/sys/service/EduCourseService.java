@@ -42,5 +42,13 @@ public interface EduCourseService {
      */
     List<EduCourseVo> queryAllTimetable(String week, String schoolId);
 
+    /**
+     * 设置所有的时间
+     *
+     * @param eduCourse
+     * @return
+     */
+    int updateAllTime(EduCourse eduCourse);
+
 
 }

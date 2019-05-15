@@ -87,6 +87,11 @@ public class EduRegist implements Serializable {
      */
     private String courseName;
 
+    /**
+     * topend
+     */
+    private String registPriority;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -217,6 +222,14 @@ public class EduRegist implements Serializable {
         this.courseName = courseName;
     }
 
+    public String getRegistPriority() {
+        return registPriority;
+    }
+
+    public void setRegistPriority(String registPriority) {
+        this.registPriority = registPriority;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -244,7 +257,8 @@ public class EduRegist implements Serializable {
             && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
             && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()))
             && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()))
-            && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()));
+            && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()))
+            && (this.getRegistPriority() == null ? other.getRegistPriority() == null : this.getRegistPriority().equals(other.getRegistPriority()));
     }
 
     @Override
@@ -267,6 +281,7 @@ public class EduRegist implements Serializable {
         result = prime * result + ((getCourseId() == null) ? 0 : getCourseId().hashCode());
         result = prime * result + ((getSchoolName() == null) ? 0 : getSchoolName().hashCode());
         result = prime * result + ((getCourseName() == null) ? 0 : getCourseName().hashCode());
+        result = prime * result + ((getRegistPriority() == null) ? 0 : getRegistPriority().hashCode());
         return result;
     }
 
@@ -292,6 +307,7 @@ public class EduRegist implements Serializable {
         sb.append(", courseId=").append(courseId);
         sb.append(", schoolName=").append(schoolName);
         sb.append(", courseName=").append(courseName);
+        sb.append(", registPriority=").append(registPriority);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

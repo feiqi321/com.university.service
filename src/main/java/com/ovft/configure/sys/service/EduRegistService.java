@@ -24,4 +24,14 @@ public interface EduRegistService {
 
     //查单一条件
     EduRegist queryById(Integer id);
+
+    //查询特殊条件
+    PageBean queryspecialCoditionBySchoold(Integer size, Integer page, Integer schoolId);
+
+    //查询所有的特殊条件
+    PageBean queryspecialCodition(Integer size, Integer page);
+
+    //去除特殊条件
+    int deleteSepecialCondition(EduRegist eduRegist);
+
 }
