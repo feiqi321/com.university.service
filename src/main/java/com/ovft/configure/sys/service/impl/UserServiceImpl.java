@@ -1,7 +1,11 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.EduClass;
+import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.SchoolMapper;
@@ -12,6 +16,7 @@ import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.PhoneTest;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -385,15 +391,12 @@ public class UserServiceImpl implements UserService {
     public WebResult selectInfo(User user) {
         //通过userId查询Item表里面的相关信息
         User findUserInfo = userMapper.queryByItemsId(user.getUserId());
-         if (findUserInfo==null){
+         if (findUserInfo.getSchoolId()==null){
              //如果没有查到Item表里面的相关信息，则返回selectUserById
              User selectUserById = userMapper.selectById(user.getUserId());
+             selectUserById.setUserName(findUserInfo.getUserName());
              return new WebResult("200", "获取成功", selectUserById);
-         }
-         //考虑到用户未选择学校的情况,状态:schoolId=0
-    if (findUserInfo.getSchoolId()==0){
-        findUserInfo.setSchoolId(null);
-    }else {
+         }else {
         String school = schoolMapper.findSchoolById(findUserInfo.getSchoolId());
         findUserInfo.setSchoolName(school);
     }
@@ -623,5 +626,45 @@ public class UserServiceImpl implements UserService {
     public User queryByItemsIdAndSchoolId(Integer userId, Integer schoolId) {
         return userMapper.queryByItemsIdAndSchoolId(userId,schoolId);
     }
+    //添加学员投稿
+    @Transactional
+    @Override
+    public WebResult addUserContribute(Contribute contribute) {
+        if (StringUtils.isBlank(contribute.getTitle())){
+            return new WebResult("400","投稿标题不能为空");
+        }
+        if (StringUtils.isBlank(contribute.getContent())){
+            return new WebResult("400","投稿正文不能为空");
+        }
+           contribute.setCheckin(1);
+           Date date=new Date();
+          contribute.setCreatetime(date);
+       userMapper.addUserContribute(contribute);
+       return new WebResult("200","投稿申请成功");
+    }
+    //查询投稿记录状态
+    @Override
+    public WebResult queryUserContributeCheckin(PageVo pageVo) {
+        if (pageVo.getPageSize() == 0) {
+            List<Contribute> contributes = userMapper.queryUserContribute(pageVo);
+            return new WebResult("200", "查询成功", contributes);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<Contribute> contributes = userMapper.queryUserContribute(pageVo);
+        PageInfo pageInfo = new PageInfo<>(contributes);
+        return new WebResult("200","查询成功", pageInfo);
+    }
+    //删除一条用户投稿记录
+    @Transactional
+    @Override
+    public WebResult deleteUserContribute(Contribute contribute) {
+        return userMapper.deleteUserContribute(contribute);
+    }
+
+    @Override
+    public WebResult updateContributeChinkin(Integer cid,Integer checkin) {
+        return null;
+    }
+    //
 
 }

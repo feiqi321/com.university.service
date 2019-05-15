@@ -5,8 +5,10 @@ import com.alibaba.druid.sql.visitor.functions.If;
 import com.jfinal.aop.Before;
 import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.UserService;
+import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,5 +256,40 @@ public class UserController {
           userService.deleteUserItem(user.getUserItemId());
           return new WebResult("200","删除成功","");
      }
+    /**
+     * 学员投稿申请
+     *
+     * @param contribute
+     * @return
+     */
+    @PostMapping(value = "/addUserContribute")
+     public WebResult addUserContribute(@ RequestBody Contribute contribute,HttpServletRequest request){
+         Integer userId=Integer.parseInt(request.getHeader("userId"));
+            contribute.setUserId(userId);
+           return userService.addUserContribute(contribute);
+     }
+    /**
+     * 学员投稿申请审核状态列表
+     *
+     * @param pageVo,request
+     * @return
+     */
+    @PostMapping(value = "/queryUserContribute")
+     public WebResult queryUserContributeCheckin(@ RequestBody PageVo pageVo,HttpServletRequest request){
+             Integer userId=Integer.parseInt(request.getHeader("userId"));
+               pageVo.setUserId(userId);
+           return userService.queryUserContributeCheckin(pageVo);
+     }
 
+    /**
+     * 删除学员投稿申请
+     *
+     * @param contribute
+     * @return
+     */
+    @PostMapping(value = "/deleteUserContribute")
+    public WebResult deleteUserContribute(@ RequestBody Contribute contribute){
+
+        return userService.deleteUserContribute(contribute);
+    }
 }

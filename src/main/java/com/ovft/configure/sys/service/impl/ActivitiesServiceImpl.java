@@ -1,0 +1,108 @@
+package com.ovft.configure.sys.service.impl;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Activities;
+import com.ovft.configure.sys.dao.ActivitiesMapper;
+import com.ovft.configure.sys.service.ActivitiesService;
+import com.ovft.configure.sys.vo.PageVo;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * @ClassName ActivitiesServiceImpl
+ * @Author zqx
+ * @Version 1.0
+ **/
+@Service
+public class ActivitiesServiceImpl implements ActivitiesService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ActivitiesServiceImpl.class);
+
+    @Resource
+    private ActivitiesMapper activitiesMapper;
+
+    @Transactional
+    @Override
+    public WebResult activitiesList(PageVo pageVo) {
+        if (pageVo.getPageSize() == 0) {
+            List<Activities> courseList = activitiesMapper.selectActivitiesList(pageVo);
+            return new WebResult("200", "查询成功", courseList);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<Activities> courseList = activitiesMapper.selectActivitiesList(pageVo);
+        PageInfo pageInfo = new PageInfo<>(courseList);
+
+        return new WebResult("200", "查询成功", pageInfo);
+    }
+
+    @Override
+    public WebResult createActivities(Activities activities) {
+        if (activities.getSchoolId() == null) {
+            return new WebResult("400", "请选择学校", "");
+        }
+        if (StringUtils.isBlank(activities.getTitle())) {
+            return new WebResult("400", "活动标题不能为空", "");
+        }
+        if (StringUtils.isBlank(activities.getContent())) {
+            return new WebResult("400", "活动内容不能为空", "");
+        }
+        if (activities.getNumber() == null || activities.getNumber().equals(0)) {
+            return new WebResult("400", "活动人数不能为空", "");
+        }
+        if (StringUtils.isBlank(activities.getPlace())) {
+            return new WebResult("400", "活动地点不能为空", "");
+        }
+        if (activities.getStartTime() == null || activities.getEndTime() == null) {
+            return new WebResult("400", "请添加活动日期", "");
+        }
+        if (activities.getStartTime().after(activities.getEndTime())) {
+            return new WebResult("400", "活动结束日期不能早于开始日期", "");
+        }
+        if (activities.getRegistStartTime() == null || activities.getRegistEndTime() == null) {
+            return new WebResult("400", "请添加活动报名日期", "");
+        }
+        if (activities.getRegistStartTime().after(activities.getRegistEndTime())) {
+            return new WebResult("400", "活动报名结束日期不能早于开始日期", "");
+        }
+        if(activities.getStartAge() == null) {
+            activities.setStartAge(0);
+        }
+        if(activities.getEndAge() == null) {
+            activities.setEndAge(100);
+        }
+        if(activities.getEndAge().compareTo(activities.getStartAge()) < 0) {
+            return new WebResult("400", "年龄范围填写错误", "");
+        }
+        if(activities.getType() == null) {
+            return new WebResult("400", "活动类型不能为空", "");
+        }
+        if(activities.getActivitiesId() == null) {
+            activitiesMapper.createActivities(activities);
+            return new WebResult("200", "保存成功", "");
+        } else {
+            activitiesMapper.updateActivities(activities);
+            return new WebResult("200", "修改成功", "");
+        }
+    }
+
+    @Override
+    public WebResult findActivities(Integer activitiesId) {
+        Activities activities = activitiesMapper.selectById(activitiesId);
+        return new WebResult("200", "查询成功", activities);
+    }
+
+    @Transactional
+    @Override
+    public WebResult deleteActivities(Integer activitiesId) {
+        activitiesMapper.deleteActivities(activitiesId);
+        return new WebResult("200", "删除成功", "");
+    }
+}

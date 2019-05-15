@@ -247,4 +247,27 @@
     <update id="updateByUserId">
         UPDATE edu_user SET  phone=#{phone} where user_Id=#{userId}
     </update>
+    <!--添加学员投稿-->
+    <insert id="addUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
+        insert into edu_contribute values(default,#{userId},#{userItemId},#{title},#{createtime},#{type},#{content},#{checkin}
+        ,#{image},#{audio},#{userId}
+        )
+    </insert>
+    <!--查询学员投稿记录 -->
+     <select id="queryUserContribute" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.bean.Contribute">
+        select * from edu_contribute where 1=1
+         <if test="userId!=null">
+              and  userId=#{userId}
+         </if>
+         <if test="search != null and search != ''">
+             AND user_name like CONCAT('%',#{search},'%')
+         </if>
+     </select>
+    <!--删除学员投稿记录-->
+    <delete id="deleteUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
+           delete  from  edu_contribute where cid=#{cid}
+    </delete>
+    <update id="updateContributeCheckin" parameterType="int">
+        update edu_contribute set checkin=#{checkin} where cid=#{cid}
+    </update>
 </mapper>

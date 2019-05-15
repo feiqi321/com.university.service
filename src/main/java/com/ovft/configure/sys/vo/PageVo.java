@@ -26,9 +26,19 @@ public class PageVo {
 
     private Integer role;
 
+    private Integer userId;
+
     private Integer isenable;
 
     private String filePath;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;

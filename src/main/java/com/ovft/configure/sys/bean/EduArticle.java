@@ -88,6 +88,22 @@ public class EduArticle implements Serializable {
      * 文章正文
      */
     private String content;
+    /**
+     *  音频
+     */
+    private String audio;
+    /**
+     *  视频
+     */
+    private String vedio;
+
+    public String getAudio() {
+        return audio;
+    }
+
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
 
     private static final long serialVersionUID = 1L;
 

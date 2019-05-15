@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.MyActivitiesMapper" >
+
+    <sql id="Base_Column_List">
+        id, user_id as userId, admin_id as adminId, school_id as schoolId, type, regist_time as registTime
+    </sql>
+
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.Address">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_my_activities
+        where id = #{id}
+    </select>
+
+    <select id="selectByUserId"  resultType="com.ovft.configure.sys.bean.Address">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_my_activities
+        where user_id = #{userId}
+        order by isdefault desc
+    </select>
+
+    <select id="selectByUserIdMap"  resultType="java.util.Map">
+        select address_id as id, consignee_name as name, phone as tel, concat(area,address) as address
+        from edu_my_activities
+        where user_id = #{userId}
+        order by isdefault desc
+    </select>
+
+    <insert id="createAddress" parameterType="com.ovft.configure.sys.bean.Address" useGeneratedKeys="true"
+            keyProperty="id">
+         insert into edu_my_activities(user_id, consignee_name, phone, area, address, postal_code, isdefault)
+         values (#{userId}, #{consigneeName}, #{phone}, #{area}, #{address}, #{postalCode}, #{isdefault})
+    </insert>
+
+    <update id="updateAddress" parameterType="com.ovft.configure.sys.bean.Address">
+        update edu_my_activities
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="consigneeName != null">
+                consignee_name = #{consigneeName},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="area != null">
+                area = #{area},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="postalCode != null">
+                postal_code = #{postalCode},
+            </if>
+            <if test="isdefault != null">
+                isdefault = #{isdefault},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAddress">
+        delete from edu_my_activities where id = #{id}
+    </delete>
+
+</mapper>

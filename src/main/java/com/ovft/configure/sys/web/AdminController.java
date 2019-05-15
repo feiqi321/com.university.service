@@ -3,9 +3,15 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
+import com.ovft.configure.sys.bean.Contribute;
+import com.ovft.configure.sys.bean.EduArticle;
+import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.AdminService;
+import com.ovft.configure.sys.service.EduArticleService;
+import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
+import com.ovft.configure.sys.vo.WithdrawVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,10 @@ public class AdminController {
     private AdminService adminService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private EduArticleService eduArticleService;
 
     /**
      * 登录
@@ -139,5 +149,45 @@ public class AdminController {
     public WebResult deleteAdmin(@RequestParam(value = "adminId") Integer adminId) {
         return adminService.deleteAdmin(adminId);
     }
+    /**
+     * 学员投稿审核
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/auditContribute")
+    public WebResult auditContribute(@RequestBody Contribute contribute){
+        Integer  checkin=contribute.getCheckin();
+        Integer  cid=contribute.getCid();
+        //0的话,向article表里面添加记录，改变Contribute的checkin状态
+        if (checkin==0){
+              userService.updateContributeChinkin(cid,checkin);
+              EduArticle eduArticle=new EduArticle();
+              eduArticle.setUserid(contribute.getUserId().toString());
+              eduArticle.setTitle(contribute.getTitle());
+              eduArticle.setContent(contribute.getContent());
+              eduArticle.setImage(contribute.getImage());
+              eduArticle.setCreatetime(contribute.getCreatetime());
+              eduArticle.setIspublic("0");
+              eduArticle.setIstop("1");
+              eduArticle.setState(contribute.getCheckin().toString());
+              eduArticle.setVisits(0);
+              eduArticle.setThumbup(0);
+              eduArticle.setComment(0);
+              eduArticle.setCollect("0");
+              eduArticle.setType(contribute.getType().toString());
+              eduArticle.setSchoolId(contribute.getSchoolId());
+              eduArticleService.adminAddNotice(eduArticle);//向article表里面添加记录
+              return new WebResult("200","审核通过","");
 
+//            userService.deleteWithdraw(wid);
+//            userService.deleteUserItem(withdrawVo.getUserItemId());
+//            return teacherService.updateWithdrawCheckIn(wid,checkin);
+
+        }
+            userService.updateContributeChinkin(cid,checkin);
+//        userService.deleteWithdraw(wid);
+//        return new WebResult("200", "拒绝成功", "");
+        return new WebResult("200","拒绝成功","");
+    }
 }
