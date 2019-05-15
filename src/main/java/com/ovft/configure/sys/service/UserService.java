@@ -63,6 +63,8 @@ public interface UserService {
     public WebResult queryUserContributeCheckin(PageVo pageVo);
     //学员投稿申请删除
     public WebResult deleteUserContribute(Contribute contribute);
+    //学员投稿记录状态的修改
+    public WebResult updateContributeChinkin(Integer cid,Integer checkin);
 
 
 }

@@ -17,7 +17,15 @@ public class Contribute {
     private String image;
     private String audio;
     private String vedio;
+    private Integer schoolId;
 
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
 
     @Override
     public String toString() {

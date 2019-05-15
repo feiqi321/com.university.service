@@ -109,7 +109,9 @@ public interface UserMapper {
     public void addUserContribute(Contribute contribute);
     //查询学员投稿申请审核状态
     public List<Contribute> queryUserContribute(PageVo pageVo);
+
     //删除一条用户投稿记录
     public WebResult deleteUserContribute(Contribute contribute);
-
+    //修改投稿申请状态
+    public WebResult updateContributeCheckin(Integer cid,Integer checkin);
 }
