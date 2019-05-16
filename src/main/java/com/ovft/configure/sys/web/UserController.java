@@ -213,7 +213,10 @@ public class UserController {
     public WebResult selectWithdrawOne(HttpServletRequest request) {
         String userId = request.getHeader("userId");
         WithdrawVo withdrawOne = userService.selectWithdrawOne(Integer.parseInt(userId));
+        if (withdrawOne!=null){
         return new WebResult("200","获取成功",withdrawOne);
+        }
+        return new WebResult("400","未找到相关记录","");
     }
     /**
      * 获取用户注销申请处理状态
