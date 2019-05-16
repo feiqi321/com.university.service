@@ -116,10 +116,10 @@ public class User {
     //用户头像
     private String image;
     //用户个性签名
-     private String mycontext;
+    private String mycontext;
     //用户所在学校名称
-     private String schoolName;
-     //在校任职
+    private String schoolName;
+    //在校任职
     private String schoolJob;
     //备注
     private String remark;

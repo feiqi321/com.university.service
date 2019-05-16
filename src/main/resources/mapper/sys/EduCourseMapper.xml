@@ -11,6 +11,7 @@
         <result column="end_date" jdbcType="DATE" property="endDate"/>
         <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
         <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
+        <result column="isenable" jdbcType="INTEGER" property="isenable"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -74,7 +75,7 @@
     </sql>
     <sql id="Base_Column_List">
         course_id, course_name, course_price, course_teacher, place_class, start_date, end_date,
-        people_number, school_id
+        people_number, school_id, isenable
     </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduCourseExample" resultMap="BaseResultMap">
         select
@@ -117,12 +118,12 @@
     <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduCourse">
         insert into edu_course (course_id, course_name, course_price,
         course_teacher, place_class, start_date,
-        end_date, people_number, school_id
-        )
+        end_date, people_number, school_id,
+        isenable)
         values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{coursePrice,jdbcType=DECIMAL},
         #{courseTeacher,jdbcType=VARCHAR}, #{placeClass,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
-        #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
-        )
+        #{endDate,jdbcType=DATE}, #{peopleNumber,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR},
+        #{isenable,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduCourse">
         insert into edu_course
@@ -154,6 +155,9 @@
             <if test="schoolId != null">
                 school_id,
             </if>
+            <if test="isenable != null">
+                isenable,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="courseId != null">
@@ -182,6 +186,9 @@
             </if>
             <if test="schoolId != null">
                 #{schoolId,jdbcType=VARCHAR},
+            </if>
+            <if test="isenable != null">
+                #{isenable,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -222,6 +229,9 @@
             <if test="record.schoolId != null">
                 school_id = #{record.schoolId,jdbcType=VARCHAR},
             </if>
+            <if test="record.isenable != null">
+                isenable = #{record.isenable,jdbcType=INTEGER},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -237,7 +247,8 @@
         start_date = #{record.startDate,jdbcType=DATE},
         end_date = #{record.endDate,jdbcType=DATE},
         people_number = #{record.peopleNumber,jdbcType=INTEGER},
-        school_id = #{record.schoolId,jdbcType=VARCHAR}
+        school_id = #{record.schoolId,jdbcType=VARCHAR},
+        isenable = #{record.isenable,jdbcType=INTEGER}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -269,26 +280,31 @@
             <if test="schoolId != null">
                 school_id = #{schoolId,jdbcType=VARCHAR},
             </if>
+            <if test="isenable != null">
+                isenable = #{isenable,jdbcType=INTEGER},
+            </if>
         </set>
         where course_id = #{courseId,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduCourse">
-        update edu_course
-        set course_name = #{courseName,jdbcType=VARCHAR},
-        course_price = #{coursePrice,jdbcType=DECIMAL},
-        course_teacher = #{courseTeacher,jdbcType=VARCHAR},
-        place_class = #{placeClass,jdbcType=VARCHAR},
-        start_date = #{startDate,jdbcType=DATE},
-        end_date = #{endDate,jdbcType=DATE},
-        people_number = #{peopleNumber,jdbcType=INTEGER},
-        school_id = #{schoolId,jdbcType=VARCHAR}
-        where course_id = #{courseId,jdbcType=INTEGER}
-    </update>
+    update edu_course
+    set course_name = #{courseName,jdbcType=VARCHAR},
+      course_price = #{coursePrice,jdbcType=DECIMAL},
+      course_teacher = #{courseTeacher,jdbcType=VARCHAR},
+      place_class = #{placeClass,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      people_number = #{peopleNumber,jdbcType=INTEGER},
+      school_id = #{schoolId,jdbcType=VARCHAR},
+      isenable = #{isenable,jdbcType=INTEGER}
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </update>
 
 
     <!--1.查找专业类别-->
-    <select id="listCourseCategoryByShoolId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduCourse">
-        select course_id from edu_course where school_id =#{school_id}
+    <select id="listCourseCategoryByShoolId" parameterType="com.ovft.configure.sys.bean.EduCourse"
+            resultType="com.ovft.configure.sys.bean.EduCourse">
+        select * from edu_course where school_id =#{schoolId} and isenable=#{isenable}
     </select>
 
 
@@ -343,6 +359,17 @@
 				LEFT JOIN edu_class_schedule e3 on e3.course_ids=c.course_id
 				) p
 				where week=#{week} and school_id=#{schoolId};
+    </select>
+
+
+    <!--3.查询每个科目可以报名的人数-->
+    <select id="selectCourseIdBySchoolId" parameterType="int" resultType="int">
+                    select
+                        course_id
+                        from
+                        edu_course
+                    where
+                      school_id=#{schoolId}
     </select>
 
 </mapper>

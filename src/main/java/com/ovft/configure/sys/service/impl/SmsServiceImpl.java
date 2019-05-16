@@ -32,8 +32,8 @@ public class SmsServiceImpl implements SmsService {
     public WebResult sendSms(Map<String, String> phoneMap) {
         String phone = phoneMap.get("phone");
         //手机号格式验证
-        if(!SecurityUtils.securityPhone(phone)) {
-            return new WebResult("400", "请输入正确手机号","");
+        if (!SecurityUtils.securityPhone(phone)) {
+            return new WebResult("400", "请输入正确手机号", "");
         }
 
         //生成6位数短信验证码
@@ -42,18 +42,18 @@ public class SmsServiceImpl implements SmsService {
 
         //设置两分钟内不能重发
         long expire = redisUtil.getExpire(key);
-        if(expire > 3*60) {
-            return new WebResult("400", "您操作太频繁","");
+        if (expire > 3 * 60) {
+            return new WebResult("400", "您操作太频繁", "");
         }
 
         boolean isSend = Sms253Util.sendSms(phone, securityCode);
-        if(!isSend) {
-            return new WebResult("400", "短信发送失败","");
+        if (!isSend) {
+            return new WebResult("400", "短信发送失败", "");
         }
 //        短信验证码存入redis中
-        redisUtil.set(key, securityCode, 5*60);
+        redisUtil.set(key, securityCode, 5 * 60);
 
-        return new WebResult("200", "短信发送成功","");
+        return new WebResult("200", "短信发送成功", "");
     }
 
 

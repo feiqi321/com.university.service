@@ -667,6 +667,12 @@ public class UserServiceImpl implements UserService {
       userMapper.updateContributeCheckin(checkin,cid);
       return new WebResult("200","操作成功","");
     }
+
+    @Override
+    public User queryUserInfo(Integer userId) {
+        User user = userMapper.queryUserInfo(userId);
+        return user;
+    }
     //
 
 }

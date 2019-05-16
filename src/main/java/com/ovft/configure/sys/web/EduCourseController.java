@@ -1,11 +1,12 @@
 package com.ovft.configure.sys.web;
 
-import com.jfinal.aop.Before;
-import com.ovft.configure.config.CORSInterceptor;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduCourse;
+import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.EduCourseService;
+import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,6 +32,8 @@ public class EduCourseController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private UserService userService;
 
     /**
      * 按学校的id来查找专业类别信息
@@ -42,10 +45,15 @@ public class EduCourseController {
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
 
-        if (schoolId == null) {
-            return new WebResult(StatusCode.ERROR, "学校id不能为空", "");
+        //判断报名的学校不能为空
+        if (schoolId1.equals("null")) {
+            return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");
         }
-        List<EduCourse> eduCourseId = eduCourseService.listCourseCategoryByShoolId(schoolId);
+        EduCourse course = new EduCourse();
+        course.setSchoolId(String.valueOf(schoolId));
+        course.setIsenable(ConstantClassField.ISONLINE);
+        List<EduCourse> eduCourseId = eduCourseService.listCourseCategoryByShoolId(course);
+
         EduCourseVo eduCourseVo = (EduCourseVo) redisTemplate.opsForValue().get("schoolId" + schoolId);
         ArrayList<Object> courseVos = new ArrayList<>();
         if (eduCourseVo == null) {
@@ -91,16 +99,38 @@ public class EduCourseController {
 //        Integer courseId = Integer.parseInt(queryString);
 //        System.out.println(queryString);
 //        Integer userId = (Integer) request.getAttribute("userId");
+
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-        /*Integer userId = 4;*/
+        String schoolId1 = request.getHeader("schoolId");
+        Integer schoolId = Integer.parseInt(schoolId1);
+//        Integer schoolId = 11;
 
+        //判断报名的学校不能为空
+        if (schoolId1.equals("null")) {
+            return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");
+        }
+//        Integer userId = 40;
+//        User user = userService.queryByItemsIdAndSchoolId(userId, schoolId);
+        User user = userService.queryUserInfo(userId);
+        if (user == null) {
+            return new WebResult(StatusCode.ERROR, "请到学员中心完善好自己的报名学校，方可报名！", "");
+        }
+
+        //判断是否是通过正式学员，没有通过则不能报名
+        if (user.getSchoolId() != schoolId) {
+            return new WebResult(StatusCode.ERROR, "您填写报名的学校是:【" + user.getSchoolName() + "】——————请到基本信息切换正确的报名学校，方可报名！", "");
+        }
+        if (user.getCheckin() != 0) {
+            return new WebResult(StatusCode.ERROR, "您还不是正式学员，正在审核中，请耐心等待", "");
+        }
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
         }
         if (courseId == null) {
             return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
         }
+
         //获取请求头的userId
         Map<String, Object> map = eduCourseService.queryCourseByCourseId(userId, courseId, request);
         Iterator<String> it = map.keySet().iterator();
@@ -126,10 +156,28 @@ public class EduCourseController {
      */
     @GetMapping(value = "timetable")
     public WebResult queryAllTimeRecord(@RequestParam(value = "week") String week, HttpServletRequest request) {
-//        String schoolId = request.getHeader("schoolId");
-        String schoolId = "1";
+        String schoolId = request.getHeader("schoolId");
+//        String schoolId = "1";
+        //判断报名的学校不能为空
+        if (schoolId.equals("null")) {
+            return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");
+        }
         List<EduCourseVo> eduCourseVos = eduCourseService.queryAllTimetable(week, schoolId);
         return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
+    }
+
+    @PostMapping(value = "updatetime")
+    public WebResult updateAlltime(@RequestBody EduCourse eduCourse) {
+        EduCourse course = new EduCourse();
+        course.setSchoolId(String.valueOf(eduCourse.getSchoolId()));
+        course.setIsenable(ConstantClassField.ISONLINE);
+        course.setStartDate(eduCourse.getStartDate());
+        course.setEndDate(eduCourse.getEndDate());
+        int i = eduCourseService.updateAllTime(course);
+        if (i > 0) {
+            return new WebResult(StatusCode.OK, "全部设置成功");
+        }
+        return new WebResult(StatusCode.ERROR, "全部设置失败");
     }
 
 

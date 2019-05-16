@@ -35,4 +35,7 @@ public interface EduRegistMapper {
 
     //查询条件的
     EduRegist selectByOne(Integer id);
+
+    //查找学校名称
+    List<String> selectNameBySchoolId(Integer schoolId);
 }

@@ -17,10 +17,10 @@ public interface EduCourseService {
     /**
      * 按学校的id来查找专业类别
      *
-     * @param schoolId
+     * @param eduCourse
      * @return
      */
-    public List<EduCourse> listCourseCategoryByShoolId(int schoolId);
+    public List<EduCourse> listCourseCategoryByShoolId(EduCourse eduCourse);
 
     /**
      * 根据课程id查询课程信息报名
@@ -42,6 +42,13 @@ public interface EduCourseService {
      */
     List<EduCourseVo> queryAllTimetable(String week, String schoolId);
 
+    /**
+     * 设置所有的时间
+     *
+     * @param eduCourse
+     * @return
+     */
+    int updateAllTime(EduCourse eduCourse);
 
 
 }

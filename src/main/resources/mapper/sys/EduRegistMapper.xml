@@ -16,6 +16,9 @@
         <result column="upate_time" jdbcType="TIMESTAMP" property="upateTime"/>
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
         <result column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="regist_priority" jdbcType="VARCHAR" property="registPriority"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -80,7 +83,7 @@
     <sql id="Base_Column_List">
     id, registstart_time, registend_time, start_age, end_age, regist_category_one, regist_category_two, 
     regist_category_three, regist_category_four, regist_category_five, regist_category_six, 
-    upate_time, school_id, course_id
+    upate_time, school_id, course_id, school_name, course_name, regist_priority
   </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduRegistExample" resultMap="BaseResultMap">
         select
@@ -129,13 +132,15 @@
         regist_category_two, regist_category_three,
         regist_category_four, regist_category_five,
         regist_category_six, upate_time, school_id,
-        course_id)
+        course_id, school_name, course_name,
+        regist_priority)
         values (#{registstartTime,jdbcType=TIMESTAMP}, #{registendTime,jdbcType=TIMESTAMP},
         #{startAge,jdbcType=INTEGER}, #{endAge,jdbcType=INTEGER}, #{registCategoryOne,jdbcType=VARCHAR},
         #{registCategoryTwo,jdbcType=VARCHAR}, #{registCategoryThree,jdbcType=VARCHAR},
         #{registCategoryFour,jdbcType=VARCHAR}, #{registCategoryFive,jdbcType=VARCHAR},
         #{registCategorySix,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{schoolId,jdbcType=INTEGER},
-        #{courseId,jdbcType=INTEGER})
+        #{courseId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR},
+        #{registPriority,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduRegist">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -182,6 +187,15 @@
             <if test="courseId != null">
                 course_id,
             </if>
+            <if test="schoolName != null">
+                school_name,
+            </if>
+            <if test="courseName != null">
+                course_name,
+            </if>
+            <if test="registPriority != null">
+                regist_priority,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="registstartTime != null">
@@ -222,6 +236,15 @@
             </if>
             <if test="courseId != null">
                 #{courseId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseName != null">
+                #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="registPriority != null">
+                #{registPriority,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -277,6 +300,15 @@
             <if test="record.courseId != null">
                 course_id = #{record.courseId,jdbcType=INTEGER},
             </if>
+            <if test="record.schoolName != null">
+                school_name = #{record.schoolName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.courseName != null">
+                course_name = #{record.courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.registPriority != null">
+                regist_priority = #{record.registPriority,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -297,7 +329,10 @@
         regist_category_six = #{record.registCategorySix,jdbcType=VARCHAR},
         upate_time = #{record.upateTime,jdbcType=TIMESTAMP},
         school_id = #{record.schoolId,jdbcType=INTEGER},
-        course_id = #{record.courseId,jdbcType=INTEGER}
+        course_id = #{record.courseId,jdbcType=INTEGER},
+        school_name = #{record.schoolName,jdbcType=VARCHAR},
+        course_name = #{record.courseName,jdbcType=VARCHAR},
+        regist_priority = #{record.registPriority,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -344,6 +379,15 @@
             <if test="courseId != null">
                 course_id = #{courseId,jdbcType=INTEGER},
             </if>
+            <if test="schoolName != null">
+                school_name = #{schoolName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseName != null">
+                course_name = #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="registPriority != null">
+                regist_priority = #{registPriority,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -361,40 +405,55 @@
       regist_category_six = #{registCategorySix,jdbcType=VARCHAR},
       upate_time = #{upateTime,jdbcType=TIMESTAMP},
       school_id = #{schoolId,jdbcType=INTEGER},
-      course_id = #{courseId,jdbcType=INTEGER}
+      course_id = #{courseId,jdbcType=INTEGER},
+      school_name = #{schoolName,jdbcType=VARCHAR},
+      course_name = #{courseName,jdbcType=VARCHAR},
+      regist_priority = #{registPriority,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
 
     <!--查询每个科目可以报名的人数vvtxw-->
-    <select id="selectByCourseId" parameterType="int" resultType="com.ovft.configure.sys.bean.EduRegist">
-        select
-        *
-        from edu_regist
-        WHERE course_id=#{course_id}
-    </select>
+    <select id="selectByCourseId" parameterType="int"
+            resultType="com.ovft.configure.sys.bean.EduRegist">
+    select
+    *
+    from edu_regist
+    WHERE course_id=#{course_id}
+  </select>
 
     <!--查询每个科目可以报名的人数vvtxw-->
-    <select id="selectByOne" parameterType="int" resultType="com.ovft.configure.sys.vo.EduRegistVo">
-               select
-                r.id,
-				r.registstart_time,
-				r.registend_time,
-				r.start_age,
-				r.end_age,
-				r.regist_category_one,
-				r.regist_category_two,
-				r.regist_category_three,
-				r.regist_category_four,
-				r.regist_category_five,
-				r.regist_category_six,
-				r.upate_time,
-				c.course_name courseName,
-				e1.school_name schoolName
-                 from edu_regist r
-				LEFT JOIN edu_course c on c.course_id=r.course_id
-				left join edu_school e1 on r.school_id=e1.school_id
-               WHERE id=#{id}
+    <select id="selectByOne" parameterType="int"
+            resultType="com.ovft.configure.sys.vo.EduRegistVo">
+    select
+    r.id,
+    r.registstart_time,
+    r.registend_time,
+    r.start_age,
+    r.end_age,
+    r.regist_category_one,
+    r.regist_category_two,
+    r.regist_category_three,
+    r.regist_category_four,
+    r.regist_category_five,
+    r.regist_category_six,
+    r.upate_time,
+    c.course_name courseName,
+    e1.school_name schoolName
+    from edu_regist r
+    LEFT JOIN edu_course c on c.course_id=r.course_id
+    left join edu_school e1 on r.school_id=e1.school_id
+    WHERE id=#{id}
+  </select>
+
+    <!--根据学校查询学校名字vvtxw-->
+    <select id="selectNameBySchoolId" parameterType="int"
+            resultType="String">
+       select
+            s.school_name
+            from
+            edu_regist r
+      LEFT JOIN edu_school s on s.school_id=r.school_id where r.school_id=#{school_id}
     </select>
 
 

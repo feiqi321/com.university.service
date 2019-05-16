@@ -50,8 +50,6 @@ public class WithdrawVo {
         return checkin;
     }
 
-
-
     public int getWid() {
         return wid;
     }

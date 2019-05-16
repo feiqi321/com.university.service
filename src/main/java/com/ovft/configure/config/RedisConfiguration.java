@@ -37,7 +37,6 @@ public class RedisConfiguration {
     @Value("${spring.redis.timeout}")
     private int timeout;
 
-    /*  */
 
     /**
      * 解决redis插入中文乱码
