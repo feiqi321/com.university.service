@@ -113,5 +113,5 @@ public interface UserMapper {
     //删除一条用户投稿记录
     public WebResult deleteUserContribute(Contribute contribute);
     //修改投稿申请状态
-    public WebResult updateContributeCheckin(Integer cid,Integer checkin);
+    public void updateContributeCheckin(@Param("checkin") Integer checkin,@Param("cid") Integer cid);
 }

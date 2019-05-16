@@ -161,15 +161,15 @@ public class AdminController {
         Integer  cid=contribute.getCid();
         //0的话,向article表里面添加记录，改变Contribute的checkin状态
         if (checkin==0){
-              userService.updateContributeChinkin(cid,checkin);
+              userService.updateContributeChinkin(checkin,cid);
               EduArticle eduArticle=new EduArticle();
               eduArticle.setUserid(contribute.getUserId().toString());
               eduArticle.setTitle(contribute.getTitle());
               eduArticle.setContent(contribute.getContent());
               eduArticle.setImage(contribute.getImage());
               eduArticle.setCreatetime(contribute.getCreatetime());
-              eduArticle.setIspublic("0");
-              eduArticle.setIstop("1");
+              eduArticle.setIspublic("1");
+              eduArticle.setIstop("0");
               eduArticle.setState(contribute.getCheckin().toString());
               eduArticle.setVisits(0);
               eduArticle.setThumbup(0);
@@ -185,7 +185,7 @@ public class AdminController {
 //            return teacherService.updateWithdrawCheckIn(wid,checkin);
 
         }
-            userService.updateContributeChinkin(cid,checkin);
+            userService.updateContributeChinkin(checkin,cid);
 //        userService.deleteWithdraw(wid);
 //        return new WebResult("200", "拒绝成功", "");
         return new WebResult("200","拒绝成功","");

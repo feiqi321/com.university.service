@@ -394,7 +394,7 @@ public class UserServiceImpl implements UserService {
          if (findUserInfo.getSchoolId()==null){
              //如果没有查到Item表里面的相关信息，则返回selectUserById
              User selectUserById = userMapper.selectById(user.getUserId());
-             selectUserById.setUserName(findUserInfo.getUserName());
+
              return new WebResult("200", "获取成功", selectUserById);
          }else {
         String school = schoolMapper.findSchoolById(findUserInfo.getSchoolId());
@@ -660,10 +660,12 @@ public class UserServiceImpl implements UserService {
     public WebResult deleteUserContribute(Contribute contribute) {
         return userMapper.deleteUserContribute(contribute);
     }
-
+    //投稿审核状态更改
+    @Transactional
     @Override
-    public WebResult updateContributeChinkin(Integer cid,Integer checkin) {
-        return null;
+    public WebResult updateContributeChinkin(Integer checkin,Integer cid) {
+      userMapper.updateContributeCheckin(checkin,cid);
+      return new WebResult("200","操作成功","");
     }
     //
 

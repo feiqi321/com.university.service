@@ -193,11 +193,11 @@
     </insert>
     <!--获取用户添加注销申请结果-->
     <select id="selectWithdraw" parameterType="int" resultType="int">
-        select checkin from  edu_withdraw
+        select checkin from  edu_withdraw where uid=#{userId}
     </select>
     <!--查询用户注销申请-->
     <select id="selectWithdrawOne" parameterType="int" resultType="com.ovft.configure.sys.vo.WithdrawVo">
-        select * from  edu_withdraw
+        select * from  edu_withdraw  where  uid=#{userId}
     </select>
     <!--后台删除用户-->
     <delete id="deleteUserItem">
@@ -250,7 +250,7 @@
     <!--添加学员投稿-->
     <insert id="addUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
         insert into edu_contribute values(default,#{userId},#{userItemId},#{title},#{createtime},#{type},#{content},#{checkin}
-        ,#{image},#{audio},#{userId}
+        ,#{image},#{audio},#{vedio},#{schoolId}
         )
     </insert>
     <!--查询学员投稿记录 -->
@@ -267,7 +267,8 @@
     <delete id="deleteUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
            delete  from  edu_contribute where cid=#{cid}
     </delete>
-    <update id="updateContributeCheckin" parameterType="int">
+    <!--删除学员投稿记录-->
+    <update id="updateContributeCheckin" parameterType="com.ovft.configure.sys.bean.Contribute">
         update edu_contribute set checkin=#{checkin} where cid=#{cid}
     </update>
 </mapper>

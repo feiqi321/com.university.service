@@ -203,8 +203,18 @@ public class UserController {
         userService.addWithdraw(withdrawVo);
         return new WebResult("200", "注销申请成功", "");
     }
-
-
+    /**
+     * 获取用户注销申请记录
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/selectWithdrawOne")
+    public WebResult selectWithdrawOne(HttpServletRequest request) {
+        String userId = request.getHeader("userId");
+        WithdrawVo withdrawOne = userService.selectWithdrawOne(Integer.parseInt(userId));
+        return new WebResult("200","获取成功",withdrawOne);
+    }
     /**
      * 获取用户注销申请处理状态
      *
@@ -220,7 +230,6 @@ public class UserController {
         }
         int i = userService.selectWithdraw(Integer.parseInt(userId));
         if (i == 0) {
-
             return new WebResult("200", "注销成功", "");
         }
         if (i == 1) {
@@ -274,10 +283,9 @@ public class UserController {
      * @param pageVo,request
      * @return
      */
-    @PostMapping(value = "/queryUserContribute")
+    @PostMapping(value = "/queryUserContributeCheckin")
      public WebResult queryUserContributeCheckin(@ RequestBody PageVo pageVo,HttpServletRequest request){
-             Integer userId=Integer.parseInt(request.getHeader("userId"));
-               pageVo.setUserId(userId);
+
            return userService.queryUserContributeCheckin(pageVo);
      }
 
