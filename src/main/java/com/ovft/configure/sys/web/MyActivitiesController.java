@@ -33,8 +33,10 @@ public class MyActivitiesController {
      */
     @PostMapping(value = "/activitiesList")
     public WebResult activitiesList(HttpServletRequest request, @RequestBody PageVo pageVo) {
-        String schoolId = request.getHeader("schoolId");
-        pageVo.setSchoolId(Integer.parseInt(schoolId));
+        if(pageVo.getType().equals("2")) {
+            String schoolId = request.getHeader("schoolId");
+            pageVo.setSchoolId(Integer.parseInt(schoolId));
+        }
         return activitiesService.activitiesList(pageVo);
     }
 
@@ -50,7 +52,7 @@ public class MyActivitiesController {
     }
 
     /**
-     * 添加/修改 我报名的活动
+     * 添加 我报名的活动
      *
      * @param myActivities
      * @return
@@ -58,7 +60,6 @@ public class MyActivitiesController {
     @PostMapping(value = "/registMyActivities")
     public WebResult registMyActivities(HttpServletRequest request, @RequestBody MyActivities myActivities) {
         myActivities.setUserId(Integer.parseInt(request.getHeader("userId")));
-        myActivities.setUserId(Integer.parseInt(request.getHeader("schoolId")));
         return myActivitiesService.registMyActivities(myActivities);
     }
 

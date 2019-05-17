@@ -97,6 +97,32 @@ public class EduArticle implements Serializable {
      */
     private String vedio;
 
+    /**
+     * 置顶天数
+     */
+    private Integer topday;
+
+    /**
+     * 置顶开始时间
+     */
+    private Date topdate;
+
+    public Integer getTopday() {
+        return topday;
+    }
+
+    public void setTopday(Integer topday) {
+        this.topday = topday;
+    }
+
+    public Date getTopdate() {
+        return topdate;
+    }
+
+    public void setTopdate(Date topdate) {
+        this.topdate = topdate;
+    }
+
     public String getVedio() {
            return vedio;
     }

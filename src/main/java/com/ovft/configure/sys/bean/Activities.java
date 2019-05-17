@@ -15,7 +15,7 @@ public class Activities implements Serializable {
     private String schoolName;
 
     /**
-     * 活动类型  1-全国活动  2-校园活动  3-志愿活动
+     * 活动类型  1-联盟活动  2-校园活动  3-志愿活动
      */
     private String type;
 
@@ -70,6 +70,19 @@ public class Activities implements Serializable {
      *  人员类别   管理员,教师,学员
      */
     private String category;
+
+    /**
+     * 已报名人人数
+     */
+    private Integer registNum;
+
+    public Integer getRegistNum() {
+        return registNum;
+    }
+
+    public void setRegistNum(Integer registNum) {
+        this.registNum = registNum;
+    }
 
     public String getSchoolName() {
         return schoolName;

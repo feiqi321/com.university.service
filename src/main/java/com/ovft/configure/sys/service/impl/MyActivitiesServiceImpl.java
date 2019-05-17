@@ -2,16 +2,24 @@ package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Activities;
+import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.MyActivities;
 import com.ovft.configure.sys.dao.ActivitiesMapper;
+import com.ovft.configure.sys.dao.AdminMapper;
 import com.ovft.configure.sys.dao.MyActivitiesMapper;
 import com.ovft.configure.sys.service.MyActivitiesService;
+import com.ovft.configure.sys.vo.MyActivitiesVo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @ClassName MyActivitiesServiceImpl
@@ -27,17 +35,68 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
     private MyActivitiesMapper myActivitiesMapper;
     @Resource
     private ActivitiesMapper activitiesMapper;
+    @Resource
+    private AdminMapper adminMapper;
 
 
     @Override
     public WebResult myActivitiesList(int userId) {
-
-        return null;
+        List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(userId, null, null);
+        LinkedList<MyActivitiesVo> voList = new LinkedList<>();
+        for (MyActivities myActivity : myActivities) {
+            MyActivitiesVo vo = new MyActivitiesVo(myActivity);
+            Activities activities = activitiesMapper.selectById(myActivity.getActivitiesId());
+            vo.setActivities(activities);
+            voList.push(vo);
+        }
+        return new WebResult("200", "查询成功", voList);
     }
 
+    /**使用for update一定要加上这个事务
+     * 当事务处理完后，for update才会将行级锁解除*/
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
     public WebResult registMyActivities(MyActivities myActivities) {
-        return null;
+        Activities activities = activitiesMapper.selectById(myActivities.getActivitiesId());
+
+        Date registStartTime = activities.getRegistStartTime();
+        Date registEndTime = activities.getRegistEndTime();
+        Date date = new Date();
+        if(date.before(registStartTime) || date.after(registEndTime)) {
+            return new WebResult("400", "不在活动报名时间内", "");
+        }
+        String category = activities.getCategory();
+        //人员类别 管理员,教师,学员
+        if(!StringUtils.isBlank(category)) {
+            if(myActivities.getUserId() != null) {
+                if( !category.contains("学员")){
+                    return new WebResult("400", "该活动只有" + category + "能报名", "");
+                }
+
+            }
+            if(myActivities.getAdminId() != null) {
+                Admin admin = adminMapper.selectById(myActivities.getAdminId());
+                if(admin.getRole().equals(1) && !category.contains("管理员")) {
+                    return new WebResult("400", "该活动只有" + category + "能报名", "");
+                }
+                if(admin.getRole().equals(2) && !category.contains("教师")) {
+                    return new WebResult("400", "该活动只有" + category + "能报名", "");
+                }
+            }
+        }
+        List<MyActivities> myActivities1 = myActivitiesMapper.selectByUserOrActivities(myActivities.getUserId(), myActivities.getAdminId(), myActivities.getActivitiesId());
+        if(myActivities1.size() != 0) {
+            return new WebResult("400", "您已报名该活动", "");
+        }
+
+        List<MyActivities> registList = myActivitiesMapper.selectByUserOrActivities(null, null, myActivities.getActivitiesId());
+        //已报名人人数 >= 参与人数
+        if(registList.size() >= activities.getNumber()) {
+            return new WebResult("400", "报名人数已满!", "");
+        }
+        myActivities.setRegistTime(new Date());
+        myActivitiesMapper.createMyActivities(myActivities);
+        return new WebResult("200", "报名成功!", "");
     }
 
     @Override
@@ -49,6 +108,7 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
         if(date.after(registEndTime)) {
             return new WebResult("400", "活动报名已截止,不能取消报名", "");
         }
+
         myActivitiesMapper.deleteMyActivities(id);
         return new WebResult("200", "删除成功", "");
     }

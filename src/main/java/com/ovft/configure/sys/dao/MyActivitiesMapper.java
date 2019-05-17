@@ -1,7 +1,6 @@
 package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.MyActivities;
-import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,11 +16,9 @@ public interface MyActivitiesMapper {
 
     public MyActivities selectById(@Param("id") Integer id);
 
-    public List<MyActivities> selectActivitiesList(PageVo pageVo);
+    public List<MyActivities> selectByUserOrActivities(@Param("userId") Integer userId, @Param("adminId") Integer adminId, @Param("activitiesId") Integer activitiesId);
 
     public void createMyActivities(MyActivities activities);
-
-    public void updateMyActivities(MyActivities activities);
 
     public void deleteMyActivities(@Param("id") Integer id);
 }

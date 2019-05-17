@@ -9,14 +9,16 @@ import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.vo.EduArticleVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author vvtxw
@@ -83,18 +85,34 @@ public class EduArticleServiceImpl implements EduArticleService {
      */
     @Transactional
     @Override
-    public WebResult adminAddNotice(EduArticle eduArticle) {
+    public WebResult adminAddNotice(EduArticle eduArticle, Integer role) {
         WebResult security = security(eduArticle);
         if(security != null) {
             return security;
         }
+        //置顶时间在当前日期之前, 文章置顶
+        if(eduArticle.getTopdate() != null && eduArticle.getTopdate().before(new Date())) {
+            eduArticle.setIstop("1");
+        } else {
+            eduArticle.setIstop("0");
+        }
+        //设置默认置顶时间  5天
+        if(eduArticle.getTopdate() != null && eduArticle.getTopday() == null) {
+            eduArticle.setTopday(5);
+        }
         String[] types = eduArticle.getType().split(",");
+        for (String type : types) {
+            //非超级管理员的联盟资讯置顶
+            if("4".equals(type) && role != 0 && eduArticle.getTopdate() != null) {
+                return new WebResult("400", "联盟资讯仅超级管理员可置顶", "");
+            }
+        }
         if(eduArticle.getId() == null) {
             //校园介绍只能有一个   需求修改,能添加多条校园介绍
             /*if("3".equals(eduArticle.getType())) {
                 List<EduArticleVo> noticeAll = eduArticleMapper.findNoticeAll(null, eduArticle.getSchoolId(), eduArticle.getType(), null);
                 if(noticeAll != null && noticeAll.size() != 0) {
-                    return new WebResult("400", "当前学校只能添加一个校园介绍", "");
+                    return new WebResult("400", "当前学校已有校园介绍", "");
                 }
             }*/
             for (String type : types) {
@@ -157,7 +175,7 @@ public class EduArticleServiceImpl implements EduArticleService {
     @Override
     public WebResult findNotice(Integer id) {
         List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(id, null, null, null);
-        if(noticeList==null && noticeList.size() == 0) {
+        if(noticeList==null || noticeList.size() == 0) {
             return new WebResult("200", "查询成功", "");
         }
         return new WebResult("200", "查询成功", noticeList.get(0));
@@ -167,7 +185,7 @@ public class EduArticleServiceImpl implements EduArticleService {
     @Override
     public WebResult queryNoticeById(Integer id) {
         List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(id, null, null, null);
-        if(noticeList==null && noticeList.size() == 0) {
+        if(noticeList==null || noticeList.size() == 0) {
             return new WebResult("200", "查询成功", "");
         }
         //浏览量加1
@@ -177,18 +195,34 @@ public class EduArticleServiceImpl implements EduArticleService {
         return new WebResult("200", "查询成功", noticeList.get(0));
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(EduArticleServiceImpl.class);
+    @Transactional
     @Override
-    public WebResult newsNotice(Integer schoolId) {
-        //查询：1-通知公告, 3-校园介绍, 4-联盟资讯, 5-政策法规
-        //可以看见所有学校联盟资讯
-        PageHelper.startPage(1, 3);
-        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, "1",null);
-        List<EduArticleVo> informationList =  eduArticleMapper.findNoticeAll(null, null, "4",null);
+    public void topScheduleTask() {
+        List<EduArticle> eduArticles = eduArticleMapper.selectIsTop();
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        for (EduArticle eduArticle : eduArticles) {
+            Date topdate = eduArticle.getTopdate();
+            Integer topday = eduArticle.getTopday();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("noticeList", noticeList);
-        map.put("informationList", informationList);
-        return new WebResult("200", "查询成功", map);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(topdate);
+            cal.add(Calendar.DATE, topday);
+            System.out.println("cal.getTime() = " + sdf.format(cal.getTime()) + "=============== " + sdf.format(topdate));
+            //置顶开始时间 < 今天 < 置顶结束时间       -> 文章置顶
+            if(now.after(topdate) && now.before(cal.getTime()) && eduArticle.getIstop().equals("0")) {
+                logger.info("置顶定时任务1: topdate: "+ sdf.format(topdate) + ", eduArticel.id=" + eduArticle.getId());
+                eduArticleMapper.updateIsTop(eduArticle.getId(), "1", topdate);
+            }
+            //置顶开始时间 + 置顶天数 < 今天日期      -> 置顶结束
+            System.out.println(now.after(cal.getTime()));
+            if(now.after(cal.getTime()) && eduArticle.getIstop().equals("1")) {
+                logger.info("置顶定时任务2: topdate: "+ sdf.format(topdate) + ", eduArticel.id=" + eduArticle.getId());
+                eduArticleMapper.updateIsTop(eduArticle.getId(), "0", null);
+            }
+        }
     }
+
 
 }

@@ -153,13 +153,14 @@
         createtime, updatetime, ispublic,
         istop, visits, thumbup,
         comment, state, url,
-        type, collect, content, school_id
+        type, collect, content, school_id, topdate, topday
         )
         values (#{userid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
         #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{ispublic,jdbcType=VARCHAR},
         #{istop,jdbcType=VARCHAR}, #{visits,jdbcType=INTEGER}, #{thumbup,jdbcType=INTEGER},
         #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
-        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}
+        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}}, #{topdate},
+        #{topday}
         )
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduArticle">
@@ -484,7 +485,8 @@
     <!--后台条件查询文章-->
     <select id="findNoticeAll"  resultType="com.ovft.configure.sys.vo.EduArticleVo">
         select a.id, a.userid, a.title, a.image, a.createtime, a.updatetime, a.ispublic, a.istop, a.visits, a.thumbup,
-        a.comment, a.state, a.url, a.type, a.collect, a.school_id as schoolId, a.content, s.school_name as schoolName
+        a.comment, a.state, a.url, a.type, a.collect, a.school_id as schoolId, a.content, s.school_name as schoolName,
+        a.topday, a.topdate
         from edu_article a
         left join  edu_school s on a.school_id = s.school_id
         where 1=1
@@ -527,7 +529,7 @@
        update  edu_article
          set  userid=#{eduArticle.userid},title=#{eduArticle.title},content=#{eduArticle.content},i=#{eduArticle.image},createtime=#{eduArticle.createtime},upadettime=#{eduArticle.updatetime}
          ispublic=#{eduArticle.ispublic},istop=#{eduArticle.istop},visits=#{eduArticle.visits},thumbup=#{eduArticle.thumbup},comment=#{eduArticle.comment},state=#{eduArticle.state},
-         url=#{eduArticle.url},type=#{eduArticle.type},collect=#{eduArticle.collect},school_id=#{eduArticle.schoolId}
+         url=#{eduArticle.url},type=#{eduArticle.type},collect=#{eduArticle.collect},school_id=#{eduArticle.schoolId},topdate=#{eduArticle.topdate},topday=#{eduArticle.topday}
         where  id=#{id}
     </update>
 
@@ -537,6 +539,16 @@
         where  id=#{id}
     </update>
 
+    <select id="selectIsTop" resultType="com.ovft.configure.sys.bean.EduArticle">
+        SELECT id, topdate, topday, istop
+        from edu_article
+        where topdate is not null
+    </select>
 
+    <update id="updateIsTop"  >
+        update  edu_article
+        set  istop=#{istop}, topdate=#{topdate,jdbcType=TIMESTAMP}
+        where  id=#{id}
+    </update>
 
 </mapper>

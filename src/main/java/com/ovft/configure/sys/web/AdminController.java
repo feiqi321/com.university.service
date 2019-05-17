@@ -5,13 +5,11 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.EduArticle;
-import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.AdminService;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
-import com.ovft.configure.sys.vo.WithdrawVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,7 +175,7 @@ public class AdminController {
               eduArticle.setCollect("0");
               eduArticle.setType(contribute.getType().toString());
               eduArticle.setSchoolId(contribute.getSchoolId());
-              eduArticleService.adminAddNotice(eduArticle);//向article表里面添加记录
+              eduArticleService.adminAddNotice(eduArticle,1);//向article表里面添加记录
               return new WebResult("200","审核通过","");
 
 //            userService.deleteWithdraw(wid);

@@ -29,7 +29,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     @Resource
     private ActivitiesMapper activitiesMapper;
 
-    @Transactional
+
     @Override
     public WebResult activitiesList(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
@@ -43,6 +43,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         return new WebResult("200", "查询成功", pageInfo);
     }
 
+    @Transactional
     @Override
     public WebResult createActivities(Activities activities) {
         if (activities.getSchoolId() == null) {
@@ -84,6 +85,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         if(activities.getType() == null) {
             return new WebResult("400", "活动类型不能为空", "");
         }
+
         if(activities.getActivitiesId() == null) {
             activitiesMapper.createActivities(activities);
             return new WebResult("200", "保存成功", "");

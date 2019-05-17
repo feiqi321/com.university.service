@@ -62,6 +62,7 @@ public class EduArticleController {
     public WebResult adminAddNotice(HttpServletRequest request, @RequestBody EduArticle eduArticle) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
+        Integer role = 0;
         if(o != null) {
             Integer id = (Integer) o;
             // 如果是pc端登录，更新token缓存失效时间
@@ -69,8 +70,9 @@ public class EduArticleController {
             Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
             if(hget.getRole() != 0) {
                 eduArticle.setSchoolId(hget.getSchoolId());
+                role = hget.getRole();
             }
-            return eduArticleService.adminAddNotice(eduArticle);
+            return eduArticleService.adminAddNotice(eduArticle, role);
         }else {
             return new WebResult("50012", "请先登录", "");
         }
@@ -120,16 +122,6 @@ public class EduArticleController {
     @GetMapping(value = "/server/article/deleteNotice")
     public WebResult deleteNotice(@RequestParam(value = "id") Integer id) {
         return eduArticleService.deleteNotice(id);
-    }
-
-    /**
-     *首页轮播新闻/通知/联盟资讯
-     * @return
-     */
-    @PostMapping(value = "/article/newsNotice")
-    public WebResult newsNotice(HttpServletRequest request) {
-        String schoolId = request.getHeader("schoolId");
-        return eduArticleService.newsNotice(Integer.valueOf(schoolId));
     }
 
 
