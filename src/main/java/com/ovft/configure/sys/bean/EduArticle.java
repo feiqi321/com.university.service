@@ -97,6 +97,14 @@ public class EduArticle implements Serializable {
      */
     private String vedio;
 
+    public String getVedio() {
+           return vedio;
+    }
+
+    public void setVedio(String vedio) {
+        this.vedio = vedio;
+    }
+
     public String getAudio() {
         return audio;
     }
