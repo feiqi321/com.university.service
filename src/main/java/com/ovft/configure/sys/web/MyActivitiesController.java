@@ -46,9 +46,20 @@ public class MyActivitiesController {
      * @param request
      * @return
      */
+    @GetMapping(value = "/findMyActivities")
+    public WebResult findMyActivities(HttpServletRequest request, Integer activitiesId) {
+        return myActivitiesService.findMyActivities(activitiesId);
+    }
+
+    /**
+     * 我报名的活动 列表
+     *
+     * @param request
+     * @return
+     */
     @GetMapping(value = "/myActivitiesList")
     public WebResult myActivitiesList(HttpServletRequest request) {
-        return myActivitiesService.myActivitiesList(Integer.parseInt(request.getHeader("userId")));
+        return myActivitiesService.myActivitiesList(Integer.parseInt(request.getHeader("userId")), null);
     }
 
     /**

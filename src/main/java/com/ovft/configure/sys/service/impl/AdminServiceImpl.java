@@ -163,10 +163,18 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public WebResult findAdmin(Integer adminId) {
+    public WebResult findAdmin(Integer adminId, Integer schoolId) {
         Admin admin = adminMapper.selectById(adminId);
-        School school = schoolMapper.selectById(admin.getSchoolId());
         AdminVo adminVo = new AdminVo(admin);
+        if(admin.getRole().equals(2)) {
+            List<Map<String, Object>> maps = adminMapper.selectTeacherBySchool(adminId, schoolId);
+            if(maps.size() != 0) {
+                Map<String, Object> map = maps.get(0);
+                adminVo.setPost((String) map.get("post"));
+                adminVo.setSchoolId((Integer) map.get("schoolId"));
+            }
+        }
+        School school = schoolMapper.selectById(adminVo.getSchoolId());
         adminVo.setSchoolName(school == null ? "" : school.getSchoolName());
         return new WebResult("200", "查询成功", adminVo);
     }
@@ -194,11 +202,20 @@ public class AdminServiceImpl implements AdminService {
     public WebResult adminList(PageVo pageVo) {
         Integer schoolId = pageVo.getSchoolId();
         if (pageVo.getPageSize() == 0) {
+            if(pageVo.getRole()!= null && pageVo.getRole().equals(2)) {
+                List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(null, schoolId);
+                return new WebResult("200", "查询成功", teacherList);
+            }
             List<Map<String, Object>> teacherList = adminMapper.selectBySchool(pageVo.getRole(), schoolId);
             return new WebResult("200", "查询成功", teacherList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "a.admin_id");
-        List<Map<String, Object>> teacherList = adminMapper.selectBySchool(pageVo.getRole(), schoolId);
+        List<Map<String, Object>> teacherList;
+        if(pageVo.getRole()!= null && pageVo.getRole().equals(2)) {
+            teacherList = adminMapper.selectTeacherBySchool(null, schoolId);
+        } else {
+            teacherList = adminMapper.selectBySchool(pageVo.getRole(), schoolId);
+        }
         PageInfo pageInfo = new PageInfo<>(teacherList);
         return new WebResult("200", "查询成功", pageInfo);
     }
@@ -222,9 +239,38 @@ public class AdminServiceImpl implements AdminService {
         if (admin.getSchoolId() == null) {
             return new WebResult("400", "请选择学校", "");
         }
+        Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
+        //添加教师
+        if(admin.getRole().equals(2)) {
+            if(admin.getAdminId() == null) {
+                //查询该手机号是否已经存在
+                if (adminPhone != null) {
+                    admin.setAdminId(adminPhone.getAdminId());
+                } else {
+                    //初始密码为000000
+                    String password = "000000";
+                    admin.setPassword(MD5Utils.md5Password(password));
+                    adminMapper.creatAdmin(admin);
+                }
+            } else {
+                //查询该手机号是否已经存在
+                if (adminPhone != null && adminPhone.getAdminId() != admin.getAdminId()) {
+                    return new WebResult("400", "手机号已存在", "");
+                }
+                adminMapper.updateByPrimary(admin);
+            }
+            List<Map<String, Object>> maps = adminMapper.selectTeacherBySchool(admin.getAdminId(), admin.getSchoolId());
+            if(maps.size() == 0) {
+                adminMapper.createTeacherSchool(admin);
+            } else {
+                adminMapper.updateTeacherSchool(admin);
+            }
+            return new WebResult("200", "操作成功", "");
+        }
+
+        //添加管理员
         if(admin.getAdminId() == null) {
             //查询该手机号是否已经存在
-            Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
             if (adminPhone != null) {
                 return new WebResult("400", "手机号已存在", "");
             }
@@ -240,7 +286,6 @@ public class AdminServiceImpl implements AdminService {
             return new WebResult("200", "添加成功", "");
         } else {
             //查询该手机号是否已经存在
-            Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
             if (adminPhone != null && adminPhone.getAdminId() != admin.getAdminId()) {
                 return new WebResult("400", "手机号已存在", "");
             }

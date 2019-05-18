@@ -46,11 +46,14 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     @Transactional
     @Override
     public WebResult createActivities(Activities activities) {
+        if (StringUtils.isBlank(activities.getTitle())) {
+            return new WebResult("400", "活动标题不能为空", "");
+        }
         if (activities.getSchoolId() == null) {
             return new WebResult("400", "请选择学校", "");
         }
-        if (StringUtils.isBlank(activities.getTitle())) {
-            return new WebResult("400", "活动标题不能为空", "");
+        if (StringUtils.isBlank(activities.getType())) {
+            return new WebResult("400", "活动类型不能为空", "");
         }
         if (StringUtils.isBlank(activities.getContent())) {
             return new WebResult("400", "活动内容不能为空", "");
@@ -72,6 +75,9 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         }
         if (activities.getRegistStartTime().after(activities.getRegistEndTime())) {
             return new WebResult("400", "活动报名结束日期不能早于开始日期", "");
+        }
+        if (activities.getRegistStartTime().after(activities.getStartTime())) {
+            return new WebResult("400", "活动开始日期不能早于活动报名日期", "");
         }
         if(activities.getStartAge() == null) {
             activities.setStartAge(0);

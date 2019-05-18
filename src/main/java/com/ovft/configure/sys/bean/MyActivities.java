@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,6 +16,7 @@ public class MyActivities implements Serializable {
     private Integer userId;
     private Integer schoolId;
     private String type;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registTime;
 
     public Integer getId() {

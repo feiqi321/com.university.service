@@ -5,9 +5,11 @@ import com.ovft.configure.sys.bean.MyActivities;
 
 public interface MyActivitiesService {
 
-    public WebResult myActivitiesList(int userId);
+    public WebResult myActivitiesList(Integer userId, Integer adminId);
 
     public WebResult registMyActivities(MyActivities myActivities);
 
     public WebResult deleteMyActivities(Integer id);
+
+    public WebResult findMyActivities(Integer activitiesId);
 }

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -96,9 +95,8 @@ public class EduArticleServiceImpl implements EduArticleService {
         } else {
             eduArticle.setIstop("0");
         }
-        //设置默认置顶时间  5天
-        if(eduArticle.getTopdate() != null && eduArticle.getTopday() == null) {
-            eduArticle.setTopday(5);
+        if(eduArticle.getTopdate() != null && eduArticle.getTopenddate() == null) {
+            return new WebResult("400", "置顶时间不能为空", "");
         }
         String[] types = eduArticle.getType().split(",");
         for (String type : types) {
@@ -196,6 +194,7 @@ public class EduArticleServiceImpl implements EduArticleService {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(EduArticleServiceImpl.class);
+
     @Transactional
     @Override
     public void topScheduleTask() {
@@ -204,21 +203,16 @@ public class EduArticleServiceImpl implements EduArticleService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         for (EduArticle eduArticle : eduArticles) {
             Date topdate = eduArticle.getTopdate();
-            Integer topday = eduArticle.getTopday();
+            Date topenddate = eduArticle.getTopenddate();
 
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(topdate);
-            cal.add(Calendar.DATE, topday);
-            System.out.println("cal.getTime() = " + sdf.format(cal.getTime()) + "=============== " + sdf.format(topdate));
             //置顶开始时间 < 今天 < 置顶结束时间       -> 文章置顶
-            if(now.after(topdate) && now.before(cal.getTime()) && eduArticle.getIstop().equals("0")) {
+            if(now.after(topdate) && now.before(topenddate) && eduArticle.getIstop().equals("0")) {
                 logger.info("置顶定时任务1: topdate: "+ sdf.format(topdate) + ", eduArticel.id=" + eduArticle.getId());
                 eduArticleMapper.updateIsTop(eduArticle.getId(), "1", topdate);
             }
-            //置顶开始时间 + 置顶天数 < 今天日期      -> 置顶结束
-            System.out.println(now.after(cal.getTime()));
-            if(now.after(cal.getTime()) && eduArticle.getIstop().equals("1")) {
-                logger.info("置顶定时任务2: topdate: "+ sdf.format(topdate) + ", eduArticel.id=" + eduArticle.getId());
+            //置顶结束时间 < 今天日期      -> 置顶结束
+            if(now.after(topenddate) && eduArticle.getIstop().equals("1")) {
+                logger.info("置顶结束定时任务2: topdate: "+ sdf.format(topdate) + ", eduArticel.id=" + eduArticle.getId());
                 eduArticleMapper.updateIsTop(eduArticle.getId(), "0", null);
             }
         }

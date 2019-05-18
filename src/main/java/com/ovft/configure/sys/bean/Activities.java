@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -49,18 +51,22 @@ public class Activities implements Serializable {
     /**
      * 活动开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
     /**
      *活动结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
     /**
      * 报名开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registStartTime;
     /**
      * 报名结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registEndTime;
 
     private Integer startAge;

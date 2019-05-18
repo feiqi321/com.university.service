@@ -97,7 +97,7 @@ public class AdminController {
             }
             return adminService.adminList(pageVo);
         }else {
-            return new WebResult("50012", "请先登录", "");
+            return new WebResult("50012", "请重新登录", "");
         }
     }
 
@@ -121,7 +121,7 @@ public class AdminController {
             }
             return adminService.createAdmin(admin);
         }else {
-            return new WebResult("50012", "请先登录", "");
+            return new WebResult("50012", "请重新登录", "");
         }
     }
 
@@ -132,8 +132,8 @@ public class AdminController {
      * @return
      */
     @GetMapping(value = "/findAdmin")
-    public WebResult findAdmin(@RequestParam(value = "adminId") Integer adminId) {
-        return adminService.findAdmin(adminId);
+    public WebResult findAdmin(@RequestParam(value = "adminId") Integer adminId, Integer schoolId) {
+        return adminService.findAdmin(adminId, schoolId);
     }
 
 

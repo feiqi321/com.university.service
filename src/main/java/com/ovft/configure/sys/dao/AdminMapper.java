@@ -22,11 +22,28 @@ public interface AdminMapper {
 
     public List<Map<String, Object>> selectBySchool(@Param("role") Integer role, @Param("schoolId") Integer schoolId);
 
+    public List<Map<String, Object>> selectTeacherBySchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId);
+
     public void creatAdmin(Admin admin);
+
+    /**
+     *  添加教师
+     */
+    public void createTeacherSchool(Admin admin);
 
     public void updateByPassword(@Param("adminId") Integer adminId, @Param("password") String password);
 
     public void updateByPrimary(Admin admin);
 
+    /**
+     *  修改教师
+     */
+    public void updateTeacherSchool(Admin admin);
+
     public void deleteById(@Param("adminId") Integer adminId);
+
+    /**
+     *  删除教师
+     */
+    public void deleteTeacherSchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId);
 }

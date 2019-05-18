@@ -40,8 +40,8 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
 
 
     @Override
-    public WebResult myActivitiesList(int userId) {
-        List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(userId, null, null);
+    public WebResult myActivitiesList(Integer userId, Integer adminId) {
+        List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(userId, adminId, null);
         LinkedList<MyActivitiesVo> voList = new LinkedList<>();
         for (MyActivities myActivity : myActivities) {
             MyActivitiesVo vo = new MyActivitiesVo(myActivity);
@@ -111,5 +111,13 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
 
         myActivitiesMapper.deleteMyActivities(id);
         return new WebResult("200", "删除成功", "");
+    }
+
+    @Override
+    public WebResult findMyActivities(Integer activitiesId) {
+        Activities activities = activitiesMapper.selectById(activitiesId);
+        List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(null, null, activitiesId);
+        activities.setRegistNum(myActivities.size());
+        return new WebResult("200", "查询成功", activities);
     }
 }

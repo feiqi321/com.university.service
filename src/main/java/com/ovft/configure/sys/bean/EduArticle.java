@@ -98,21 +98,20 @@ public class EduArticle implements Serializable {
     private String vedio;
 
     /**
-     * 置顶天数
-     */
-    private Integer topday;
-
-    /**
      * 置顶开始时间
      */
     private Date topdate;
+    /**
+     * 置顶结束时间
+     */
+    private Date topenddate;
 
-    public Integer getTopday() {
-        return topday;
+    public Date getTopenddate() {
+        return topenddate;
     }
 
-    public void setTopday(Integer topday) {
-        this.topday = topday;
+    public void setTopenddate(Date topenddate) {
+        this.topenddate = topenddate;
     }
 
     public Date getTopdate() {

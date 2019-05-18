@@ -4,7 +4,9 @@ import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Activities;
 import com.ovft.configure.sys.bean.Admin;
+import com.ovft.configure.sys.bean.MyActivities;
 import com.ovft.configure.sys.service.ActivitiesService;
+import com.ovft.configure.sys.service.MyActivitiesService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class ActivitiesController {
     private RedisUtil redisUtil;
     @Autowired
     private ActivitiesService activitiesService;
+    @Autowired
+    private MyActivitiesService myActivitiesService;
 
     /**
      * 活动列表
@@ -86,7 +90,7 @@ public class ActivitiesController {
     }
 
     /**
-     * 删除活动地址
+     * 删除活动
      *
      * @param activitiesId
      * @return
@@ -94,6 +98,59 @@ public class ActivitiesController {
     @GetMapping(value = "/deleteActivities")
     public WebResult deleteActivities(@RequestParam(value = "activitiesId") Integer activitiesId) {
         return activitiesService.deleteActivities(activitiesId);
+    }
+
+    /**
+     * 我报名的活动 列表
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/myActivitiesList")
+    public WebResult myActivitiesList(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            return myActivitiesService.myActivitiesList(null, hget.getAdminId());
+        }else {
+            return new WebResult("50012", "请重新登录", "");
+        }
+    }
+
+    /**
+     * 添加 我报名的活动
+     *
+     * @param myActivities
+     * @return
+     */
+    @PostMapping(value = "/registMyActivities")
+    public WebResult registMyActivities(HttpServletRequest request, @RequestBody MyActivities myActivities) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            myActivities.setAdminId(hget.getAdminId());
+            return myActivitiesService.registMyActivities(myActivities);
+        }else {
+            return new WebResult("50012", "请重新登录", "");
+        }
+    }
+
+    /**
+     * 删除 我报名的活动
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/deleteMyActivities")
+    public WebResult deleteMyActivities(@RequestParam(value = "id") Integer id) {
+        return myActivitiesService.deleteMyActivities(id);
     }
 
 }
