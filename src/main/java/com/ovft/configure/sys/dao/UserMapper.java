@@ -120,8 +120,6 @@ public interface UserMapper {
     //修改投稿申请状态
     public void updateContributeCheckin(@Param("checkin") Integer checkin,@Param("rejectReason") String rejectReason,@Param("cid") Integer cid);
 
-    //查询报名学校Id和是否通过验证 -vvtxw
-    public User queryUserInfo(Integer userId);
 
     //查询所有学员投稿申请列表
     public List<Contribute> contributeList(PageVo pageVo);
