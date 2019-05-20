@@ -33,9 +33,22 @@ public class MyActivitiesController {
      */
     @PostMapping(value = "/activitiesList")
     public WebResult activitiesList(HttpServletRequest request, @RequestBody PageVo pageVo) {
-        String schoolId = request.getHeader("schoolId");
-        pageVo.setSchoolId(Integer.parseInt(schoolId));
+        if(pageVo.getType().equals("2")) {
+            String schoolId = request.getHeader("schoolId");
+            pageVo.setSchoolId(Integer.parseInt(schoolId));
+        }
         return activitiesService.activitiesList(pageVo);
+    }
+
+    /**
+     * 我报名的活动 列表
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findMyActivities")
+    public WebResult findMyActivities(HttpServletRequest request, Integer activitiesId) {
+        return myActivitiesService.findMyActivities(activitiesId);
     }
 
     /**
@@ -46,11 +59,11 @@ public class MyActivitiesController {
      */
     @GetMapping(value = "/myActivitiesList")
     public WebResult myActivitiesList(HttpServletRequest request) {
-        return myActivitiesService.myActivitiesList(Integer.parseInt(request.getHeader("userId")));
+        return myActivitiesService.myActivitiesList(Integer.parseInt(request.getHeader("userId")), null);
     }
 
     /**
-     * 添加/修改 我报名的活动
+     * 添加 我报名的活动
      *
      * @param myActivities
      * @return
@@ -58,7 +71,6 @@ public class MyActivitiesController {
     @PostMapping(value = "/registMyActivities")
     public WebResult registMyActivities(HttpServletRequest request, @RequestBody MyActivities myActivities) {
         myActivities.setUserId(Integer.parseInt(request.getHeader("userId")));
-        myActivities.setUserId(Integer.parseInt(request.getHeader("schoolId")));
         return myActivitiesService.registMyActivities(myActivities);
     }
 

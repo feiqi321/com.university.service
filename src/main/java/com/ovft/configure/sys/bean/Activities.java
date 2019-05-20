@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,7 +17,7 @@ public class Activities implements Serializable {
     private String schoolName;
 
     /**
-     * 活动类型  1-全国活动  2-校园活动  3-志愿活动
+     * 活动类型  1-联盟活动  2-校园活动  3-志愿活动
      */
     private String type;
 
@@ -49,18 +51,22 @@ public class Activities implements Serializable {
     /**
      * 活动开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
     /**
      *活动结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
     /**
      * 报名开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registStartTime;
     /**
      * 报名结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registEndTime;
 
     private Integer startAge;
@@ -70,6 +76,19 @@ public class Activities implements Serializable {
      *  人员类别   管理员,教师,学员
      */
     private String category;
+
+    /**
+     * 已报名人人数
+     */
+    private Integer registNum;
+
+    public Integer getRegistNum() {
+        return registNum;
+    }
+
+    public void setRegistNum(Integer registNum) {
+        this.registNum = registNum;
+    }
 
     public String getSchoolName() {
         return schoolName;

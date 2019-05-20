@@ -28,6 +28,19 @@ public class Admin implements Serializable {
 
     private Integer schoolId;
 
+    /**
+     * 职称/职级
+     */
+    private String post;
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
     public Integer getSchoolId() {
         return schoolId;
     }

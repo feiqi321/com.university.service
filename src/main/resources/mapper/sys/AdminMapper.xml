@@ -4,7 +4,7 @@
 <mapper namespace="com.ovft.configure.sys.dao.AdminMapper" >
 
     <sql id="Base_Column_List">
-        admin_id, name, password, phone, image, role, school_id
+        admin_id, name, password, phone, image, role, school_id, post
     </sql>
     <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.Admin">
         <id column="admin_id" jdbcType="INTEGER" property="adminId"/>
@@ -12,6 +12,7 @@
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
         <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="post" jdbcType="VARCHAR" property="post"/>
         <result column="role" jdbcType="INTEGER" property="role"/>
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
     </resultMap>
@@ -25,7 +26,7 @@
 
     <select id="selectBySchool"  resultType="java.util.Map">
         select
-        a.admin_id adminId, a.name, a.password, a.phone, a.image, a.role, a.school_id schoolId, s.school_name as schoolName
+        a.admin_id adminId, a.name, a.phone, a.image, a.role, a.school_id schoolId, s.school_name as schoolName, a.post
         from edu_admin a
         left join edu_school s on a.school_id = s.school_id
         where 1=1
@@ -38,12 +39,12 @@
     </select>
 
     <select id="selectByPhone"  resultType="com.ovft.configure.sys.bean.Admin">
-         select admin_id as adminId, name, password, phone, image, role, school_id as schoolId from edu_admin where phone = #{phone}
+         select admin_id as adminId, name, password, phone, image, role, school_id as schoolId, post from edu_admin where phone = #{phone}
     </select>
 
     <insert id="creatAdmin" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="adminId">
-         insert into edu_admin(name, password, phone, image, role, school_id)
-         values (#{name}, #{password}, #{phone}, #{image}, #{role}, #{schoolId})
+         insert into edu_admin(name, password, phone, image, role, school_id, post)
+         values (#{name}, #{password}, #{phone}, #{image}, #{role}, #{schoolId}, #{post})
     </insert>
     
     <update id="updateByPassword">
@@ -73,6 +74,9 @@
             <if test="schoolId != null">
                 school_id = #{schoolId},
             </if>
+            <if test="post != null">
+                post = #{post},
+            </if>
         </set>
         where admin_id = #{adminId,jdbcType=INTEGER}
     </update>
@@ -81,5 +85,40 @@
         delete from edu_admin
         where admin_id = #{adminId}
   </delete>
+
+    <select id="selectTeacherBySchool"  resultType="java.util.Map">
+        select
+        a.admin_id adminId, a.name, a.phone, a.image, a.role, t.school_id schoolId, s.school_name as schoolName, t.post
+        from edu_admin a
+        LEFT JOIN edu_teacher_school t on a.admin_id = t.admin_id
+        LEFT JOIN edu_school s on t.school_id = s.school_id
+        where 1=1
+        <if test="adminId != null">
+            and a.admin_id = #{adminId}
+        </if>
+        <if test="schoolId != null">
+            and t.school_id = #{schoolId}
+        </if>
+    </select>
+
+    <insert id="createTeacherSchool" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="id">
+         insert into edu_teacher_school(school_id, admin_id, post)
+         values (#{schoolId}, #{adminId}, #{post})
+    </insert>
+
+    <update id="updateTeacherSchool" parameterType="com.ovft.configure.sys.bean.Admin">
+        update edu_teacher_school
+        <set>
+            <if test="post != null">
+                post = #{post},
+            </if>
+        </set>
+        where admin_id = #{adminId} and school_id = #{schoolId}
+    </update>
+
+    <delete id="deleteTeacherSchool" parameterType="java.lang.Integer">
+        delete from edu_teacher_school
+        where admin_id = #{adminId} and school_id = #{schoolId}
+    </delete>
 
 </mapper>

@@ -22,7 +22,7 @@ public interface EduArticleService {
      * @param eduArticle
      * @return
      */
-    public WebResult adminAddNotice(EduArticle eduArticle );
+    public WebResult adminAddNotice(EduArticle eduArticle, Integer role);
     /**
      * 后台查询所有文章
      *
@@ -60,8 +60,8 @@ public interface EduArticleService {
     public WebResult queryNoticeById(Integer id);
 
     /**
-     *首页新闻
-     * @return
+     * 文章置顶的定时任务
      */
-    public WebResult newsNotice(Integer schoolId);
+    public void topScheduleTask();
+
 }

@@ -1,24 +1,18 @@
 package com.ovft.configure.sys.web;
 
-import com.jfinal.aop.Before;
-import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.constant.OrderStatus;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduCheck;
-import com.ovft.configure.sys.bean.EduCheckExample;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.service.EduCheckService;
 import com.ovft.configure.sys.service.EduCourseService;
 import com.ovft.configure.sys.service.OrderService;
 import com.ovft.configure.sys.service.SchoolService;
 import com.ovft.configure.sys.vo.EduCheckVo;
-import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.OrderVo;
-import javafx.scene.input.InputMethodTextRun;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

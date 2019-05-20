@@ -5,6 +5,7 @@ import com.ovft.configure.sys.bean.EduArticleExample;
 import com.ovft.configure.sys.vo.EduArticleVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface EduArticleMapper {
@@ -81,8 +82,15 @@ public interface EduArticleMapper {
     public void updateVisites(@Param("id") Integer id, @Param("visits")Integer visits);
 
     /**
-     * 首页轮播新闻
+     * 所有置顶文章
      * @return
      */
-    public List<EduArticle> newsNotice();
+    public List<EduArticle> selectIsTop();
+
+    /**
+     * 修改是否置顶
+     * @param id
+     * @param istop
+     */
+    public void updateIsTop(@Param("id") Integer id, @Param("istop")String istop, @Param("topdate")Date topdate);
 }

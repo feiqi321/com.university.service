@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.service.impl;
 
+import com.ovft.configure.sys.bean.Order;
 import com.ovft.configure.sys.dao.EduCourseMapper;
 import com.ovft.configure.sys.dao.OrderMapper;
 import com.ovft.configure.sys.service.OrderService;
@@ -34,6 +35,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderVo> queryAllRecord(Integer userId) {
         return orderMapper.queryAllRecord(userId);
+    }
+
+    @Override
+    public Order getOrderInfo(String orderId) {
+        return orderMapper.selectByPrimaryKey(Integer.parseInt(orderId));
     }
 
 

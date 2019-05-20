@@ -14,7 +14,7 @@ public interface AdminService {
 
     public WebResult updatePhone(Integer adminId, String newPhone, String securityCode);
 
-    public WebResult findAdmin(Integer adminId);
+    public WebResult findAdmin(Integer adminId, Integer schoolId);
 
     public WebResult deleteAdmin(Integer adminId);
 

@@ -24,6 +24,9 @@
         <if test="schoolId != null">
             AND a.school_id = #{schoolId}
         </if>
+        <if test="type != null">
+            AND a.type = #{type}
+        </if>
         <if test="search != null and search != ''">
             AND a.title like CONCAT('%',#{search},'%')
         </if>

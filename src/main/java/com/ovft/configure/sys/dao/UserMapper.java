@@ -130,4 +130,11 @@ public interface UserMapper {
     public void updateContribute(Contribute contribute);
 
 
+    //修改投稿申请状态
+    public void updateContributeCheckin(@Param("checkin") Integer checkin,@Param("cid") Integer cid);
+
+
+    //查询报名学校Id和是否通过验证 -vvtxw
+    public User queryUserInfo(Integer userId);
+
 }

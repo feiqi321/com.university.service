@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.EduCourse;
+import com.ovft.configure.sys.bean.EduCourseExample;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,13 +17,36 @@ import java.util.List;
  */
 @Mapper
 public interface EduCourseMapper {
+
+    long countByExample(EduCourseExample example);
+
+    int deleteByExample(EduCourseExample example);
+
+    int deleteByPrimaryKey(Integer courseId);
+
+    int insert(EduCourse record);
+
+    int insertSelective(EduCourse record);
+
+    List<EduCourse> selectByExample(EduCourseExample example);
+
+    EduCourse selectByPrimaryKey(Integer courseId);
+
+    int updateByExampleSelective(@Param("record") EduCourse record, @Param("example") EduCourseExample example);
+
+    int updateByExample(@Param("record") EduCourse record, @Param("example") EduCourseExample example);
+
+    int updateByPrimaryKeySelective(EduCourse record);
+
+    int updateByPrimaryKey(EduCourse record);
+
     /**
      * 按学校的id来查找专业类别
      *
-     * @param schoolId
+     * @param eduCourse
      * @return
      */
-    public List<EduCourse> listCourseCategoryByShoolId(int schoolId);
+    public List<EduCourse> listCourseCategoryByShoolId(EduCourse eduCourse);
 
     /**
      * 根据课程id查询课程信息报名--课程地点老师等
@@ -49,4 +73,11 @@ public interface EduCourseMapper {
      */
     List<EduCourseVo> queryAllTimetable(@Param("week") String week, @Param("schoolId") String schoolId);
 
+    /**
+     * 根据学校id查询课程id
+     *
+     * @param schoolId
+     * @return
+     */
+    List<Integer> selectCourseIdBySchoolId(Integer schoolId);
 }
