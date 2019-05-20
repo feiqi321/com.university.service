@@ -144,8 +144,8 @@ public class AdminController {
      * @return
      */
     @GetMapping(value = "/deleteAdmin")
-    public WebResult deleteAdmin(@RequestParam(value = "adminId") Integer adminId) {
-        return adminService.deleteAdmin(adminId);
+    public WebResult deleteAdmin(@RequestParam(value = "adminId") Integer adminId, Integer schoolId) {
+        return adminService.deleteAdmin(adminId, schoolId);
     }
     /**
      * 学员投稿审核

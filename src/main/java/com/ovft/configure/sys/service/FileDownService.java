@@ -1,9 +1,9 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.vo.PageVo;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface FileDownService {
 
-    public WebResult courseListDowm(PageVo pageVo);
+    public WebResult courseListImport(MultipartFile uploadFile, Integer schoolId);
 }

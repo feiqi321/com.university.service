@@ -23,6 +23,7 @@ public class AdminVo extends Admin {
         this.setImage(admin.getImage());
         this.setRole(admin.getRole());
         this.setSchoolId(admin.getSchoolId());
+        this.setPost(admin.getPost());
     }
 
     public String getSchoolName() {

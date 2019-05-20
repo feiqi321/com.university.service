@@ -89,6 +89,9 @@ public class EduArticleServiceImpl implements EduArticleService {
         if(security != null) {
             return security;
         }
+        if(eduArticle.getIstop().equals("0")) {
+            eduArticle.setTopdate(null);
+        }
         //置顶时间在当前日期之前, 文章置顶
         if(eduArticle.getTopdate() != null && eduArticle.getTopdate().before(new Date())) {
             eduArticle.setIstop("1");
@@ -117,6 +120,7 @@ public class EduArticleServiceImpl implements EduArticleService {
                 eduArticle.setType(type);
                 eduArticle.setCreatetime(new Date());
                 eduArticle.setUpdatetime(new Date());
+                eduArticle.setIspublic("0");
                 eduArticle.setVisits(0);
                 eduArticle.setThumbup(0);
                 eduArticle.setComment(0);
@@ -176,7 +180,11 @@ public class EduArticleServiceImpl implements EduArticleService {
         if(noticeList==null || noticeList.size() == 0) {
             return new WebResult("200", "查询成功", "");
         }
-        return new WebResult("200", "查询成功", noticeList.get(0));
+        EduArticleVo eduArticleVo = noticeList.get(0);
+        if(eduArticleVo.getTopdate() != null) {
+            eduArticleVo.setIstop("1");
+        }
+        return new WebResult("200", "查询成功", eduArticleVo);
     }
 
     @Transactional

@@ -159,7 +159,7 @@
         #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{ispublic,jdbcType=VARCHAR},
         #{istop,jdbcType=VARCHAR}, #{visits,jdbcType=INTEGER}, #{thumbup,jdbcType=INTEGER},
         #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
-        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}}, #{topdate},
+        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}, #{topdate},
         #{topenddate}
         )
     </insert>

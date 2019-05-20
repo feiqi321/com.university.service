@@ -16,7 +16,7 @@ public interface AdminService {
 
     public WebResult findAdmin(Integer adminId, Integer schoolId);
 
-    public WebResult deleteAdmin(Integer adminId);
+    public WebResult deleteAdmin(Integer adminId, Integer schoolId);
 
     public WebResult adminList(PageVo pageVo);
 

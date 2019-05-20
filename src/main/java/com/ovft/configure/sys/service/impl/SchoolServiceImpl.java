@@ -38,6 +38,13 @@ public class SchoolServiceImpl implements SchoolService {
         if(StringUtils.isBlank(school.getSchoolName())) {
             return new WebResult("400", "学校名称不能为空", "");
         }
+        String schoolName = school.getSchoolName();
+        List<School> schoolList = schoolmapper.selectSchoolList(null, schoolName);
+        for (School s : schoolList) {
+            if(s.getSchoolName().equals(schoolName)) {
+                return new WebResult("400", "学校已存在", "");
+            }
+        }
         if(StringUtils.isBlank(school.getLongitude()) || StringUtils.isBlank(school.getLatitude())) {
             return new WebResult("400", "学校位置不能为空", "");
         }
@@ -73,6 +80,13 @@ public class SchoolServiceImpl implements SchoolService {
         }
         if(StringUtils.isBlank(school.getSchoolName())) {
             return new WebResult("400", "学校名称不能为空", "");
+        }
+        String schoolName = school.getSchoolName();
+        List<School> schoolList = schoolmapper.selectSchoolList(null, schoolName);
+        for (School s : schoolList) {
+            if(s.getSchoolName().equals(schoolName) && !s.getSchoolId().equals(school.getSchoolId())) {
+                return new WebResult("400", "学校已添加", "");
+            }
         }
         if(StringUtils.isBlank(school.getLongitude()) || StringUtils.isBlank(school.getLatitude())) {
             return new WebResult("400", "学校位置不能为空", "");

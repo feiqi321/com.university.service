@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -100,10 +102,12 @@ public class EduArticle implements Serializable {
     /**
      * 置顶开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date topdate;
     /**
      * 置顶结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date topenddate;
 
     public Date getTopenddate() {

@@ -187,7 +187,15 @@ public class AdminServiceImpl implements AdminService {
      */
     @Transactional
     @Override
-    public WebResult deleteAdmin(Integer adminId) {
+    public WebResult deleteAdmin(Integer adminId, Integer schoolId) {
+        if(schoolId != null) {
+            adminMapper.deleteTeacherSchool(adminId, schoolId);
+            List<Map<String, Object>> maps = adminMapper.selectTeacherBySchool(adminId, null);
+            if(maps.size() == 0) {
+                adminMapper.deleteById(adminId);
+            }
+            return new WebResult("200", "删除成功", "");
+        }
         adminMapper.deleteById(adminId);
         return new WebResult("200", "删除成功", "");
     }
