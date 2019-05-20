@@ -17,7 +17,7 @@
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where phone=#{phone};
          </select>
-    <!--通过密码查找用户（不常用）-->
+    <!--通过密码查找用户（弃用）-->
     <select id="findUserByPassword" parameterType="com.ovft.configure.sys.bean.User"
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where  password=#{user.password};
@@ -42,7 +42,7 @@
     <update id="updateByPhone">
           update edu_user set password = #{password} where phone=#{phone}
     </update>
-    <!--保存user表1全部信息(不常用)-->
+    <!--保存user表1全部信息(弃用)-->
     <update id="savaInfo" parameterType="com.ovft.configure.sys.bean.User">
           update edu_user set user_name=#{user.userName},sex=#{user.sex},school_id=#{user.schoolId},area=#{user.area},volunteer=#{user.volunteer},
           identity_card=#{user.identity_card},address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},
@@ -124,23 +124,23 @@
 
     <!--修改edu_user_item表里面该用户记录-->
     <update id="updateInfoItems" parameterType="com.ovft.configure.sys.bean.User">
-          update
+        update
         edu_user_item
         <set>
-           user_name=#{userName},sex=#{sex},telephone=#{telephone},areaId=#{areaId},area=#{area},
-           address=#{address},political=#{political},educational=#{educational},position=#{position},retired=#{retired},
-           employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
-           emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
-           emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
-           emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},
-        <if test="schoolJob!=null" >
-            school_job=#{schoolJob},
-        </if>
-        <if test="remark!=null" >
-            remark=#{remark}
-        </if>
+            user_name=#{userName},sex=#{sex},telephone=#{telephone},areaId=#{areaId},area=#{area},
+            address=#{address},political=#{political},educational=#{educational},position=#{position},retired=#{retired},
+            employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
+            emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
+            emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
+            emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},
+            <if test="schoolJob!=null">
+                school_job=#{schoolJob},
+            </if>
+            <if test="remark!=null">
+                remark=#{remark}
+            </if>
         </set>
-           where user_id=#{userId} and school_id=#{schoolId}
+        where user_id=#{userId} and school_id=#{schoolId}
     </update>
 
     <!--增加edu_user_item表里面该用户记录-->
@@ -161,10 +161,23 @@
 
     <!--查询用户头像地址-vvtxw-->
     <select id="queryAllAddress" parameterType="int" resultType="String">
-        select
+         select
         image
         from edu_user
         WHERE user_id=#{userId}
+    </select>
+
+
+    <!--获取报名课程的信息-vvtxw-->
+    <select id="queryUserInfo" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
+        	select
+			s.school_name,
+            i.school_id,
+            i.checkin
+          FROM
+           edu_user_item i
+			LEFT JOIN edu_school s on s.school_id=i.school_id
+          WHERE user_id=#{user_id}
     </select>
 
     <!--用户头像地址-vvtxw-->
@@ -193,11 +206,11 @@
     </insert>
     <!--获取用户添加注销申请结果-->
     <select id="selectWithdraw" parameterType="int" resultType="int">
-        select checkin from  edu_withdraw
+        select checkin from  edu_withdraw where uid=#{userId}
     </select>
     <!--查询用户注销申请-->
     <select id="selectWithdrawOne" parameterType="int" resultType="com.ovft.configure.sys.vo.WithdrawVo">
-        select * from  edu_withdraw
+        select * from  edu_withdraw  where  uid=#{userId}
     </select>
     <!--后台删除用户-->
     <delete id="deleteUserItem">
@@ -208,7 +221,8 @@
       delete  from  edu_withdraw where wid=#{wid}
     </delete>
     <!--CheckinAndSchoolId条件查询用户信息申请-->
-    <select id="findUserByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+    <select id="findUserByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
        select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
         i.political,i.educational,i.position,i.retired,
@@ -221,7 +235,8 @@
         where i.checkin = #{user.checkin}
     </select>
     <!--Checkin条件查询用户信息申请-->
-    <select id="findUserByCheckin" parameterType="com.ovft.configure.sys.bean.User" resultType="com.ovft.configure.sys.bean.User">
+    <select id="findUserByCheckin" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
        select u.user_id userId,i.user_name userName,u.phone,u.image,
         i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
         i.political,i.educational,i.position,i.retired,
@@ -234,7 +249,8 @@
         where i.checkin = #{user.checkin}
     </select>
     <!--CheckinAndSchoolId条件查询用户注销信息申请-->
-    <select id="findWithdrawByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.vo.WithdrawVo" resultType="com.ovft.configure.sys.vo.WithdrawVo">
+    <select id="findWithdrawByCheckinAndSchoolId" parameterType="com.ovft.configure.sys.vo.WithdrawVo"
+            resultType="com.ovft.configure.sys.vo.WithdrawVo">
        select  w.wid wid,w.uid uid,w.school_id,w.school school,w.content content,w.checkin checkin
          from  edu_withdraw w
             where w.school_id=#{schoolId} and w.checkin=#{checkin}
@@ -250,21 +266,103 @@
     <!--添加学员投稿-->
     <insert id="addUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
         insert into edu_contribute values(default,#{userId},#{userItemId},#{title},#{createtime},#{type},#{content},#{checkin}
-        ,#{image},#{audio}
+        ,#{image},#{audio},#{vedio},#{schoolId},#{schoolName},#{userName},#{rejectReason}
         )
     </insert>
     <!--查询学员投稿记录 -->
-     <select id="queryUserContribute" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.bean.Contribute">
+    <select id="queryUserContribute" parameterType="com.ovft.configure.sys.vo.PageVo"
+            resultType="com.ovft.configure.sys.bean.Contribute">
         select * from edu_contribute where 1=1
-         <if test="userId!=null">
-              and  userId=#{userId}
-         </if>
-         <if test="search != null and search != ''">
-             AND user_name like CONCAT('%',#{search},'%')
-         </if>
-     </select>
+        <if test="userId!=null">
+            and userId=#{userId}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
+    <!--查询学员投稿记录 -->
+    <select id="contributeList" parameterType="com.ovft.configure.sys.vo.PageVo"
+            resultType="com.ovft.configure.sys.bean.Contribute">
+        select * from edu_contribute where 1=1
+        <if test="schoolId!=null">
+            and school_id=#{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
     <!--删除学员投稿记录-->
     <delete id="deleteUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
            delete  from  edu_contribute where cid=#{cid}
     </delete>
+    <!--改变学员投稿记录状态-->
+    <update id="updateContributeCheckin" parameterType="com.ovft.configure.sys.bean.Contribute">
+        update edu_contribute <set>
+          <if test="checkin!=null">
+         checkin=#{checkin}
+          </if>
+          <if test="rejectReason!=null">
+              reject_reason=#{rejectReason}
+          </if>
+    </set>
+         where
+         <if test="cid">
+        cid=#{cid}
+         </if>
+    </update>
+    <!--修改学员投稿记录-->
+    <update id="updateContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
+        update edu_contribute
+        <set>
+            <if test="userId!=null">
+                userId=#{userId},
+            </if>
+            <if test="userItemId!=null">
+                userItemId=#{userItemId},
+            </if>
+            <if test="title!=null">
+                title=#{title},
+            </if>
+            <if test="createtime!=null">
+                createtime=#{createtime},
+            </if>
+            <if test="type!=null">
+                type=#{type},
+            </if>
+            <if test="content!=null">
+                content=#{content},
+            </if>
+            <if test="checkin!=null">
+                checkin=#{checkin},
+            </if>
+            <if test="image!=null">
+                image=#{image},
+            </if>
+            <if test="audio!=null">
+                audio=#{audio},
+            </if>
+            <if test="vedio!=null">
+                vedio=#{vedio},
+            </if>
+            <if test="schoolId!=null">
+                school_id=#{schoolId},
+            </if>
+            <if test="schoolName!=null">
+                schoolName=#{schoolName},
+            </if>
+            <if test="userName!=null">
+                userName=#{userName},
+            </if>
+            <if test="rejectReason!=null">
+                reject_reason=#{rejectReason}
+            </if>
+        </set>
+        where
+        <if test="cid!=null">
+        cid=#{cid}
+        </if>
+    </update>
+       <select id="findUserItemByPhone" parameterType="int" resultType="com.ovft.configure.sys.bean.UserItem">
+            select  * from  edu_user_item where
+       </select>
 </mapper>

@@ -20,17 +20,17 @@
     </resultMap>
 
     <select id="selectById" resultMap="BaseResultMap">
-         select
+        select
         <include refid="Base_Column_List"/>
-         from edu_school
-         where school_id = #{schoolId}
+        from edu_school
+        where school_id = #{schoolId}
     </select>
 
     <select id="selectSchoolList" resultMap="BaseResultMap">
-         select
+        select
         <include refid="Base_Column_List"/>
-         from edu_school
-         where is_using = 1
+        from edu_school
+        where is_using = 1
         <if test="schoolId != null and schoolId != ''">
             AND school_id = #{schoolId}
         </if>
@@ -41,8 +41,8 @@
 
     <insert id="createSchool" parameterType="com.ovft.configure.sys.bean.School" useGeneratedKeys="true"
             keyProperty="schoolId">
-         insert into edu_school(school_name, admin_id, longitude, latitude, image, school_char, is_using, slideshow)
-         values (#{schoolName}, #{adminId}, #{longitude}, #{latitude}, #{image}, #{schoolChar}, #{isUsing}, #{slideshow})
+        insert into edu_school(school_name, admin_id, longitude, latitude, image, school_char, is_using, slideshow)
+        values (#{schoolName}, #{adminId}, #{longitude}, #{latitude}, #{image}, #{schoolChar}, #{isUsing}, #{slideshow})
     </insert>
 
 
@@ -82,26 +82,30 @@
        from  edu_school
        where is_using = 1;
     </select>
-      <update id="switchSchoolID" parameterType="int">
-              update edu_user
-              set  school_id=#{schoolId}
-              where  user_id=#{userId}
-      </update>
-    <!--查询学校坐标-vvtxw-->
+    <update id="switchSchoolID" parameterType="int">
+        update edu_user
+        set school_id=#{schoolId}
+        where user_id=#{userId}
+    </update>
+
+    <!--查询学校轮播图-->
     <select id="findSlideshowAll" parameterType="int" resultType="com.ovft.configure.sys.bean.School">
           select *
           from   edu_school
           where school_id=#{schoolId}
 
     </select>
+
     <!--查询所有学校名和对应学校ID-vvtxw-->
-       <select id="findSchoolAll" resultType="com.ovft.configure.sys.bean.School">
-   select  * from edu_school
-       </select>
+    <select id="findSchoolAll" resultType="com.ovft.configure.sys.bean.School">
+        select * from edu_school
+    </select>
+
+
     <!--根据学校Id查找对应的学校-vvtxw-->
-       <select id="findSchoolById" parameterType="int" resultType="java.lang.String">
-   select school_name  from edu_school where school_id=#{schoolId}
-       </select>
+    <select id="findSchoolById" parameterType="int" resultType="java.lang.String">
+        select school_name from edu_school where school_id=#{schoolId}
+    </select>
 
     <delete id="deleteSchool">
         delete from edu_school where school_id = #{schoolId}

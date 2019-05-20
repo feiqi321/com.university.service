@@ -449,7 +449,8 @@ public class TeacherServiceImpl implements TeacherService {
             return new WebResult("400", "该手机号已被注册", "");
         }
         user.setUserId(finduserbyphone.getUserId());
-        User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(), user.getSchoolId());
+        User findUser = userMapper.queryByItemsId(user.getUserId());
+
         Integer schoolId = findUser.getSchoolId();
         Integer schoolId1 = user.getSchoolId();
         if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())!=0) {

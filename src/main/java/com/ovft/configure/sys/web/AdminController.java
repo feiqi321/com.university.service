@@ -4,8 +4,11 @@ import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.Contribute;
+import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.AdminService;
+import com.ovft.configure.sys.service.EduArticleService;
+import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -33,6 +36,10 @@ public class AdminController {
     private AdminService adminService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private EduArticleService eduArticleService;
 
     /**
      * 登录
@@ -143,24 +150,110 @@ public class AdminController {
         return adminService.deleteAdmin(adminId);
     }
     /**
+     * 学员投稿审核列表
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/contributeList")
+    public WebResult contributeList(HttpServletRequest request, @RequestBody PageVo pageVo){
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                pageVo.setSchoolId(hget.getSchoolId());
+            }
+
+            return userService.contributeList(pageVo);
+        }else {
+            return new WebResult("50012", "请先登录", "");
+        }
+
+    }
+
+//    @PostMapping(value = "/addContribute")
+//    public WebResult addUserContribute(@ RequestBody Contribute contribute,HttpServletRequest request){
+//
+//        return userService.addUserContribute(contribute);
+//    }
+
+    /**
      * 学员投稿审核
      *
      * @param
      * @return
      */
     @PostMapping(value = "/auditContribute")
-    public WebResult auditContribute(@RequestBody Contribute contribute){
+    public WebResult auditContribute(HttpServletRequest request,@RequestBody Contribute contribute){
         Integer  checkin=contribute.getCheckin();
         Integer  cid=contribute.getCid();
         //0的话,向article表里面添加记录，改变Contribute的checkin状态
         if (checkin==0){
-//            userService.deleteWithdraw(wid);
-//            userService.deleteUserItem(withdrawVo.getUserItemId());
-//            return teacherService.updateWithdrawCheckIn(wid,checkin);
+              userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
+              EduArticle eduArticle=new EduArticle();
+              eduArticle.setUserid(contribute.getUserId().toString());
+              eduArticle.setTitle(contribute.getTitle());
+              eduArticle.setContent(contribute.getContent());
+              eduArticle.setImage(contribute.getImage());
+              eduArticle.setCreatetime(contribute.getCreatetime());
+                 if (contribute.getType()==7||contribute.getType()==7)
+              eduArticle.setIspublic("1");
+              eduArticle.setIstop("0");
+              eduArticle.setState(contribute.getCheckin().toString());
+              eduArticle.setVisits(0);
+              eduArticle.setThumbup(0);
+              eduArticle.setComment(0);
+              eduArticle.setCollect("0");
+              eduArticle.setType(contribute.getType().toString());
+              eduArticle.setSchoolId(contribute.getSchoolId());
+
+
+              eduArticleService.adminAddNotice(eduArticle);//向article表里面添加记录
+
+              return new WebResult("200","审核通过","");
+
 
         }
+//        String token = request.getHeader("token");
+//        Object o = redisUtil.get(token);
+//        if(o != null) {
+//            Integer id = (Integer) o;
+//            // 如果是pc端登录，更新token缓存失效时间
+//            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+//            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+//            if(hget.getRole() == 0) {
+//
+//                eduArticleService.deleteNotice();
+//                userService.updateContributeChinkin(checkin,cid);
+//            }else{
+//                userService.updateContributeChinkin(checkin,cid);
+////        userService.deleteWithdraw(wid);
+////        return new WebResult("200", "拒绝成功", "");
+//                return new WebResult("200","拒绝成功","");
+//
+//            }
+//
+//        }else {
+//            return new WebResult("50012", "请先登录", "");
+//        }
+        userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
+
 //        userService.deleteWithdraw(wid);
 //        return new WebResult("200", "拒绝成功", "");
-        return null;
+        return new WebResult("200","拒绝成功","");
+    }
+    /**
+     * 学员投稿修改
+     *
+     * @param contribute
+     * @return
+     */
+    @PostMapping(value = "/updateUserContribute")
+    public WebResult updateUserContribute(@ RequestBody Contribute contribute){
+        return userService.updateContribute(contribute);
     }
 }

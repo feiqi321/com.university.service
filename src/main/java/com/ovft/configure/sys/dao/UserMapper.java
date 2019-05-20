@@ -3,6 +3,7 @@ package com.ovft.configure.sys.dao;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.bean.UserItem;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -29,7 +30,7 @@ public interface UserMapper {
     public User findUserByPhone2(@Param("phone") String phone);
 
     //通过密码查找用户
-     public User findUserByPassword(@Param("user") User user);
+    public User findUserByPassword(@Param("user") User user);
 
     //修改密码
     public void updateByPhone(@Param("phone") String phone, @Param("password") String password);
@@ -82,6 +83,7 @@ public interface UserMapper {
 
     //获取用户注销申请结果状态
     public int selectWithdraw(Integer uid);
+
     //获取一个用户注销记录
     public WithdrawVo selectWithdrawOne(Integer uid);
 
@@ -89,7 +91,7 @@ public interface UserMapper {
     public void deleteUserItem(@Param("userItemId") Integer userItemId);
 
     //后台删除用户注销申请记录
-    public  void deleteWithdraw(Integer wid);
+    public void deleteWithdraw(Integer wid);
 
     //根据checkin和schoolId条件进行学员审核查找
     public List<User> findUserByCheckinAndSchoolId(@Param("user") User user);
@@ -104,12 +106,28 @@ public interface UserMapper {
     public void UpdateUserSchoolId(Integer userId);
 
     //后台修改用户信息
-    public  void updateByUserId(@Param("phone") String phone, @Param("userId") Integer userId);
+    public void updateByUserId(@Param("phone") String phone, @Param("userId") Integer userId);
+
     //添加学员投稿
     public void addUserContribute(Contribute contribute);
+
     //查询学员投稿申请审核状态
     public List<Contribute> queryUserContribute(PageVo pageVo);
+
     //删除一条用户投稿记录
-    public WebResult deleteUserContribute(Contribute contribute);
+    public void deleteUserContribute(Contribute contribute);
+
+    //修改投稿申请状态
+    public void updateContributeCheckin(@Param("checkin") Integer checkin,@Param("rejectReason") String rejectReason,@Param("cid") Integer cid);
+
+    //查询报名学校Id和是否通过验证 -vvtxw
+    public User queryUserInfo(Integer userId);
+
+    //查询所有学员投稿申请列表
+    public List<Contribute> contributeList(PageVo pageVo);
+
+    //学员投稿修改
+    public void updateContribute(Contribute contribute);
+
 
 }

@@ -20,5 +20,4 @@ public interface AdminService {
 
     public WebResult adminList(PageVo pageVo);
 
-
 }
