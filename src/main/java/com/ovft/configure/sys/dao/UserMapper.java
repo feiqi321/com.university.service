@@ -3,6 +3,7 @@ package com.ovft.configure.sys.dao;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.bean.UserItem;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -114,7 +115,20 @@ public interface UserMapper {
     public List<Contribute> queryUserContribute(PageVo pageVo);
 
     //删除一条用户投稿记录
-    public WebResult deleteUserContribute(Contribute contribute);
+    public void deleteUserContribute(Contribute contribute);
+
+    //修改投稿申请状态
+    public void updateContributeCheckin(@Param("checkin") Integer checkin,@Param("rejectReason") String rejectReason,@Param("cid") Integer cid);
+
+    //查询报名学校Id和是否通过验证 -vvtxw
+    public User queryUserInfo(Integer userId);
+
+    //查询所有学员投稿申请列表
+    public List<Contribute> contributeList(PageVo pageVo);
+
+    //学员投稿修改
+    public void updateContribute(Contribute contribute);
+
 
     //修改投稿申请状态
     public void updateContributeCheckin(@Param("checkin") Integer checkin,@Param("cid") Integer cid);

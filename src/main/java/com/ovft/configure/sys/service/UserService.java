@@ -3,6 +3,7 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.bean.UserItem;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -88,11 +89,19 @@ public interface UserService {
     public WebResult deleteUserContribute(Contribute contribute);
 
     //学员投稿记录状态的修改
-    public WebResult updateContributeChinkin(Integer cid, Integer checkin);
+    public WebResult updateContributeChinkin(Integer cid, String rejectReason,Integer checkin);
 
 
     //查询报名学校Id和是否通过验证 -vvtxw
     public User queryUserInfo(Integer userId);
 
+    //学员投稿列表
+    public WebResult contributeList(PageVo pageVo);
+
+    //学员投稿列表
+    public WebResult updateContribute(Contribute contribute);
+
+    //通过电话查找用户
+    public User findUserByPhone(String phone);
 
 }

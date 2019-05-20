@@ -3,10 +3,7 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.Contribute;
-import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.EduCourse;
-import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.dao.UserMapper;
@@ -95,6 +92,7 @@ public class UserServiceImpl implements UserService {
         }
         WebResult result = new WebResult();
         userMapper.addUser(user);
+        //userMapper.saveInfoItems(user);
         result.setCode("200");
         result.setMsg("注册成功");
         return result;
@@ -323,7 +321,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "输入身份证格式有误", "");
         }
 
-        //保存
+        //保存或修改模块
         User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
 
         if (findUser == null) {
@@ -386,7 +384,7 @@ public class UserServiceImpl implements UserService {
         redisUtil.delete(token);
         return new WebResult("200", "退出成功", "");
     }
-    //查询基本信息接口
+    //查询基本信息接口(通过userId查找)
     @Override
     public WebResult selectInfo(User user) {
         //通过userId查询Item表里面的相关信息
@@ -630,13 +628,22 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult addUserContribute(Contribute contribute) {
+
         if (StringUtils.isBlank(contribute.getTitle())){
             return new WebResult("400","投稿标题不能为空");
         }
         if (StringUtils.isBlank(contribute.getContent())){
             return new WebResult("400","投稿正文不能为空");
         }
-           contribute.setCheckin(1);
+        User user= userMapper.queryByItemsId(contribute.getUserId());
+        String schoolName = schoolMapper.findSchoolById(user.getSchoolId());
+        if (user.getSchoolId()==null) {
+            return new WebResult("400","您还未报名任何学校，不能投稿");
+        }
+        contribute.setSchoolId(user.getSchoolId());
+        contribute.setUserName(user.getUserName());
+        contribute.setSchoolName(schoolName);
+        contribute.setCheckin(1);
            Date date=new Date();
           contribute.setCreatetime(date);
        userMapper.addUserContribute(contribute);
@@ -658,13 +665,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult deleteUserContribute(Contribute contribute) {
-        return userMapper.deleteUserContribute(contribute);
+         userMapper.deleteUserContribute(contribute);
+        return new WebResult("200","删除成功","");
     }
     //投稿审核状态更改
     @Transactional
     @Override
-    public WebResult updateContributeChinkin(Integer checkin,Integer cid) {
-      userMapper.updateContributeCheckin(checkin,cid);
+    public WebResult updateContributeChinkin(Integer cid, String rejectReason,Integer checkin) {
+      userMapper.updateContributeCheckin(checkin,rejectReason,cid);
       return new WebResult("200","操作成功","");
     }
 
@@ -673,6 +681,33 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.queryUserInfo(userId);
         return user;
     }
-    //
+
+    //投稿审核列表
+    @Transactional
+    @Override
+    public WebResult contributeList(PageVo pageVo) {
+        if (pageVo.getPageSize() == 0) {
+            List<Contribute> contributes = userMapper.contributeList(pageVo);
+            return new WebResult("200", "查询成功", contributes);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<Contribute> contributes = userMapper.contributeList(pageVo);
+        PageInfo pageInfo = new PageInfo<>(contributes);
+        return new WebResult("200","查询成功", pageInfo);
+    }
+    //学员投稿审核修改
+    @Transactional
+    @Override
+    public WebResult updateContribute(Contribute contribute) {
+         userMapper.updateContribute(contribute);
+         return new WebResult("200","修改成功","");
+    }
+
+
+    @Override
+    public User findUserByPhone(String phone) {
+        return userMapper.findUserByPhone2(phone);
+    }
+
 
 }

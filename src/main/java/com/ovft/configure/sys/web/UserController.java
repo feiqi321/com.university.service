@@ -92,7 +92,6 @@ public class UserController {
              user.setSchoolId(0);
           }else {
 
-
           }
         return userService.savaInfo(user);
     }
@@ -268,6 +267,7 @@ public class UserController {
           userService.deleteUserItem(user.getUserItemId());
           return new WebResult("200","删除成功","");
      }
+
     /**
      * 学员投稿申请
      *
@@ -276,10 +276,14 @@ public class UserController {
      */
     @PostMapping(value = "/addUserContribute")
      public WebResult addUserContribute(@ RequestBody Contribute contribute,HttpServletRequest request){
+
          Integer userId=Integer.parseInt(request.getHeader("userId"));
             contribute.setUserId(userId);
            return userService.addUserContribute(contribute);
      }
+
+
+
     /**
      * 学员投稿申请审核状态列表
      *

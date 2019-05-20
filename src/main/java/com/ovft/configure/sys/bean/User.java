@@ -33,13 +33,6 @@ public class User {
      */
     private String areaId;
 
-    public String getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
-    }
 
     /**
      * 地址
@@ -123,6 +116,14 @@ public class User {
     private String schoolJob;
     //备注
     private String remark;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public String getSchoolJob() {
         return schoolJob;

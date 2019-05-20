@@ -18,6 +18,34 @@ public class Contribute {
     private String audio;
     private String vedio;
     private Integer schoolId;
+    private String userName;
+    private String schoolName;
+    private String rejectReason;     //拒绝原因
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+
+        this.rejectReason = rejectReason;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
 
     public Integer getSchoolId() {
         return schoolId;

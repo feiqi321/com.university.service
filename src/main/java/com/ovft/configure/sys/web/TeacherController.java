@@ -116,7 +116,17 @@ public class TeacherController {
             if(hget.getRole() != 0) {
                 user.setSchoolId(hget.getSchoolId());
             }
-            return teacherService.savaUserInfo(user);
+//            User findUser = userService.findUserByPhone(user.getPhone());
+//               if (findUser!=null){
+//                   User queryByItemsId = userService.queryByItemsId(findUser.getUserId());
+//                        if (queryByItemsId.getSchoolId()!=null){
+//                            return new WebResult("400", "该学员已报名其他学校", "");
+//                        }else{
+//                            return teacherService.savaUserInfo(user);
+//                        }
+//
+//               }
+                   return teacherService.savaUserInfo(user);
         }else {
             return new WebResult("50012", "请先登录", "");
         }
