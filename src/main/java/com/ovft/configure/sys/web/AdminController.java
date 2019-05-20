@@ -99,7 +99,7 @@ public class AdminController {
             }
             return adminService.adminList(pageVo);
         }else {
-            return new WebResult("50012", "请先登录", "");
+            return new WebResult("50012", "请重新登录", "");
         }
     }
 
@@ -123,7 +123,7 @@ public class AdminController {
             }
             return adminService.createAdmin(admin);
         }else {
-            return new WebResult("50012", "请先登录", "");
+            return new WebResult("50012", "请重新登录", "");
         }
     }
 
@@ -134,8 +134,8 @@ public class AdminController {
      * @return
      */
     @GetMapping(value = "/findAdmin")
-    public WebResult findAdmin(@RequestParam(value = "adminId") Integer adminId) {
-        return adminService.findAdmin(adminId);
+    public WebResult findAdmin(@RequestParam(value = "adminId") Integer adminId, Integer schoolId) {
+        return adminService.findAdmin(adminId, schoolId);
     }
 
 
@@ -170,7 +170,7 @@ public class AdminController {
 
             return userService.contributeList(pageVo);
         }else {
-            return new WebResult("50012", "请先登录", "");
+            return new WebResult("50012", "请重新登录", "");
         }
 
     }
@@ -212,7 +212,7 @@ public class AdminController {
               eduArticle.setSchoolId(contribute.getSchoolId());
 
 
-              eduArticleService.adminAddNotice(eduArticle);//向article表里面添加记录
+              eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
 
               return new WebResult("200","审核通过","");
 
