@@ -671,7 +671,7 @@ public class UserServiceImpl implements UserService {
     //投稿审核状态更改
     @Transactional
     @Override
-    public WebResult updateContributeChinkin(Integer cid, String rejectReason,Integer checkin) {
+    public WebResult updateContributeChinkin(Integer checkin, String rejectReason,Integer cid) {
       userMapper.updateContributeCheckin(checkin,rejectReason,cid);
       return new WebResult("200","操作成功","");
     }

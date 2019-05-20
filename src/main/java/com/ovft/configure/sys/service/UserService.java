@@ -89,7 +89,7 @@ public interface UserService {
     public WebResult deleteUserContribute(Contribute contribute);
 
     //学员投稿记录状态的修改
-    public WebResult updateContributeChinkin(Integer cid, String rejectReason,Integer checkin);
+    public WebResult updateContributeChinkin(Integer checkin, String rejectReason,Integer cid);
 
 
     //查询报名学校Id和是否通过验证 -vvtxw
@@ -98,7 +98,7 @@ public interface UserService {
     //学员投稿列表
     public WebResult contributeList(PageVo pageVo);
 
-    //学员投稿列表
+    //学员投稿修改
     public WebResult updateContribute(Contribute contribute);
 
     //通过电话查找用户

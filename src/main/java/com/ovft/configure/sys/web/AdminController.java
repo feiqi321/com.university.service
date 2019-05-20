@@ -200,7 +200,7 @@ public class AdminController {
               eduArticle.setContent(contribute.getContent());
               eduArticle.setImage(contribute.getImage());
               eduArticle.setCreatetime(contribute.getCreatetime());
-                 if (contribute.getType()==7||contribute.getType()==7)
+
               eduArticle.setIspublic("1");
               eduArticle.setIstop("0");
               eduArticle.setState(contribute.getCheckin().toString());

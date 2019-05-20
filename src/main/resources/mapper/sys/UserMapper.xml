@@ -299,7 +299,7 @@
     <update id="updateContributeCheckin" parameterType="com.ovft.configure.sys.bean.Contribute">
         update edu_contribute <set>
           <if test="checkin!=null">
-         checkin=#{checkin}
+         checkin=#{checkin},
           </if>
           <if test="rejectReason!=null">
               reject_reason=#{rejectReason}
