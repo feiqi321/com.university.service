@@ -98,7 +98,10 @@ public class EduArticle implements Serializable {
      *  视频
      */
     private String vedio;
-
+    /**
+     *  作者
+     */
+    private String author;
     /**
      * 置顶开始时间
      */
@@ -109,6 +112,14 @@ public class EduArticle implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date topenddate;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public Date getTopenddate() {
         return topenddate;

@@ -211,7 +211,6 @@ public class AdminController {
               eduArticle.setType(contribute.getType().toString());
               eduArticle.setSchoolId(contribute.getSchoolId());
 
-
               eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
 
               return new WebResult("200","审核通过","");

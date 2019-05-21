@@ -15,6 +15,8 @@ public class PageVo {
 
     private String search;
 
+    private String authorSearch;
+
     private Integer schoolId;
 
 
@@ -45,6 +47,15 @@ public class PageVo {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
+
+    public String getAuthorSearch() {
+        return authorSearch;
+    }
+
+    public void setAuthorSearch(String authorSearch) {
+
+        this.authorSearch = authorSearch;
+    }
 
     public Date getStartDate() {
         return startDate;

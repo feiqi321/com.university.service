@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /*
@@ -10,6 +12,7 @@ public class Contribute {
     private Integer userId;
     private Integer userItemId;
     private String title;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createtime;
     private Integer type;
     private String content;

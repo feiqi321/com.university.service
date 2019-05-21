@@ -161,8 +161,8 @@
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
         i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
         i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
-        from edu_user_item i
-        left join edu_user u on u.user_id = i.user_id
+        from  edu_user u
+        left join edu_user_item i on u.user_id = i.user_id
         where 1 =1
         <if test="schoolId != null">
             and i.school_id = #{schoolId}
