@@ -46,7 +46,7 @@ public class EduCourse implements Serializable {
     private String schoolId;
 
     /**
-     *  是否启用
+     *  是否启用  -1-下架, 0-未启用, 1-启用
      */
     private Integer isenable;
 

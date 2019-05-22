@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.FineCourseMapper" >
+
+    <sql id="Base_Column_List">
+        fine_id as fineId, school_id as schoolId, video, title, teacher, introduce, visits, thumbup, cover
+    </sql>
+
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.FineCourse">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_fine_course
+        where fine_id = #{fineId}
+    </select>
+
+    <select id="selectFineCourseList" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.bean.FineCourse">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_fine_course
+        where 1=1
+        <if test="schoolId != null">
+            AND school_id = #{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND title like CONCAT('%',#{search},'%')
+        </if>
+        order by visits desc, thumbup desc
+    </select>
+
+    <insert id="createFineCourse" parameterType="com.ovft.configure.sys.bean.FineCourse" useGeneratedKeys="true"
+            keyProperty="fineId">
+        insert into edu_fine_course(school_id, video, title, teacher, introduce, visits, thumbup, cover)
+        values (#{schoolId}, #{video}, #{title}, #{teacher}, #{introduce}, #{visits}, #{thumbup}, #{cover})
+    </insert>
+
+    <update id="updateFineCourse" parameterType="com.ovft.configure.sys.bean.FineCourse">
+        update edu_fine_course
+        <set>
+            <if test="schoolId != null">
+                school_id = #{schoolId},
+            </if>
+            <if test="video != null">
+                video = #{video},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="teacher != null">
+                teacher = #{teacher},
+            </if>
+            <if test="introduce != null">
+                introduce = #{introduce},
+            </if>
+            <if test="visits != null">
+                visits = #{visits},
+            </if>
+            <if test="thumbup != null">
+                thumbup = #{thumbup},
+            </if>
+            <if test="cover != null">
+                cover = #{cover},
+            </if>
+        </set>
+        where fine_id = #{fineId}
+    </update>
+
+    <delete id="deleteFineCourse">
+        delete from edu_fine_course where fine_id = #{fineId}
+    </delete>
+
+</mapper>

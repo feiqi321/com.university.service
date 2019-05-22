@@ -82,6 +82,19 @@ public class Activities implements Serializable {
      */
     private Integer registNum;
 
+    /**
+     * 浏览量
+     */
+    private Integer visits;
+
+    public Integer getVisits() {
+        return visits;
+    }
+
+    public void setVisits(Integer visits) {
+        this.visits = visits;
+    }
+
     public Integer getRegistNum() {
         return registNum;
     }

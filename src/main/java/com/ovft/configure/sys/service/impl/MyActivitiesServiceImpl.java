@@ -116,6 +116,12 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
     @Override
     public WebResult findMyActivities(Integer activitiesId) {
         Activities activities = activitiesMapper.selectById(activitiesId);
+
+        //浏览量加1
+        activities.setVisits(activities.getVisits() + 1);
+        activitiesMapper.updateActivities(activities);
+
+        // 获取报名人数
         List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(null, null, activitiesId);
         activities.setRegistNum(myActivities.size());
         return new WebResult("200", "查询成功", activities);

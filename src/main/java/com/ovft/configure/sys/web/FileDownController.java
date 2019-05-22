@@ -22,8 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -174,11 +178,11 @@ public class FileDownController {
 
     /**
      * 课程列表上传
-     * @param uploadFile
+     * @param file
      * @return
      */
     @PostMapping(value = "/courseListImport")
-    public WebResult courseListImport(HttpServletRequest request, @RequestParam("file") MultipartFile uploadFile) {
+    public WebResult courseListImport(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
         Integer schoolId = null;
@@ -190,10 +194,83 @@ public class FileDownController {
             if(hget.getRole() != 0) {
                 schoolId = hget.getSchoolId();
             }
-            return fileDownService.courseListImport(uploadFile, schoolId);
+            return fileDownService.courseListImport(file, schoolId);
         }else {
             return new WebResult("50012", "请重新登录", "");
         }
+    }
+
+    /**
+     * 模板下载
+     * @param
+     * @author kaima2
+     */
+    @RequestMapping(value = "/downloadExcel", method = RequestMethod.GET)
+    @ResponseBody
+    public void downloadExcel(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String filePath = getClass().getResource("/conf/课程模板.xlsx").getPath();
+        InputStream is= this.getClass().getResourceAsStream("/conf/课程模板.xlsx");
+        byte[] fileData = input2byte(is);
+        downloadFile(response, request, "课程模板.xlsx", fileData);
+    }
+
+    /**
+     * inputstream转Byte[]
+     * @param inStream
+     * @return
+     * @throws IOException
+     */
+    private  byte[] input2byte(InputStream inStream)
+            throws IOException {
+        ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+        byte[] buff = new byte[100];
+        int rc = 0;
+        while ((rc = inStream.read(buff, 0, 100)) > 0) {
+            swapStream.write(buff, 0, rc);
+        }
+        byte[] in2b = swapStream.toByteArray();
+        return in2b;
+    }
+    /**
+     * 下载
+     * @param response
+     * @param request
+     * @param filename
+     * @param fileData
+     * @return
+     */
+    private boolean downloadFile(HttpServletResponse response,
+                                 HttpServletRequest request, String filename, byte[] fileData) {
+        OutputStream myout = null;
+        // 检查时候获取到数据
+        if (fileData == null) {
+            return false;
+        }
+        try {
+            if(request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+                filename = new String(filename.getBytes("GBK"),"iso-8859-1");
+            }else{
+                filename = URLEncoder.encode(filename, "utf-8");
+            }
+            response.setContentType("multipart/form-data");
+            /*response.setContentType("multipart/form-data;charset=utf-8");*/
+            response.setHeader("content-disposition","attachment;filename="+filename);
+            // 写明要下载的文件的大小
+            response.setContentLength(fileData.length);
+            // 从response对象中得到输出流,准备下载
+            myout = response.getOutputStream();
+            myout.write(fileData);
+            myout.flush();
+        } catch (Exception e) {
+        } finally {
+            if (myout != null) {
+                try {
+                    myout.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+        return true;
     }
 
 }
