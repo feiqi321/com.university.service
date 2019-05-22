@@ -420,6 +420,12 @@
             <if test="schoolId != null">
                 school_id = #{schoolId,jdbcType=INTEGER},
             </if>
+            <if test="topdate != null">
+                topdate = #{topdate},
+            </if>
+            <if test="topenddate != null">
+                topenddate = #{topenddate},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
