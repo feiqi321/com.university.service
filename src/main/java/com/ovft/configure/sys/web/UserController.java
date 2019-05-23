@@ -11,6 +11,7 @@ import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -306,5 +307,15 @@ public class UserController {
     public WebResult deleteUserContribute(@ RequestBody Contribute contribute){
 
         return userService.deleteUserContribute(contribute);
+    }
+    /**
+     * 通过cid查询对应学员投稿申请
+     *
+     * @param cid
+     * @return
+     */
+    @GetMapping(value = "/findContributeByCid")
+    public WebResult findContributeByCid(@Param("cid") Integer cid){
+        return userService.findContributeByCid(cid);
     }
 }

@@ -104,4 +104,7 @@ public interface UserService {
     //通过电话查找用户
     public User findUserByPhone(String phone);
 
+    //根据学员投稿cid查询
+    public WebResult findContributeByCid(Integer cid);
+
 }

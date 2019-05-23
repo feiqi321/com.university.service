@@ -73,6 +73,13 @@ public interface EduArticleMapper {
      * @return
      */
     public void updateNotice(EduArticle eduArticle);
+    /**
+     * 后台修改文章点赞数
+     *
+     * @param id,thumbup
+     * @return
+     */
+    public void updateNoticeThumbup(@Param("id") Integer id, @Param("thumbup")Integer thumbup);
 
     /**
      * 浏览量加 1
@@ -93,4 +100,11 @@ public interface EduArticleMapper {
      * @param istop
      */
     public void updateIsTop(@Param("id") Integer id, @Param("istop")String istop, @Param("topdate")Date topdate);
+
+    /**
+     * 查询对应文章
+     * @param id
+     *
+     */
+     public  EduArticle  selectAriticleById(@Param("id") Integer id);
 }

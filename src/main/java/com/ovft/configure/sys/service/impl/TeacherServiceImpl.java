@@ -430,20 +430,33 @@ public class TeacherServiceImpl implements TeacherService {
          * 3. finduserbyphone != null && userId != null  已注册过的学员,没有修改手机号
          */
         User finduserbyphone = userMapper.findUserByPhone(user);
+//        if (finduserbyphone == null) {
+//            if(user.getUserId() == null) {
+//                //1. finduserbyphone == null && userId == null  新注册的学员
+//                //初始密码为000000
+//                String password = "000000";
+//                user.setPassword(MD5Utils.md5Password(password));
+//                userMapper.addUser(user);
+//                userMapper.saveInfoItems(user);
+//                return new WebResult("200", "保存成功", "");
+//            } else {
+//                //2. finduserbyphone == null && userId != null  原已经注册过的学员,修改了手机号
+//                userMapper.updateByUserId(user.getPhone(), user.getUserId());
+//            }
+//        }
         if (finduserbyphone == null) {
-            if(user.getUserId() == null) {
-                //1. finduserbyphone == null && userId == null  新注册的学员
+              //未注册的情况
+            //1. finduserbyphone == null && userId == null  新注册的学员
                 //初始密码为000000
                 String password = "000000";
                 user.setPassword(MD5Utils.md5Password(password));
                 userMapper.addUser(user);
                 userMapper.saveInfoItems(user);
                 return new WebResult("200", "保存成功", "");
-            } else {
+        }else {
                 //2. finduserbyphone == null && userId != null  原已经注册过的学员,修改了手机号
                 userMapper.updateByUserId(user.getPhone(), user.getUserId());
             }
-        }
 
         if(finduserbyphone != null && user.getUserId() != null && user.getUserId().compareTo(finduserbyphone.getUserId())!= 0) {
             return new WebResult("400", "该手机号已被注册", "");

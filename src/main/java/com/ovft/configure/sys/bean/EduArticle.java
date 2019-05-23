@@ -89,7 +89,7 @@ public class EduArticle implements Serializable {
     /**
      * 文章正文
      */
-    private String content;
+        private String content;
     /**
      *  音频
      */

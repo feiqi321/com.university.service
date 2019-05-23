@@ -130,4 +130,7 @@ public interface UserMapper {
     //查询报名学校Id和是否通过验证 -vvtxw
     public User queryUserInfo(Integer userId);
 
+    //根据学员投稿cid查询
+    public Contribute findContributeByCid(Integer cid);
+
 }

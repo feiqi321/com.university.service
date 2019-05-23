@@ -269,7 +269,7 @@
         ,#{image},#{audio},#{vedio},#{schoolId},#{schoolName},#{userName},#{rejectReason}
         )
     </insert>
-    <!--查询学员投稿记录 -->
+    <!--查询对应userid学员投稿记录列表 -->
     <select id="queryUserContribute" parameterType="com.ovft.configure.sys.vo.PageVo"
             resultType="com.ovft.configure.sys.bean.Contribute">
         select * from edu_contribute where 1=1
@@ -280,7 +280,7 @@
             AND user_name like CONCAT('%',#{search},'%')
         </if>
     </select>
-    <!--查询学员投稿记录 -->
+    <!--查询学员投稿记录列表 -->
     <select id="contributeList" parameterType="com.ovft.configure.sys.vo.PageVo"
             resultType="com.ovft.configure.sys.bean.Contribute">
         select * from edu_contribute where 1=1
@@ -295,6 +295,14 @@
     <delete id="deleteUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
            delete  from  edu_contribute where cid=#{cid}
     </delete>
+
+    <!--通过cid查询学员投稿记录-->
+    <select id="findContributeByCid" parameterType="int" resultType="com.ovft.configure.sys.bean.Contribute">
+        select c.cid cid,c.userId userId,c.userItemId userItemId,c.title title,c.createtime createtime,
+        c.type type, c.content content,c.checkin checkin,c.image image,c.audio audio,c.vedio vedio,
+        c.school_id schoolId,c.schoolName schoolName,c.userName userName,c.reject_reason rejectReason
+          from edu_contribute c where cid=#{cid}
+    </select>
     <!--改变学员投稿记录状态-->
     <update id="updateContributeCheckin" parameterType="com.ovft.configure.sys.bean.Contribute">
         update edu_contribute <set>

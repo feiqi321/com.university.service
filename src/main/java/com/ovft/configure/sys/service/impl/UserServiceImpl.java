@@ -676,6 +676,7 @@ public class UserServiceImpl implements UserService {
       return new WebResult("200","操作成功","");
     }
 
+
     @Override
     public User queryUserInfo(Integer userId) {
         User user = userMapper.queryUserInfo(userId);
@@ -699,8 +700,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult updateContribute(Contribute contribute) {
+
          userMapper.updateContribute(contribute);
          return new WebResult("200","修改成功","");
+    }
+    //根据学员投稿cid查询
+    @Override
+    public WebResult findContributeByCid(Integer cid) {
+
+        Contribute contributeByCid = userMapper.findContributeByCid(cid);
+        return new WebResult("200","查询成功",contributeByCid);
     }
 
 
