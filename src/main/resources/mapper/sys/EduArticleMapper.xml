@@ -153,14 +153,14 @@
         createtime, updatetime, ispublic,
         istop, visits, thumbup,
         comment, state, url,
-        type, collect, content, school_id,audio,vedio, topdate, topenddate,author
+        type, collect, content, school_id, topdate, topenddate
         )
         values (#{userid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
         #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{ispublic,jdbcType=VARCHAR},
         #{istop,jdbcType=VARCHAR}, #{visits,jdbcType=INTEGER}, #{thumbup,jdbcType=INTEGER},
         #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
-        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER},#{audio,jdbcType=VARCHAR},#{vedio,jdbcType=VARCHAR}, #{topdate,jdbcType=TIMESTAMP},
-        #{topenddate,jdbcType=TIMESTAMP},#{author,jdbcType=VARCHAR}
+        #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}, #{topdate},
+        #{topenddate}
         )
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduArticle">
