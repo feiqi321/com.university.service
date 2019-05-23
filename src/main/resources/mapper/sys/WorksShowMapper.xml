@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.WorksShowMapper" >
+
+    <!--后台条件查询文章-->
+    <select id="findUserShowAll"  resultType="com.ovft.configure.sys.vo.EduArticleVo">
+        select a.id, a.userid, a.title, a.image, a.createtime, a.updatetime, a.ispublic, a.istop, a.visits, a.thumbup,
+        a.comment, a.state, a.url, a.type, a.collect, a.school_id as schoolId, a.content, s.school_name as schoolName,
+        a.topenddate, a.topdate,a.author
+        from edu_article a
+        left join  edu_school s on a.school_id = s.school_id
+        where 1=1
+        <if test="id != null and id != ''">
+            AND a.id = #{id}
+        </if>
+        <if test="schoolId != null and schoolId != ''">
+            AND a.school_id = #{schoolId}
+        </if>
+        <if test="type != null and type != ''">
+            AND a.type = #{type}
+        </if>
+        <if test="search != null and search != ''">
+            AND (a.title  like CONCAT('%',#{search},'%')  or a.author like CONCAT('%',#{search},'%'))
+        </if>
+
+
+        ORDER BY a.istop DESC,a.updatetime DESC
+    </select>
+
+
+</mapper>
