@@ -93,6 +93,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         }
 
         if(activities.getActivitiesId() == null) {
+            activities.setVisits(0);
             activitiesMapper.createActivities(activities);
             return new WebResult("200", "保存成功", "");
         } else {

@@ -41,7 +41,7 @@ public class MyActivitiesController {
     }
 
     /**
-     * 我报名的活动 列表
+     * 活动 详情
      *
      * @param request
      * @return
@@ -63,7 +63,7 @@ public class MyActivitiesController {
     }
 
     /**
-     * 添加 我报名的活动
+     * 报名活动
      *
      * @param myActivities
      * @return

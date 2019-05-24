@@ -7,7 +7,7 @@
         a.activities_id as activitiesId, a.admin_id as adminId, a.user_id as userId, a.school_id as schoolId,
         a.title, a.content, a.image, a.scenario, a.number, a.place, a.type, a.category,
         a.start_time as startTime, a.end_time as endTime, a.regist_start_time as registStartTime, a.regist_end_time as registEndTime,
-        a.start_age as startAge, a.end_age as endAge, s.school_name as schoolName
+        a.start_age as startAge, a.end_age as endAge, s.school_name as schoolName, a.visits
         from edu_activities a left join edu_school s on a.school_id = s.school_id
     </sql>
 
@@ -38,7 +38,7 @@
         insert into edu_activities(admin_id, user_id,school_id,
         title, content, image, scenario, number, place, type, category,
         start_time, end_time, regist_start_time, regist_end_time,
-        start_age, end_age)
+        start_age, end_age, visits)
          values (#{adminId}, #{userId}, #{schoolId}, #{title}, #{content}, #{image}, #{scenario},
          #{number}, #{place}, #{type}, #{category}, #{startTime}, #{endTime}, #{registStartTime}, #{registEndTime},
          #{startAge}, #{endAge})
@@ -94,6 +94,9 @@
             </if>
             <if test="endAge != null">
                 end_age = #{endAge},
+            </if>
+            <if test="visits != null">
+                visits = #{visits},
             </if>
         </set>
         where activities_id = #{activitiesId}
