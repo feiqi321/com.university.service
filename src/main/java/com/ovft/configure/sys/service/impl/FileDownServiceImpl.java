@@ -4,14 +4,20 @@ import com.ovft.configure.config.MessageCenterException;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
+import com.ovft.configure.sys.bean.FineCourse;
 import com.ovft.configure.sys.bean.School;
-import com.ovft.configure.sys.dao.AdminMapper;
-import com.ovft.configure.sys.dao.EduClassMapper;
-import com.ovft.configure.sys.dao.SchoolMapper;
-import com.ovft.configure.sys.dao.TeacherMapper;
+import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.FileDownService;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
+import com.qiniu.common.QiniuException;
+import com.qiniu.common.Zone;
+import com.qiniu.http.Response;
+import com.qiniu.storage.BucketManager;
+import com.qiniu.storage.Configuration;
+import com.qiniu.storage.model.BatchStatus;
+import com.qiniu.storage.model.FileInfo;
+import com.qiniu.util.Auth;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -20,6 +26,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -52,6 +56,8 @@ public class FileDownServiceImpl implements FileDownService {
     public SchoolMapper schoolMapper;
     @Resource
     public EduClassMapper classMapper;
+    @Resource
+    private FineCourseMapper fineCourseMapper;
 
     @Transactional
     @Override
@@ -103,13 +109,13 @@ public class FileDownServiceImpl implements FileDownService {
             } else if("下架".equals(isenable)){
                 course.setIsenable(-1);
             } else {
-                return new WebResult("400", "文件上传失败: 请选择 第" + (j + 1) + "行 的课程状态");
+                return new WebResult("400", "文件上传失败: 请选择 第" + (j + 1) + "行 的课程状态", "");
             }
 
             //  1-学校名称
             cell = row.getCell(1);
             if(schoolId == null && (cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK)) {
-                return new WebResult("400", "文件上传失败: 请选择 第" + (j + 1) + "行 的学校");
+                return new WebResult("400", "文件上传失败: 请选择 第" + (j + 1) + "行 的学校", "");
             }
             if(schoolId != null) {
                 course.setSchoolId(schoolId.toString());
@@ -123,7 +129,7 @@ public class FileDownServiceImpl implements FileDownService {
                     }
                 }
                 if(StringUtils.isBlank(course.getSchoolId())) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的学校不存在");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的学校不存在", "");
                 }
             }
 
@@ -131,17 +137,17 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(0);
             if(cell != null && cell.getCellType() != HSSFCell.CELL_TYPE_BLANK) {
                 if(cell.getCellType() != HSSFCell.CELL_TYPE_NUMERIC) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程ID格式错误");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程ID格式错误", "");
                 }
                 double courseId = cell.getNumericCellValue();
                 EduCourseVo courseVo = teacherMapper.selectByCourseId(new Double(courseId).intValue());
                 if(courseVo == null) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程ID不存在");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程ID不存在", "");
                 }
                 if(courseVo.getSchoolId().equals(course.getSchoolId())) {
                     course.setCourseId(new Double(courseId).intValue());
                 } else {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程ID与学校不相符");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程ID与学校不相符", "");
                 }
             }
 
@@ -149,7 +155,7 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(2);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)) {
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的教师不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的教师不能为空", "");
                 }
             } else {
                 String teacher = row.getCell(2).getStringCellValue();
@@ -163,14 +169,14 @@ public class FileDownServiceImpl implements FileDownService {
                     }
                 }
                 if(StringUtils.isBlank(course.getCourseTeacher())) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的教师不存在");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的教师不存在", "");
                 }
             }
 
             //  3-课程名
             cell = row.getCell(3);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
-                return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程名不能为空");
+                return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程名不能为空", "");
             }
             String courseName = cell.getStringCellValue();
             course.setCourseName(courseName);
@@ -179,7 +185,7 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(4);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的上课地点不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的上课地点不能为空", "");
                 }
             } else {
                 String placeClass = row.getCell(4).getStringCellValue();
@@ -191,7 +197,7 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(5);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的开课日期不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的开课日期不能为空", "");
                 }
             }else {
                 Date startDate = row.getCell(5).getDateCellValue();
@@ -202,7 +208,7 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(6);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的结课日期不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的结课日期不能为空", "");
                 }
             }else {
                 Date endDate = row.getCell(6).getDateCellValue();
@@ -213,11 +219,11 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(7);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的课程价格不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的课程价格不能为空", "");
                 }
             }else {
                 if(cell.getCellType() != HSSFCell.CELL_TYPE_NUMERIC) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程价格格式错误");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程价格格式错误", "");
                 }
                 double coursePrice = row.getCell(7).getNumericCellValue();
                 course.setCoursePrice(new BigDecimal(coursePrice));
@@ -227,11 +233,11 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(9);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的课程人数不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的课程人数不能为空", "");
                 }
             }else {
                 if(cell.getCellType() != HSSFCell.CELL_TYPE_NUMERIC) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程人数格式错误");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程人数格式错误", "");
                 }
                 double peopleNumber = row.getCell(9).getNumericCellValue();
                 course.setPeopleNumber(new Double(peopleNumber).intValue());
@@ -242,11 +248,11 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(10);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的星期不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的星期不能为空", "");
                 }
             }else {
                 if(cell.getCellType() != HSSFCell.CELL_TYPE_NUMERIC) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程星期格式错误");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的课程星期格式错误", "");
                 }
                 double week = row.getCell(10).getNumericCellValue();
                 course.setWeek(new Double(week).intValue() + "" + new Double(week).intValue());
@@ -258,12 +264,12 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(11);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的上课开始时间不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的上课开始时间不能为空", "");
                 }
             }else {
                 String startTime = row.getCell(11).getStringCellValue();
                 if(!StringUtils.isBlank(startTime) && !p.matcher(startTime).matches()) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的上课开始时间填写错误");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的上课开始时间填写错误", "");
                 }
                 course.setStartTime(startTime);
             }
@@ -272,12 +278,12 @@ public class FileDownServiceImpl implements FileDownService {
             cell = row.getCell(12);
             if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
                 if(course.getIsenable().equals(1)){
-                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的上课结束时间不能为空");
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的上课结束时间不能为空", "");
                 }
             }else {
                 String endTime = row.getCell(12).getStringCellValue();
                 if(!StringUtils.isBlank(endTime) && !p.matcher(endTime).matches()) {
-                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的上课结束时间填写错误");
+                    return new WebResult("400", "文件上传失败: 第" + (j + 1) + "行 的上课结束时间填写错误", "");
                 }
                 course.setEndTime(endTime);
             }
@@ -321,5 +327,92 @@ public class FileDownServiceImpl implements FileDownService {
         }
         return new WebResult("200", "文件上传成功", "");
 
+    }
+
+    //...生成上传凭证，然后准备上传
+    @Value("${qiniuyun.accessKey}")
+    private String accessKey;
+    @Value("${qiniuyun.secretKey}")
+    private String secretKey;
+    @Value("${qiniuyun.bucket}")
+    private String bucket;
+    @Value("${qiniuyun.filePrefix}")
+    private String filePrefix;
+    @Override
+    public void deleteFile() {
+        //构造一个带指定Zone对象的配置类
+        Configuration cfg = new Configuration(Zone.zone0());
+        Auth auth = Auth.create(accessKey, secretKey);
+        BucketManager bucketManager = new BucketManager(auth, cfg);
+         //文件名前缀
+        String prefix = filePrefix;
+        //每次迭代的长度限制，最大1000，推荐值 1000
+        int limit = 1000;
+        //指定目录分隔符，列出所有公共前缀（模拟列出目录效果）。缺省值为空字符串
+        String delimiter = "";
+        //列举空间文件列表
+        BucketManager.FileListIterator fileListIterator = bucketManager.createFileListIterator(bucket, prefix, limit, delimiter);
+        LinkedList<String> keyList = new LinkedList<String>();
+        Map<String, String> findFile = findFile();
+        while (fileListIterator.hasNext()) {
+            //处理获取的file list结果
+            FileInfo[] items = fileListIterator.next();
+            for (FileInfo item : items) {
+                System.out.println(item.key);
+                if(!findFile.containsKey(item.key)) {
+                    keyList.push(item.key);
+                }
+            }
+        }
+        if(keyList.size()!=0) {
+            String[] arry = new String[keyList.size()];
+            arry = keyList.toArray(arry);
+            bankDelete(arry);
+        }
+    }
+
+    //todo  待添加上传至七牛云的图片
+    public Map<String, String> findFile() {
+        PageVo pageVo = new PageVo();
+        List<FineCourse> fineCourseFile = fineCourseMapper.selectFineCourseList(pageVo);
+        Map<String, String> map = new HashMap<>();
+        for (FineCourse fineCourse : fineCourseFile) {
+            String video = fineCourse.getVideo();
+            if(!StringUtils.isBlank(fineCourse.getVideo())) {
+                map.put(video, video);
+            }
+            String cover = fineCourse.getCover();
+            if(!StringUtils.isBlank(cover)) {
+                map.put(cover, cover);
+            }
+        }
+        return map;
+    }
+
+    public void bankDelete(String[] keyList) {
+        //构造一个带指定Zone对象的配置类
+        Configuration cfg = new Configuration(Zone.zone0());
+        Auth auth = Auth.create(accessKey, secretKey);
+        BucketManager bucketManager = new BucketManager(auth, cfg);
+        try {
+            BucketManager.BatchOperations batchOperations = new BucketManager.BatchOperations();
+            batchOperations.addDeleteOp(bucket, keyList);
+            Response response = bucketManager.batch(batchOperations);
+            BatchStatus[] batchStatusList = response.jsonToObject(BatchStatus[].class);
+            for (int i = 0; i < keyList.length; i++) {
+                BatchStatus status = batchStatusList[i];
+                String key = keyList[i];
+                System.out.print(key + "\t");
+                if (status.code == 200) {
+                    System.out.println("delete success");
+                    logger.info("文件删除成功！" + key);
+                } else {
+                    System.out.println(status.data.error);
+                }
+            }
+        } catch (QiniuException ex) {
+            System.err.println(ex.response.toString());
+            logger.info("文件删除失败！" + ex.getMessage());
+        }
     }
 }
