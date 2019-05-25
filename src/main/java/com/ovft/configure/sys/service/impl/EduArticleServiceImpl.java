@@ -228,6 +228,17 @@ public class EduArticleServiceImpl implements EduArticleService {
             }
         }
     }
+    //通过cid删除文章记录
+    @Transactional
+    @Override
+    public WebResult deleteNoticeByCid(Integer cid) {
+        return eduArticleMapper.deleteNoticeByCid(cid);
+    }
+    //通过cid查找文章记录
+    @Override
+    public WebResult findNoticeByCid(Integer cid) {
+        return eduArticleMapper.findNoticeByCid(cid);
+    }
 
 
 }

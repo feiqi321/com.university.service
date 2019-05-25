@@ -103,6 +103,13 @@ public class EduArticle implements Serializable {
      */
     private String author;
     /**
+     *  投稿记录ID
+     */
+    private Integer cid;
+
+
+
+    /**
      * 置顶开始时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -112,6 +119,16 @@ public class EduArticle implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date topenddate;
+
+
+    public Integer getCid() {
+        return cid;
+    }
+
+    public void setCid(Integer cid) {
+
+        this.cid = cid;
+    }
 
     public String getAuthor() {
         return author;

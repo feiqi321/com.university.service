@@ -217,33 +217,38 @@ public class AdminController {
 
 
         }
-//        String token = request.getHeader("token");
-//        Object o = redisUtil.get(token);
-//        if(o != null) {
-//            Integer id = (Integer) o;
-//            // 如果是pc端登录，更新token缓存失效时间
-//            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
-//            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-//            if(hget.getRole() == 0) {
-//
-//                eduArticleService.deleteNotice();
-//                userService.updateContributeChinkin(checkin,cid);
-//            }else{
-//                userService.updateContributeChinkin(checkin,cid);
-////        userService.deleteWithdraw(wid);
-////        return new WebResult("200", "拒绝成功", "");
-//                return new WebResult("200","拒绝成功","");
-//
-//            }
-//
-//        }else {
-//            return new WebResult("50012", "请先登录", "");
-//        }
-        userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
-
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() == 0) {
+                WebResult noticeByCid = eduArticleService.findNoticeByCid(contribute.getCid());
+                if (noticeByCid!=null){
+                    eduArticleService.deleteNoticeByCid(contribute.getCid());
+                    userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
+                }else {
+                    userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
+                }
+            }else{
+                userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
 //        userService.deleteWithdraw(wid);
 //        return new WebResult("200", "拒绝成功", "");
-        return new WebResult("200","拒绝成功","");
+                return new WebResult("200","拒绝成功","");
+
+            }
+
+        }else {
+            return new WebResult("50012", "请先登录", "");
+        }
+        return null;
+//        userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
+//
+////        userService.deleteWithdraw(wid);
+////        return new WebResult("200", "拒绝成功", "");
+//        return new WebResult("200","拒绝成功","");
     }
     /**
      * 学员投稿修改

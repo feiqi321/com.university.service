@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.dao;
 
+import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.bean.EduArticleExample;
 import com.ovft.configure.sys.vo.EduArticleVo;
@@ -107,4 +108,17 @@ public interface EduArticleMapper {
      *
      */
      public  EduArticle  selectAriticleById(@Param("id") Integer id);
+
+    /**
+     * 删除对应文章
+     * @param cid
+     *
+     */
+     public WebResult deleteNoticeByCid(Integer cid);
+    /**
+     * 查找对应文章
+     * @param cid
+     *
+     */
+     public WebResult findNoticeByCid(Integer cid);
 }

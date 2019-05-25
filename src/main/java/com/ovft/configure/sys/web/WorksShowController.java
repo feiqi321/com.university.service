@@ -53,6 +53,31 @@ public class WorksShowController {
 
 }
     /**
+     * 学员展示首页推荐
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/WorksShow/findIndexShowAll")
+    public WebResult findIndexShowAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        pageVo.setType("7");
+        return worksShowService.findIndexShowAll(pageVo);
+
+    }
+    /**
+     * 教师风采首页推荐
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/WorksShow/TeacherIndexShowAll")
+    public WebResult TeacherIndexShowAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        pageVo.setType("8");
+        return worksShowService.findIndexShowAll(pageVo);
+
+    }
+
+    /**
      * 进入学员详情页
      *
      * @param id

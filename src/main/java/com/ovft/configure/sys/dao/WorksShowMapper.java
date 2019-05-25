@@ -11,4 +11,5 @@ import java.util.List;
    @Mapper
 public interface WorksShowMapper {
     public List<EduArticleVo> findUserShowAll(@Param("id")Integer id, @Param("schoolId")Integer schoolId, @Param("type")String type, @Param("search") String search);
+    public List<EduArticleVo> findIndexShowAll(@Param("id")Integer id, @Param("schoolId")Integer schoolId, @Param("type")String type, @Param("search") String search);
 }

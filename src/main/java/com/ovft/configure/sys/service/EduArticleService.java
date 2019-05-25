@@ -64,4 +64,19 @@ public interface EduArticleService {
      */
     public void topScheduleTask();
 
+    /**
+     *  后台删除文章
+     *
+     * @param cid
+     * @return
+     */
+    public WebResult deleteNoticeByCid(Integer cid);
+    /**
+     *  后台查询文章
+     *
+     * @param cid
+     * @return
+     */
+    public WebResult findNoticeByCid(Integer cid);
+
 }

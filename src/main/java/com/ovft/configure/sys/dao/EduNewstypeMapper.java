@@ -3,6 +3,8 @@ package com.ovft.configure.sys.dao;
 import com.ovft.configure.sys.bean.EduNewstype;
 import com.ovft.configure.sys.bean.EduNewstypeExample;
 import java.util.List;
+
+import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface EduNewstypeMapper {
@@ -27,4 +29,7 @@ public interface EduNewstypeMapper {
     int updateByPrimaryKeySelective(EduNewstype record);
 
     int updateByPrimaryKey(EduNewstype record);
+
+    //获取所有栏目列表
+    public List<EduNewstype> queryNewsTypeAll(PageVo pageVo);
 }

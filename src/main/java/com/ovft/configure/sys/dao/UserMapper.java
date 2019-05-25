@@ -115,7 +115,7 @@ public interface UserMapper {
     public List<Contribute> queryUserContribute(PageVo pageVo);
 
     //删除一条用户投稿记录
-    public void deleteUserContribute(Contribute contribute);
+    public void deleteUserContribute( Contribute contribute);
 
     //修改投稿申请状态
     public void updateContributeCheckin(@Param("checkin") Integer checkin,@Param("rejectReason") String rejectReason,@Param("cid") Integer cid);

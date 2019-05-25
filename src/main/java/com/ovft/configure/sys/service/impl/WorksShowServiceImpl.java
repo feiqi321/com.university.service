@@ -33,6 +33,19 @@ public class WorksShowServiceImpl implements WorksShowService {
         PageInfo pageInfo = new PageInfo<>(noticeList);
         return new WebResult("200", "查询成功", pageInfo);
     }
+
+    @Override
+    public WebResult findIndexShowAll(PageVo pageVo) {
+        if(pageVo.getPageSize() == 0) {
+            List<EduArticleVo> noticeList =  worksShowMapper.findIndexShowAll(null, pageVo.getSchoolId(), pageVo.getType(),pageVo.getSearch());
+            return new WebResult("200", "查询成功", noticeList);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<EduArticleVo> noticeList =  worksShowMapper.findIndexShowAll(null, pageVo.getSchoolId(), pageVo.getType(), pageVo.getSearch());
+        PageInfo pageInfo = new PageInfo<>(noticeList);
+        return new WebResult("200", "查询成功", pageInfo);
+    }
+
     @Transactional
     @Override
     public Integer addThumbup(Integer id) {

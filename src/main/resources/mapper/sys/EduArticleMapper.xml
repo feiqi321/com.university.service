@@ -578,6 +578,16 @@
         a.topenddate, a.topdate,author
         from edu_article a WHERE id=#{id}
      </select>
+    <delete id="deleteNoticeByCid" parameterType="int">
+           delete
+         from edu_article
+           where  cid={cid}
+    </delete>
+    <delete id="findNoticeByCid" parameterType="int">
+          select *
+         from edu_article
+           where  cid={cid}
+    </delete>
 
 
 </mapper>

@@ -14,6 +14,7 @@ import com.ovft.configure.sys.vo.WithdrawVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -276,7 +277,7 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/addUserContribute")
-     public WebResult addUserContribute(@ RequestBody Contribute contribute,HttpServletRequest request){
+     public WebResult addUserContribute(@ RequestBody Contribute contribute,HttpServletRequest request,@RequestParam("file") MultipartFile file){
 
          Integer userId=Integer.parseInt(request.getHeader("userId"));
             contribute.setUserId(userId);

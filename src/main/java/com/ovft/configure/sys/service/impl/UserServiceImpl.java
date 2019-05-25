@@ -640,6 +640,7 @@ public class UserServiceImpl implements UserService {
         if (user.getSchoolId()==null) {
             return new WebResult("400","您还未报名任何学校，不能投稿");
         }
+
         contribute.setSchoolId(user.getSchoolId());
         contribute.setUserName(user.getUserName());
         contribute.setSchoolName(schoolName);
