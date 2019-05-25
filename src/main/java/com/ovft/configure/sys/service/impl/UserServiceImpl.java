@@ -3,7 +3,10 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.*;
+import com.ovft.configure.sys.bean.Contribute;
+import com.ovft.configure.sys.bean.EduClass;
+import com.ovft.configure.sys.bean.EduCourse;
+import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.dao.UserMapper;
@@ -92,7 +95,6 @@ public class UserServiceImpl implements UserService {
         }
         WebResult result = new WebResult();
         userMapper.addUser(user);
-        //userMapper.saveInfoItems(user);
         result.setCode("200");
         result.setMsg("注册成功");
         return result;
@@ -378,6 +380,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updatePhone(oldPhone, newPhone);
         return new WebResult("200", "更换成功");
     }
+
     //退出登录
     @Override
     public WebResult userQuit(String token) {
@@ -584,6 +587,7 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteUserItem(userItemId);
         return new WebResult("200","删除成功","");
     }
+
     //删除一条学员注销申请记录
     @Override
     public void deleteWithdraw(Integer wid) {
@@ -624,6 +628,7 @@ public class UserServiceImpl implements UserService {
     public User queryByItemsIdAndSchoolId(Integer userId, Integer schoolId) {
         return userMapper.queryByItemsIdAndSchoolId(userId,schoolId);
     }
+
     //添加学员投稿
     @Transactional
     @Override
@@ -650,6 +655,7 @@ public class UserServiceImpl implements UserService {
        userMapper.addUserContribute(contribute);
        return new WebResult("200","投稿申请成功");
     }
+
     //查询投稿记录状态
     @Override
     public WebResult queryUserContributeCheckin(PageVo pageVo) {
@@ -662,6 +668,7 @@ public class UserServiceImpl implements UserService {
         PageInfo pageInfo = new PageInfo<>(contributes);
         return new WebResult("200","查询成功", pageInfo);
     }
+
     //删除一条用户投稿记录
     @Transactional
     @Override
@@ -669,6 +676,7 @@ public class UserServiceImpl implements UserService {
          userMapper.deleteUserContribute(contribute);
         return new WebResult("200","删除成功","");
     }
+
     //投稿审核状态更改
     @Transactional
     @Override
@@ -719,5 +727,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.findUserByPhone2(phone);
     }
 
+
+    @Override
+    public User queryInfo(Integer userId) {
+        User user = userMapper.queryInfo(userId);
+        return user;
+    }
 
 }

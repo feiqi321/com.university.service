@@ -19,8 +19,17 @@ public class EduCourseVo extends EduCourse {
     private String week;
     private String startTime;
     private String endTime;
-
     private String[] courseIds;
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String[] getCourseIds() {
         return courseIds;

@@ -14,5 +14,8 @@ public class Status {
     public static final Integer ALLCOURSE = 0;
     public static final Integer PRIORITYONE = 1;
     public static final Integer PRIORITYTWO = 2;
+    public static final Integer DEFAULTCATID = 1;
+    public static final Integer DEFAULTEXTENDCATID = 1;
+
 
 }

@@ -9,8 +9,6 @@ import java.util.Map;
 import com.ovft.configure.sys.vo.OrderVo;
 import org.apache.ibatis.annotations.Param;
 
-import javax.servlet.http.HttpServletRequest;
-
 public interface OrderMapper {
     long countByExample(OrderExample example);
 
@@ -59,6 +57,16 @@ public interface OrderMapper {
      * @return
      */
     public List<OrderVo> queryAllRecord(Integer userId);
+
+    //显示详细的相关订单
+    List<OrderVo> showOrders(Map<String, Object> map);
+
+
+    //显示总订单
+    List<OrderVo> showOrder(Map<String, Object> map);
+
+    //查询订单的数量
+    int countOrderNum(Integer orderId);
 
 
 }

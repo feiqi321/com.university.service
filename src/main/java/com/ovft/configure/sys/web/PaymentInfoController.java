@@ -1,24 +1,21 @@
 package com.ovft.configure.sys.web;
 
-import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
-import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.internal.mapping.AlipayFieldMethod;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.ovft.configure.config.AlipayConfig;
 import com.ovft.configure.constant.OrderStatus;
-import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.Order;
-import com.ovft.configure.sys.bean.OrderDetail;
-import com.ovft.configure.sys.bean.PaymentInfo;
+import com.ovft.configure.http.result.StatusCode;
+import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.EduCourseMapper;
 import com.ovft.configure.sys.dao.OrderDetailMapper;
 import com.ovft.configure.sys.dao.OrderMapper;
-import com.ovft.configure.sys.service.OrderService;
-import com.ovft.configure.sys.service.paymentService;
+import com.ovft.configure.sys.service.*;
 import com.ovft.configure.sys.utils.OrderIdUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author vvtxw
@@ -48,7 +44,6 @@ import java.util.Map;
 public class PaymentInfoController {
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private paymentService paymentService;
     @Resource
@@ -60,9 +55,105 @@ public class PaymentInfoController {
     @Resource
     private OrderDetailMapper orderDetailMapper;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private EduOfflineOrderService eduOfflineOrderService;
+
+    @Autowired
+    private EduRegistService eduRegistService;
+
+    @Autowired
+    private EduOfflineAddressService eduOfflineAddressService;
+    @Autowired
+    private EduOfflineOrderitemService eduOfflineOrderitemService;
+
+
+    @GetMapping(value = "showonoroff")
+    public WebResult sendToStatus(Integer courseId, HttpServletRequest request) {
+        String schoolId1 = request.getHeader("schoolId");
+        int schoolId = Integer.parseInt(schoolId1);
+//        Integer schoolId = 11;
+        int status = eduRegistService.queryOffRegist(schoolId, courseId);
+        return new WebResult(StatusCode.OK, "查询成功", status);
+    }
+
 
     @GetMapping(value = "alipay/submit")
-    public ResponseEntity<String> paymentAlipay(@RequestParam("courseId") Integer courseId, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
+    public WebResult paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
+        String schoolId1 = request.getHeader("schoolId");
+        int schoolId = Integer.parseInt(schoolId1);
+
+        if (type == 2) {
+            ResponseEntity<String> stringResponseEntity = alipayMethod(courseId, request, httpServletResponse);
+            return new WebResult(StatusCode.OK, "支付成功", stringResponseEntity);
+        }
+
+        if (type == 3) {
+            int i = offlineRegist(request, courseId);
+            List<EduOfflineAddresstime> eduOfflineAddresstimes = eduOfflineAddressService.queryAddressByschoolId(schoolId);
+            for (EduOfflineAddresstime eduOfflineAddresstime : eduOfflineAddresstimes) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+                String startTime = date.format(eduOfflineAddresstime.getPaymentStarttime());
+                String endtTime = date.format(eduOfflineAddresstime.getPaymentStarttime());
+                if (i > 0) {
+                    return new WebResult(StatusCode.OK, "请在报名时间：" + startTime + "至" + endtTime + "之前到" + eduOfflineAddresstime.getPaymentAddress() + "缴费，否者自动取消");
+                }
+            }
+            if (i == -2) {
+                return new WebResult(StatusCode.OK, "您已经报名该课程，不要重复报名");
+            }
+        }
+        return new WebResult(StatusCode.ERROR, "报名失败", "");
+    }
+
+    private int offlineRegist(HttpServletRequest request, Integer courseId) {
+        //生存线下报名记录
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
+//        Integer userId = 59;
+        //查询学员的基本信息
+        User user = userService.queryInfo(userId);
+        //查询学员的课程信息
+        EduCourseVo eduCourseVo = eduCourseMapper.queryCourseInfo(courseId);
+
+        //查询是否有订单，如果已经下单了，返回信息
+        List<EduOfflineOrder> oldOrder = eduOfflineOrderService.queryOffRecord(user.getUserId(), courseId);
+        if (oldOrder.size() > 0) {
+            return -2;
+        }
+
+        EduOfflineOrder eduOfflineOrder = new EduOfflineOrder();
+        eduOfflineOrder.setUserId(userId);
+        eduOfflineOrder.setUserName(user.getUserName());
+        eduOfflineOrder.setPhone(user.getPhone());
+        eduOfflineOrder.setCourseId(courseId);
+        eduOfflineOrder.setCourseTeacher(eduCourseVo.getName());
+        eduOfflineOrder.setPayStatus("2");
+        eduOfflineOrder.setCourseName(eduCourseVo.getCourseName());
+        eduOfflineOrder.setCousePrice(eduCourseVo.getCoursePrice());
+        eduOfflineOrder.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
+        eduOfflineOrder.setSchoolName(eduCourseVo.getSchoolName());
+
+        EduOfflineOrderitem eduOfflineOrderitem = new EduOfflineOrderitem();
+        eduOfflineOrderitem.setCouserName(eduCourseVo.getCourseName());
+        eduOfflineOrderitem.setCouserPrice(eduCourseVo.getCoursePrice());
+        eduOfflineOrderitem.setPayStatus("2");
+        eduOfflineOrderitem.setCourseId(courseId);
+        eduOfflineOrderitem.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
+        eduOfflineOrderitem.setUserId(userId);
+
+        int res = eduOfflineOrderService.updateOffOrder(eduOfflineOrder);
+        int res1 = eduOfflineOrderitemService.addItemOrder(eduOfflineOrderitem);
+
+        if (res > 0 && res1 > 0) {
+            return 1;
+        }
+        return -1;
+    }
+
+    private ResponseEntity<String> alipayMethod(Integer courseId, HttpServletRequest request, HttpServletResponse httpServletResponse) {
 
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
@@ -147,6 +238,7 @@ public class PaymentInfoController {
         //把表单html打印到客户端浏览器
         return ResponseEntity.ok().body(form);
     }
+
 
     @RequestMapping(value = "/alipay/callback/return", method = RequestMethod.GET)
     public String callbackReturn(HttpServletRequest request, Model model) throws UnsupportedEncodingException {

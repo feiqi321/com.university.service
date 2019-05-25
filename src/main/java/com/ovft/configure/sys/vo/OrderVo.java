@@ -19,10 +19,20 @@ public class OrderVo extends Order {
     private String employer;
     private String name;
 
+    private Integer num;
+
     /**
      * 课时id
      */
     private String week;
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
 
     public String getName() {
         return name;
@@ -91,6 +101,7 @@ public class OrderVo extends Order {
 
     private String endTime;
 
+
     public Integer getSchoolId() {
         return schoolId;
     }
@@ -102,6 +113,7 @@ public class OrderVo extends Order {
     public String getShoolName() {
         return schoolName;
     }
+
 
     public void setShoolName(String shoolName) {
         this.schoolName = shoolName;

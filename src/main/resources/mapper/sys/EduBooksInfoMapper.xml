@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduBooksInfoMapper">
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduBooksInfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="book_goods_id" jdbcType="INTEGER" property="bookGoodsId"/>
+        <result column="publish_address" jdbcType="VARCHAR" property="publishAddress"/>
+        <result column="format_book" jdbcType="VARCHAR" property="formatBook"/>
+        <result column="edition_book" jdbcType="VARCHAR" property="editionBook"/>
+        <result column="page_size" jdbcType="DOUBLE" property="pageSize"/>
+        <result column="recommend_unit" jdbcType="VARCHAR" property="recommendUnit"/>
+        <result column="book_sn" jdbcType="VARCHAR" property="bookSn"/>
+        <result column="describe_note" jdbcType="VARCHAR" property="describeNote"/>
+        <result column="describe_book" jdbcType="VARCHAR" property="describeBook"/>
+        <result column="introduction_author" jdbcType="VARCHAR" property="introductionAuthor"/>
+        <result column="freight_pirce" jdbcType="VARCHAR" property="freightPirce"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, book_goods_id, publish_address, format_book, edition_book, page_size, recommend_unit, 
+    book_sn, describe_note, describe_book, " introduction_author", freight_pirce
+  </sql>
+    <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduBooksInfoExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from edu_books_info
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_books_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from edu_books_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduBooksInfoExample">
+        delete from edu_books_info
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduBooksInfo">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_books_info (book_goods_id, publish_address, format_book,
+        edition_book, page_size, recommend_unit,
+        book_sn, describe_note, describe_book,
+        "introduction_author", freight_pirce)
+        values (#{bookGoodsId,jdbcType=INTEGER}, #{publishAddress,jdbcType=VARCHAR}, #{formatBook,jdbcType=VARCHAR},
+        #{editionBook,jdbcType=VARCHAR}, #{pageSize,jdbcType=DOUBLE}, #{recommendUnit,jdbcType=VARCHAR},
+        #{bookSn,jdbcType=VARCHAR}, #{describeNote,jdbcType=VARCHAR}, #{describeBook,jdbcType=VARCHAR},
+        #{introductionAuthor,jdbcType=VARCHAR}, #{freightPirce,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduBooksInfo">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_books_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookGoodsId != null">
+                book_goods_id,
+            </if>
+            <if test="publishAddress != null">
+                publish_address,
+            </if>
+            <if test="formatBook != null">
+                format_book,
+            </if>
+            <if test="editionBook != null">
+                edition_book,
+            </if>
+            <if test="pageSize != null">
+                page_size,
+            </if>
+            <if test="recommendUnit != null">
+                recommend_unit,
+            </if>
+            <if test="bookSn != null">
+                book_sn,
+            </if>
+            <if test="describeNote != null">
+                describe_note,
+            </if>
+            <if test="describeBook != null">
+                describe_book,
+            </if>
+            <if test="introductionAuthor != null">
+                " introduction_author",
+            </if>
+            <if test="freightPirce != null">
+                freight_pirce,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bookGoodsId != null">
+                #{bookGoodsId,jdbcType=INTEGER},
+            </if>
+            <if test="publishAddress != null">
+                #{publishAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="formatBook != null">
+                #{formatBook,jdbcType=VARCHAR},
+            </if>
+            <if test="editionBook != null">
+                #{editionBook,jdbcType=VARCHAR},
+            </if>
+            <if test="pageSize != null">
+                #{pageSize,jdbcType=DOUBLE},
+            </if>
+            <if test="recommendUnit != null">
+                #{recommendUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="bookSn != null">
+                #{bookSn,jdbcType=VARCHAR},
+            </if>
+            <if test="describeNote != null">
+                #{describeNote,jdbcType=VARCHAR},
+            </if>
+            <if test="describeBook != null">
+                #{describeBook,jdbcType=VARCHAR},
+            </if>
+            <if test="introductionAuthor != null">
+                #{introductionAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="freightPirce != null">
+                #{freightPirce,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.ovft.configure.sys.bean.EduBooksInfoExample"
+            resultType="java.lang.Long">
+        select count(*) from edu_books_info
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update edu_books_info
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.bookGoodsId != null">
+                book_goods_id = #{record.bookGoodsId,jdbcType=INTEGER},
+            </if>
+            <if test="record.publishAddress != null">
+                publish_address = #{record.publishAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="record.formatBook != null">
+                format_book = #{record.formatBook,jdbcType=VARCHAR},
+            </if>
+            <if test="record.editionBook != null">
+                edition_book = #{record.editionBook,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pageSize != null">
+                page_size = #{record.pageSize,jdbcType=DOUBLE},
+            </if>
+            <if test="record.recommendUnit != null">
+                recommend_unit = #{record.recommendUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="record.bookSn != null">
+                book_sn = #{record.bookSn,jdbcType=VARCHAR},
+            </if>
+            <if test="record.describeNote != null">
+                describe_note = #{record.describeNote,jdbcType=VARCHAR},
+            </if>
+            <if test="record.describeBook != null">
+                describe_book = #{record.describeBook,jdbcType=VARCHAR},
+            </if>
+            <if test="record.introductionAuthor != null">
+                " introduction_author" = #{record.introductionAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="record.freightPirce != null">
+                freight_pirce = #{record.freightPirce,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update edu_books_info
+        set id = #{record.id,jdbcType=INTEGER},
+        book_goods_id = #{record.bookGoodsId,jdbcType=INTEGER},
+        publish_address = #{record.publishAddress,jdbcType=VARCHAR},
+        format_book = #{record.formatBook,jdbcType=VARCHAR},
+        edition_book = #{record.editionBook,jdbcType=VARCHAR},
+        page_size = #{record.pageSize,jdbcType=DOUBLE},
+        recommend_unit = #{record.recommendUnit,jdbcType=VARCHAR},
+        book_sn = #{record.bookSn,jdbcType=VARCHAR},
+        describe_note = #{record.describeNote,jdbcType=VARCHAR},
+        describe_book = #{record.describeBook,jdbcType=VARCHAR},
+        "introduction_author" = #{record.introductionAuthor,jdbcType=VARCHAR},
+        freight_pirce = #{record.freightPirce,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.EduBooksInfo">
+        update edu_books_info
+        <set>
+            <if test="bookGoodsId != null">
+                book_goods_id = #{bookGoodsId,jdbcType=INTEGER},
+            </if>
+            <if test="publishAddress != null">
+                publish_address = #{publishAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="formatBook != null">
+                format_book = #{formatBook,jdbcType=VARCHAR},
+            </if>
+            <if test="editionBook != null">
+                edition_book = #{editionBook,jdbcType=VARCHAR},
+            </if>
+            <if test="pageSize != null">
+                page_size = #{pageSize,jdbcType=DOUBLE},
+            </if>
+            <if test="recommendUnit != null">
+                recommend_unit = #{recommendUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="bookSn != null">
+                book_sn = #{bookSn,jdbcType=VARCHAR},
+            </if>
+            <if test="describeNote != null">
+                describe_note = #{describeNote,jdbcType=VARCHAR},
+            </if>
+            <if test="describeBook != null">
+                describe_book = #{describeBook,jdbcType=VARCHAR},
+            </if>
+            <if test="introductionAuthor != null">
+                "introduction_author" = #{introductionAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="freightPirce != null">
+                freight_pirce = #{freightPirce,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduBooksInfo">
+    update edu_books_info
+    set book_goods_id = #{bookGoodsId,jdbcType=INTEGER},
+      publish_address = #{publishAddress,jdbcType=VARCHAR},
+      format_book = #{formatBook,jdbcType=VARCHAR},
+      edition_book = #{editionBook,jdbcType=VARCHAR},
+      page_size = #{pageSize,jdbcType=DOUBLE},
+      recommend_unit = #{recommendUnit,jdbcType=VARCHAR},
+      book_sn = #{bookSn,jdbcType=VARCHAR},
+      describe_note = #{describeNote,jdbcType=VARCHAR},
+      describe_book = #{describeBook,jdbcType=VARCHAR},
+      "introduction_author" = #{introductionAuthor,jdbcType=VARCHAR},
+      freight_pirce = #{freightPirce,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!--查询教材相关信息-->
+    <select id="selectBookById" parameterType="Integer"
+            resultType="com.ovft.configure.sys.vo.EduBooksInfoVo">
+    SELECT
+    i.*,
+    g.books_name,
+    g.books_author,
+    g.store_count,
+    g.shop_price,
+    g.original_img
+    from
+    edu_books_info i
+    LEFT JOIN edu_book_goods g  on g.id=i.book_goods_id
+    where i.id=#{id}
+  </select>
+
+
+</mapper>

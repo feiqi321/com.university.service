@@ -211,6 +211,7 @@ public class EduRegistServiceImpl implements EduRegistService {
                 regist.setRegistCategorySix(eduRegistAll.getRegistCategorySix());
                 regist.setRegistCategoryTwo(eduRegistAll.getRegistCategoryTwo());
                 regist.setSchoolName(eduRegistAll.getSchoolName());
+                regist.setOfflineRegist(eduRegistAll.getOfflineRegist());
                 eduRegistMapper.updateByPrimaryKeySelective(regist);
             }
         }
@@ -286,6 +287,18 @@ public class EduRegistServiceImpl implements EduRegistService {
     public int deleteSepecialCondition(EduRegist eduRegist) {
         int i = updateAllConditions(eduRegist);
         return i;
+    }
+
+    @Override
+    public Integer queryOffRegist(int schoolId, Integer courseId) {
+        EduRegistExample eduRegistExample = new EduRegistExample();
+        eduRegistExample.createCriteria().andSchoolIdEqualTo(schoolId).andCourseIdEqualTo(courseId);
+        List<EduRegist> eduRegists = eduRegistMapper.selectByExample(eduRegistExample);
+        for (EduRegist eduRegist : eduRegists) {
+            String offlineRegist = eduRegist.getOfflineRegist();
+            return Integer.valueOf(offlineRegist);
+        }
+        return null;
     }
 
     private int updateAllConditions(EduRegist eduRegist) {

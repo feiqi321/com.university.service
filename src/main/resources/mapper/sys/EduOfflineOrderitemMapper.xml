@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduOfflineOrderitemMapper">
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduOfflineOrderitem">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="couser_name" jdbcType="VARCHAR" property="couserName"/>
+        <result column="couser_price" jdbcType="DECIMAL" property="couserPrice"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="pay_status" jdbcType="VARCHAR" property="payStatus"/>
+        <result column="course_id" jdbcType="INTEGER" property="courseId"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, user_id, couser_name, couser_price, school_id, pay_status, course_id
+  </sql>
+    <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduOfflineOrderitemExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from edu_offline_orderitem
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_offline_orderitem
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from edu_offline_orderitem
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduOfflineOrderitemExample">
+        delete from edu_offline_orderitem
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduOfflineOrderitem">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_offline_orderitem (user_id, couser_name, couser_price,
+        school_id, pay_status, course_id
+        )
+        values (#{userId,jdbcType=INTEGER}, #{couserName,jdbcType=VARCHAR}, #{couserPrice,jdbcType=DECIMAL},
+        #{schoolId,jdbcType=INTEGER}, #{payStatus,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduOfflineOrderitem">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_offline_orderitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="couserName != null">
+                couser_name,
+            </if>
+            <if test="couserPrice != null">
+                couser_price,
+            </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
+            <if test="payStatus != null">
+                pay_status,
+            </if>
+            <if test="courseId != null">
+                course_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="couserName != null">
+                #{couserName,jdbcType=VARCHAR},
+            </if>
+            <if test="couserPrice != null">
+                #{couserPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="payStatus != null">
+                #{payStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="courseId != null">
+                #{courseId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.ovft.configure.sys.bean.EduOfflineOrderitemExample"
+            resultType="java.lang.Long">
+        select count(*) from edu_offline_orderitem
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update edu_offline_orderitem
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.userId != null">
+                user_id = #{record.userId,jdbcType=INTEGER},
+            </if>
+            <if test="record.couserName != null">
+                couser_name = #{record.couserName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.couserPrice != null">
+                couser_price = #{record.couserPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="record.schoolId != null">
+                school_id = #{record.schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="record.payStatus != null">
+                pay_status = #{record.payStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.courseId != null">
+                course_id = #{record.courseId,jdbcType=INTEGER},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update edu_offline_orderitem
+        set id = #{record.id,jdbcType=INTEGER},
+        user_id = #{record.userId,jdbcType=INTEGER},
+        couser_name = #{record.couserName,jdbcType=VARCHAR},
+        couser_price = #{record.couserPrice,jdbcType=DECIMAL},
+        school_id = #{record.schoolId,jdbcType=INTEGER},
+        pay_status = #{record.payStatus,jdbcType=VARCHAR},
+        course_id = #{record.courseId,jdbcType=INTEGER}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.EduOfflineOrderitem">
+        update edu_offline_orderitem
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="couserName != null">
+                couser_name = #{couserName,jdbcType=VARCHAR},
+            </if>
+            <if test="couserPrice != null">
+                couser_price = #{couserPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="payStatus != null">
+                pay_status = #{payStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduOfflineOrderitem">
+    update edu_offline_orderitem
+    set user_id = #{userId,jdbcType=INTEGER},
+      couser_name = #{couserName,jdbcType=VARCHAR},
+      couser_price = #{couserPrice,jdbcType=DECIMAL},
+      school_id = #{schoolId,jdbcType=INTEGER},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      course_id = #{courseId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
