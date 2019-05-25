@@ -277,8 +277,8 @@
     </update>
     <!--添加学员投稿-->
     <insert id="addUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
-        insert into edu_contribute values(default,#{userId},#{userItemId},#{title},#{createtime},#{type},#{content},#{checkin}
-        ,#{image},#{audio},#{vedio},#{schoolId}
+        insert into edu_contribute values(default,#{userId,jdbcType=INTEGER},#{userItemId,jdbcType=INTEGER},#{title,jdbcType=VARCHAR},#{createtime,jdbcType=TIMESTAMP},#{type,jdbcType=INTEGER},#{content,jdbcType=VARCHAR},#{checkin,jdbcType=INTEGER}
+        ,#{image,jdbcType=VARCHAR},#{audio,jdbcType=VARCHAR},#{vedio,jdbcType=VARCHAR},#{schoolId,jdbcType=INTEGER},#{schoolName,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{rejectReason,jdbcType=VARCHAR},#{typeName,jdbcType=VARCHAR}
         )
     </insert>
     <!--查询对应userid学员投稿记录列表 -->
