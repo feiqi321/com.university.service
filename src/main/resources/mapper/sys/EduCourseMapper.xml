@@ -372,4 +372,20 @@
                       school_id=#{schoolId}
     </select>
 
+
+    <!--4.查询科目相关信息-->
+    <select id="queryCourseInfo" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCourseVo">
+                  select
+                    c.course_id,
+                    c.course_name,
+                    c.course_price,
+                    a.school_name,
+                    a.school_id,
+                    d.name
+                from edu_course c
+                LEFT JOIN edu_school a on a.school_id=c.school_id
+                LEFT join edu_admin d on  d.admin_id = c.course_teacher
+                where course_id =#{courseId}
+    </select>
+
 </mapper>

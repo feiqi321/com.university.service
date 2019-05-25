@@ -17,7 +17,7 @@
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where phone=#{phone};
          </select>
-    <!--通过密码查找用户（弃用）-->
+    <!--通过密码查找用户（不常用）-->
     <select id="findUserByPassword" parameterType="com.ovft.configure.sys.bean.User"
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where  password=#{user.password};
@@ -42,7 +42,7 @@
     <update id="updateByPhone">
           update edu_user set password = #{password} where phone=#{phone}
     </update>
-    <!--保存user表1全部信息(弃用)-->
+    <!--保存user表1全部信息(不常用)-->
     <update id="savaInfo" parameterType="com.ovft.configure.sys.bean.User">
           update edu_user set user_name=#{user.userName},sex=#{user.sex},school_id=#{user.schoolId},area=#{user.area},volunteer=#{user.volunteer},
           identity_card=#{user.identity_card},address=#{user.address},political=#{user.political},educational=#{user.educational},retired=#{user.retired},
@@ -180,6 +180,18 @@
           WHERE user_id=#{user_id}
     </select>
 
+
+    <!--获取报名课程的信息-vvtxw-->
+    <select id="queryInfo" parameterType="int" resultType="com.ovft.configure.sys.bean.User">
+        	select
+			user_id,
+            user_name,
+            phone
+          FROM
+           edu_user
+          WHERE user_id=#{user_id}
+    </select>
+
     <!--用户头像地址-vvtxw-->
     <update id="updateAddress" parameterType="com.ovft.configure.sys.bean.User">
         UPDATE edu_user SET  image=#{user.image} where user_Id=#{user.userId}
@@ -265,8 +277,8 @@
     </update>
     <!--添加学员投稿-->
     <insert id="addUserContribute" parameterType="com.ovft.configure.sys.bean.Contribute">
-        insert into edu_contribute values(default,#{userId,jdbcType=INTEGER},#{userItemId,jdbcType=INTEGER},#{title,jdbcType=VARCHAR},#{createtime,jdbcType=TIMESTAMP},#{type,jdbcType=INTEGER},#{content,jdbcType=VARCHAR},#{checkin,jdbcType=INTEGER}
-        ,#{image,jdbcType=VARCHAR},#{audio,jdbcType=VARCHAR},#{vedio,jdbcType=VARCHAR},#{schoolId,jdbcType=INTEGER},#{schoolName,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{rejectReason,jdbcType=VARCHAR},#{typeName,jdbcType=VARCHAR}
+        insert into edu_contribute values(default,#{userId},#{userItemId},#{title},#{createtime},#{type},#{content},#{checkin}
+        ,#{image},#{audio},#{vedio},#{schoolId}
         )
     </insert>
     <!--查询对应userid学员投稿记录列表 -->
@@ -370,7 +382,4 @@
         cid=#{cid}
         </if>
     </update>
-       <select id="findUserItemByPhone" parameterType="int" resultType="com.ovft.configure.sys.bean.UserItem">
-            select  * from  edu_user_item where
-       </select>
 </mapper>

@@ -30,6 +30,7 @@ public class EduRegistController {
      */
     @PostMapping(value = "condition")
     public WebResult addRegistCondition(@RequestBody EduRegist eduRegist) {
+        //查询是否有原有的全部设置
         eduRegist.setUpateTime(new Date());
         EduRegist oldEduRegist = eduRegistService.queryById(eduRegist.getCourseId());
         if (oldEduRegist != null) {
@@ -126,6 +127,7 @@ public class EduRegistController {
         }
         return new WebResult(StatusCode.ERROR, "删除设置失败", "");
     }
+
 
     /**
      * 移除条件设置

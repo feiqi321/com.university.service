@@ -26,4 +26,5 @@ public interface AddressMapper {
     public void updateAddress(Address address);
 
     public void deleteAddress(@Param("addressId") Integer addressId);
+
 }

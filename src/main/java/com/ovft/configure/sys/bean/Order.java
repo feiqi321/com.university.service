@@ -1,10 +1,11 @@
 package com.ovft.configure.sys.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author 
+ * @author
  */
 public class Order implements Serializable {
     /**
@@ -71,6 +72,32 @@ public class Order implements Serializable {
      * 收货人
      */
     private String consignee;
+
+
+    /**
+     * 电话
+     */
+    private String telephone;
+
+    /**
+     * 地址
+     */
+    private String address;
+
+    /**
+     * 发送方式
+     */
+    private String sendType;
+
+    /**
+     * 邮费
+     */
+    private BigDecimal tosendPrice;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     private static final long serialVersionUID = 1L;
 
@@ -178,6 +205,46 @@ public class Order implements Serializable {
         this.consignee = consignee;
     }
 
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getSendType() {
+        return sendType;
+    }
+
+    public void setSendType(String sendType) {
+        this.sendType = sendType;
+    }
+
+    public BigDecimal getTosendPrice() {
+        return tosendPrice;
+    }
+
+    public void setTosendPrice(BigDecimal tosendPrice) {
+        this.tosendPrice = tosendPrice;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -191,18 +258,23 @@ public class Order implements Serializable {
         }
         Order other = (Order) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getOrderSn() == null ? other.getOrderSn() == null : this.getOrderSn().equals(other.getOrderSn()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getOrderStatus() == null ? other.getOrderStatus() == null : this.getOrderStatus().equals(other.getOrderStatus()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getExpireTime() == null ? other.getExpireTime() == null : this.getExpireTime().equals(other.getExpireTime()))
-            && (this.getPaymentTime() == null ? other.getPaymentTime() == null : this.getPaymentTime().equals(other.getPaymentTime()))
-            && (this.getTotalAmount() == null ? other.getTotalAmount() == null : this.getTotalAmount().equals(other.getTotalAmount()))
-            && (this.getPaymentWay() == null ? other.getPaymentWay() == null : this.getPaymentWay().equals(other.getPaymentWay()))
-            && (this.getOutTradeNo() == null ? other.getOutTradeNo() == null : this.getOutTradeNo().equals(other.getOutTradeNo()))
-            && (this.getTradeBody() == null ? other.getTradeBody() == null : this.getTradeBody().equals(other.getTradeBody()))
-            && (this.getImgUrl() == null ? other.getImgUrl() == null : this.getImgUrl().equals(other.getImgUrl()))
-            && (this.getConsignee() == null ? other.getConsignee() == null : this.getConsignee().equals(other.getConsignee()));
+                && (this.getOrderSn() == null ? other.getOrderSn() == null : this.getOrderSn().equals(other.getOrderSn()))
+                && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+                && (this.getOrderStatus() == null ? other.getOrderStatus() == null : this.getOrderStatus().equals(other.getOrderStatus()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getExpireTime() == null ? other.getExpireTime() == null : this.getExpireTime().equals(other.getExpireTime()))
+                && (this.getPaymentTime() == null ? other.getPaymentTime() == null : this.getPaymentTime().equals(other.getPaymentTime()))
+                && (this.getTotalAmount() == null ? other.getTotalAmount() == null : this.getTotalAmount().equals(other.getTotalAmount()))
+                && (this.getPaymentWay() == null ? other.getPaymentWay() == null : this.getPaymentWay().equals(other.getPaymentWay()))
+                && (this.getOutTradeNo() == null ? other.getOutTradeNo() == null : this.getOutTradeNo().equals(other.getOutTradeNo()))
+                && (this.getTradeBody() == null ? other.getTradeBody() == null : this.getTradeBody().equals(other.getTradeBody()))
+                && (this.getImgUrl() == null ? other.getImgUrl() == null : this.getImgUrl().equals(other.getImgUrl()))
+                && (this.getConsignee() == null ? other.getConsignee() == null : this.getConsignee().equals(other.getConsignee()))
+                && (this.getTelephone() == null ? other.getTelephone() == null : this.getTelephone().equals(other.getTelephone()))
+                && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
+                && (this.getSendType() == null ? other.getSendType() == null : this.getSendType().equals(other.getSendType()))
+                && (this.getTosendPrice() == null ? other.getTosendPrice() == null : this.getTosendPrice().equals(other.getTosendPrice()))
+                && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()));
     }
 
     @Override
@@ -222,6 +294,11 @@ public class Order implements Serializable {
         result = prime * result + ((getTradeBody() == null) ? 0 : getTradeBody().hashCode());
         result = prime * result + ((getImgUrl() == null) ? 0 : getImgUrl().hashCode());
         result = prime * result + ((getConsignee() == null) ? 0 : getConsignee().hashCode());
+        result = prime * result + ((getTelephone() == null) ? 0 : getTelephone().hashCode());
+        result = prime * result + ((getAddress() == null) ? 0 : getAddress().hashCode());
+        result = prime * result + ((getSendType() == null) ? 0 : getSendType().hashCode());
+        result = prime * result + ((getTosendPrice() == null) ? 0 : getTosendPrice().hashCode());
+        result = prime * result + ((getRemark() == null) ? 0 : getRemark().hashCode());
         return result;
     }
 
@@ -244,6 +321,11 @@ public class Order implements Serializable {
         sb.append(", tradeBody=").append(tradeBody);
         sb.append(", imgUrl=").append(imgUrl);
         sb.append(", consignee=").append(consignee);
+        sb.append(", telephone=").append(telephone);
+        sb.append(", address=").append(address);
+        sb.append(", sendType=").append(sendType);
+        sb.append(", tosendPrice=").append(tosendPrice);
+        sb.append(", remark=").append(remark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

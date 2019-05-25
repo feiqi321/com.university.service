@@ -277,7 +277,7 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/addUserContribute")
-     public WebResult addUserContribute(@ RequestBody Contribute contribute,HttpServletRequest request,@RequestParam("file") MultipartFile file){
+     public WebResult addUserContribute(@ RequestBody Contribute contribute,HttpServletRequest request){
 
          Integer userId=Integer.parseInt(request.getHeader("userId"));
             contribute.setUserId(userId);

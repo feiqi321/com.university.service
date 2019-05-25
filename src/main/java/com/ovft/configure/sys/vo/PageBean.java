@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class PageBean implements Serializable {
@@ -12,6 +13,24 @@ public class PageBean implements Serializable {
     private int size;
     private long total;
     private List<?> results;
+    private Object data;
+
+    private BigDecimal accountAllMoney;
+
+
+    public BigDecimal getAccountAllMoney() {
+        return accountAllMoney;
+    }
+
+    public void setAccountAllMoney(BigDecimal accountAllMoney) {
+        this.accountAllMoney = accountAllMoney;
+    }
+
+    public PageBean(long total, List<?> results, BigDecimal accountAllMoney) {
+        this.total = total;
+        this.results = results;
+        this.accountAllMoney = accountAllMoney;
+    }
 
     public PageBean() {
         super();
@@ -21,6 +40,11 @@ public class PageBean implements Serializable {
     public PageBean(long total, List<?> results) {
         this.total = total;
         this.results = results;
+    }
+
+    public PageBean(long total, Object data) {
+        this.total = total;
+        this.data = data;
     }
 
     public PageBean(int page, int size, long total, List<?> results) {
@@ -63,5 +87,11 @@ public class PageBean implements Serializable {
         this.results = results;
     }
 
+    public Object getData() {
+        return data;
+    }
 
+    public void setData(Object data) {
+        this.data = data;
+    }
 }

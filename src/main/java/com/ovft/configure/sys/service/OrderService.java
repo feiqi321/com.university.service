@@ -3,7 +3,7 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.sys.bean.Order;
 import com.ovft.configure.sys.vo.OrderVo;
 
-import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -14,38 +14,40 @@ import java.util.Map;
 
 public interface OrderService {
 
-    /**
-     * 按支付状态统计总人数
-     *
-     * @param map
-     * @return
-     */
+    //按支付状态统计总人数
     public int countPayCourseNum(Map<String, Object> map);
 
 
-    /**
-     * 按学员的类别支付状态统计总人数
-     *
-     * @param map
-     * @return
-     */
+    //按学员的类别支付状态统计总人数
     public int countPayCourseEmployerNum(Map<String, Object> map);
 
-    /**
-     * 查询所有的购买记录
-     *
-     * @param userId
-     * @return
-     */
+    //查询所有的购买记录
     public List<OrderVo> queryAllRecord(Integer userId);
 
-    /**
-     * 根据订单id查询订单详情
-     *
-     * @param orderId
-     * @return
-     */
+    //根据订单id查询订单详情
     Order getOrderInfo(String orderId);
+
+    //添加教材订单
+    public void insertCartToOrder(Integer userId, Integer addressId, String sendType, BigDecimal toSendPrice, String remark);
+
+    //显示相关订单
+    List<OrderVo> showOrders(Integer userId, Integer orderStatus);
+
+    //显示总订单
+    List<OrderVo> showOrder(Integer userId, Integer orderStatus);
+
+    //取消订单
+    int offAndSubmitOrders(Order order);
+
+    //删除订单
+    int deleteOrder(Order order);
+
+
+
+
+
+
+
 
 
 

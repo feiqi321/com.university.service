@@ -1,5 +1,5 @@
 server:
-  port: 8830
+  port: 8840
 
 logging:
   level:
@@ -31,12 +31,8 @@ spring:
       enabled: true
       file-size-threshold: 0
       location:
-      max-file-size: -1
-      max-request-size: -1
-  http:
-    multipart:
-      maxFileSize: 100MB
-      maxRequestSize: 100MB
+      max-file-size: 500kb
+      max-request-size: 10MB
 
 fastdfs:
     charset: UTF-8

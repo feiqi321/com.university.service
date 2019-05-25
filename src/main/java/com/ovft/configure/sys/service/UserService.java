@@ -109,5 +109,8 @@ public interface UserService {
 
     //根据学员投稿cid查询
     public WebResult findContributeByCid(Integer cid);
+    //查询用户相关信息 -vvtxw
+    public User queryInfo(Integer userId);
+
 
 }
