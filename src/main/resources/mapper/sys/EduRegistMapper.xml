@@ -19,6 +19,7 @@
         <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
         <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
         <result column="regist_priority" jdbcType="VARCHAR" property="registPriority"/>
+        <result column="offline_regist" jdbcType="VARCHAR" property="offlineRegist"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -83,7 +84,7 @@
     <sql id="Base_Column_List">
     id, registstart_time, registend_time, start_age, end_age, regist_category_one, regist_category_two, 
     regist_category_three, regist_category_four, regist_category_five, regist_category_six, 
-    upate_time, school_id, course_id, school_name, course_name, regist_priority
+    upate_time, school_id, course_id, school_name, course_name, regist_priority, offline_regist
   </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduRegistExample" resultMap="BaseResultMap">
         select
@@ -133,14 +134,14 @@
         regist_category_four, regist_category_five,
         regist_category_six, upate_time, school_id,
         course_id, school_name, course_name,
-        regist_priority)
+        regist_priority, offline_regist)
         values (#{registstartTime,jdbcType=TIMESTAMP}, #{registendTime,jdbcType=TIMESTAMP},
         #{startAge,jdbcType=INTEGER}, #{endAge,jdbcType=INTEGER}, #{registCategoryOne,jdbcType=VARCHAR},
         #{registCategoryTwo,jdbcType=VARCHAR}, #{registCategoryThree,jdbcType=VARCHAR},
         #{registCategoryFour,jdbcType=VARCHAR}, #{registCategoryFive,jdbcType=VARCHAR},
         #{registCategorySix,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{schoolId,jdbcType=INTEGER},
         #{courseId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR},
-        #{registPriority,jdbcType=VARCHAR})
+        #{registPriority,jdbcType=VARCHAR}, #{offlineRegist,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduRegist">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -196,6 +197,9 @@
             <if test="registPriority != null">
                 regist_priority,
             </if>
+            <if test="offlineRegist != null">
+                offline_regist,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="registstartTime != null">
@@ -245,6 +249,9 @@
             </if>
             <if test="registPriority != null">
                 #{registPriority,jdbcType=VARCHAR},
+            </if>
+            <if test="offlineRegist != null">
+                #{offlineRegist,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -309,6 +316,9 @@
             <if test="record.registPriority != null">
                 regist_priority = #{record.registPriority,jdbcType=VARCHAR},
             </if>
+            <if test="record.offlineRegist != null">
+                offline_regist = #{record.offlineRegist,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -332,7 +342,8 @@
         course_id = #{record.courseId,jdbcType=INTEGER},
         school_name = #{record.schoolName,jdbcType=VARCHAR},
         course_name = #{record.courseName,jdbcType=VARCHAR},
-        regist_priority = #{record.registPriority,jdbcType=VARCHAR}
+        regist_priority = #{record.registPriority,jdbcType=VARCHAR},
+        offline_regist = #{record.offlineRegist,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -388,6 +399,9 @@
             <if test="registPriority != null">
                 regist_priority = #{registPriority,jdbcType=VARCHAR},
             </if>
+            <if test="offlineRegist != null">
+                offline_regist = #{offlineRegist,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -408,7 +422,8 @@
       course_id = #{courseId,jdbcType=INTEGER},
       school_name = #{schoolName,jdbcType=VARCHAR},
       course_name = #{courseName,jdbcType=VARCHAR},
-      regist_priority = #{registPriority,jdbcType=VARCHAR}
+      regist_priority = #{registPriority,jdbcType=VARCHAR},
+      offline_regist = #{offlineRegist,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -449,12 +464,12 @@
     <!--根据学校查询学校名字vvtxw-->
     <select id="selectNameBySchoolId" parameterType="int"
             resultType="String">
-       select
-            s.school_name
-            from
-            edu_regist r
-      LEFT JOIN edu_school s on s.school_id=r.school_id where r.school_id=#{school_id}
-    </select>
+    select
+    s.school_name
+    from
+    edu_regist r
+    LEFT JOIN edu_school s on s.school_id=r.school_id where r.school_id=#{school_id}
+  </select>
 
 
 </mapper>

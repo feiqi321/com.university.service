@@ -72,7 +72,8 @@
     <select id="queryRecordBySchoolId" resultType="com.ovft.configure.sys.bean.School">
         SELECT
 	     longitude,
-	     latitude
+	     latitude,
+	     image
 	    from
 	     edu_school
 	  WHERE school_id=#{schoolId}

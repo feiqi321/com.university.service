@@ -15,6 +15,12 @@
         <result column="trade_body" jdbcType="VARCHAR" property="tradeBody"/>
         <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
         <result column="consignee" jdbcType="VARCHAR" property="consignee"/>
+        <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="send_type" jdbcType="VARCHAR" property="sendType"/>
+        <result column="tosend_price" jdbcType="DECIMAL" property="tosendPrice"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -78,7 +84,8 @@
     </sql>
     <sql id="Base_Column_List">
     id, order_sn, user_id, order_status, create_time, expire_time, payment_time, total_amount, 
-    payment_way, out_trade_no, trade_body, img_url, consignee
+    payment_way, out_trade_no, trade_body, img_url, consignee, school_id, telephone, 
+    address, send_type, tosend_price, remark
   </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.OrderExample" resultMap="BaseResultMap">
         select
@@ -125,12 +132,16 @@
         insert into edu_order (order_sn, user_id, order_status,
         create_time, expire_time, payment_time,
         total_amount, payment_way, out_trade_no,
-        trade_body, img_url, consignee
+        trade_body, img_url, consignee,
+        school_id, telephone, address,
+        send_type, tosend_price, remark
         )
         values (#{orderSn,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{orderStatus,jdbcType=INTEGER},
         #{createTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP},
         #{totalAmount,jdbcType=BIGINT}, #{paymentWay,jdbcType=VARCHAR}, #{outTradeNo,jdbcType=VARCHAR},
-        #{tradeBody,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{consignee,jdbcType=VARCHAR}
+        #{tradeBody,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{consignee,jdbcType=VARCHAR},
+        #{schoolId,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+        #{sendType,jdbcType=VARCHAR}, #{tosendPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}
         )
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.Order">
@@ -175,6 +186,24 @@
             <if test="consignee != null">
                 consignee,
             </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
+            <if test="telephone != null">
+                telephone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="sendType != null">
+                send_type,
+            </if>
+            <if test="tosendPrice != null">
+                tosend_price,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderSn != null">
@@ -212,6 +241,24 @@
             </if>
             <if test="consignee != null">
                 #{consignee,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="sendType != null">
+                #{sendType,jdbcType=VARCHAR},
+            </if>
+            <if test="tosendPrice != null">
+                #{tosendPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -263,6 +310,24 @@
             <if test="record.consignee != null">
                 consignee = #{record.consignee,jdbcType=VARCHAR},
             </if>
+            <if test="record.schoolId != null">
+                school_id = #{record.schoolId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.telephone != null">
+                telephone = #{record.telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.address != null">
+                address = #{record.address,jdbcType=VARCHAR},
+            </if>
+            <if test="record.sendType != null">
+                send_type = #{record.sendType,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tosendPrice != null">
+                tosend_price = #{record.tosendPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -282,7 +347,13 @@
         out_trade_no = #{record.outTradeNo,jdbcType=VARCHAR},
         trade_body = #{record.tradeBody,jdbcType=VARCHAR},
         img_url = #{record.imgUrl,jdbcType=VARCHAR},
-        consignee = #{record.consignee,jdbcType=VARCHAR}
+        consignee = #{record.consignee,jdbcType=VARCHAR},
+        school_id = #{record.schoolId,jdbcType=VARCHAR},
+        telephone = #{record.telephone,jdbcType=VARCHAR},
+        address = #{record.address,jdbcType=VARCHAR},
+        send_type = #{record.sendType,jdbcType=VARCHAR},
+        tosend_price = #{record.tosendPrice,jdbcType=DECIMAL},
+        remark = #{record.remark,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -326,6 +397,24 @@
             <if test="consignee != null">
                 consignee = #{consignee,jdbcType=VARCHAR},
             </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="sendType != null">
+                send_type = #{sendType,jdbcType=VARCHAR},
+            </if>
+            <if test="tosendPrice != null">
+                tosend_price = #{tosendPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -342,9 +431,16 @@
       out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
       trade_body = #{tradeBody,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
-      consignee = #{consignee,jdbcType=VARCHAR}
+      consignee = #{consignee,jdbcType=VARCHAR},
+      school_id = #{schoolId,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      send_type = #{sendType,jdbcType=VARCHAR},
+      tosend_price = #{tosendPrice,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
 
     <!--1.查找专业及学员分类报名人数-->
     <select id="countPayCourseEmployerNum" parameterType="map" resultType="int">
@@ -362,60 +458,97 @@
     LEFT JOIN edu_payment_info f on f.order_id = o.id
     LEFT JOIN edu_user u on  u.user_id=o.user_id
     ) t
-    WHERE course_id=#{course_id} and payment_status=#{payment_status} and employer=#{employer}
+    WHERE course_id=#{course_id} and payment_status=#{payment_status} and employer=#
+    {employer}
   </select>
 
     <!--2.查找专业相关报名人数-->
     <select id="countPayCourseNum" parameterType="map" resultType="int">
-       SELECT
-       count(t.user_id)
-        from
-      (
-        select
-        o.user_id,
-        i.course_id,
-        f.payment_status
-      from edu_order o
-        LEFT JOIN edu_order_item i on i.order_id=o.id
-        LEFT JOIN edu_payment_info f on f.order_id = o.id
-      ) t
-  WHERE course_id=#{course_id} and payment_status=#{payment_status}
+    SELECT
+    count(t.user_id)
+    from
+    (
+    select
+    o.user_id,
+    i.course_id,
+    f.payment_status
+    from edu_order o
+    LEFT JOIN edu_order_item i on i.order_id=o.id
+    LEFT JOIN edu_payment_info f on f.order_id = o.id
+    ) t
+    WHERE course_id=#{course_id} and payment_status=#{payment_status}
   </select>
 
     <!--3.查找报名记录信息-->
     <select id="queryAllRecord" resultType="com.ovft.configure.sys.vo.OrderVo">
-      select
-					c.course_name,
-					c.place_class,
-					c.start_date,
-					e3.start_time,
-					e3.end_time,
-					e1.school_name,
-					e2.name,
-					e1.school_id
-                    from edu_course  c
-			 left join edu_school e1 on c.school_id=e1.school_id
-			 left join edu_admin e2 on c.course_teacher=e2.admin_id
-			 left JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
-			where course_id
-				in(
-								SELECT
-                                 t.course_id
-                                from
-            (
-                select
-                        o.user_id,
-                        i.course_id,
-                        f.payment_status
-            from edu_order o
-                        LEFT JOIN edu_order_item i on i.order_id=o.id
-                        LEFT JOIN edu_payment_info f on f.order_id = o.id
-            ) t
+	   select
+		 c.course_id,
+    c.course_name,
+    c.place_class,
+    c.start_date,
+    e3.start_time,
+    e3.end_time,
+    e1.school_name,
+    e2.name,
+    e1.school_id
+    from edu_course  c
+    left join edu_school e1 on c.school_id=e1.school_id
+    left join edu_admin e2 on c.course_teacher=e2.admin_id
+    left JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+    where course_id
+    in(
+    SELECT
+    t.course_id
+    from
+    (
+    select
+    o.user_id,
+    i.course_id,
+    f.payment_status
+    from edu_order o
+    LEFT JOIN edu_order_item i on i.order_id=o.id
+    LEFT JOIN edu_payment_info f on f.order_id = o.id
+    ) t
 
-			 WHERE payment_status=1 and user_id=#{user_id}
-																			)
-
+    WHERE payment_status=1 and user_id=#{user_id} )
   </select>
+
+
+    <!--4.查找订单的详细信息-->
+    <select id="showOrders" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
+       SELECT
+		o.*,
+		i.course_name,
+		i.num
+		from edu_order o
+		LEFT JOIN edu_order_item i on i.order_id=o.id
+		where o.user_Id=#{userId} and o.order_status=#{orderStatus}
+    </select>
+
+    <!--5.查找总订单信息-->
+    <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
+        select
+        *
+        from
+        edu_order
+        <where>
+            <if test="userId != null and userId!=''">
+                and user_Id=#{userId}
+            </if>
+            <if test="orderStatus != null and orderStatus!=''">
+                and order_status=#{orderStatus}
+            </if>
+        </where>
+    </select>
+
+    <!--６.查找订单的数量-->
+    <select id="countOrderNum" parameterType="Integer" resultType="Integer">
+        SELECT
+        count(course_id)
+        from
+        edu_order_item
+        where order_id=#{orderId}
+    </select>
 
 
 </mapper>

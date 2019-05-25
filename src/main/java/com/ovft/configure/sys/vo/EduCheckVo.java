@@ -23,6 +23,7 @@ public class EduCheckVo extends EduCheck {
 
     private String schoolName;
 
+
     public String getCourseName() {
         return courseName;
     }

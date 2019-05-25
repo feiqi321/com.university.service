@@ -166,6 +166,12 @@ public class EduCourseController {
         return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
     }
 
+    /**
+     * 统一设置时间
+     *
+     * @param eduCourse
+     * @return
+     */
     @PostMapping(value = "updatetime")
     public WebResult updateAlltime(@RequestBody EduCourse eduCourse) {
         EduCourse course = new EduCourse();

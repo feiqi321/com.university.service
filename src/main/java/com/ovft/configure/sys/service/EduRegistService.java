@@ -34,4 +34,6 @@ public interface EduRegistService {
     //去除特殊条件
     int deleteSepecialCondition(EduRegist eduRegist);
 
+    //查询状态
+    Integer queryOffRegist(int schoolId, Integer courseId);
 }

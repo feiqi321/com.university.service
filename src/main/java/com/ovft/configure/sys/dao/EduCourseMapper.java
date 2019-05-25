@@ -80,4 +80,8 @@ public interface EduCourseMapper {
      * @return
      */
     List<Integer> selectCourseIdBySchoolId(Integer schoolId);
+
+    //查询课程相关信息
+    EduCourseVo queryCourseInfo(Integer courseId);
+
 }

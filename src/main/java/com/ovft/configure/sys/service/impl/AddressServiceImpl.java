@@ -31,37 +31,37 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public WebResult createAddress(Address address) {
-        if(StringUtils.isBlank(address.getConsigneeName())) {
+        if (StringUtils.isBlank(address.getConsigneeName())) {
             return new WebResult("400", "收货人姓名不能为空", "");
         }
-        if(StringUtils.isBlank(address.getArea())) {
+        if (StringUtils.isBlank(address.getArea())) {
             return new WebResult("400", "地区不能为空", "");
         }
-        if(StringUtils.isBlank(address.getAddress())) {
+        if (StringUtils.isBlank(address.getAddress())) {
             return new WebResult("400", "详细地址不能为空", "");
         }
         boolean b = SecurityUtils.securityPhone(address.getPhone());
-        if(!b) {
+        if (!b) {
             return new WebResult("400", "请输入正确的手机号", "");
         }
-        if(address.getIsdefault() == null) {
+        if (address.getIsdefault() == null) {
             address.setIsdefault(0);
         }
 
         //如果原先没有收货地址,添加的第一条默认为默认收货地址
         List<Address> addressList = addressMapper.selectByUserId(address.getUserId());
-        if(addressList.size() != 0) {
+        if (addressList.size() != 0) {
             //如果新添加的地址是默认地址,先修改原先默认地址为0
-            if(address.getIsdefault().compareTo(1) == 0) {
+            if (address.getIsdefault().compareTo(1) == 0) {
                 Address isDefaultAddress = addressList.get(0);
-                if(isDefaultAddress.getIsdefault() == 1) {
+                if (isDefaultAddress.getIsdefault() == 1) {
                     isDefaultAddress.setIsdefault(0);
                     addressMapper.updateAddress(isDefaultAddress);
                 }
             }
         }
 
-        if(address.getAddressId() == null) {
+        if (address.getAddressId() == null) {
             addressMapper.createAddress(address);
             return new WebResult("200", "添加成功", "");
         } else {

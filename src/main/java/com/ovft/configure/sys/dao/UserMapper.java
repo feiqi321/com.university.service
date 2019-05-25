@@ -52,8 +52,10 @@ public interface UserMapper {
 
     //查询对应学员是否已选择该学校（通过userId）
     public User queryByItemsId(@Param("userId") Integer userId);
+
     //  <!--查询对应edu_user_item表里面该用户记录(i.school_id is not null且i.school_id不为0)-->
     public User queryByItemsId2(@Param("userId") Integer userId);
+
     //查询对应学员是否已选择该学校
     public List<User> queryByItemsIdList(@Param("userId") Integer userId);
 
@@ -133,4 +135,6 @@ public interface UserMapper {
     //根据学员投稿cid查询
     public Contribute findContributeByCid(Integer cid);
 
+    //查询用户相关信息 -vvtxw
+    public User queryInfo(Integer userId);
 }

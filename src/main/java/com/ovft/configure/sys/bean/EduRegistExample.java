@@ -1234,6 +1234,76 @@ public class EduRegistExample {
             addCriterion("regist_priority not between", value1, value2, "registPriority");
             return (Criteria) this;
         }
+
+        public Criteria andOfflineRegistIsNull() {
+            addCriterion("offline_regist is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistIsNotNull() {
+            addCriterion("offline_regist is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistEqualTo(String value) {
+            addCriterion("offline_regist =", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistNotEqualTo(String value) {
+            addCriterion("offline_regist <>", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistGreaterThan(String value) {
+            addCriterion("offline_regist >", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistGreaterThanOrEqualTo(String value) {
+            addCriterion("offline_regist >=", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistLessThan(String value) {
+            addCriterion("offline_regist <", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistLessThanOrEqualTo(String value) {
+            addCriterion("offline_regist <=", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistLike(String value) {
+            addCriterion("offline_regist like", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistNotLike(String value) {
+            addCriterion("offline_regist not like", value, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistIn(List<String> values) {
+            addCriterion("offline_regist in", values, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistNotIn(List<String> values) {
+            addCriterion("offline_regist not in", values, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistBetween(String value1, String value2) {
+            addCriterion("offline_regist between", value1, value2, "offlineRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andOfflineRegistNotBetween(String value1, String value2) {
+            addCriterion("offline_regist not between", value1, value2, "offlineRegist");
+            return (Criteria) this;
+        }
     }
 
     /**
