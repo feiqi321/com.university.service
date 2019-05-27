@@ -11,5 +11,5 @@ public interface MyActivitiesService {
 
     public WebResult deleteMyActivities(Integer id);
 
-    public WebResult findMyActivities(Integer activitiesId);
+    public WebResult findMyActivities(Integer activitiesId, Integer userId);
 }

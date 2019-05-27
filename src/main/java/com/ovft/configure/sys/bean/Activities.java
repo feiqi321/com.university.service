@@ -17,7 +17,7 @@ public class Activities implements Serializable {
     private String schoolName;
 
     /**
-     * 活动类型  1-联盟活动  2-校园活动  3-志愿活动
+     * 活动类型  1-联盟活动  2-校园活动
      */
     private String type;
 
@@ -86,6 +86,19 @@ public class Activities implements Serializable {
      * 浏览量
      */
     private Integer visits;
+
+    /**
+     *   1-已报名  0-未报名
+     */
+    private Integer isRegist;
+
+    public Integer getIsRegist() {
+        return isRegist;
+    }
+
+    public void setIsRegist(Integer isRegist) {
+        this.isRegist = isRegist;
+    }
 
     public Integer getVisits() {
         return visits;

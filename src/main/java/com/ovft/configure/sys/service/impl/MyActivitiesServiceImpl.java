@@ -114,7 +114,7 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
     }
 
     @Override
-    public WebResult findMyActivities(Integer activitiesId) {
+    public WebResult findMyActivities(Integer activitiesId, Integer userId) {
         Activities activities = activitiesMapper.selectById(activitiesId);
 
         //浏览量加1
@@ -124,6 +124,9 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
         // 获取报名人数
         List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(null, null, activitiesId);
         activities.setRegistNum(myActivities.size());
+
+        List<MyActivities> isRegist = myActivitiesMapper.selectByUserOrActivities(userId, null, activitiesId);
+        activities.setIsRegist(isRegist.size());
         return new WebResult("200", "查询成功", activities);
     }
 }

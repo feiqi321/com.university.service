@@ -5,6 +5,7 @@ import com.ovft.configure.sys.bean.MyActivities;
 import com.ovft.configure.sys.service.ActivitiesService;
 import com.ovft.configure.sys.service.MyActivitiesService;
 import com.ovft.configure.sys.vo.PageVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,11 @@ public class MyActivitiesController {
      */
     @GetMapping(value = "/findMyActivities")
     public WebResult findMyActivities(HttpServletRequest request, Integer activitiesId) {
-        return myActivitiesService.findMyActivities(activitiesId);
+        String userId = request.getHeader("userId");
+        if(StringUtils.isBlank(userId)) {
+            return new WebResult("400", "请登录！", "");
+        }
+        return myActivitiesService.findMyActivities(activitiesId, Integer.valueOf(userId));
     }
 
     /**
