@@ -192,4 +192,11 @@
             update edu_withdraw set  checkin=#{checkin} where wid=#{wid}
     </update>
 
+    <select id="shelvesCourse" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_course
+        where isenable != -1 <![CDATA[ and  end_date <= #{endDate,jdbcType=DATE}]]>
+    </select>
+
 </mapper>

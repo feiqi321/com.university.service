@@ -23,6 +23,9 @@ public interface TeacherService {
 
     public WebResult deleteCourse(String[] courseId);
 
+    //下架过期课程
+    public void shelvesCourse();
+
     public WebResult userList(PageVo pageVo);
 
     public WebResult savaUserInfo(User user);

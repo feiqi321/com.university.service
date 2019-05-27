@@ -68,5 +68,17 @@
     <delete id="deleteFineCourse">
         delete from edu_fine_course where fine_id = #{fineId}
     </delete>
+    <select id="updatVisitOrThumbup">
+        update edu_fine_course
+        <set>
+            <if test="visits != null">
+                visits = #{visits},
+            </if>
+            <if test="thumbup != null">
+                thumbup = #{thumbup},
+            </if>
+        </set>
+        where fine_id = #{fineId}
+    </select>
 
 </mapper>

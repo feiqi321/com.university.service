@@ -279,6 +279,16 @@ public class TeacherServiceImpl implements TeacherService {
         return new WebResult("200", "删除成功", "");
     }
 
+    @Override
+    public void shelvesCourse() {
+        Date date = new Date();
+        List<EduCourse> courseList = teacherMapper.shelvesCourse(date);
+        for (EduCourse course : courseList) {
+            course.setIsenable(-1);
+            teacherMapper.updateCourseByCourseId(course);
+        }
+    }
+
     /**
      * 学员列表
      *

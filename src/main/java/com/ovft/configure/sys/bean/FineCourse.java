@@ -29,6 +29,31 @@ public class FineCourse implements Serializable {
      */
     private String cover;
 
+    /**
+     * 学校名称（数据库无字段）
+     */
+    private String schoolName;
+    /**
+     * 学校头像
+     */
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
     public Integer getSchoolId() {
         return schoolId;
     }

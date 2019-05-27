@@ -9,6 +9,7 @@ import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.vo.EduArticleVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -92,6 +93,9 @@ public class EduArticleServiceImpl implements EduArticleService {
         if(security != null) {
             return security;
         }
+        if(StringUtils.isBlank(eduArticle.getIstop())) {
+            eduArticle.setIstop("0");
+        }
         if(eduArticle.getIstop().equals("0")) {
             eduArticle.setTopdate(null);
         }
@@ -137,7 +141,6 @@ public class EduArticleServiceImpl implements EduArticleService {
                 eduArticleMapper.updateByPrimaryKeySelective(eduArticle);
             }
             return new WebResult("200", "修改成功", "");
-
         }
     }
 
@@ -215,14 +218,27 @@ public class EduArticleServiceImpl implements EduArticleService {
         for (EduArticle eduArticle : eduArticles) {
             Date topdate = eduArticle.getTopdate();
             Date topenddate = eduArticle.getTopenddate();
+            if(topenddate == null) {
+                eduArticleMapper.updateIsTop(eduArticle.getId(), "0", null);
+                continue;
+            }
+            boolean before = now.before(topenddate);
+            boolean after = now.after(topenddate);
+            //判断两个Date是不是同一天
+            boolean samedate = DateUtils.isSameDay(topenddate, now);
+            if(samedate) {
+                before = true;
+                after = false;
+            }
 
             //置顶开始时间 < 今天 < 置顶结束时间       -> 文章置顶
-            if(now.after(topdate) && now.before(topenddate) && eduArticle.getIstop().equals("0")) {
+            if(now.after(topdate) && before && eduArticle.getIstop().equals("0")) {
                 logger.info("置顶定时任务1: topdate: "+ sdf.format(topdate) + ", eduArticel.id=" + eduArticle.getId());
                 eduArticleMapper.updateIsTop(eduArticle.getId(), "1", topdate);
+                continue;
             }
             //置顶结束时间 < 今天日期      -> 置顶结束
-            if(now.after(topenddate) && eduArticle.getIstop().equals("1")) {
+            if(after && eduArticle.getIstop().equals("1")) {
                 logger.info("置顶结束定时任务2: topdate: "+ sdf.format(topdate) + ", eduArticel.id=" + eduArticle.getId());
                 eduArticleMapper.updateIsTop(eduArticle.getId(), "0", null);
             }

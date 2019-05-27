@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.FineCourse;
+import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.dao.FineCourseMapper;
+import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.service.FineCourseService;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
@@ -28,18 +30,32 @@ public class FineCourseServiceImpl implements FineCourseService {
 
     @Resource
     private FineCourseMapper fineCourseMapper;
+    @Resource
+    private SchoolMapper schoolMapper;
 
     @Override
     public WebResult fineCourseList(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
             List<FineCourse> courseList = fineCourseMapper.selectFineCourseList(pageVo);
+            findSchool(courseList);
             return new WebResult("200", "查询成功", courseList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<FineCourse> courseList = fineCourseMapper.selectFineCourseList(pageVo);
+        findSchool(courseList);
         PageInfo pageInfo = new PageInfo<>(courseList);
 
         return new WebResult("200", "查询成功", pageInfo);
+    }
+
+    public void findSchool(List<FineCourse> courseList) {
+        for (FineCourse fineCourse : courseList) {
+            School school = schoolMapper.selectById(fineCourse.getSchoolId());
+            if(school != null) {
+                fineCourse.setSchoolName(school.getSchoolName());
+                fineCourse.setImage(school.getImage());
+            }
+        }
     }
 
     @Transactional
@@ -51,18 +67,18 @@ public class FineCourseServiceImpl implements FineCourseService {
         if (fineCourse.getSchoolId() == null) {
             return new WebResult("400", "请选择学校", "");
         }
-//        if (StringUtils.isBlank(fineCourse.getVideo())) {
-//            return new WebResult("400", "请上传课程视频", "");
-//        }
+        if (StringUtils.isBlank(fineCourse.getVideo())) {
+            return new WebResult("400", "请上传课程视频", "");
+        }
         if (StringUtils.isBlank(fineCourse.getTeacher())) {
             return new WebResult("400", "课程教师不能为空", "");
         }
         if (StringUtils.isBlank(fineCourse.getIntroduce())) {
             return new WebResult("400", "课程介绍不能为空", "");
         }
-//        if (StringUtils.isBlank(fineCourse.getCover())) {
-//            return new WebResult("400", "课程封面不能为空", "");
-//        }
+        if (StringUtils.isBlank(fineCourse.getCover())) {
+            return new WebResult("400", "课程封面不能为空", "");
+        }
         if(fineCourse.getFineId() == null) {
             fineCourse.setVisits(0);
             fineCourse.setThumbup(0);

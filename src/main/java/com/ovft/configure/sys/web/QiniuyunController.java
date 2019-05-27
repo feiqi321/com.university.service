@@ -2,7 +2,9 @@ package com.ovft.configure.sys.web;
 
 import com.google.gson.Gson;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.service.FileDownService;
+import com.ovft.configure.sys.service.TeacherService;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -103,9 +105,29 @@ public class QiniuyunController {
     }
 
 
+    @Autowired
+    public EduArticleService eduArticleService;
+    @Autowired
+    public TeacherService teacherService;
     @GetMapping(value = "/deleteVideo")
     public void courseListImport() {
-        fileDownService.deleteFile();
+        //文章置顶的定时任务
+        try {
+            eduArticleService.topScheduleTask();
+        }catch (Exception e) {
+            e.getMessage();
+        }
+
+        try {
+            teacherService.shelvesCourse();
+        }catch (Exception e) {
+            e.getMessage();
+        }
+        try {
+            fileDownService.deleteFile();
+        }catch (Exception e) {
+            e.getMessage();
+        }
     }
 
 }

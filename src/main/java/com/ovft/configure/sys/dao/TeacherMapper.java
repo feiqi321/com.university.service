@@ -8,6 +8,7 @@ import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,4 +52,5 @@ public interface TeacherMapper {
 
     public void updateWithdrawCheckIn(@Param("wid") Integer wid,@Param("checkin") Integer checkin);
 
+    public List<EduCourse> shelvesCourse(Date date);
 }
