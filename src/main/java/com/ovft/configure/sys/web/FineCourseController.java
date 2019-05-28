@@ -109,13 +109,8 @@ public class FineCourseController {
         if(StringUtils.isBlank(schoolId)) {
             return new WebResult("400", "请选择学校", "");
         }
-        Object o = redisUtil.get(token);
-        if(o != null) {
-            pageVo.setSchoolId(Integer.valueOf(schoolId));
-            return fineCourseService.fineCourseList(pageVo);
-        }else {
-            return new WebResult("50012", "请先登录", "");
-        }
+        pageVo.setSchoolId(Integer.valueOf(schoolId));
+        return fineCourseService.fineCourseList(pageVo);
     }
 
     /**
