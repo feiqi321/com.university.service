@@ -39,10 +39,10 @@ public class SaticScheduleTask {
             e.getMessage();
         }
         //定期删除文件
-        try {
-            fileDownService.deleteFile();
-        }catch (Exception e) {
-            e.getMessage();
-        }
+//        try {
+//            fileDownService.deleteFile();
+//        }catch (Exception e) {
+//            e.getMessage();
+//        }
     }
 }
