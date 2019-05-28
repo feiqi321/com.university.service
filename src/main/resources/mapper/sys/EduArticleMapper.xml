@@ -153,14 +153,14 @@
         createtime, updatetime, ispublic,
         istop, visits, thumbup,
         comment, state, url,
-        type, collect, content, school_id, topdate, topenddate
+        type, collect, content, school_id, topdate, topenddate,author,cid
         )
         values (#{userid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
         #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{ispublic,jdbcType=VARCHAR},
         #{istop,jdbcType=VARCHAR}, #{visits,jdbcType=INTEGER}, #{thumbup,jdbcType=INTEGER},
         #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
         #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}, #{topdate},
-        #{topenddate}
+        #{topenddate},#{author},#{cid}
         )
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduArticle">
@@ -434,6 +434,9 @@
             </if>
             <if test="author != null">
                 author = #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="cid != null">
+                cid = #{cid,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

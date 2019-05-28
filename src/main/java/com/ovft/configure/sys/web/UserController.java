@@ -242,7 +242,6 @@ public class UserController {
         if (i == 2) {
             return new WebResult("200", "拒绝审核", "");
         }
-
         return null;
     }
 

@@ -258,7 +258,6 @@ public class AdminController {
      */
     @PostMapping(value = "/updateUserContribute")
     public WebResult updateUserContribute(@ RequestBody Contribute contribute){
-
         return userService.updateContribute(contribute);
     }
 }
