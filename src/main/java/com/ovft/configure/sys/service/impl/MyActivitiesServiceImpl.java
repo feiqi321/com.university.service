@@ -10,6 +10,7 @@ import com.ovft.configure.sys.dao.MyActivitiesMapper;
 import com.ovft.configure.sys.service.MyActivitiesService;
 import com.ovft.configure.sys.vo.MyActivitiesVo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -62,7 +63,8 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
         Date registStartTime = activities.getRegistStartTime();
         Date registEndTime = activities.getRegistEndTime();
         Date date = new Date();
-        if(date.before(registStartTime) || date.after(registEndTime)) {
+        boolean after = date.before(registEndTime) || DateUtils.isSameDay(registEndTime, date);
+        if(date.before(registStartTime) || !after) {
             return new WebResult("400", "不在活动报名时间内", "");
         }
         String category = activities.getCategory();

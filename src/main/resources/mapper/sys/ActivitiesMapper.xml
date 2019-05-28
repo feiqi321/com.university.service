@@ -41,7 +41,7 @@
         start_age, end_age, visits)
          values (#{adminId}, #{userId}, #{schoolId}, #{title}, #{content}, #{image}, #{scenario},
          #{number}, #{place}, #{type}, #{category}, #{startTime}, #{endTime}, #{registStartTime}, #{registEndTime},
-         #{startAge}, #{endAge})
+         #{startAge}, #{endAge}, #{visits})
     </insert>
 
     <update id="updateActivities" parameterType="com.ovft.configure.sys.bean.Activities">
@@ -73,6 +73,9 @@
             </if>
             <if test="type != null">
                 type = #{type},
+            </if>
+            <if test="place != null">
+                place = #{place},
             </if>
             <if test="category != null">
                 category = #{category},
