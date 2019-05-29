@@ -50,8 +50,8 @@ public class MyActivitiesController {
     @GetMapping(value = "/findMyActivities")
     public WebResult findMyActivities(HttpServletRequest request, Integer activitiesId) {
         String userId = request.getHeader("userId");
-        if(StringUtils.isBlank(userId)) {
-            return new WebResult("400", "请登录！", "");
+        if(StringUtils.isBlank(userId) || userId.equals("null")) {
+            return myActivitiesService.findMyActivities(activitiesId, null);
         }
         return myActivitiesService.findMyActivities(activitiesId, Integer.valueOf(userId));
     }
@@ -64,6 +64,10 @@ public class MyActivitiesController {
      */
     @GetMapping(value = "/myActivitiesList")
     public WebResult myActivitiesList(HttpServletRequest request) {
+        String userId = request.getHeader("userId");
+        if(StringUtils.isBlank(userId) || userId.equals("null")) {
+            return new WebResult("400", "请登录！", "");
+        }
         return myActivitiesService.myActivitiesList(Integer.parseInt(request.getHeader("userId")), null);
     }
 
@@ -75,7 +79,11 @@ public class MyActivitiesController {
      */
     @PostMapping(value = "/registMyActivities")
     public WebResult registMyActivities(HttpServletRequest request, @RequestBody MyActivities myActivities) {
-        myActivities.setUserId(Integer.parseInt(request.getHeader("userId")));
+        String userId = request.getHeader("userId");
+        if(StringUtils.isBlank(userId) || userId.equals("null")) {
+            return new WebResult("400", "请登录！", "");
+        }
+        myActivities.setUserId(Integer.parseInt(userId));
         return myActivitiesService.registMyActivities(myActivities);
     }
 

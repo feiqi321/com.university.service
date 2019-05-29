@@ -127,8 +127,12 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
         List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(null, null, activitiesId);
         activities.setRegistNum(myActivities.size());
 
-        List<MyActivities> isRegist = myActivitiesMapper.selectByUserOrActivities(userId, null, activitiesId);
-        activities.setIsRegist(isRegist.size());
+        if(userId == null) {
+            activities.setIsRegist(0);
+        } else  {
+            List<MyActivities> isRegist = myActivitiesMapper.selectByUserOrActivities(userId, null, activitiesId);
+            activities.setIsRegist(isRegist.size());
+        }
         return new WebResult("200", "查询成功", activities);
     }
 }
