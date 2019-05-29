@@ -248,11 +248,12 @@ public class EduArticleServiceImpl implements EduArticleService {
     @Transactional
     @Override
     public WebResult deleteNoticeByCid(Integer cid) {
-        return eduArticleMapper.deleteNoticeByCid(cid);
+         eduArticleMapper.deleteNoticeByCid(cid);
+         return new WebResult("200","处理成功","");
     }
     //通过cid查找文章记录
     @Override
-    public WebResult findNoticeByCid(Integer cid) {
+    public EduArticle findNoticeByCid(Integer cid) {
         return eduArticleMapper.findNoticeByCid(cid);
     }
 

@@ -77,6 +77,6 @@ public interface EduArticleService {
      * @param cid
      * @return
      */
-    public WebResult findNoticeByCid(Integer cid);
+    public EduArticle findNoticeByCid(Integer cid);
 
 }

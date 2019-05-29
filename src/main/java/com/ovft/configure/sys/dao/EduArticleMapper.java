@@ -107,18 +107,18 @@ public interface EduArticleMapper {
      * @param id
      *
      */
-     public  EduArticle  selectAriticleById(@Param("id") Integer id);
+     public  EduArticle  selectAriticleById(Integer cid);
 
     /**
      * 删除对应文章
      * @param cid
      *
      */
-     public WebResult deleteNoticeByCid(Integer cid);
+     public void deleteNoticeByCid(Integer cid);
     /**
      * 查找对应文章
      * @param cid
      *
      */
-     public WebResult findNoticeByCid(Integer cid);
+     public EduArticle findNoticeByCid(Integer cid);
 }

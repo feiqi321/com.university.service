@@ -195,6 +195,7 @@ public class AdminController {
         if (checkin==0){
               userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
               EduArticle eduArticle=new EduArticle();
+              eduArticle.setCid(cid);
               eduArticle.setUserid(contribute.getUserId().toString());
               eduArticle.setTitle(contribute.getTitle());
               eduArticle.setContent(contribute.getContent());
@@ -225,7 +226,7 @@ public class AdminController {
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
             Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
             if(hget.getRole() == 0) {
-                WebResult noticeByCid = eduArticleService.findNoticeByCid(contribute.getCid());
+               EduArticle noticeByCid = eduArticleService.findNoticeByCid(contribute.getCid());
                 if (noticeByCid!=null){
                     eduArticleService.deleteNoticeByCid(contribute.getCid());
                     userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
@@ -257,7 +258,65 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/updateUserContribute")
-    public WebResult updateUserContribute(@ RequestBody Contribute contribute){
+    public WebResult updateUserContribute(HttpServletRequest request,@RequestBody Contribute contribute){
+        Integer checkin= contribute.getCheckin();
+        Integer cid= contribute.getCid();
+        if (checkin==0){
+            userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
+            EduArticle eduArticle=new EduArticle();
+            eduArticle.setCid(cid);
+            eduArticle.setUserid(contribute.getUserId().toString());
+            eduArticle.setTitle(contribute.getTitle());
+            eduArticle.setContent(contribute.getContent());
+            eduArticle.setImage(contribute.getImage());
+            eduArticle.setCreatetime(contribute.getCreatetime());
+
+            eduArticle.setIspublic("1");
+            eduArticle.setIstop("0");
+            eduArticle.setState(contribute.getCheckin().toString());
+            eduArticle.setVisits(0);
+            eduArticle.setThumbup(0);
+            eduArticle.setComment(0);
+            eduArticle.setCollect("0");
+            eduArticle.setType(contribute.getType().toString());
+            eduArticle.setSchoolId(contribute.getSchoolId());
+
+            eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
+
+            return new WebResult("200","审核通过","");
+
+
+        }
+        if (contribute.getCheckin()==2){
+            String token = request.getHeader("token");
+            Object o = redisUtil.get(token);
+            if(o != null) {
+                Integer id = (Integer) o;
+                // 如果是pc端登录，更新token缓存失效时间
+                redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+                Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+                if(hget.getRole() == 0) {
+                    EduArticle noticeByCid = eduArticleService.findNoticeByCid(contribute.getCid());
+                    if (noticeByCid!=null){
+                        eduArticleService.deleteNoticeByCid(contribute.getCid());
+                        userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
+                    }else {
+                        userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
+                    }
+                }else{
+                    userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
+//        userService.deleteWithdraw(wid);
+//        return new WebResult("200", "拒绝成功", "");
+                    return new WebResult("200","拒绝成功","");
+
+                }
+
+
+            }  else {
+                return new WebResult("50012", "请先登录", "");
+            }
+        }
+
         return userService.updateContribute(contribute);
     }
 }

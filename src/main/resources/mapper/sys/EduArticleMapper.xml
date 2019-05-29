@@ -584,13 +584,13 @@
     <delete id="deleteNoticeByCid" parameterType="int">
            delete
          from edu_article
-           where  cid={cid}
+           where  cid=#{cid}
     </delete>
-    <delete id="findNoticeByCid" parameterType="int">
+    <select id="findNoticeByCid" parameterType="int" resultType="com.ovft.configure.sys.bean.EduArticle">
           select *
          from edu_article
-           where  cid={cid}
-    </delete>
+           where  cid=#{cid}
+    </select>
 
 
 </mapper>
