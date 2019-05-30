@@ -201,7 +201,8 @@ public class AdminController {
               eduArticle.setContent(contribute.getContent());
               eduArticle.setImage(contribute.getImage());
               eduArticle.setCreatetime(contribute.getCreatetime());
-
+              eduArticle.setAudio(contribute.getAudio());
+              eduArticle.setVedio(contribute.getVedio());
               eduArticle.setIspublic("1");
               eduArticle.setIstop("0");
               eduArticle.setState(contribute.getCheckin().toString());
@@ -262,29 +263,37 @@ public class AdminController {
         Integer checkin= contribute.getCheckin();
         Integer cid= contribute.getCid();
         if (checkin==0){
-            userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
-            EduArticle eduArticle=new EduArticle();
-            eduArticle.setCid(cid);
-            eduArticle.setUserid(contribute.getUserId().toString());
-            eduArticle.setTitle(contribute.getTitle());
-            eduArticle.setContent(contribute.getContent());
-            eduArticle.setImage(contribute.getImage());
-            eduArticle.setCreatetime(contribute.getCreatetime());
+            //查找该投稿内容是否已被通过发布
 
-            eduArticle.setIspublic("1");
-            eduArticle.setIstop("0");
-            eduArticle.setState(contribute.getCheckin().toString());
-            eduArticle.setVisits(0);
-            eduArticle.setThumbup(0);
-            eduArticle.setComment(0);
-            eduArticle.setCollect("0");
-            eduArticle.setType(contribute.getType().toString());
-            eduArticle.setSchoolId(contribute.getSchoolId());
+            EduArticle notice = eduArticleService.findNoticeByCid(cid);
+            if (notice==null) {
+                userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
+                EduArticle eduArticle = new EduArticle();
+                eduArticle.setCid(cid);
+                eduArticle.setUserid(contribute.getUserId().toString());
+                eduArticle.setTitle(contribute.getTitle());
+                eduArticle.setContent(contribute.getContent());
+                eduArticle.setImage(contribute.getImage());
+                eduArticle.setCreatetime(contribute.getCreatetime());
+                eduArticle.setAudio(contribute.getAudio());
+                eduArticle.setVedio(contribute.getVedio());
+                eduArticle.setIspublic("1");
+                eduArticle.setIstop("0");
+                eduArticle.setState(contribute.getCheckin().toString());
+                eduArticle.setVisits(0);
+                eduArticle.setThumbup(0);
+                eduArticle.setComment(0);
+                eduArticle.setCollect("0");
+                eduArticle.setType(contribute.getType().toString());
+                eduArticle.setSchoolId(contribute.getSchoolId());
 
-            eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
+                eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
 
-            return new WebResult("200","审核通过","");
+                return new WebResult("200", "审核通过", "");
+            }else{
+                return new WebResult("200", "该投稿文章内容已被通过发布，请在相关栏目进行查看即可", "");
 
+            }
 
         }
         if (contribute.getCheckin()==2){
