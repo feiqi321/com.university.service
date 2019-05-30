@@ -277,6 +277,7 @@ public class AdminController {
                 eduArticle.setCreatetime(contribute.getCreatetime());
                 eduArticle.setAudio(contribute.getAudio());
                 eduArticle.setVedio(contribute.getVedio());
+                eduArticle.setAuthor(contribute.getUserName());
                 eduArticle.setIspublic("1");
                 eduArticle.setIstop("0");
                 eduArticle.setState(contribute.getCheckin().toString());
@@ -291,7 +292,6 @@ public class AdminController {
 
                 return new WebResult("200", "审核通过", "");
             }else{
-                return new WebResult("200", "该投稿文章内容已被通过发布，请在相关栏目进行查看即可", "");
 
             }
 
@@ -309,14 +309,15 @@ public class AdminController {
                     if (noticeByCid!=null){
                         eduArticleService.deleteNoticeByCid(contribute.getCid());
                         userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
+                        return new WebResult("200","拒绝成功","");
                     }else {
                         userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
                     }
                 }else{
-                    userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
+                    //userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
 //        userService.deleteWithdraw(wid);
 //        return new WebResult("200", "拒绝成功", "");
-                    return new WebResult("200","拒绝成功","");
+                    return new WebResult("200","抱歉！您没有此权限，请联系超级管理员进行操作","");
 
                 }
 
