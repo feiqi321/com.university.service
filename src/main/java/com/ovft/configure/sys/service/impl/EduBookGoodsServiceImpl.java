@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.ovft.configure.sys.bean.EduBookGoods;
 import com.ovft.configure.sys.bean.EduBooksCategory;
 import com.ovft.configure.sys.bean.EduBooksExtendcategory;
+import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.dao.EduBookGoodsMapper;
 import com.ovft.configure.sys.dao.EduBooksCategoryMapper;
 import com.ovft.configure.sys.dao.EduBooksExtendcategoryMapper;
@@ -77,6 +78,34 @@ public class EduBookGoodsServiceImpl implements EduBookGoodsService {
         map.put("searchkey", searchkey);
         List<EduBookGoods> eduBookGoods = eduBookGoodsMapper.queryAllBookesForlike(map);
 
+        long total = pageAll.getTotal();
+        return new PageBean(total, eduBookGoods);
+    }
+
+    @Override
+    public Integer addBooks(EduBookGoods eduBookGoods) {
+        return eduBookGoodsMapper.insertSelective(eduBookGoods);
+    }
+
+    @Override
+    public EduBookGoods queryById(Integer id) {
+        return eduBookGoodsMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int updateBook(EduBookGoods eduBookGoods) {
+        return eduBookGoodsMapper.updateByPrimaryKeySelective(eduBookGoods);
+    }
+
+    @Override
+    public int deleteBook(EduBookGoods eduBookGoods) {
+        return eduBookGoodsMapper.deleteByPrimaryKey(eduBookGoods.getId());
+    }
+
+    @Override
+    public PageBean showPageBooks(Integer page, Integer size, String schoolId) {
+        Page<Object> pageAll = PageHelper.startPage(page, size);
+            List<EduBookGoods> eduBookGoods = eduBookGoodsMapper.queryForPage(schoolId);
         long total = pageAll.getTotal();
         return new PageBean(total, eduBookGoods);
     }

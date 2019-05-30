@@ -43,4 +43,7 @@ public interface EduBookGoodsMapper {
 
     //查询所有的默认搜索name
     List<EduBookGoods> queryAllBookesForlike(Map<String, Object> map);
+
+    //分页展示数据
+    List<EduBookGoods> queryForPage(String schoolId);
 }

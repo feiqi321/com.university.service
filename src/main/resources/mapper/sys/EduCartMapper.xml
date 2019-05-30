@@ -224,9 +224,28 @@
                     user_id =#{userId}
     </select>
 
+
     <!--查询购物车相关信息vvtxw-->
-    <select id="countNum" parameterType="map"
-            resultType="Integer">
+    <select id="queryOrderInfoFromCart" parameterType="map" resultType="com.ovft.configure.sys.vo.EduCartVo">
+                select
+                  c.*,
+                    g.original_img,
+                    g.books_name,
+                    g.books_author,
+                    g.shop_price,
+                    g.send_price,
+                    s.school_name
+                from
+                    edu_cart c
+                    left join
+                    edu_book_goods g on g.id=c.goods_id
+                    LEFT JOIN edu_school s on s.school_id = c.school_id
+                    where
+                    user_id =#{user_id} and goods_id=#{goods_id}
+    </select>
+
+    <!--查询购物车相关信息vvtxw-->
+    <select id="countNum" parameterType="map" resultType="Integer">
         		SELECT
                   count(num)
                 from

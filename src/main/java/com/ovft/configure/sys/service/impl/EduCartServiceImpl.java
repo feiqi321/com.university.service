@@ -94,4 +94,13 @@ public class EduCartServiceImpl implements EduCartService {
     public Integer updateCart(EduCart cart) {
         return eduCartMapper.updateByPrimaryKeySelective(cart);
     }
+
+    @Override
+    public EduCartVo queryOrderInfoFromCart(Integer userId, Integer goodsId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_id", userId);
+        map.put("goods_id", goodsId);
+        EduCartVo eduCartVo = eduCartMapper.queryOrderInfoFromCart(map);
+        return eduCartVo;
+    }
 }

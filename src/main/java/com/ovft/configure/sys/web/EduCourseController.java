@@ -43,12 +43,13 @@ public class EduCourseController {
     @GetMapping(value = "showCategory")
     public WebResult queryAllCourse(HttpServletRequest request) {
         String schoolId1 = request.getHeader("schoolId");
-        Integer schoolId = Integer.parseInt(schoolId1);
-
         //判断报名的学校不能为空
         if (schoolId1.equals("null")) {
             return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");
         }
+        Integer schoolId = Integer.parseInt(schoolId1);
+
+
         EduCourse course = new EduCourse();
         course.setSchoolId(String.valueOf(schoolId));
         course.setIsenable(ConstantClassField.ISONLINE);
@@ -101,7 +102,12 @@ public class EduCourseController {
 //        Integer userId = (Integer) request.getAttribute("userId");
 
         String userId1 = request.getHeader("userId");
+        if (userId1.equals("null")) {
+            return new WebResult(StatusCode.ERROR, "请先登录再购买", "");
+        }
         Integer userId = Integer.parseInt(userId1);
+
+
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
 //        Integer schoolId = 11;
@@ -124,9 +130,7 @@ public class EduCourseController {
         if (user.getCheckin() != 0) {
             return new WebResult(StatusCode.ERROR, "您还不是正式学员，正在审核中，请耐心等待", "");
         }
-        if (userId == null) {
-            return new WebResult(StatusCode.ERROR, "userId不能为空", "");
-        }
+
         if (courseId == null) {
             return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
         }

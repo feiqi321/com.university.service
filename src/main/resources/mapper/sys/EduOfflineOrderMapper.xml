@@ -342,4 +342,15 @@
   </select>
 
 
+    <!--2.查找线下报名记录-->
+    <select id="queryOffRecordNum" parameterType="Integer" resultType="Integer">
+  		      select
+                count(*)
+                from
+                edu_offline_order
+                where
+                pay_status =#{pay_status}
+  </select>
+
+
 </mapper>

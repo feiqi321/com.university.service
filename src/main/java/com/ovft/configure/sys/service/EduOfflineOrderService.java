@@ -26,4 +26,7 @@ public interface EduOfflineOrderService {
     //修改支付状态
     Integer updatePayStatus(String schoolId, Integer userId, Integer courseId);
 
+    //现象支付的人数
+    Integer queryOffRecordNum(Integer payStatus);
+
 }
