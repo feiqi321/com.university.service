@@ -1,12 +1,18 @@
 package com.ovft.configure.sys.web;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.EduBookGoods;
+import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.service.EduBookGoodsService;
 import com.ovft.configure.sys.vo.PageBean;
 import com.ovft.configure.sys.vo.QueryBookVos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author vvtxw
@@ -47,8 +53,77 @@ public class EduBookGoodsController {
     }
 
 
+    /**
+     * 添加新教材
+     *
+     * @param eduBookGoods
+     * @return
+     */
+    @PostMapping(value = "addbooks")
+    public WebResult addBooks(@RequestBody EduBookGoods eduBookGoods) {
+        Integer res = eduBookGoodsService.addBooks(eduBookGoods);
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "添加成功", "");
+        }
+        return new WebResult(StatusCode.OK, "添加失败", "");
+    }
+
+    /**
+     * 查询1条信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "showone")
+    public WebResult queryById(Integer id) {
+        EduBookGoods eduBookGoods = eduBookGoodsService.queryById(id);
+        return new WebResult(StatusCode.OK, "查询成功", eduBookGoods);
+    }
+
+    /**
+     * 分页显示教材列表
+     *
+     * @param page
+     * @param size
+     * @param schoolId
+     * @return
+     */
+    @GetMapping(value = "shows")
+    public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId) {
+        PageBean pageBean = eduBookGoodsService.showPageBooks(page, size, schoolId);
+        return new WebResult(StatusCode.OK, "查询成功", pageBean);
+    }
 
 
+    /**
+     * 修改教材
+     *
+     * @param eduBookGoods
+     * @return
+     */
+    @PostMapping(value = "updateco")
+    public WebResult updateCodition(@RequestBody EduBookGoods eduBookGoods) {
+        int result = eduBookGoodsService.updateBook(eduBookGoods);
+        if (result > 0) {
+            return new WebResult(StatusCode.OK, "修改设置成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "修改设置失败", "");
+    }
+
+    /**
+     * 删材
+     *
+     * @param eduBookGoods
+     * @return
+     */
+    @PostMapping(value = "deleteco")
+    public WebResult deleteCodition(@RequestBody EduBookGoods eduBookGoods) {
+        int result = eduBookGoodsService.deleteBook(eduBookGoods);
+        if (result > 0) {
+            return new WebResult(StatusCode.OK, "删除设置成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "删除设置失败", "");
+    }
 
 
 }

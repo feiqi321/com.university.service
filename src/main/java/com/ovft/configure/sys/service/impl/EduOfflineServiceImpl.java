@@ -35,16 +35,14 @@ public class EduOfflineServiceImpl implements EduOfflineService {
 
 
     @Override
-    public PageBean queryAllOffInfo(Integer page, Integer size, String schoolId, Integer userId) {
-        Page<Object> pageAll = PageHelper.startPage(page, size);
+    public QueryOffLineVos queryAllOffInfo(String schoolId, Integer userId) {
+//        Page<Object> pageAll = PageHelper.startPage(page, size);
         List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderService.queryAllOffOrder(schoolId, userId);
         List<EduOfflineOrderitem> eduOfflineOrderitems = eduOfflineOrderitemService.queryAllOffOrderItem(schoolId, userId);
-        List<QueryOffLineVos> queryOffLineVoslist = new ArrayList<>();
 
         BigDecimal accountAllMoney = new BigDecimal(0);
 
         QueryOffLineVos queryOffLineVos = new QueryOffLineVos();
-        List<QueryOffLineVos> queryOffLineVos1 = new ArrayList<>();
         for (EduOfflineOrder eduOfflineOrder : eduOfflineOrders) {
             queryOffLineVos.setSchoolName(eduOfflineOrder.getSchoolName());
             queryOffLineVos.setUserName(eduOfflineOrder.getUserName());
@@ -52,10 +50,8 @@ public class EduOfflineServiceImpl implements EduOfflineService {
             queryOffLineVos.setOrderitems(eduOfflineOrderitems);
             accountAllMoney = accountAllMoney.add(eduOfflineOrder.getCousePrice());
             queryOffLineVos.setAccountAllMoney(accountAllMoney);
-            queryOffLineVoslist.add(queryOffLineVos);
-            queryOffLineVos1.add(queryOffLineVos);
         }
-        long total = pageAll.getTotal();
-        return new PageBean(page, size, total, queryOffLineVos1);
+//        long total = pageAll.getTotal();
+        return queryOffLineVos;
     }
 }

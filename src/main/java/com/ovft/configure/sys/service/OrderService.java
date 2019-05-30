@@ -2,7 +2,10 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.sys.bean.Order;
 import com.ovft.configure.sys.vo.OrderVo;
+import com.ovft.configure.sys.vo.QueryOrderVos;
+import com.ovft.configure.sys.vo.SubmitOrderVos;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +31,7 @@ public interface OrderService {
     Order getOrderInfo(String orderId);
 
     //添加教材订单
-    public void insertCartToOrder(Integer userId, Integer addressId, String sendType, BigDecimal toSendPrice, String remark);
+    void insertCartToOrder(SubmitOrderVos submitOrderVos, HttpServletRequest request);
 
     //显示相关订单
     List<OrderVo> showOrders(Integer userId, Integer orderStatus);
@@ -41,6 +44,7 @@ public interface OrderService {
 
     //删除订单
     int deleteOrder(Order order);
+
 
 
 

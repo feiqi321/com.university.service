@@ -205,6 +205,8 @@ public class EduBookGoods implements Serializable {
      */
     private String booksContent;
 
+
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {

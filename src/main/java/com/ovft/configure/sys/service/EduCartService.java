@@ -2,10 +2,12 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.sys.bean.EduCart;
 import com.ovft.configure.sys.bean.EduCartExample;
+import com.ovft.configure.sys.vo.EduCartVo;
 import com.ovft.configure.sys.vo.PageBean;
 import com.ovft.configure.sys.vo.PageBeanVo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author vvtxw
@@ -26,4 +28,7 @@ public interface EduCartService {
 
     //修改购物车数量
     Integer updateCart(EduCart cart);
+
+    //查询出订单的购物车信息
+    EduCartVo queryOrderInfoFromCart(Integer userId, Integer goodsId);
 }

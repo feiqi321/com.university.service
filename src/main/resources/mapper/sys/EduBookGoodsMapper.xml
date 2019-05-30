@@ -911,5 +911,28 @@
     from edu_book_goods where books_author like '%${searchkey}%' or books_name like '%${searchkey}%'
   </select>
 
+    <!--  &lt;!&ndash;1.查找线下报名记录&ndash;&gt;
+      <select id="selectOfflineList" parameterType="Integer" resultType="com.ovft.configure.sys.bean.EduBookGoods">
+          select
+          *
+          from edu_book_goods
+          <where>
+              <if test="schoolId != null and schoolId!=''">
+                  and school_id = #{schoolId}
+              </if>
+          </where>
+      </select>-->
+    <!--1.查找线下报名记录-->
+    <select id="queryForPage" parameterType="String" resultType="com.ovft.configure.sys.bean.EduBookGoods">
+        select
+        *
+        from edu_book_goods
+        <where>
+            <if test="_parameter  != null and _parameter !=''">
+                and school_id = #{schoolId}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

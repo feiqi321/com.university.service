@@ -4,10 +4,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.ovft.configure.sys.bean.EduOfflineAddresstime;
 import com.ovft.configure.sys.bean.EduOfflineAddresstimeExample;
-import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.dao.EduOfflineAddresstimeMapper;
+import com.ovft.configure.sys.dao.EduRegistMapper;
 import com.ovft.configure.sys.service.EduOfflineAddressService;
-import com.ovft.configure.sys.service.EduOfflineOrderService;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +48,7 @@ public class EduOfflineAddressServiceImpl implements EduOfflineAddressService {
         EduOfflineAddresstimeExample eduOfflineAddresstimeExample = new EduOfflineAddresstimeExample();
         eduOfflineAddresstimeExample.createCriteria().andSchoolIdEqualTo(schoolId);
         List<EduOfflineAddresstime> eduOfflineAddresstimes = eduOfflineAddresstimeMapper.selectByExample(eduOfflineAddresstimeExample);
+        UpDateSchoolName(eduOfflineAddresstimes);
         long total = pageAll.getTotal();
         return new PageBean(page, size, total, eduOfflineAddresstimes);
     }
@@ -57,16 +57,31 @@ public class EduOfflineAddressServiceImpl implements EduOfflineAddressService {
     public PageBean queryAllAddressInfo(Integer size, Integer page) {
         Page<Object> pageAll = PageHelper.startPage(page, size);
         List<EduOfflineAddresstime> eduOfflineAddresstimes = eduOfflineAddresstimeMapper.selectByExample(null);
+        UpDateSchoolName(eduOfflineAddresstimes);
         long total = pageAll.getTotal();
         return new PageBean(page, size, total, eduOfflineAddresstimes);
     }
 
+    //获取学校名称
+    private void UpDateSchoolName(List<EduOfflineAddresstime> eduOfflineAddresstimes) {
+        for (EduOfflineAddresstime OfflineAddresstime : eduOfflineAddresstimes) {
+            List<String> strings = eduOfflineAddresstimeMapper.selectNameBySchoolId(OfflineAddresstime.getSchoolId());
+            for (String name : strings) {
+                OfflineAddresstime.setSchoolName(name);
+            }
+        }
+    }
+
 
     @Override
-
     public EduOfflineAddresstime queryById(Integer id) {
         EduOfflineAddresstime eduOfflineAddresstime = eduOfflineAddresstimeMapper.selectByPrimaryKey(id);
         return eduOfflineAddresstime;
+    }
+
+    @Override
+    public Integer deleteAddressTime(Integer id) {
+        return eduOfflineAddresstimeMapper.deleteByPrimaryKey(id);
     }
 
 

@@ -8,10 +8,13 @@ import com.ovft.configure.sys.service.OrderService;
 import com.ovft.configure.sys.utils.OrderIdUtil;
 import com.ovft.configure.sys.vo.EduCartVo;
 import com.ovft.configure.sys.vo.OrderVo;
+import com.ovft.configure.sys.vo.QueryOrderVos;
+import com.ovft.configure.sys.vo.SubmitOrderVos;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -55,31 +58,38 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void insertCartToOrder(Integer userId, Integer addressId, String sendType, BigDecimal toSendPrice, String remark) {
-        //查出购物车的相关信息
-        List<Object> eduCarts = eduCartMapper.selectCartByUserId(userId);
-        //查出学员的收货地址
-        Address address = addressMapper.selectByAddressId(addressId);
-
+    public void insertCartToOrder(SubmitOrderVos submitOrderVos, HttpServletRequest request) {
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
         BigDecimal accountAllMoney = new BigDecimal(0);
-        for (Object eduCart : eduCarts) {
-            Order order = new Order();
-            EduCartVo eduCartVo = (EduCartVo) eduCarts;
-            accountAllMoney = accountAllMoney.add(eduCartVo.getShopPrice());
-            order.setTradeBody(eduCartVo.getBooksName());
-            order.setUserId(userId);
-            order.setOrderSn(OrderIdUtil.getOrderIdByTime());
-            order.setOrderStatus(OrderStatus.UNREMOVE);
-            order.setCreateTime(new Date());
-            order.setTotalAmount(accountAllMoney.longValue());
-            order.setConsignee(address.getConsigneeName());
-            order.setTelephone(address.getPhone());
-            order.setAddress(address.getAddress());
-            order.setSendType(sendType);
-            order.setTosendPrice(toSendPrice);
-            order.setRemark(remark);
-            orderMapper.insertSelective(order);
+        Order order = new Order();
+
+        order.setUserId(userId);
+        order.setOrderSn(OrderIdUtil.getOrderIdByTime());
+        order.setOrderStatus(OrderStatus.UNREMOVE);
+        order.setCreateTime(new Date());
+        order.setTotalAmount(accountAllMoney.longValue());
+        order.setConsignee(submitOrderVos.getUserName());
+        order.setTelephone(submitOrderVos.getPhone());
+        order.setAddress(submitOrderVos.getAddress());
+        order.setSendType(submitOrderVos.getSendType());
+        order.setTosendPrice(submitOrderVos.getToSendPrice());
+        order.setRemark(submitOrderVos.getRemark());
+        orderMapper.insertSelective(order);
+
+        List<OrderDetail> orderItems = submitOrderVos.getOrderItems();
+        for (OrderDetail orderItem : orderItems) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrderId(orderItem.getId());
+            orderDetail.setNum(orderItem.getNum());
+            orderDetail.setOrderPrice(orderItem.getOrderPrice());
+            orderDetail.setCourseName(orderItem.getCourseName());
+            orderDetail.setImgUrl(orderItem.getImgUrl());
+            orderDetail.setCourseId(orderItem.getCourseId());
+            orderDetailMapper.insertSelective(orderDetail);
         }
+
+
     }
 
     @Override

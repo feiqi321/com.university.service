@@ -8,6 +8,7 @@ import com.alipay.api.internal.mapping.AlipayFieldMethod;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.ovft.configure.config.AlipayConfig;
 import com.ovft.configure.constant.OrderStatus;
+import com.ovft.configure.constant.Status;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
@@ -18,6 +19,8 @@ import com.ovft.configure.sys.dao.OrderMapper;
 import com.ovft.configure.sys.service.*;
 import com.ovft.configure.sys.utils.OrderIdUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageBean;
+import com.ovft.configure.sys.vo.QueryOffLineVos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +59,9 @@ public class PaymentInfoController {
     private OrderDetailMapper orderDetailMapper;
 
     @Autowired
+    private EduOfflineService eduOfflineService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -68,6 +74,8 @@ public class PaymentInfoController {
     private EduOfflineAddressService eduOfflineAddressService;
     @Autowired
     private EduOfflineOrderitemService eduOfflineOrderitemService;
+    @Autowired
+    private EduOfflinePayInfoService eduOfflinePayInfoService;
 
 
     @GetMapping(value = "showonoroff")
@@ -84,6 +92,7 @@ public class PaymentInfoController {
     public WebResult paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String schoolId1 = request.getHeader("schoolId");
         int schoolId = Integer.parseInt(schoolId1);
+//        Integer schoolId = 11;
 
         if (type == 2) {
             ResponseEntity<String> stringResponseEntity = alipayMethod(courseId, request, httpServletResponse);
@@ -113,6 +122,14 @@ public class PaymentInfoController {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
 //        Integer userId = 59;
+
+        String schoolId1 = request.getHeader("schoolId");
+        Integer schoolId = Integer.parseInt(schoolId1);
+      /*  String schoolId1 = "11";
+        Integer schoolId = 11;*/
+
+
+//        Integer userId = 59;
         //查询学员的基本信息
         User user = userService.queryInfo(userId);
         //查询学员的课程信息
@@ -130,7 +147,7 @@ public class PaymentInfoController {
         eduOfflineOrder.setPhone(user.getPhone());
         eduOfflineOrder.setCourseId(courseId);
         eduOfflineOrder.setCourseTeacher(eduCourseVo.getName());
-        eduOfflineOrder.setPayStatus("2");
+        eduOfflineOrder.setPayStatus(String.valueOf(Status.UNPAY));
         eduOfflineOrder.setCourseName(eduCourseVo.getCourseName());
         eduOfflineOrder.setCousePrice(eduCourseVo.getCoursePrice());
         eduOfflineOrder.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
@@ -139,19 +156,43 @@ public class PaymentInfoController {
         EduOfflineOrderitem eduOfflineOrderitem = new EduOfflineOrderitem();
         eduOfflineOrderitem.setCouserName(eduCourseVo.getCourseName());
         eduOfflineOrderitem.setCouserPrice(eduCourseVo.getCoursePrice());
-        eduOfflineOrderitem.setPayStatus("2");
+        eduOfflineOrderitem.setPayStatus(String.valueOf(Status.UNPAY));
         eduOfflineOrderitem.setCourseId(courseId);
         eduOfflineOrderitem.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
         eduOfflineOrderitem.setUserId(userId);
 
+
         int res = eduOfflineOrderService.updateOffOrder(eduOfflineOrder);
         int res1 = eduOfflineOrderitemService.addItemOrder(eduOfflineOrderitem);
 
-        if (res > 0 && res1 > 0) {
+        QueryOffLineVos queryOffLineVos = eduOfflineService.queryAllOffInfo(schoolId1, userId);
+
+        Integer res2 = 0;
+        EduOfflinePayInfo eduOfflinePayInfo = new EduOfflinePayInfo();
+        eduOfflinePayInfo.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
+        eduOfflinePayInfo.setSchoolName(queryOffLineVos.getSchoolName());
+        eduOfflinePayInfo.setUserName(queryOffLineVos.getUserName());
+        eduOfflinePayInfo.setTelephone(queryOffLineVos.getPhone());
+        List<EduOfflineOrderitem> orderitems = queryOffLineVos.getOrderitems();
+
+
+        String s = "";
+//        eduOfflinePayInfo.setListOrder(orderitem.getCouserName() + "：【" + (orderitem.getPayStatus().equals("1") ? "已支付" : "未支付") + "】")
+        for (int i = 0; i < orderitems.size(); i++) {
+            s = s + "<br> 【" + orderitems.get(i).getCouserName() + "】:\t￥" + orderitems.get(i).getCouserPrice() + "元\t\t<color style='color:red'>(" + (orderitems.get(i).getPayStatus().equals("1") ? "已支付" : "未支付") + ") </color>";
+        }
+        eduOfflinePayInfo.setListOrder(s);
+        eduOfflinePayInfo.setAccountMoney(queryOffLineVos.getAccountAllMoney());
+        eduOfflinePayInfo.setPayStatus(String.valueOf(Status.UNPAY));
+        eduOfflinePayInfo.setPayUpdatetime(new Date());
+        res2 = eduOfflinePayInfoService.insertPayInfo(eduOfflinePayInfo);
+
+        if (res > 0 && res1 > 0 && res2 > 0) {
             return 1;
         }
         return -1;
     }
+
 
     private ResponseEntity<String> alipayMethod(Integer courseId, HttpServletRequest request, HttpServletResponse httpServletResponse) {
 

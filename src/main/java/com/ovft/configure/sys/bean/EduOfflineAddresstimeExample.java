@@ -434,6 +434,76 @@ public class EduOfflineAddresstimeExample {
             addCriterion("school_id not between", value1, value2, "schoolId");
             return (Criteria) this;
         }
+
+        public Criteria andSchoolNameIsNull() {
+            addCriterion("school_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameIsNotNull() {
+            addCriterion("school_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameEqualTo(String value) {
+            addCriterion("school_name =", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotEqualTo(String value) {
+            addCriterion("school_name <>", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameGreaterThan(String value) {
+            addCriterion("school_name >", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameGreaterThanOrEqualTo(String value) {
+            addCriterion("school_name >=", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameLessThan(String value) {
+            addCriterion("school_name <", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameLessThanOrEqualTo(String value) {
+            addCriterion("school_name <=", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameLike(String value) {
+            addCriterion("school_name like", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotLike(String value) {
+            addCriterion("school_name not like", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameIn(List<String> values) {
+            addCriterion("school_name in", values, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotIn(List<String> values) {
+            addCriterion("school_name not in", values, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameBetween(String value1, String value2) {
+            addCriterion("school_name between", value1, value2, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotBetween(String value1, String value2) {
+            addCriterion("school_name not between", value1, value2, "schoolName");
+            return (Criteria) this;
+        }
     }
 
     /**

@@ -19,7 +19,6 @@ public class PageVo {
 
     private Integer schoolId;
 
-
     private Integer checkin;
 
     private Integer wid;
@@ -134,10 +133,10 @@ public class PageVo {
     }
 
     public void setPageSize(int pageSize) {
-        if(pageSize <= 0) {
+        if (pageSize <= 0) {
             pageSize = 10;
         }
-        this.pageSize = pageSize ;
+        this.pageSize = pageSize;
     }
 
     public int getPageNum() {

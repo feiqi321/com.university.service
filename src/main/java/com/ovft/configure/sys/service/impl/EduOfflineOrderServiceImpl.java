@@ -52,4 +52,10 @@ public class EduOfflineOrderServiceImpl implements EduOfflineOrderService {
     public Integer updatePayStatus(String schoolId, Integer userId, Integer courseId) {
         return null;
     }
+
+    @Override
+    public Integer queryOffRecordNum(Integer payStatus) {
+        Integer num = eduOfflineOrderMapper.queryOffRecordNum(payStatus);
+        return num;
+    }
 }

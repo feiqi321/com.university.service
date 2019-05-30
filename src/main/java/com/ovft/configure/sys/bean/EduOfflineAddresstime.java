@@ -1,8 +1,5 @@
 package com.ovft.configure.sys.bean;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,21 +20,22 @@ public class EduOfflineAddresstime implements Serializable {
     /**
      * 缴费开始时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date paymentStarttime;
 
     /**
      * 缴费结束时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date paymentEndtime;
 
     /**
      * 学校id
      */
     private Integer schoolId;
+
+    /**
+     * 学校姓名
+     */
+    private String schoolName;
 
     private static final long serialVersionUID = 1L;
 
@@ -81,6 +79,14 @@ public class EduOfflineAddresstime implements Serializable {
         this.schoolId = schoolId;
     }
 
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -97,7 +103,8 @@ public class EduOfflineAddresstime implements Serializable {
                 && (this.getPaymentAddress() == null ? other.getPaymentAddress() == null : this.getPaymentAddress().equals(other.getPaymentAddress()))
                 && (this.getPaymentStarttime() == null ? other.getPaymentStarttime() == null : this.getPaymentStarttime().equals(other.getPaymentStarttime()))
                 && (this.getPaymentEndtime() == null ? other.getPaymentEndtime() == null : this.getPaymentEndtime().equals(other.getPaymentEndtime()))
-                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()));
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
+                && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()));
     }
 
     @Override
@@ -109,6 +116,7 @@ public class EduOfflineAddresstime implements Serializable {
         result = prime * result + ((getPaymentStarttime() == null) ? 0 : getPaymentStarttime().hashCode());
         result = prime * result + ((getPaymentEndtime() == null) ? 0 : getPaymentEndtime().hashCode());
         result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
+        result = prime * result + ((getSchoolName() == null) ? 0 : getSchoolName().hashCode());
         return result;
     }
 
@@ -123,6 +131,7 @@ public class EduOfflineAddresstime implements Serializable {
         sb.append(", paymentStarttime=").append(paymentStarttime);
         sb.append(", paymentEndtime=").append(paymentEndtime);
         sb.append(", schoolId=").append(schoolId);
+        sb.append(", schoolName=").append(schoolName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

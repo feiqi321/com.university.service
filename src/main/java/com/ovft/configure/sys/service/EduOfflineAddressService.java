@@ -28,4 +28,10 @@ public interface EduOfflineAddressService {
 
     //查询一个
     EduOfflineAddresstime queryById(Integer id);
+
+    //删除一个
+    Integer deleteAddressTime(Integer id);
+
+
+
 }

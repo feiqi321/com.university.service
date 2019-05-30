@@ -2,7 +2,9 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.EduOfflineAddresstime;
 import com.ovft.configure.sys.bean.EduOfflineAddresstimeExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface EduOfflineAddresstimeMapper {
@@ -27,4 +29,9 @@ public interface EduOfflineAddresstimeMapper {
     int updateByPrimaryKeySelective(EduOfflineAddresstime record);
 
     int updateByPrimaryKey(EduOfflineAddresstime record);
+
+    //查找学校名称
+    List<String> selectNameBySchoolId(Integer schoolId);
+
+
 }

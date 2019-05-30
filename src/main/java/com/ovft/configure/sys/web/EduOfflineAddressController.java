@@ -3,7 +3,6 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduOfflineAddresstime;
-import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.service.EduOfflineAddressService;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +85,18 @@ public class EduOfflineAddressController {
         return new WebResult(StatusCode.OK, "查询成功", eduOfflineAddresstime);
     }
 
-
+    /**
+     * 删除线下地址信息
+     *
+     * @param eduOfflineAddresstime
+     * @return
+     */
+    @PostMapping(value = "deleteone")
+    public WebResult deleteAddressTime(@RequestBody EduOfflineAddresstime eduOfflineAddresstime) {
+        Integer res = eduOfflineAddressService.deleteAddressTime(eduOfflineAddresstime.getId());
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "修改成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "删除失败", "");
+    }
 }

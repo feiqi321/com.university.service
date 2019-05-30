@@ -16,6 +16,8 @@ public class Status {
     public static final Integer PRIORITYTWO = 2;
     public static final Integer DEFAULTCATID = 1;
     public static final Integer DEFAULTEXTENDCATID = 1;
+    public static final Integer PAY = 1;//支付
+    public static final Integer UNPAY = 2;//未支付
 
 
 }

@@ -42,4 +42,7 @@ public interface EduCartMapper {
 
     //统计该商品的数量
     Integer countNum(Map<String, Object> map);
+
+    //查询出订单的购物车信息
+    EduCartVo queryOrderInfoFromCart(Map<String, Object> map);
 }

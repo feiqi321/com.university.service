@@ -6,6 +6,7 @@ import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.EduCourseService;
+import com.ovft.configure.sys.service.EduOfflineOrderService;
 import com.ovft.configure.sys.utils.AgeUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.utils.OrderIdUtil;
@@ -44,6 +45,9 @@ public class EduCourseServiceImpl implements EduCourseService {
     @Resource
     private EduRegistMapper eduRegistMapper;
 
+    @Resource
+    private EduOfflineOrderMapper eduOfflineOrderMapper;
+
     /**
      * 按学校的id来查找专业类别
      *
@@ -77,18 +81,23 @@ public class EduCourseServiceImpl implements EduCourseService {
         if (acceptNum == 0) {
             map.put("本专业未设置可报名的人数，请管理员设置报名人数限制", "");
         }
-        //查询用户所对应的专业已购买人数
+        //查询用户所对应的专业显示已经购买人数
         param.put("course_id", courseId);
         param.put("payment_status", OrderStatus.PAY);
-        int payNum = orderMapper.countPayCourseNum(param);
+        int olineNum = orderMapper.countPayCourseNum(param);
+
+        //查询用户所对应的专业线下的总人数
+        Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(Status.PAY);
+
+        Integer payNum = olineNum + offNum;
 
         if (payNum >= acceptNum) {
             map.put("人数已满，请下期再报名", "");
             return map;
         }
-
         //可报名剩余人数
         int nowtotal = acceptNum - payNum;
+
 
         EduRegist eduRegist = eduRegistMapper.selectByCourseId(courseId);
         try {
@@ -156,6 +165,7 @@ public class EduCourseServiceImpl implements EduCourseService {
                 map.put("请在学员中心的基本信息填写必要信息：学员类别，再来报名！", "");
                 return map;
             }
+            //通过省份证获取年龄
             int age = AgeUtil.IdNOToAge(identity);
             if (startAge > age || age > endAge) {
                 map.put("请在在允许的年龄阶段报名：" + startAge + "至" + endAge + "方可报名", "");
@@ -260,9 +270,10 @@ public class EduCourseServiceImpl implements EduCourseService {
             }*/
 
         } catch (Exception e) {
-            map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
+            map.put("后台设置出现问题，请检查设置", "");
             return map;
         }
+        map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
         return map;
     }
 

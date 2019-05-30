@@ -41,7 +41,7 @@ public class EduRegistServiceImpl implements EduRegistService {
     @Override
     public int addRegistCondition(EduRegist eduRegist) {
         //添加全局设置
-        //查询出是否有已经全局的设置
+        //1.查询出是否有已经全局的设置
         EduRegistExample eduRegistExample0 = new EduRegistExample();
         eduRegistExample0.createCriteria().andCourseIdEqualTo(eduRegist.getCourseId()).andSchoolIdEqualTo(eduRegist.getSchoolId());
         List<EduRegist> eduRegistA = eduRegistMapper.selectByExample(eduRegistExample0);
@@ -49,6 +49,8 @@ public class EduRegistServiceImpl implements EduRegistService {
         if (eduRegistA.size() != 0) {
             return -2;
         }
+        //判断该学校是否已经上架的课程。如果没有提示信息
+
         //添加全局条件之前要判断是否有全局的课程
         //根据学校查出所有的课程设置
         EduRegistExample eduRegistExample = new EduRegistExample();
