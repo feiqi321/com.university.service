@@ -22,6 +22,25 @@ public class EduComment implements Serializable {
      */
     private Integer isshow;
 
+    private Integer newtype;
+    private Integer parentid;
+
+    public Integer getNewtype() {
+        return newtype;
+    }
+
+    public void setNewtype(Integer newtype) {
+        this.newtype = newtype;
+    }
+
+    public Integer getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(Integer parentid) {
+        this.parentid = parentid;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getComid() {

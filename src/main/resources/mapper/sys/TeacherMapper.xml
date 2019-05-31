@@ -74,6 +74,31 @@
         </if>
         order by isenable desc, start_date desc
     </select>
+    <select id="selectCourseList" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.vo.EduCourseVo">
+        select course_id as courseId, course_name as courseName, course_price as coursePrice, course_teacher as courseTeacher,
+        place_class as placeClass, start_date as startDate, end_date as endDate,
+        people_number as peopleNumber, school_id as schoolId, isenable,
+        (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher) as teacherName,
+        (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName
+        from edu_course
+        where 1=1
+        <if test="schoolId != null">
+            AND school_id = #{schoolId}
+        </if>
+        <if test="isenable != null">
+            AND isenable = #{isenable}
+        </if>
+        <if test="startDate != null">
+            <![CDATA[ and  start_date >= #{startDate}]]>
+        </if>
+        <if test="endDate != null">
+            <![CDATA[ and  start_date <= #{endDate}]]>
+        </if>
+        <if test="search != null and search != ''">
+            AND course_name like CONCAT('%',#{search},'%')
+        </if>
+        order by isenable desc, start_date desc
+    </select>
 
     <!--添加课程-->
     <insert id="insertCourse" parameterType="com.ovft.configure.sys.bean.EduCourse"

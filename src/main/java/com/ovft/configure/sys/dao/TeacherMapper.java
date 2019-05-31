@@ -29,6 +29,9 @@ public interface TeacherMapper {
     //根据学校id查找课程列表
     public List<EduCourse> selectCourseListBySchoolId(PageVo pageVo);
 
+    //查找课程列表   多表查询，带学校名称和教师名称
+    public List<EduCourseVo> selectCourseList(PageVo pageVo);
+
     //根据课程id查找课程
     public EduCourseVo selectByCourseId(@Param("courseId") Integer courseId);
 

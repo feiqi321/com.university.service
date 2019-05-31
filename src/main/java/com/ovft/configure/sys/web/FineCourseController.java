@@ -7,7 +7,6 @@ import com.ovft.configure.sys.bean.FineCourse;
 import com.ovft.configure.sys.service.FineCourseService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,12 +103,12 @@ public class FineCourseController {
      */
     @PostMapping(value = "/fineCourse/fineCourseList")
     public WebResult courseList(HttpServletRequest request, @RequestBody PageVo pageVo) {
-        String token = request.getHeader("token");
+        /*String token = request.getHeader("token");
         String schoolId = request.getHeader("schoolId");
         if(StringUtils.isBlank(schoolId)) {
             return new WebResult("400", "请选择学校", "");
         }
-        pageVo.setSchoolId(Integer.valueOf(schoolId));
+        pageVo.setSchoolId(Integer.valueOf(schoolId));*/
         return fineCourseService.fineCourseList(pageVo);
     }
 

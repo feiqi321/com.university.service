@@ -227,11 +227,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult courseList(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
-            List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo);
+            List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
             return new WebResult("200", "查询成功", courseList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-        List<EduCourse> courseList = teacherMapper.selectCourseListBySchoolId(pageVo);
+        List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
         PageInfo pageInfo = new PageInfo<>(courseList);
 
         return new WebResult("200", "查询成功", pageInfo);
