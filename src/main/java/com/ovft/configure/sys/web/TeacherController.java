@@ -186,7 +186,7 @@ public class TeacherController {
 
         if (checkin==0){
                 userService.deleteWithdraw(wid);
-                userService.deleteUserItem(withdrawVo.getUserItemId());
+                userService.UpdateUserSchoolId(withdrawVo.getUid());
                 return teacherService.updateWithdrawCheckIn(wid,checkin);
             }
         userService.deleteWithdraw(wid);

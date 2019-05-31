@@ -324,23 +324,12 @@ public class UserServiceImpl implements UserService {
         }
 
         //保存或修改模块
-        User findUser = userMapper.queryByItemsIdAndSchoolId(user.getUserId(),user.getSchoolId());
+        User findUser = userMapper.queryByItemsId3(user.getUserId());
 
         if (findUser == null) {
             user.setCheckin(1);
             userMapper.saveInfoItems(user);
             return new WebResult("200", "保存成功", "");
-        }
-
-        if (findUser.getUserId() != null&&findUser.getSchoolId()==0){
-                userMapper.updateInfoItems(user);
-            return new WebResult("200", "修改成功", "");
-        }
-        if ((findUser.getUserId() == null&&findUser.getSchoolId()==null)||(findUser.getUserId() != null&&findUser.getSchoolId()==null)
-                ) {
-                user.setCheckin(1);
-                userMapper.saveInfoItems(user);
-                return new WebResult("200", "保存成功", "");
         } else {
             userMapper.updateInfoItems(user);
             return new WebResult("200", "修改成功", "");
@@ -392,7 +381,7 @@ public class UserServiceImpl implements UserService {
     public WebResult selectInfo(User user) {
         //通过userId查询Item表里面的相关信息
         User findUserInfo = userMapper.queryByItemsId(user.getUserId());
-         if (findUserInfo.getSchoolId()==null){
+         if (findUserInfo==null){
              //如果没有查到Item表里面的相关信息，则返回selectUserById
              User selectUserById = userMapper.selectById(user.getUserId());
 
@@ -605,7 +594,7 @@ public class UserServiceImpl implements UserService {
         List<WithdrawVo> withdrawVos = userMapper.findWithdrawByCheckinAndSchoolId(withdrawVo);
              return new WebResult("200","查找成功",withdrawVos);
     }
-   //学员注销
+   //假删学员
     @Transactional
     @Override
     public WebResult UpdateUserSchoolId(Integer userId) {

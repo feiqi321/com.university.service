@@ -70,7 +70,7 @@ public interface UserService {
     //根据checkin和schoolId条件进行学员注销审核查找
     public WebResult findWithdrawByCheckinAndSchoolId(WithdrawVo withdrawVo);
 
-    //学员所报信息假删（弃用）
+    //学员所报信息假删（最新）
     public WebResult UpdateUserSchoolId(Integer userId);
 
     //通过学员id查找报名学校（user_Item）表信息

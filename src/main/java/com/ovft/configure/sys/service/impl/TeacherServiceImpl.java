@@ -472,19 +472,22 @@ public class TeacherServiceImpl implements TeacherService {
             return new WebResult("400", "该手机号已被注册", "");
         }
         user.setUserId(finduserbyphone.getUserId());
-        User findUser = userMapper.queryByItemsId(user.getUserId());
+        //通过userId来寻找edu_Item
+        User findUser = userMapper.queryByItemsId3(user.getUserId());
+        if (findUser == null) {
+            user.setCheckin(1);
+            userMapper.saveInfoItems(user);
+            return new WebResult("200", "保存成功", "");
+        } else {
 
-        Integer schoolId = findUser.getSchoolId();
-        Integer schoolId1 = user.getSchoolId();
-        if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())!=0) {
-            return new WebResult("400", "该用户已是其他学校学员", "");
-        }
-        if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())==0) {
+            Integer schoolId = findUser.getSchoolId();
+            Integer schoolId1 = user.getSchoolId();
+            if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())!=0) {
+                return new WebResult("400", "该用户已是其他学校学员", "");
+            }
             userMapper.updateInfoItems(user);
             return new WebResult("200", "修改成功", "");
         }
-        userMapper.saveInfoItems(user);
-        return new WebResult("200", "保存成功", "");
 
     }
     /**

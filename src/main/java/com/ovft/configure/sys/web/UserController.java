@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ *学员用户模块
  * Created by looyer on 2019/4/2.
  */
 @RestController
@@ -245,18 +245,18 @@ public class UserController {
         return null;
     }
 
-//    /**
-//     * 学员所报学校信息假删（1）
-//     *
-//     * @param user
-//     * @return
-//     */
-//    @PostMapping(value = "/UpdateUserSchoolId")
-//     public WebResult UpdateUserSchoolId(@ RequestBody User user){
-//
-//          userService.UpdateUserSchoolId(user.getUserId());
-//          return new WebResult("200","删除成功","");
-//     }
+    /**
+     * 学员所报学校信息假删（1）
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping(value = "/UpdateUserSchoolId")
+     public WebResult UpdateUserSchoolId(@ RequestBody User user){
+
+          userService.UpdateUserSchoolId(user.getUserId());
+          return new WebResult("200","删除成功","");
+     }
     /**
      * 学员所报学校信息假删
      *
