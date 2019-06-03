@@ -3,6 +3,7 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.sys.bean.EduBookGoods;
 import com.ovft.configure.sys.vo.PageBean;
 import com.ovft.configure.sys.vo.QueryBookVos;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @author vvtxw
@@ -28,5 +29,12 @@ public interface EduBookGoodsService {
     int deleteBook(EduBookGoods eduBookGoods);
 
     //分页展示教材
-    PageBean showPageBooks(Integer page, Integer size, String schoolId);
+    PageBean showPageBooks(Integer page, Integer size, String schoolId, String booksAuthor, String booksSn, Byte isOnSale);
+
+    //上架和下架
+    Integer UpdataIsOnSale(EduBookGoods eduBookGoods);
+
+
+    //批量上架和下架
+    Integer bathUpdataIsOnSale(@RequestBody EduBookGoods eduBookGoods);
 }

@@ -2,10 +2,7 @@ package com.ovft.configure.sys.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.ovft.configure.sys.bean.EduBookGoods;
-import com.ovft.configure.sys.bean.EduBooksCategory;
-import com.ovft.configure.sys.bean.EduBooksExtendcategory;
-import com.ovft.configure.sys.bean.EduRegist;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.EduBookGoodsMapper;
 import com.ovft.configure.sys.dao.EduBooksCategoryMapper;
 import com.ovft.configure.sys.dao.EduBooksExtendcategoryMapper;
@@ -103,11 +100,47 @@ public class EduBookGoodsServiceImpl implements EduBookGoodsService {
     }
 
     @Override
-    public PageBean showPageBooks(Integer page, Integer size, String schoolId) {
+    public PageBean showPageBooks(Integer page, Integer size, String schoolId, String booksAuthor, String booksSn, Byte isOnSale) {
         Page<Object> pageAll = PageHelper.startPage(page, size);
-            List<EduBookGoods> eduBookGoods = eduBookGoodsMapper.queryForPage(schoolId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("schoolId", schoolId);
+        map.put("booksAuthor", booksAuthor);
+        map.put("booksSn", booksSn);
+        map.put("isOnSale", isOnSale);
+        List<EduBookGoods> eduBookGoods = eduBookGoodsMapper.queryForPage(map);
+        UpDateSchoolName(eduBookGoods);
         long total = pageAll.getTotal();
-        return new PageBean(total, eduBookGoods);
+        return new PageBean(page, size, total, eduBookGoods);
+    }
+
+    //获取学校名称
+    private void UpDateSchoolName(List<EduBookGoods> eduBookGoods) {
+
+        for (EduBookGoods eduBookGood : eduBookGoods) {
+            List<String> strings = eduBookGoodsMapper.selectNameBySchoolId(Integer.parseInt(eduBookGood.getSchoolId()));
+            for (String name : strings) {
+                eduBookGood.setSchoolName(name);
+            }
+        }
+    }
+
+
+    @Override
+    public Integer UpdataIsOnSale(EduBookGoods eduBookGoods) {
+        return eduBookGoodsMapper.updateByPrimaryKeySelective(eduBookGoods);
+    }
+
+    @Override
+    public Integer bathUpdataIsOnSale(EduBookGoods eduBookGoods) {
+        //查出所有的教材
+        List<EduBookGoods> allBookGoods = eduBookGoodsMapper.selectByExample(null);
+        int res = 0;
+        for (EduBookGoods allBookGood : allBookGoods) {
+            //定义id传值
+            eduBookGoods.setId(allBookGood.getId());
+            res = eduBookGoodsMapper.updateByPrimaryKeySelective(eduBookGoods);
+        }
+        return res;
     }
 
 

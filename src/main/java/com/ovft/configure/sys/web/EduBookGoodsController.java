@@ -1,18 +1,13 @@
 package com.ovft.configure.sys.web;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduBookGoods;
-import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.service.EduBookGoodsService;
 import com.ovft.configure.sys.vo.PageBean;
 import com.ovft.configure.sys.vo.QueryBookVos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author vvtxw
@@ -89,8 +84,8 @@ public class EduBookGoodsController {
      * @return
      */
     @GetMapping(value = "shows")
-    public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId) {
-        PageBean pageBean = eduBookGoodsService.showPageBooks(page, size, schoolId);
+    public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId, String booksAuthor, String booksSn, Byte isOnSale) {
+        PageBean pageBean = eduBookGoodsService.showPageBooks(page, size, schoolId, booksAuthor, booksSn, isOnSale);
         return new WebResult(StatusCode.OK, "查询成功", pageBean);
     }
 
@@ -123,6 +118,36 @@ public class EduBookGoodsController {
             return new WebResult(StatusCode.OK, "删除设置成功", "");
         }
         return new WebResult(StatusCode.ERROR, "删除设置失败", "");
+    }
+
+    /**
+     * 上架和下架
+     *
+     * @param eduBookGoods
+     * @return
+     */
+    @PostMapping(value = "UpdataIsOnSale")
+    public WebResult upGoodsBook(@RequestBody EduBookGoods eduBookGoods) {
+        Integer res = eduBookGoodsService.UpdataIsOnSale(eduBookGoods);
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "修改成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "修改失败", "");
+    }
+
+    /**
+     * 批量上架和下架
+     *
+     * @param eduBookGoods
+     * @return
+     */
+    @PostMapping(value = "bathUpdataIsOnSale")
+    public WebResult bathUpdataPaystatus(@RequestBody EduBookGoods eduBookGoods) {
+        Integer res = eduBookGoodsService.bathUpdataIsOnSale(eduBookGoods);
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "修改成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "修改失败", "");
     }
 
 

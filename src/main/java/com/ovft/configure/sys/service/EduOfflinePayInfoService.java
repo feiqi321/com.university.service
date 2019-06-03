@@ -2,7 +2,6 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.sys.bean.EduOfflinePayInfo;
 import com.ovft.configure.sys.vo.PageBean;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 

@@ -41,6 +41,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
         <result column="send_price" jdbcType="DECIMAL" property="sendPrice"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ovft.configure.sys.bean.EduBookGoods">
         <result column="books_content" jdbcType="LONGVARCHAR" property="booksContent"/>
@@ -111,7 +112,7 @@
     original_img, is_real, is_on_sale, is_free_shipping, on_time, sort, is_recommend, 
     is_new, is_hot, last_update, goods_type, spec_type, give_integral, exchange_integral, 
     suppliers_id, sales_sum, prom_type, prom_id, commission, spu, sku, update_time, school_id, 
-    send_price
+    send_price, school_name
   </sql>
     <sql id="Blob_Column_List">
     books_content
@@ -190,8 +191,8 @@
         exchange_integral, suppliers_id, sales_sum,
         prom_type, prom_id, commission,
         spu, sku, update_time,
-        school_id, send_price, books_content
-        )
+        school_id, send_price, school_name,
+        books_content)
         values (#{catId,jdbcType=INTEGER}, #{extendCatId,jdbcType=INTEGER}, #{booksSn,jdbcType=VARCHAR},
         #{booksAuthor,jdbcType=VARCHAR}, #{booksName,jdbcType=VARCHAR}, #{clickCount,jdbcType=INTEGER},
         #{storeCount,jdbcType=SMALLINT}, #{commentCount,jdbcType=SMALLINT}, #{weight,jdbcType=INTEGER},
@@ -204,8 +205,8 @@
         #{exchangeIntegral,jdbcType=INTEGER}, #{suppliersId,jdbcType=SMALLINT}, #{salesSum,jdbcType=INTEGER},
         #{promType,jdbcType=TINYINT}, #{promId,jdbcType=INTEGER}, #{commission,jdbcType=DECIMAL},
         #{spu,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
-        #{schoolId,jdbcType=VARCHAR}, #{sendPrice,jdbcType=DECIMAL}, #{booksContent,jdbcType=LONGVARCHAR}
-        )
+        #{schoolId,jdbcType=VARCHAR}, #{sendPrice,jdbcType=DECIMAL}, #{schoolName,jdbcType=VARCHAR},
+        #{booksContent,jdbcType=LONGVARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduBookGoods">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -327,6 +328,9 @@
             <if test="sendPrice != null">
                 send_price,
             </if>
+            <if test="schoolName != null">
+                school_name,
+            </if>
             <if test="booksContent != null">
                 books_content,
             </if>
@@ -445,6 +449,9 @@
             </if>
             <if test="sendPrice != null">
                 #{sendPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName,jdbcType=VARCHAR},
             </if>
             <if test="booksContent != null">
                 #{booksContent,jdbcType=LONGVARCHAR},
@@ -578,6 +585,9 @@
             <if test="record.sendPrice != null">
                 send_price = #{record.sendPrice,jdbcType=DECIMAL},
             </if>
+            <if test="record.schoolName != null">
+                school_name = #{record.schoolName,jdbcType=VARCHAR},
+            </if>
             <if test="record.booksContent != null">
                 books_content = #{record.booksContent,jdbcType=LONGVARCHAR},
             </if>
@@ -627,6 +637,7 @@
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
         school_id = #{record.schoolId,jdbcType=VARCHAR},
         send_price = #{record.sendPrice,jdbcType=DECIMAL},
+        school_name = #{record.schoolName,jdbcType=VARCHAR},
         books_content = #{record.booksContent,jdbcType=LONGVARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -672,7 +683,8 @@
         sku = #{record.sku,jdbcType=VARCHAR},
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
         school_id = #{record.schoolId,jdbcType=VARCHAR},
-        send_price = #{record.sendPrice,jdbcType=DECIMAL}
+        send_price = #{record.sendPrice,jdbcType=DECIMAL},
+        school_name = #{record.schoolName,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -794,6 +806,9 @@
             <if test="sendPrice != null">
                 send_price = #{sendPrice,jdbcType=DECIMAL},
             </if>
+            <if test="schoolName != null">
+                school_name = #{schoolName,jdbcType=VARCHAR},
+            </if>
             <if test="booksContent != null">
                 books_content = #{booksContent,jdbcType=LONGVARCHAR},
             </if>
@@ -840,6 +855,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       school_id = #{schoolId,jdbcType=VARCHAR},
       send_price = #{sendPrice,jdbcType=DECIMAL},
+      school_name = #{schoolName,jdbcType=VARCHAR},
       books_content = #{booksContent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -882,11 +898,13 @@
       sku = #{sku,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       school_id = #{schoolId,jdbcType=VARCHAR},
-      send_price = #{sendPrice,jdbcType=DECIMAL}
+      send_price = #{sendPrice,jdbcType=DECIMAL},
+      school_name = #{schoolName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <!--查询所有教材相关信息-->
+
+    <!--1.查询所有教材相关信息-->
     <select id="queryAllBooksGoods" parameterType="map"
             resultType="com.ovft.configure.sys.bean.EduBookGoods">
         select
@@ -903,36 +921,46 @@
     </select>
 
 
-    <!--查询搜索所有教材相关信息-->
+    <!--2.查询搜索所有教材相关信息-->
     <select id="queryAllBookesForlike" parameterType="map"
             resultType="com.ovft.configure.sys.bean.EduBookGoods">
     select
     *
-    from edu_book_goods where books_author like '%${searchkey}%' or books_name like '%${searchkey}%'
+    from edu_book_goods where books_author like '%${searchkey}%' or books_name like '%
+    ${searchkey}%'
   </select>
 
-    <!--  &lt;!&ndash;1.查找线下报名记录&ndash;&gt;
-      <select id="selectOfflineList" parameterType="Integer" resultType="com.ovft.configure.sys.bean.EduBookGoods">
-          select
-          *
-          from edu_book_goods
-          <where>
-              <if test="schoolId != null and schoolId!=''">
-                  and school_id = #{schoolId}
-              </if>
-          </where>
-      </select>-->
-    <!--1.查找线下报名记录-->
-    <select id="queryForPage" parameterType="String" resultType="com.ovft.configure.sys.bean.EduBookGoods">
+    <!--1.查找教材列表-->
+    <select id="queryForPage" parameterType="map"
+            resultType="com.ovft.configure.sys.bean.EduBookGoods">
         select
         *
         from edu_book_goods
         <where>
-            <if test="_parameter  != null and _parameter !=''">
+            <if test="booksAuthor != null and booksAuthor!=''">
+                and books_author LIKE '%${booksAuthor}%'
+            </if>
+            <if test="booksSn != null and booksSn!=''">
+                and books_sn = #{booksSn}
+            </if>
+            <if test="isOnSale != null and isOnSale!=''">
+                and is_on_sale = #{isOnSale}
+            </if>
+            <if test="schoolId != null and schoolId!=''">
                 and school_id = #{schoolId}
             </if>
         </where>
     </select>
+
+    <!--根据学校查询学校名字vvtxw-->
+    <select id="selectNameBySchoolId" parameterType="int"
+            resultType="String">
+        select
+        s.school_name
+        from
+        edu_book_goods r
+        LEFT JOIN edu_school s on s.school_id=r.school_id where r.school_id=#{school_id}
+  </select>
 
 
 </mapper>

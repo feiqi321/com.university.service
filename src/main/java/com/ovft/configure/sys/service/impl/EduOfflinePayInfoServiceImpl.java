@@ -1,16 +1,14 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.ovft.configure.constant.Status;
-import com.ovft.configure.sys.bean.EduOfflinePayInfo;
-import com.ovft.configure.sys.bean.EduOfflinePayInfoExample;
+import com.ovft.configure.sys.bean.*;
+import com.ovft.configure.sys.dao.EduOfflineOrderMapper;
+import com.ovft.configure.sys.dao.EduOfflineOrderitemMapper;
 import com.ovft.configure.sys.dao.EduOfflinePayInfoMapper;
 import com.ovft.configure.sys.service.EduOfflinePayInfoService;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -26,6 +24,12 @@ import java.util.Map;
 public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
     @Resource
     private EduOfflinePayInfoMapper eduOfflinePayInfoMapper;
+
+    @Resource
+    private EduOfflineOrderMapper eduOfflineOrderMapper;
+
+    @Resource
+    private EduOfflineOrderitemMapper eduOfflineOrderitemMapper;
 
     @Override
     public Integer insertPayInfo(EduOfflinePayInfo eduOfflinePayInfo) {
@@ -72,7 +76,41 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
 
     @Override
     public Integer updatePayStatus(EduOfflinePayInfo eduOfflinePayInfo) {
-        return eduOfflinePayInfoMapper.updateByPrimaryKeySelective(eduOfflinePayInfo);
+        int res = eduOfflinePayInfoMapper.updateByPrimaryKeySelective(eduOfflinePayInfo);
+        //根据userid查询出所有订单信息
+        EduOfflineOrderExample eduOfflineOrderExample = new EduOfflineOrderExample();
+        eduOfflineOrderExample.createCriteria().andUserIdEqualTo(eduOfflinePayInfo.getUserId());
+        List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderMapper.selectByExample(eduOfflineOrderExample);
+
+        //根据userid查询出所有订单详情信息
+        EduOfflineOrderitemExample eduOfflineOrderitemExample1 = new EduOfflineOrderitemExample();
+        eduOfflineOrderitemExample1.createCriteria().andUserIdEqualTo(eduOfflinePayInfo.getUserId());
+        List<EduOfflineOrderitem> eduOfflineOrderitems = eduOfflineOrderitemMapper.selectByExample(eduOfflineOrderitemExample1);
+
+
+        if (res > 0 && eduOfflinePayInfo.getPayStatus().equals("1")) {
+            for (EduOfflineOrder eduOfflineOrder : eduOfflineOrders) {
+                eduOfflineOrder.setPayStatus("2");
+                eduOfflineOrderMapper.updateByPrimaryKeySelective(eduOfflineOrder);
+            }
+            for (EduOfflineOrderitem eduOfflineOrderitem : eduOfflineOrderitems) {
+                eduOfflineOrderitem.setPayStatus("2");
+                eduOfflineOrderitemMapper.updateByPrimaryKeySelective(eduOfflineOrderitem);
+            }
+
+        } else if (res > 0 && eduOfflinePayInfo.getPayStatus().equals("2")) {
+            for (EduOfflineOrder eduOfflineOrder : eduOfflineOrders) {
+                eduOfflineOrder.setPayStatus("1");
+                eduOfflineOrderMapper.updateByPrimaryKeySelective(eduOfflineOrder);
+            }
+            for (EduOfflineOrderitem eduOfflineOrderitem : eduOfflineOrderitems) {
+                eduOfflineOrderitem.setPayStatus("1");
+                eduOfflineOrderitemMapper.updateByPrimaryKeySelective(eduOfflineOrderitem);
+            }
+        } else {
+            return -1;
+        }
+        return res;
     }
 
     @Override

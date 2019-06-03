@@ -37,7 +37,6 @@ public interface EduBookGoodsMapper {
 
     int updateByPrimaryKey(EduBookGoods record);
 
-
     //查询所有的默认的学员分类
     List<EduBookGoods> queryAllBooksGoods(Map<String, Object> map);
 
@@ -45,5 +44,8 @@ public interface EduBookGoodsMapper {
     List<EduBookGoods> queryAllBookesForlike(Map<String, Object> map);
 
     //分页展示数据
-    List<EduBookGoods> queryForPage(String schoolId);
+    List<EduBookGoods> queryForPage(Map<String, Object> map);
+
+    //查找学校名称
+    List<String> selectNameBySchoolId(Integer schoolId);
 }

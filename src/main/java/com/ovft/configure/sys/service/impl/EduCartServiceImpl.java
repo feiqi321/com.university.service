@@ -9,8 +9,6 @@ import com.ovft.configure.sys.dao.EduCartMapper;
 import com.ovft.configure.sys.service.EduCartService;
 import com.ovft.configure.sys.vo.EduCartVo;
 import com.ovft.configure.sys.vo.PageBean;
-import com.ovft.configure.sys.vo.PageBeanVo;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

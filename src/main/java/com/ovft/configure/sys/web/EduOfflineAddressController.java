@@ -65,7 +65,7 @@ public class EduOfflineAddressController {
      */
     @GetMapping(value = "show")
     public WebResult queryAllAddressInfo(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId) {
-        if (!schoolId.equals("null")) {
+        if (!schoolId.equals("")) {
             PageBean pageBean = eduOfflineAddressService.queryAllAddressInfoBySchoold(size, page, Integer.parseInt(schoolId));
             return new WebResult(StatusCode.OK, "查询成功", pageBean);
         }

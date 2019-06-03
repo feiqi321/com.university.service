@@ -59,7 +59,7 @@ public class EduRegistController {
      */
     @GetMapping(value = "show")
     public WebResult queryAllCourseCodition(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId) {
-        if (!schoolId.equals("null")) {
+        if (!schoolId.equals("")) {
             PageBean pageBean = eduRegistService.queryAllCoditionBySchoold(size, page, Integer.parseInt(schoolId));
             return new WebResult(StatusCode.OK, "查询成功", pageBean);
         }

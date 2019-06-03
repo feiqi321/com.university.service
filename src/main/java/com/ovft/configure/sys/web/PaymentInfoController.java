@@ -171,6 +171,7 @@ public class PaymentInfoController {
         EduOfflinePayInfo eduOfflinePayInfo = new EduOfflinePayInfo();
         eduOfflinePayInfo.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
         eduOfflinePayInfo.setSchoolName(queryOffLineVos.getSchoolName());
+        eduOfflinePayInfo.setUserId(userId);
         eduOfflinePayInfo.setUserName(queryOffLineVos.getUserName());
         eduOfflinePayInfo.setTelephone(queryOffLineVos.getPhone());
         List<EduOfflineOrderitem> orderitems = queryOffLineVos.getOrderitems();

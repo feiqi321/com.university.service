@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author 
+ * @author
  */
 public class EduBookGoods implements Serializable {
     /**
@@ -201,11 +201,14 @@ public class EduBookGoods implements Serializable {
     private BigDecimal sendPrice;
 
     /**
+     * 学校名称
+     */
+    private String schoolName;
+
+    /**
      * 商品详细描述
      */
     private String booksContent;
-
-
 
     private static final long serialVersionUID = 1L;
 
@@ -521,6 +524,14 @@ public class EduBookGoods implements Serializable {
         this.sendPrice = sendPrice;
     }
 
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
     public String getBooksContent() {
         return booksContent;
     }
@@ -542,45 +553,46 @@ public class EduBookGoods implements Serializable {
         }
         EduBookGoods other = (EduBookGoods) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getCatId() == null ? other.getCatId() == null : this.getCatId().equals(other.getCatId()))
-            && (this.getExtendCatId() == null ? other.getExtendCatId() == null : this.getExtendCatId().equals(other.getExtendCatId()))
-            && (this.getBooksSn() == null ? other.getBooksSn() == null : this.getBooksSn().equals(other.getBooksSn()))
-            && (this.getBooksAuthor() == null ? other.getBooksAuthor() == null : this.getBooksAuthor().equals(other.getBooksAuthor()))
-            && (this.getBooksName() == null ? other.getBooksName() == null : this.getBooksName().equals(other.getBooksName()))
-            && (this.getClickCount() == null ? other.getClickCount() == null : this.getClickCount().equals(other.getClickCount()))
-            && (this.getStoreCount() == null ? other.getStoreCount() == null : this.getStoreCount().equals(other.getStoreCount()))
-            && (this.getCommentCount() == null ? other.getCommentCount() == null : this.getCommentCount().equals(other.getCommentCount()))
-            && (this.getWeight() == null ? other.getWeight() == null : this.getWeight().equals(other.getWeight()))
-            && (this.getMarketPrice() == null ? other.getMarketPrice() == null : this.getMarketPrice().equals(other.getMarketPrice()))
-            && (this.getShopPrice() == null ? other.getShopPrice() == null : this.getShopPrice().equals(other.getShopPrice()))
-            && (this.getCostPrice() == null ? other.getCostPrice() == null : this.getCostPrice().equals(other.getCostPrice()))
-            && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equals(other.getKeywords()))
-            && (this.getBooksRemark() == null ? other.getBooksRemark() == null : this.getBooksRemark().equals(other.getBooksRemark()))
-            && (this.getOriginalImg() == null ? other.getOriginalImg() == null : this.getOriginalImg().equals(other.getOriginalImg()))
-            && (this.getIsReal() == null ? other.getIsReal() == null : this.getIsReal().equals(other.getIsReal()))
-            && (this.getIsOnSale() == null ? other.getIsOnSale() == null : this.getIsOnSale().equals(other.getIsOnSale()))
-            && (this.getIsFreeShipping() == null ? other.getIsFreeShipping() == null : this.getIsFreeShipping().equals(other.getIsFreeShipping()))
-            && (this.getOnTime() == null ? other.getOnTime() == null : this.getOnTime().equals(other.getOnTime()))
-            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
-            && (this.getIsRecommend() == null ? other.getIsRecommend() == null : this.getIsRecommend().equals(other.getIsRecommend()))
-            && (this.getIsNew() == null ? other.getIsNew() == null : this.getIsNew().equals(other.getIsNew()))
-            && (this.getIsHot() == null ? other.getIsHot() == null : this.getIsHot().equals(other.getIsHot()))
-            && (this.getLastUpdate() == null ? other.getLastUpdate() == null : this.getLastUpdate().equals(other.getLastUpdate()))
-            && (this.getGoodsType() == null ? other.getGoodsType() == null : this.getGoodsType().equals(other.getGoodsType()))
-            && (this.getSpecType() == null ? other.getSpecType() == null : this.getSpecType().equals(other.getSpecType()))
-            && (this.getGiveIntegral() == null ? other.getGiveIntegral() == null : this.getGiveIntegral().equals(other.getGiveIntegral()))
-            && (this.getExchangeIntegral() == null ? other.getExchangeIntegral() == null : this.getExchangeIntegral().equals(other.getExchangeIntegral()))
-            && (this.getSuppliersId() == null ? other.getSuppliersId() == null : this.getSuppliersId().equals(other.getSuppliersId()))
-            && (this.getSalesSum() == null ? other.getSalesSum() == null : this.getSalesSum().equals(other.getSalesSum()))
-            && (this.getPromType() == null ? other.getPromType() == null : this.getPromType().equals(other.getPromType()))
-            && (this.getPromId() == null ? other.getPromId() == null : this.getPromId().equals(other.getPromId()))
-            && (this.getCommission() == null ? other.getCommission() == null : this.getCommission().equals(other.getCommission()))
-            && (this.getSpu() == null ? other.getSpu() == null : this.getSpu().equals(other.getSpu()))
-            && (this.getSku() == null ? other.getSku() == null : this.getSku().equals(other.getSku()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
-            && (this.getSendPrice() == null ? other.getSendPrice() == null : this.getSendPrice().equals(other.getSendPrice()))
-            && (this.getBooksContent() == null ? other.getBooksContent() == null : this.getBooksContent().equals(other.getBooksContent()));
+                && (this.getCatId() == null ? other.getCatId() == null : this.getCatId().equals(other.getCatId()))
+                && (this.getExtendCatId() == null ? other.getExtendCatId() == null : this.getExtendCatId().equals(other.getExtendCatId()))
+                && (this.getBooksSn() == null ? other.getBooksSn() == null : this.getBooksSn().equals(other.getBooksSn()))
+                && (this.getBooksAuthor() == null ? other.getBooksAuthor() == null : this.getBooksAuthor().equals(other.getBooksAuthor()))
+                && (this.getBooksName() == null ? other.getBooksName() == null : this.getBooksName().equals(other.getBooksName()))
+                && (this.getClickCount() == null ? other.getClickCount() == null : this.getClickCount().equals(other.getClickCount()))
+                && (this.getStoreCount() == null ? other.getStoreCount() == null : this.getStoreCount().equals(other.getStoreCount()))
+                && (this.getCommentCount() == null ? other.getCommentCount() == null : this.getCommentCount().equals(other.getCommentCount()))
+                && (this.getWeight() == null ? other.getWeight() == null : this.getWeight().equals(other.getWeight()))
+                && (this.getMarketPrice() == null ? other.getMarketPrice() == null : this.getMarketPrice().equals(other.getMarketPrice()))
+                && (this.getShopPrice() == null ? other.getShopPrice() == null : this.getShopPrice().equals(other.getShopPrice()))
+                && (this.getCostPrice() == null ? other.getCostPrice() == null : this.getCostPrice().equals(other.getCostPrice()))
+                && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equals(other.getKeywords()))
+                && (this.getBooksRemark() == null ? other.getBooksRemark() == null : this.getBooksRemark().equals(other.getBooksRemark()))
+                && (this.getOriginalImg() == null ? other.getOriginalImg() == null : this.getOriginalImg().equals(other.getOriginalImg()))
+                && (this.getIsReal() == null ? other.getIsReal() == null : this.getIsReal().equals(other.getIsReal()))
+                && (this.getIsOnSale() == null ? other.getIsOnSale() == null : this.getIsOnSale().equals(other.getIsOnSale()))
+                && (this.getIsFreeShipping() == null ? other.getIsFreeShipping() == null : this.getIsFreeShipping().equals(other.getIsFreeShipping()))
+                && (this.getOnTime() == null ? other.getOnTime() == null : this.getOnTime().equals(other.getOnTime()))
+                && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
+                && (this.getIsRecommend() == null ? other.getIsRecommend() == null : this.getIsRecommend().equals(other.getIsRecommend()))
+                && (this.getIsNew() == null ? other.getIsNew() == null : this.getIsNew().equals(other.getIsNew()))
+                && (this.getIsHot() == null ? other.getIsHot() == null : this.getIsHot().equals(other.getIsHot()))
+                && (this.getLastUpdate() == null ? other.getLastUpdate() == null : this.getLastUpdate().equals(other.getLastUpdate()))
+                && (this.getGoodsType() == null ? other.getGoodsType() == null : this.getGoodsType().equals(other.getGoodsType()))
+                && (this.getSpecType() == null ? other.getSpecType() == null : this.getSpecType().equals(other.getSpecType()))
+                && (this.getGiveIntegral() == null ? other.getGiveIntegral() == null : this.getGiveIntegral().equals(other.getGiveIntegral()))
+                && (this.getExchangeIntegral() == null ? other.getExchangeIntegral() == null : this.getExchangeIntegral().equals(other.getExchangeIntegral()))
+                && (this.getSuppliersId() == null ? other.getSuppliersId() == null : this.getSuppliersId().equals(other.getSuppliersId()))
+                && (this.getSalesSum() == null ? other.getSalesSum() == null : this.getSalesSum().equals(other.getSalesSum()))
+                && (this.getPromType() == null ? other.getPromType() == null : this.getPromType().equals(other.getPromType()))
+                && (this.getPromId() == null ? other.getPromId() == null : this.getPromId().equals(other.getPromId()))
+                && (this.getCommission() == null ? other.getCommission() == null : this.getCommission().equals(other.getCommission()))
+                && (this.getSpu() == null ? other.getSpu() == null : this.getSpu().equals(other.getSpu()))
+                && (this.getSku() == null ? other.getSku() == null : this.getSku().equals(other.getSku()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
+                && (this.getSendPrice() == null ? other.getSendPrice() == null : this.getSendPrice().equals(other.getSendPrice()))
+                && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()))
+                && (this.getBooksContent() == null ? other.getBooksContent() == null : this.getBooksContent().equals(other.getBooksContent()));
     }
 
     @Override
@@ -626,6 +638,7 @@ public class EduBookGoods implements Serializable {
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
         result = prime * result + ((getSendPrice() == null) ? 0 : getSendPrice().hashCode());
+        result = prime * result + ((getSchoolName() == null) ? 0 : getSchoolName().hashCode());
         result = prime * result + ((getBooksContent() == null) ? 0 : getBooksContent().hashCode());
         return result;
     }
@@ -675,6 +688,7 @@ public class EduBookGoods implements Serializable {
         sb.append(", updateTime=").append(updateTime);
         sb.append(", schoolId=").append(schoolId);
         sb.append(", sendPrice=").append(sendPrice);
+        sb.append(", schoolName=").append(schoolName);
         sb.append(", booksContent=").append(booksContent);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

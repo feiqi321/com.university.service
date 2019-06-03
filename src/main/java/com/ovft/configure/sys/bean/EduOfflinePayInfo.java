@@ -53,6 +53,11 @@ public class EduOfflinePayInfo implements Serializable {
      */
     private Integer schoolId;
 
+    /**
+     * 用户id
+     */
+    private Integer userId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -127,6 +132,14 @@ public class EduOfflinePayInfo implements Serializable {
         this.schoolId = schoolId;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -147,7 +160,8 @@ public class EduOfflinePayInfo implements Serializable {
                 && (this.getAccountMoney() == null ? other.getAccountMoney() == null : this.getAccountMoney().equals(other.getAccountMoney()))
                 && (this.getPayStatus() == null ? other.getPayStatus() == null : this.getPayStatus().equals(other.getPayStatus()))
                 && (this.getPayUpdatetime() == null ? other.getPayUpdatetime() == null : this.getPayUpdatetime().equals(other.getPayUpdatetime()))
-                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()));
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
+                && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()));
     }
 
     @Override
@@ -163,6 +177,7 @@ public class EduOfflinePayInfo implements Serializable {
         result = prime * result + ((getPayStatus() == null) ? 0 : getPayStatus().hashCode());
         result = prime * result + ((getPayUpdatetime() == null) ? 0 : getPayUpdatetime().hashCode());
         result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
+        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
         return result;
     }
 
@@ -181,6 +196,7 @@ public class EduOfflinePayInfo implements Serializable {
         sb.append(", payStatus=").append(payStatus);
         sb.append(", payUpdatetime=").append(payUpdatetime);
         sb.append(", schoolId=").append(schoolId);
+        sb.append(", userId=").append(userId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

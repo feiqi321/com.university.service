@@ -1,10 +1,12 @@
 package com.ovft.configure.sys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author 
+ * @author
  */
 public class EduRegist implements Serializable {
     /**
@@ -15,11 +17,13 @@ public class EduRegist implements Serializable {
     /**
      * 报名的开始时间
      */
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date registstartTime;
 
     /**
      * 报名的截止时间
      */
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date registendTime;
 
     /**
@@ -256,23 +260,23 @@ public class EduRegist implements Serializable {
         }
         EduRegist other = (EduRegist) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getRegiststartTime() == null ? other.getRegiststartTime() == null : this.getRegiststartTime().equals(other.getRegiststartTime()))
-            && (this.getRegistendTime() == null ? other.getRegistendTime() == null : this.getRegistendTime().equals(other.getRegistendTime()))
-            && (this.getStartAge() == null ? other.getStartAge() == null : this.getStartAge().equals(other.getStartAge()))
-            && (this.getEndAge() == null ? other.getEndAge() == null : this.getEndAge().equals(other.getEndAge()))
-            && (this.getRegistCategoryOne() == null ? other.getRegistCategoryOne() == null : this.getRegistCategoryOne().equals(other.getRegistCategoryOne()))
-            && (this.getRegistCategoryTwo() == null ? other.getRegistCategoryTwo() == null : this.getRegistCategoryTwo().equals(other.getRegistCategoryTwo()))
-            && (this.getRegistCategoryThree() == null ? other.getRegistCategoryThree() == null : this.getRegistCategoryThree().equals(other.getRegistCategoryThree()))
-            && (this.getRegistCategoryFour() == null ? other.getRegistCategoryFour() == null : this.getRegistCategoryFour().equals(other.getRegistCategoryFour()))
-            && (this.getRegistCategoryFive() == null ? other.getRegistCategoryFive() == null : this.getRegistCategoryFive().equals(other.getRegistCategoryFive()))
-            && (this.getRegistCategorySix() == null ? other.getRegistCategorySix() == null : this.getRegistCategorySix().equals(other.getRegistCategorySix()))
-            && (this.getUpateTime() == null ? other.getUpateTime() == null : this.getUpateTime().equals(other.getUpateTime()))
-            && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
-            && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()))
-            && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()))
-            && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()))
-            && (this.getRegistPriority() == null ? other.getRegistPriority() == null : this.getRegistPriority().equals(other.getRegistPriority()))
-            && (this.getOfflineRegist() == null ? other.getOfflineRegist() == null : this.getOfflineRegist().equals(other.getOfflineRegist()));
+                && (this.getRegiststartTime() == null ? other.getRegiststartTime() == null : this.getRegiststartTime().equals(other.getRegiststartTime()))
+                && (this.getRegistendTime() == null ? other.getRegistendTime() == null : this.getRegistendTime().equals(other.getRegistendTime()))
+                && (this.getStartAge() == null ? other.getStartAge() == null : this.getStartAge().equals(other.getStartAge()))
+                && (this.getEndAge() == null ? other.getEndAge() == null : this.getEndAge().equals(other.getEndAge()))
+                && (this.getRegistCategoryOne() == null ? other.getRegistCategoryOne() == null : this.getRegistCategoryOne().equals(other.getRegistCategoryOne()))
+                && (this.getRegistCategoryTwo() == null ? other.getRegistCategoryTwo() == null : this.getRegistCategoryTwo().equals(other.getRegistCategoryTwo()))
+                && (this.getRegistCategoryThree() == null ? other.getRegistCategoryThree() == null : this.getRegistCategoryThree().equals(other.getRegistCategoryThree()))
+                && (this.getRegistCategoryFour() == null ? other.getRegistCategoryFour() == null : this.getRegistCategoryFour().equals(other.getRegistCategoryFour()))
+                && (this.getRegistCategoryFive() == null ? other.getRegistCategoryFive() == null : this.getRegistCategoryFive().equals(other.getRegistCategoryFive()))
+                && (this.getRegistCategorySix() == null ? other.getRegistCategorySix() == null : this.getRegistCategorySix().equals(other.getRegistCategorySix()))
+                && (this.getUpateTime() == null ? other.getUpateTime() == null : this.getUpateTime().equals(other.getUpateTime()))
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
+                && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()))
+                && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()))
+                && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()))
+                && (this.getRegistPriority() == null ? other.getRegistPriority() == null : this.getRegistPriority().equals(other.getRegistPriority()))
+                && (this.getOfflineRegist() == null ? other.getOfflineRegist() == null : this.getOfflineRegist().equals(other.getOfflineRegist()));
     }
 
     @Override

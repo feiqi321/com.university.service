@@ -1,11 +1,10 @@
 package com.ovft.configure.sys.dao;
 
-import com.ovft.configure.sys.bean.EduOfflinePayInfo;
-import com.ovft.configure.sys.bean.EduOfflinePayInfoExample;
-
 import java.util.List;
 import java.util.Map;
 
+import com.ovft.configure.sys.bean.EduOfflinePayInfo;
+import com.ovft.configure.sys.bean.EduOfflinePayInfoExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface EduOfflinePayInfoMapper {

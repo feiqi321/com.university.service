@@ -65,7 +65,6 @@ public class EduRegistServiceImpl implements EduRegistService {
         if (i > 0) {
             updateAllCondition(eduRegist);
         }
-
         return i;
     }
 
