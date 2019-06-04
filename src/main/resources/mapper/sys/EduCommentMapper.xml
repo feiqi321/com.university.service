@@ -23,22 +23,19 @@
     where comid = #{comid,jdbcType=INTEGER}
   </select>
 
-  <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduComment" resultMap="BaseResultMap">
+  <select id="selectList"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from edu_comment
     where 1=1
     <if test="uid != null">
-      and uid = #{uid,jdbcType=INTEGER},
+      and uid = #{uid,jdbcType=INTEGER}
     </if>
     <if test="newtype != null">
-      and newtype = #{newtype,jdbcType=INTEGER},
+      and newtype = #{newtype,jdbcType=INTEGER}
     </if>
     <if test="newsid != null">
-      and newsid = #{newsid,jdbcType=INTEGER},
-    </if>
-    <if test="parentid != null">
-      and parentid = #{parentid,jdbcType=INTEGER},
+      and newsid = #{newsid,jdbcType=INTEGER}
     </if>
   </select>
 

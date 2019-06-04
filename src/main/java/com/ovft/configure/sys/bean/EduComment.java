@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ *  评论
  * @author 
  */
 public class EduComment implements Serializable {
@@ -22,6 +23,9 @@ public class EduComment implements Serializable {
      */
     private Integer isshow;
 
+    /**
+     * 评论类型 1-视频教学
+     */
     private Integer newtype;
     private Integer parentid;
 

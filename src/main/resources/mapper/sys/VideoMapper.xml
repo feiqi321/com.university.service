@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.VideoMapper" >
+
+    <sql id="Base_Column_List">
+        video_id as videoId,school_id as  schoolId, title, teacher, content, cover, visits, is_free as isFree, price, act_price as actPrice
+    </sql>
+
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.Video">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_video
+        where video_id = #{videoId}
+    </select>
+
+    <select id="selectList"  resultType="com.ovft.configure.sys.bean.Video">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_video
+        where 1=1
+        <if test="schoolId != null">
+            and school_id = #{schoolId}
+        </if>
+        <if test="isFree != null">
+            and is_free = #{isFree}
+        </if>
+        order by visits desc
+    </select>
+
+    <insert id="create" parameterType="com.ovft.configure.sys.bean.Video" useGeneratedKeys="true"
+            keyProperty="videoId">
+         insert into edu_video(school_id, title, teacher,
+         content, cover, visits, is_free, price, act_price)
+         values (#{schoolId}, #{title}, #{teacher}, #{content}, #{cover},
+         #{visits}, #{isFree}, #{price}, #{actPrice})
+    </insert>
+
+    <update id="update" parameterType="com.ovft.configure.sys.bean.Video">
+        update edu_video
+        set school_id = #{schoolId}, title = #{title}, teacher = #{teacher}, content = #{content},
+        cover = #{cover}, is_free = #{isFree}, price = #{price}, act_price = #{actPrice}
+        where video_id = #{videoId}
+    </update>
+
+    <delete id="delete">
+        delete from edu_video where video_id = #{videoId}
+    </delete>
+
+
+    <!--
+    *  细单
+    * @param itemId
+    * @return
+    /-->
+    <sql id="Base_Item_Column_List">
+        item_id as itemId, video_id as videoId, title, video, duration, count, is_test as isTest
+    </sql>
+
+    <select id="selectItemById"  resultType="com.ovft.configure.sys.bean.VideoItem">
+        select
+        <include refid="Base_Item_Column_List"/>
+        from edu_video_item
+        where item_id = #{itemId}
+    </select>
+
+    <select id="selectItemList"  resultType="com.ovft.configure.sys.bean.VideoItem">
+        select
+        <include refid="Base_Item_Column_List"/>
+        from edu_video_item
+        where 1=1
+        <if test="videoId != null">
+            and video_id = #{videoId}
+        </if>
+        order by count
+    </select>
+
+    <insert id="createItem" parameterType="com.ovft.configure.sys.bean.VideoItem" useGeneratedKeys="true"
+            keyProperty="itemId">
+         insert into edu_video_item(video_id, title, video, duration, count, is_test)
+         values (#{videoId}, #{title}, #{video}, #{duration}, #{count}, #{isTest})
+    </insert>
+
+    <update id="updateItem" parameterType="com.ovft.configure.sys.bean.VideoItem">
+        update edu_video_item
+        <set>
+            video_id = #{videoId}, title = #{title}, video = #{video}, duration = #{duration},
+            count = #{count}, is_test = #{isTest},
+            <if test="visits != null">
+                visits = #{visits}
+            </if>
+        </set>
+        where item_id = #{itemId}
+    </update>
+
+    <delete id="deleteItem">
+        delete from edu_video_item where item_id = #{itemId}
+    </delete>
+
+    <!--
+        我的视频
+    -->
+    <insert id="createMyVideo" parameterType="com.ovft.configure.sys.bean.MyVideo" useGeneratedKeys="true"
+            keyProperty="id">
+         insert into edu_my_video(video_id, user_id, date, items)
+         values (#{videoId}, #{userId}, #{date}, #{items})
+    </insert>
+
+    <update id="updateMyVideo" parameterType="com.ovft.configure.sys.bean.MyVideo">
+        update edu_my_video
+        set items = #{items}
+        where id = #{id}
+    </update>
+
+    <select id="selectMyVideo"  resultType="com.ovft.configure.sys.bean.MyVideo">
+        select id, user_id as userId, video_id as videoId, date
+        from edu_my_video
+        where 1=1
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+        <if test="videoId != null">
+            and video_id = #{videoId}
+        </if>
+    </select>
+
+</mapper>

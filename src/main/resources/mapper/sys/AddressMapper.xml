@@ -23,7 +23,7 @@
     </select>
 
     <select id="selectByUserIdMap"  resultType="java.util.Map">
-        select address_id as id, consignee_name as name, phone as tel, concat(area,address) as address
+        select address_id as id, consignee_name as name, phone as tel, concat(area,address) as address, isdefault
         from edu_address
         where user_id = #{userId}
         order by isdefault desc

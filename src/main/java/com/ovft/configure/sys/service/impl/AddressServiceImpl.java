@@ -52,9 +52,9 @@ public class AddressServiceImpl implements AddressService {
         List<Address> addressList = addressMapper.selectByUserId(address.getUserId());
         if (addressList.size() != 0) {
             //如果新添加的地址是默认地址,先修改原先默认地址为0
-            if (address.getIsdefault().compareTo(1) == 0) {
+            if (address.getIsdefault().equals(1)) {
                 Address isDefaultAddress = addressList.get(0);
-                if (isDefaultAddress.getIsdefault() == 1) {
+                if (isDefaultAddress.getIsdefault().equals(1)) {
                     isDefaultAddress.setIsdefault(0);
                     addressMapper.updateAddress(isDefaultAddress);
                 }

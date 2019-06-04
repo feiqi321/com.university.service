@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.CollectMapper" >
+
+    <sql id="Base_Column_List">
+        collect_id as collectId, uid, type_id as typeId, type, date
+    </sql>
+
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.Collect">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_collect
+        where collect_id = #{collectId}
+    </select>
+
+    <select id="selectList"  resultType="com.ovft.configure.sys.bean.Collect">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_collect
+        where 1=1
+        <if test="uid != null">
+            and uid = #{uid}
+        </if>
+        <if test="typeId != null">
+            and type_id = #{typeId}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        order by date desc
+    </select>
+
+    <insert id="createCollect" parameterType="com.ovft.configure.sys.bean.Collect" useGeneratedKeys="true"
+            keyProperty="collectId">
+         insert into edu_collect(uid, type_id, type, date)
+         values (#{uid}, #{typeId}, #{type}, #{date})
+    </insert>
+
+    <update id="updateCollect" parameterType="com.ovft.configure.sys.bean.Collect">
+        update edu_collect
+        <set>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="date != null">
+                date = #{date},
+            </if>
+        </set>
+        where collect_id = #{collectId}
+    </update>
+
+    <delete id="deleteCollect">
+        delete from edu_collect where collect_id = #{collectId}
+    </delete>
+
+</mapper>

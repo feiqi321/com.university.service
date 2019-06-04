@@ -23,7 +23,7 @@ public class SaticScheduleTask {
     FileDownService fileDownService;
 
     //3.添加定时任务
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     private void configureTasks() {
         System.err.println("执行静态定时任务时间: " + LocalDateTime.now());
         //文章置顶的定时任务

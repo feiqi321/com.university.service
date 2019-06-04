@@ -31,7 +31,15 @@ public class PageVo {
 
     private Integer isenable;
 
-    private String filePath;
+    private Integer isFree;
+
+    public Integer getIsFree() {
+        return isFree;
+    }
+
+    public void setIsFree(Integer isFree) {
+        this.isFree = isFree;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -70,14 +78,6 @@ public class PageVo {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     public Integer getIsenable() {
