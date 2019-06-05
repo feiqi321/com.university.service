@@ -29,4 +29,10 @@ public interface EduOfflineOrderService {
     //现象支付的人数
     Integer queryOffRecordNum(Integer payStatus);
 
+    //根据学员电话查询订单
+    List<EduOfflineOrder> showOffOrderByUserPhone(String phone);
+
+    //取消订单
+    Integer deleteOffOrderByUserPhone(EduOfflineOrder eduOfflineOrder);
+
 }

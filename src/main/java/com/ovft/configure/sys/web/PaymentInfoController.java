@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -77,12 +78,14 @@ public class PaymentInfoController {
     @Autowired
     private EduOfflinePayInfoService eduOfflinePayInfoService;
 
+    @Autowired
+    private EduOfflineNumService eduOfflineNumService;
+
 
     @GetMapping(value = "showonoroff")
     public WebResult sendToStatus(Integer courseId, HttpServletRequest request) {
         String schoolId1 = request.getHeader("schoolId");
         int schoolId = Integer.parseInt(schoolId1);
-//        Integer schoolId = 11;
         int status = eduRegistService.queryOffRegist(schoolId, courseId);
         return new WebResult(StatusCode.OK, "查询成功", status);
     }
@@ -92,7 +95,6 @@ public class PaymentInfoController {
     public WebResult paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String schoolId1 = request.getHeader("schoolId");
         int schoolId = Integer.parseInt(schoolId1);
-//        Integer schoolId = 11;
 
         if (type == 2) {
             ResponseEntity<String> stringResponseEntity = alipayMethod(courseId, request, httpServletResponse);
@@ -105,9 +107,9 @@ public class PaymentInfoController {
             for (EduOfflineAddresstime eduOfflineAddresstime : eduOfflineAddresstimes) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
                 String startTime = date.format(eduOfflineAddresstime.getPaymentStarttime());
-                String endtTime = date.format(eduOfflineAddresstime.getPaymentStarttime());
+                String endtTime = date.format(eduOfflineAddresstime.getPaymentEndtime());
                 if (i > 0) {
-                    return new WebResult(StatusCode.OK, "请在报名时间：" + startTime + "至" + endtTime + "之前到" + eduOfflineAddresstime.getPaymentAddress() + "缴费，否者自动取消");
+                    return new WebResult(StatusCode.OK, "请在缴费时间：" + startTime + "至" + endtTime + "之前到" + eduOfflineAddresstime.getPaymentAddress() + "缴费，否者自动取消");
                 }
             }
             if (i == -2) {
@@ -121,15 +123,11 @@ public class PaymentInfoController {
         //生存线下报名记录
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-//        Integer userId = 59;
 
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
-      /*  String schoolId1 = "11";
-        Integer schoolId = 11;*/
 
 
-//        Integer userId = 59;
         //查询学员的基本信息
         User user = userService.queryInfo(userId);
         //查询学员的课程信息
@@ -140,7 +138,7 @@ public class PaymentInfoController {
         if (oldOrder.size() > 0) {
             return -2;
         }
-
+        //生成eduOfflineOrder
         EduOfflineOrder eduOfflineOrder = new EduOfflineOrder();
         eduOfflineOrder.setUserId(userId);
         eduOfflineOrder.setUserName(user.getUserName());
@@ -152,7 +150,7 @@ public class PaymentInfoController {
         eduOfflineOrder.setCousePrice(eduCourseVo.getCoursePrice());
         eduOfflineOrder.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
         eduOfflineOrder.setSchoolName(eduCourseVo.getSchoolName());
-
+        //生成eduOfflineOrderitem
         EduOfflineOrderitem eduOfflineOrderitem = new EduOfflineOrderitem();
         eduOfflineOrderitem.setCouserName(eduCourseVo.getCourseName());
         eduOfflineOrderitem.setCouserPrice(eduCourseVo.getCoursePrice());
@@ -161,32 +159,57 @@ public class PaymentInfoController {
         eduOfflineOrderitem.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
         eduOfflineOrderitem.setUserId(userId);
 
+        //生成eduOfflineNum
+        EduOfflineNum eduOfflineNum = new EduOfflineNum();
+        eduOfflineNum.setCourseId(courseId);
+        eduOfflineNum.setUserId(userId);
+        eduOfflineNum.setCourseName(eduCourseVo.getCourseName());
+        eduOfflineNum.setCoursePrice(eduCourseVo.getCoursePrice());
+        eduOfflineNum.setPayStatus(String.valueOf(Status.UNPAY));
+
 
         int res = eduOfflineOrderService.updateOffOrder(eduOfflineOrder);
         int res1 = eduOfflineOrderitemService.addItemOrder(eduOfflineOrderitem);
+        int res3 = eduOfflineNumService.addOfflineNum(eduOfflineNum);
 
-        QueryOffLineVos queryOffLineVos = eduOfflineService.queryAllOffInfo(schoolId1, userId);
+//        QueryOffLineVos queryOffLineVos = eduOfflineService.queryAllOffInfo(schoolId1, userId);
+        List<EduOfflineNum> eduOfflineNums = eduOfflineNumService.queryAllCourse(userId, courseId);
+        QueryOffLineVos queryOffLineVos = new QueryOffLineVos();
+        queryOffLineVos.setOfflineNums(eduOfflineNums);
+        queryOffLineVos.setUserName(user.getUserName());
+        queryOffLineVos.setPhone(user.getPhone());
+        queryOffLineVos.setSchoolName(eduCourseVo.getSchoolName());
+
 
         Integer res2 = 0;
-        EduOfflinePayInfo eduOfflinePayInfo = new EduOfflinePayInfo();
-        eduOfflinePayInfo.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
-        eduOfflinePayInfo.setSchoolName(queryOffLineVos.getSchoolName());
-        eduOfflinePayInfo.setUserId(userId);
-        eduOfflinePayInfo.setUserName(queryOffLineVos.getUserName());
-        eduOfflinePayInfo.setTelephone(queryOffLineVos.getPhone());
-        List<EduOfflineOrderitem> orderitems = queryOffLineVos.getOrderitems();
+        //支付信息生存
+        EduOfflinePayInfo edufflinePayInfo = new EduOfflinePayInfo();
+        edufflinePayInfo.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
+        edufflinePayInfo.setSchoolName(queryOffLineVos.getSchoolName());
+        edufflinePayInfo.setUserId(userId);
+        edufflinePayInfo.setUserName(queryOffLineVos.getUserName());
+        edufflinePayInfo.setTelephone(queryOffLineVos.getPhone());
+        List<EduOfflineNum> orderitems = queryOffLineVos.getOfflineNums();
 
-
-        String s = "";
+/*        String s = "";
 //        eduOfflinePayInfo.setListOrder(orderitem.getCouserName() + "：【" + (orderitem.getPayStatus().equals("1") ? "已支付" : "未支付") + "】")
         for (int i = 0; i < orderitems.size(); i++) {
-            s = s + "<br> 【" + orderitems.get(i).getCouserName() + "】:\t￥" + orderitems.get(i).getCouserPrice() + "元\t\t<color style='color:red'>(" + (orderitems.get(i).getPayStatus().equals("1") ? "已支付" : "未支付") + ") </color>";
+            s = s + "<br> 【" + orderitems.get(i).getCourseName() + "】:\t￥" + orderitems.get(i).getCoursePrice() + "元\t\t<color style='color:red'>(" + (orderitems.get(i).getPayStatus().equals("1") ? "已支付" : "未支付") + ") </color>";
         }
-        eduOfflinePayInfo.setListOrder(s);
-        eduOfflinePayInfo.setAccountMoney(queryOffLineVos.getAccountAllMoney());
-        eduOfflinePayInfo.setPayStatus(String.valueOf(Status.UNPAY));
-        eduOfflinePayInfo.setPayUpdatetime(new Date());
-        res2 = eduOfflinePayInfoService.insertPayInfo(eduOfflinePayInfo);
+        edufflinePayInfo.setListOrder(s);*/
+
+        BigDecimal accountAllMoney = new BigDecimal(0);
+        for (int i = 0; i < orderitems.size(); i++) {
+            accountAllMoney = accountAllMoney.add(orderitems.get(i).getCoursePrice());
+        }
+        edufflinePayInfo.setPayStatus(String.valueOf(Status.UNPAY));
+        edufflinePayInfo.setPayUpdatetime(new Date());
+
+        //查询支付订单表里的用户只有一个
+        List<EduOfflinePayInfo> eduOfflinePayInfos = eduOfflinePayInfoService.queryAllPayInfo(queryOffLineVos.getPhone());
+        if (eduOfflinePayInfos.size() == 0) {
+            res2 = eduOfflinePayInfoService.insertPayInfo(edufflinePayInfo);
+        }
 
         if (res > 0 && res1 > 0 && res2 > 0) {
             return 1;

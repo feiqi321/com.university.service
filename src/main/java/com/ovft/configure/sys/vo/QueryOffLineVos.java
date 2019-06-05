@@ -1,8 +1,9 @@
 package com.ovft.configure.sys.vo;
 
-import com.ovft.configure.sys.bean.EduOfflineOrderitem;
+import com.ovft.configure.sys.bean.EduOfflineNum;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,12 +11,31 @@ import java.util.List;
  * @create 2019-05-24 11:42
  */
 public class QueryOffLineVos {
+    private Integer id;
     private String schoolName;
     private String userName;
     private String phone;
-    private List<EduOfflineOrderitem> orderitems;
+    private List<EduOfflineNum> offlineNums;
     private BigDecimal accountAllMoney;
     private String payStatus;
+    private Date updateTime;
+
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getPayStatus() {
         return payStatus;
@@ -49,12 +69,12 @@ public class QueryOffLineVos {
         this.phone = phone;
     }
 
-    public List<EduOfflineOrderitem> getOrderitems() {
-        return orderitems;
+    public List<EduOfflineNum> getOfflineNums() {
+        return offlineNums;
     }
 
-    public void setOrderitems(List<EduOfflineOrderitem> orderitems) {
-        this.orderitems = orderitems;
+    public void setOfflineNums(List<EduOfflineNum> offlineNums) {
+        this.offlineNums = offlineNums;
     }
 
     public BigDecimal getAccountAllMoney() {

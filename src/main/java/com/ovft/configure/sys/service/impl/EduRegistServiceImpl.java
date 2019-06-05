@@ -50,7 +50,6 @@ public class EduRegistServiceImpl implements EduRegistService {
             return -2;
         }
         //判断该学校是否已经上架的课程。如果没有提示信息
-
         //添加全局条件之前要判断是否有全局的课程
         //根据学校查出所有的课程设置
         EduRegistExample eduRegistExample = new EduRegistExample();
@@ -93,44 +92,54 @@ public class EduRegistServiceImpl implements EduRegistService {
      * @return
      */
     @Override
+    @Transactional
     public PageBean queryAllCoditionBySchoold(Integer size, Integer page, Integer schoolId) {
-        //查询设置全部的条件
+        //1.查询设置全部条件的条件
         Page<Object> pageAll = PageHelper.startPage(page, size);
         EduRegistExample eduRegistExample = new EduRegistExample();
         eduRegistExample.createCriteria().andSchoolIdEqualTo(schoolId).andCourseIdEqualTo(Status.ALLCOURSE);
         List<EduRegist> eduRegists = eduRegistMapper.selectByExample(eduRegistExample);
 
+        //2.查询学校所有课程的id及报名课程名字
+        EduCourse course = new EduCourse();
+        course.setSchoolId(String.valueOf(schoolId));
+        course.setIsenable(ConstantClassField.ISONLINE);
+        List<EduCourse> eduCourses = eduCourseMapper.listCourseCategoryByShoolId(course);
 
-        //0.查询条件列表
+        //3.查询出条件表对应的课程
+        EduRegistExample eduRegistExample3 = new EduRegistExample();
+        eduRegistExample3.createCriteria().andSchoolIdEqualTo(schoolId).andCourseIdNotEqualTo(0);
+        List<EduRegist> eduRegistsNum = eduRegistMapper.selectByExample(eduRegistExample3);
+
+        //4.第一次的查询和第二次的查询不同，则删除之前的
+        if (eduCourses.size() != eduRegistsNum.size()) {
+            for (EduCourse eduCours : eduCourses) {
+                //删除所有的条件记录课程
+                EduRegistExample eduRegistExample4 = new EduRegistExample();
+                eduRegistExample4.createCriteria().andCourseIdEqualTo(eduCours.getCourseId());
+                eduRegistMapper.deleteByExample(eduRegistExample4);
+            }
+        }
+
+        //5.查询所有课程的条件列表
         EduRegistExample eduRegistExample2 = new EduRegistExample();
-        eduRegistExample2.createCriteria().andSchoolIdEqualTo(schoolId).andRegistPriorityEqualTo(String.valueOf(Status.PRIORITYTWO));
+        eduRegistExample2.createCriteria().andSchoolIdEqualTo(schoolId).andCourseIdNotEqualTo(0).andRegistPriorityEqualTo(String.valueOf(Status.PRIORITYTWO));
         List<EduRegist> eduRegistsOld = eduRegistMapper.selectByExample(eduRegistExample2);
 
-        //没有新添默认条件列表
-        if (eduRegistsOld.size() == 0) {
-            //1.查询学校所有课程的id及报名课程名字
-            EduCourse course = new EduCourse();
-            course.setSchoolId(String.valueOf(schoolId));
-            course.setIsenable(ConstantClassField.ISONLINE);
-            List<EduCourse> eduCourses = eduCourseMapper.listCourseCategoryByShoolId(course);
-            //2.插入到数据库表
-            for (EduCourse eduCours : eduCourses) {
-                EduRegist eduRegist = new EduRegist();
-                eduRegist.setCourseId(eduCours.getCourseId());
-                eduRegist.setCourseName(eduCours.getCourseName());
-                eduRegist.setSchoolId(schoolId);
-                eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
-                eduRegistMapper.insertSelective(eduRegist);
-            }
-            //3.生成默认原始条件列表
-            EduRegistExample eduRegistExample1 = new EduRegistExample();
-            eduRegistExample1.createCriteria().andSchoolIdEqualTo(schoolId).andRegistPriorityEqualTo(String.valueOf(Status.PRIORITYTWO));
-            List<EduRegist> eduRegistsNew = eduRegistMapper.selectByExample(eduRegistExample1);
 
-            UpDateSchoolName(eduRegistsNew);
+        //6.如果条件课程列表为空
+        if (eduRegistsOld.size() == 0) {
+            //重新插入，生成新的的条件列表
+            List<EduRegist> eduRegistsNew = getEduRegists(schoolId, eduCourses);
+            for (EduRegist eduRegist : eduRegistsNew) {
+                if (eduRegists.size() != 0) {
+                    updateAllConditions(eduRegist);
+                }
+            }
             long total = pageAll.getTotal();
             return new PageBean(page, size, total, eduRegistsNew);
         }
+
         //有直接展示报名条件列表
         //如果总条件查询不为空，添加进去
         if (eduRegists.size() != 0)
@@ -140,6 +149,26 @@ public class EduRegistServiceImpl implements EduRegistService {
 
         long total = pageAll.getTotal();
         return new PageBean(page, size, total, eduRegistsOld);
+    }
+
+    //生成默认的条件列表
+    private List<EduRegist> getEduRegists(Integer schoolId, List<EduCourse> eduCourses) {
+        //2.插入到数据库表
+        for (EduCourse eduCours : eduCourses) {
+            EduRegist eduRegist = new EduRegist();
+            eduRegist.setCourseId(eduCours.getCourseId());
+            eduRegist.setCourseName(eduCours.getCourseName());
+            eduRegist.setSchoolId(schoolId);
+            eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+            eduRegistMapper.insertSelective(eduRegist);
+        }
+        //3.生成默认原始条件列表
+        EduRegistExample eduRegistExample1 = new EduRegistExample();
+        eduRegistExample1.createCriteria().andSchoolIdEqualTo(schoolId).andRegistPriorityEqualTo(String.valueOf(Status.PRIORITYTWO));
+        List<EduRegist> eduRegistsNew = eduRegistMapper.selectByExample(eduRegistExample1);
+
+        UpDateSchoolName(eduRegistsNew);
+        return eduRegistsNew;
     }
 
     //获取学校名称
@@ -302,6 +331,8 @@ public class EduRegistServiceImpl implements EduRegistService {
         return null;
     }
 
+
+    //全局设置部分
     private int updateAllConditions(EduRegist eduRegist) {
         //根据id查询条件信息
         EduRegist oldEduRegist = eduRegistMapper.selectByPrimaryKey(eduRegist.getId());

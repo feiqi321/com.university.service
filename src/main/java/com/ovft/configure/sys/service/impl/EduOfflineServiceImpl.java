@@ -36,7 +36,7 @@ public class EduOfflineServiceImpl implements EduOfflineService {
 
     @Override
     public QueryOffLineVos queryAllOffInfo(String schoolId, Integer userId) {
-//        Page<Object> pageAll = PageHelper.startPage(page, size);
+//        Page<Object> pageAll = PageHelper.startPage(page, size);废气
         List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderService.queryAllOffOrder(schoolId, userId);
         List<EduOfflineOrderitem> eduOfflineOrderitems = eduOfflineOrderitemService.queryAllOffOrderItem(schoolId, userId);
 
@@ -47,7 +47,7 @@ public class EduOfflineServiceImpl implements EduOfflineService {
             queryOffLineVos.setSchoolName(eduOfflineOrder.getSchoolName());
             queryOffLineVos.setUserName(eduOfflineOrder.getUserName());
             queryOffLineVos.setPhone(eduOfflineOrder.getPhone());
-            queryOffLineVos.setOrderitems(eduOfflineOrderitems);
+//            queryOffLineVos.setOrderitems(eduOfflineOrderitems);
             accountAllMoney = accountAllMoney.add(eduOfflineOrder.getCousePrice());
             queryOffLineVos.setAccountAllMoney(accountAllMoney);
         }

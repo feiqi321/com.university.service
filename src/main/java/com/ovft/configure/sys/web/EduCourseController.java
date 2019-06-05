@@ -96,10 +96,6 @@ public class EduCourseController {
      */
     @GetMapping(value = "order")
     public WebResult queryCourseInfoById(@RequestParam(value = "courseId") Integer courseId, HttpServletRequest request) {
-//        String queryString = request.getQueryString();
-//        Integer courseId = Integer.parseInt(queryString);
-//        System.out.println(queryString);
-//        Integer userId = (Integer) request.getAttribute("userId");
 
         String userId1 = request.getHeader("userId");
         if (userId1.equals("null")) {
@@ -110,14 +106,11 @@ public class EduCourseController {
 
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
-//        Integer schoolId = 11;
 
         //判断报名的学校不能为空
         if (schoolId1.equals("null")) {
             return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");
         }
-//        Integer userId = 40;
-//        User user = userService.queryByItemsIdAndSchoolId(userId, schoolId);
         User user = userService.queryUserInfo(userId);
         if (user == null) {
             return new WebResult(StatusCode.ERROR, "请到学员中心完善好自己的报名学校，方可报名！", "");
@@ -161,7 +154,6 @@ public class EduCourseController {
     @GetMapping(value = "timetable")
     public WebResult queryAllTimeRecord(@RequestParam(value = "week") String week, HttpServletRequest request) {
         String schoolId = request.getHeader("schoolId");
-//        String schoolId = "1";
         //判断报名的学校不能为空
         if (schoolId.equals("null")) {
             return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");

@@ -2,10 +2,13 @@ package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.sys.bean.EduOfflineOrder;
 import com.ovft.configure.sys.bean.EduOfflineOrderExample;
+import com.ovft.configure.sys.bean.EduOfflineOrderitemExample;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduOfflineOrderMapper;
+import com.ovft.configure.sys.dao.EduOfflineOrderitemMapper;
 import com.ovft.configure.sys.service.EduOfflineOrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,6 +22,9 @@ public class EduOfflineOrderServiceImpl implements EduOfflineOrderService {
 
     @Resource
     private EduOfflineOrderMapper eduOfflineOrderMapper;
+
+    @Resource
+    private EduOfflineOrderitemMapper eduOfflineOrderitemMapper;
 
 
     @Override
@@ -57,5 +63,25 @@ public class EduOfflineOrderServiceImpl implements EduOfflineOrderService {
     public Integer queryOffRecordNum(Integer payStatus) {
         Integer num = eduOfflineOrderMapper.queryOffRecordNum(payStatus);
         return num;
+    }
+
+    @Override
+    public List<EduOfflineOrder> showOffOrderByUserPhone(String phone) {
+        EduOfflineOrderExample eduOfflineOrderExample = new EduOfflineOrderExample();
+        eduOfflineOrderExample.createCriteria().andPhoneEqualTo(phone);
+        List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderMapper.selectByExample(eduOfflineOrderExample);
+        return eduOfflineOrders;
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteOffOrderByUserPhone(EduOfflineOrder eduOfflineOrder) {
+        int res = eduOfflineOrderMapper.deleteByPrimaryKey(eduOfflineOrder.getId());
+        if (res > 0) {
+            EduOfflineOrderitemExample eduOfflineOrderitemExample = new EduOfflineOrderitemExample();
+            eduOfflineOrderitemExample.createCriteria().andCourseIdEqualTo(eduOfflineOrder.getCourseId());
+            eduOfflineOrderitemMapper.deleteByExample(eduOfflineOrderitemExample);
+        }
+        return res;
     }
 }

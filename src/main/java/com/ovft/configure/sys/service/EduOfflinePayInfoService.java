@@ -26,5 +26,6 @@ public interface EduOfflinePayInfoService {
     //一键修改缴费状态
     Integer bathUpdataPaystatus(EduOfflinePayInfo eduOfflinePayInfo);
 
-
+    //查询用户的个数
+    List<EduOfflinePayInfo> queryAllPayInfo(String phone);
 }

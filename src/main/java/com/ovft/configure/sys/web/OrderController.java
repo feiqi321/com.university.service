@@ -31,8 +31,10 @@ import java.util.List;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
     @Autowired
     private EduCartService eduCartService;
+
     @Resource
     private AddressMapper addressMapper;
 
@@ -41,6 +43,9 @@ public class OrderController {
 
     @Autowired
     private SchoolService schoolService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private EduPayrecordService eduPayrecordService;
@@ -99,12 +104,30 @@ public class OrderController {
         }
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
-        /*Integer userId = 59;
-        Integer schoolId = 11;*/
         List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderService.queryAllOffRecord(userId);
         School school = schoolService.queryRecordBySchoolId(schoolId);
-        return new WebResult(StatusCode.OK, "查询成功，报名成功", new OfflineBean(eduOfflineOrders, school.getImage()));
+        OfflineBean offlineBean = null;
+        for (EduOfflineOrder eduOfflineOrder : eduOfflineOrders) {
+            offlineBean = new OfflineBean(eduOfflineOrders, school.getImage(), eduOfflineOrder.getUserName(), eduOfflineOrder.getSchoolName());
+        }
+        return new WebResult(StatusCode.OK, "查询成功，报名成功", offlineBean);
     }
+
+    /**
+     * 取消线下订单
+     *
+     * @param eduOfflineOrder
+     * @return
+     */
+    @PostMapping(value = "delete")
+    public WebResult deleteOffRecord(@RequestBody EduOfflineOrder eduOfflineOrder) {
+        Integer res = eduOfflineOrderService.deleteOffOrderByUserPhone(eduOfflineOrder);
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "取消成功", "");
+        }
+        return new WebResult(StatusCode.OK, "取消失败", "");
+    }
+
 
     /**
      * 购物车进入订单展示
@@ -117,7 +140,6 @@ public class OrderController {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
         Page<Object> pageAll = PageHelper.startPage(1, 2);
-//        Integer userId = 59;
         List<EduCart> allInfo = new ArrayList<>();
         for (EduCart cart : eduCart) {
             //修改订单数量
@@ -177,7 +199,7 @@ public class OrderController {
     public WebResult showOrder(Integer orderStatus, HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-//        Integer userId = 59;
+
         List<OrderVo> orderVoList = orderService.showOrder(userId, orderStatus);
         return new WebResult(StatusCode.OK, "提交成功", orderVoList);
     }
@@ -193,7 +215,7 @@ public class OrderController {
     public WebResult showOrders(Integer orderStatus, HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-//        Integer userId = 59;
+
         List<OrderVo> orderVoList = orderService.showOrders(userId, orderStatus);
         return new WebResult(StatusCode.OK, "提交成功", orderVoList);
     }
@@ -231,5 +253,4 @@ public class OrderController {
         }
         return new WebResult(StatusCode.ERROR, "删除失败");
     }
-
 }

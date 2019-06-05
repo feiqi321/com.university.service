@@ -12,6 +12,11 @@ public class OrderStatus {
     public static final Integer REMOVE = 1;//已取消
     public static final Integer PAY = 1;//已支付
     public static final String UNPAY = "未支付";//未支付
+
+    public static final String OFFPAY = "1";//已支付
+    public static final String OFFUNPAY = "2";//未支付
+
     public static final Integer ISCHECK = 1;//已打卡
     public static final Integer NOCHECK = 0;//未打卡
+
 }

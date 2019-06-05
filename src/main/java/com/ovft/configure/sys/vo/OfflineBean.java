@@ -11,11 +11,30 @@ import java.util.List;
 public class OfflineBean {
     private List<EduOfflineOrder> eduOfflineOrders;
     private String image;
+    private String userName;
+    private String schoolName;
 
-
-    public OfflineBean(List<EduOfflineOrder> eduOfflineOrders, String image) {
+    public OfflineBean(List<EduOfflineOrder> eduOfflineOrders, String image, String userName, String schoolName) {
         this.eduOfflineOrders = eduOfflineOrders;
         this.image = image;
+        this.userName = userName;
+        this.schoolName = schoolName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 
     public List<EduOfflineOrder> getEduOfflineOrders() {

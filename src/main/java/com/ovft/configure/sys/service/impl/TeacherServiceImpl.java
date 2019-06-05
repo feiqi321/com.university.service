@@ -215,6 +215,8 @@ public class TeacherServiceImpl implements TeacherService {
                 classMapper.insert(eduClass);
             }
         }
+        //添加成功之后，判断是否开启，
+
         return new WebResult("200", msg, "");
     }
 

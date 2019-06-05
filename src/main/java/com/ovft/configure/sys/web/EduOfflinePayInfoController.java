@@ -4,7 +4,6 @@ import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduOfflinePayInfo;
 import com.ovft.configure.sys.service.EduOfflinePayInfoService;
-import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +23,6 @@ public class EduOfflinePayInfoController {
     @Autowired
     private EduOfflinePayInfoService eduOfflinePayInfoService;
 
-
-    @Autowired
-    private RedisUtil redisUtil;
-
     /**
      * 线下分页列表显示
      *
@@ -44,6 +39,9 @@ public class EduOfflinePayInfoController {
         PageBean pageBean = eduOfflinePayInfoService.queryAllOffInfo(page, size, schoolId, schoolName, telephone, payStatus);
         return new WebResult(StatusCode.OK, "查询成功", pageBean);
     }
+
+
+
 
     /**
      * 下载列表

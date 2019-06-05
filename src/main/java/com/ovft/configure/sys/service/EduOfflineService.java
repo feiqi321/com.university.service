@@ -13,7 +13,7 @@ import java.util.List;
 public interface EduOfflineService {
 
 
-    //查询线下报名信息详情
+    //查询线下报名信息详情--
     QueryOffLineVos queryAllOffInfo(String schoolId, Integer userId);
 
 

@@ -1,10 +1,11 @@
 package com.ovft.configure.sys.dao;
 
+import com.ovft.configure.sys.bean.EduOfflinePayInfo;
+import com.ovft.configure.sys.bean.EduOfflinePayInfoExample;
+
 import java.util.List;
 import java.util.Map;
 
-import com.ovft.configure.sys.bean.EduOfflinePayInfo;
-import com.ovft.configure.sys.bean.EduOfflinePayInfoExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface EduOfflinePayInfoMapper {
@@ -29,6 +30,7 @@ public interface EduOfflinePayInfoMapper {
     int updateByPrimaryKeySelective(EduOfflinePayInfo record);
 
     int updateByPrimaryKey(EduOfflinePayInfo record);
+
 
     //线下学员展示
     List<EduOfflinePayInfo> selectOfflineList(Map<String, Object> map);
