@@ -1,47 +1,30 @@
 package com.ovft.configure.sys.vo;
 
+import com.ovft.configure.sys.bean.EduComment;
+
 /**
- * @author zqx
- * @create 2019-04-17 10:37
+    评论的
  */
-public class CommentVo {
-    private int pageSize;
+public class CommentVo extends EduComment {
 
-    private int pageNum;
+    private String userName;
 
-    private Integer newsid;
+    private String image;
 
-    private Integer newtype;
-
-    public int getPageSize() {
-        return pageSize;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public int getPageNum() {
-        return pageNum;
+    public String getImage() {
+        return image;
     }
 
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public Integer getNewsid() {
-        return newsid;
-    }
-
-    public void setNewsid(Integer newsid) {
-        this.newsid = newsid;
-    }
-
-    public Integer getNewtype() {
-        return newtype;
-    }
-
-    public void setNewtype(Integer newtype) {
-        this.newtype = newtype;
-    }
 }

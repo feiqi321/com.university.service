@@ -54,6 +54,7 @@ public class Sms253Util {
             SmsSendResponse smsSingleResponse = JSON.parseObject(response, SmsSendResponse.class);
 
             System.out.println("response  toString is :" + smsSingleResponse);
+            logger.info("[短信发送]：" + smsSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("[短信发送失败]：" + e);

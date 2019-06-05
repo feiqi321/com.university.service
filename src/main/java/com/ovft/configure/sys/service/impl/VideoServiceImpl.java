@@ -170,7 +170,7 @@ public class VideoServiceImpl implements VideoService {
         return new WebResult("200", "查询成功", video);
     }
 
-    //视频教学 立即学习
+    //立即学习
     @Transactional
     @Override
     public WebResult myVideoLearn(Integer videoId, Integer userId) {
@@ -192,6 +192,7 @@ public class VideoServiceImpl implements VideoService {
         return new WebResult("200", "查询成功", lastVideoItem);
     }
 
+    //我的视频
     @Override
     public WebResult myLearnList(Integer userId) {
         List<MyVideo> myVideos = videoMapper.selectMyVideo(userId, null);
@@ -281,6 +282,7 @@ public class VideoServiceImpl implements VideoService {
         if(StringUtils.isBlank(items)) {
             myVideo.setItems(itemIdStr);
             videoMapper.updateMyVideo(myVideo);
+            return;
         }
         String[] ids = items.split(",");
         StringBuilder str = new StringBuilder();

@@ -3,7 +3,7 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduComment;
 import com.ovft.configure.sys.service.CommentService;
-import com.ovft.configure.sys.vo.CommentVo;
+import com.ovft.configure.sys.vo.PageComVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +38,12 @@ public class CommentController {
     /**
      *  评论列表
      * @param request
-     * @param commentVo
+     * @param pageComVo
      * @return
      */
    @PostMapping(value = "/commentList")
-   public WebResult commentList(HttpServletRequest request, @RequestBody CommentVo commentVo) {
-       return commentService.commentList(commentVo);
+   public WebResult commentList(HttpServletRequest request, @RequestBody PageComVo pageComVo) {
+       return commentService.commentList(pageComVo);
    }
 
     /**

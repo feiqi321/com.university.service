@@ -10,10 +10,11 @@
     <result column="isshow" jdbcType="INTEGER" property="isshow" />
     <result column="newtype" jdbcType="INTEGER" property="isshow" />
     <result column="parentid" jdbcType="INTEGER" property="isshow" />
+    <result column="start" jdbcType="INTEGER" property="isshow" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    comid, context, newsid, uid, comtime, isshow, newtype, parentid
+    comid, context, newsid, uid, comtime, isshow, newtype, parentid, start
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -23,20 +24,22 @@
     where comid = #{comid,jdbcType=INTEGER}
   </select>
 
-  <select id="selectList"  resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from edu_comment
+  <select id="selectList"  resultType="com.ovft.configure.sys.vo.CommentVo">
+    SELECT c.comid, c.context, c.newsid, c.uid, c.comtime,
+    c.isshow, c.newtype, c.parentid, c.start, u.user_name, u.image
+    FROM edu_comment c
+    LEFT JOIN edu_user u on c.uid = u.user_id
     where 1=1
     <if test="uid != null">
-      and uid = #{uid,jdbcType=INTEGER}
+      and c.uid = #{uid,jdbcType=INTEGER}
     </if>
     <if test="newtype != null">
-      and newtype = #{newtype,jdbcType=INTEGER}
+      and c.newtype = #{newtype,jdbcType=INTEGER}
     </if>
     <if test="newsid != null">
-      and newsid = #{newsid,jdbcType=INTEGER}
+      and c.newsid = #{newsid,jdbcType=INTEGER}
     </if>
+    ORDER BY c.comtime DESC
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -46,11 +49,11 @@
 
   <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduComment">
     insert into edu_comment (comid, context, newsid, 
-      uid, comtime, isshow, newtype, parentid
+      uid, comtime, isshow, newtype, parentid, start
       )
     values (#{comid,jdbcType=INTEGER}, #{context,jdbcType=VARCHAR}, #{newsid,jdbcType=INTEGER}, 
       #{uid,jdbcType=INTEGER}, #{comtime,jdbcType=TIMESTAMP}, #{isshow,jdbcType=INTEGER},
-       #{newsid,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}
+       #{newsid,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{start,jdbcType=INTEGER}
       )
   </insert>
 
@@ -77,6 +80,9 @@
       </if>
       <if test="parentid != null">
         parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="start != null">
+        start = #{start,jdbcType=INTEGER},
       </if>
     </set>
     where comid = #{comid,jdbcType=INTEGER}

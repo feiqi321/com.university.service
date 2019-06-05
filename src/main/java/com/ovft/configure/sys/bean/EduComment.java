@@ -29,6 +29,19 @@ public class EduComment implements Serializable {
     private Integer newtype;
     private Integer parentid;
 
+    /**
+     *  星级
+     */
+    private Integer start;
+
+    public Integer getStart() {
+        return start;
+    }
+
+    public void setStart(Integer start) {
+        this.start = start;
+    }
+
     public Integer getNewtype() {
         return newtype;
     }

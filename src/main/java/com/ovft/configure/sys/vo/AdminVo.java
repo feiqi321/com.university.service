@@ -3,7 +3,6 @@ package com.ovft.configure.sys.vo;
 import com.ovft.configure.sys.bean.Admin;
 
 /**
- * 课程的扩展类
  *
  * @author vvtxw
  * @create 2019-04-14 7:53

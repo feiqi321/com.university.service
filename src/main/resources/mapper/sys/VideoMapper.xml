@@ -113,7 +113,7 @@
     </update>
 
     <select id="selectMyVideo"  resultType="com.ovft.configure.sys.bean.MyVideo">
-        select id, user_id as userId, video_id as videoId, date
+        select id, user_id as userId, video_id as videoId, date, items
         from edu_my_video
         where 1=1
         <if test="userId != null">

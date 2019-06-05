@@ -58,7 +58,7 @@ public class MyVideoController {
     public WebResult findMyVideoItemList(HttpServletRequest request, @RequestParam(value = "videoId") Integer videoId) {
         String userId = request.getHeader("userId");
         if(StringUtils.isBlank(userId) || userId.equals("null")) {
-            return new WebResult("400", "请登录！", "");
+            return videoService.videoItemList(null, videoId);
         }
         return videoService.videoItemList(Integer.valueOf(userId), videoId);
     }
@@ -79,7 +79,7 @@ public class MyVideoController {
     }
 
     /**
-     *   视频教学 立即学习
+     *  立即学习
      *
      * @param videoId
      * @return
@@ -105,7 +105,5 @@ public class MyVideoController {
         }
         return videoService.myLearnList(Integer.valueOf(userId));
     }
-
-
 
 }

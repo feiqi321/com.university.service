@@ -7,6 +7,7 @@ import com.ovft.configure.sys.bean.EduComment;
 import com.ovft.configure.sys.dao.EduCommentMapper;
 import com.ovft.configure.sys.service.CommentService;
 import com.ovft.configure.sys.vo.CommentVo;
+import com.ovft.configure.sys.vo.PageComVo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public WebResult addComment(EduComment comment) {
-        List<EduComment> eduComments = commentMapper.selectList(comment.getUid(), comment.getNewtype(), comment.getNewsid());
+        List<CommentVo> eduComments = commentMapper.selectList(comment.getUid(), comment.getNewtype(), comment.getNewsid());
         if(eduComments.size() != 0) {
             return new WebResult("400", "您已评论", "");
         }
@@ -43,6 +44,9 @@ public class CommentServiceImpl implements CommentService {
        if(comment.getNewsid() == null || comment.getNewtype() == null) {
            return new WebResult("400", "评论失败", "");
        }
+       if(comment.getStart() == null ) {
+           return new WebResult("400", "请选择星级", "");
+       }
        comment.setComtime(new Date());
         comment.setIsshow(1);
         comment.setParentid(0);
@@ -51,13 +55,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public WebResult commentList(CommentVo commentVo) {
-        if (commentVo.getPageSize() == 0) {
-            List<EduComment> eduComments = commentMapper.selectList(null, commentVo.getNewtype(), commentVo.getNewsid());
+    public WebResult commentList(PageComVo pageComVo) {
+        if (pageComVo.getPageSize() == 0) {
+            List<CommentVo> eduComments = commentMapper.selectList(null, pageComVo.getNewtype(), pageComVo.getNewsid());
             return new WebResult("200", "查询成功", eduComments);
         }
-        PageHelper.startPage(commentVo.getPageNum(), commentVo.getPageSize());
-        List<EduComment> eduComments = commentMapper.selectList(null, commentVo.getNewtype(), commentVo.getNewsid());
+        PageHelper.startPage(pageComVo.getPageNum(), pageComVo.getPageSize());
+        List<CommentVo> eduComments = commentMapper.selectList(null, pageComVo.getNewtype(), pageComVo.getNewsid());
         PageInfo pageInfo = new PageInfo<>(eduComments);
         return new WebResult("200", "查询成功", pageInfo);
     }
@@ -68,6 +72,5 @@ public class CommentServiceImpl implements CommentService {
         commentMapper.deleteByPrimaryKey(comid);
         return new WebResult("200", "删除成功", "");
     }
-
 
 }
