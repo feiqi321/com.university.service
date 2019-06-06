@@ -31,7 +31,6 @@ public class UserController {
     private UserService userService;
 
     /**
-     * ;
      * 注册
      *
      * @param user

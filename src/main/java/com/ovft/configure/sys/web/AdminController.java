@@ -203,6 +203,7 @@ public class AdminController {
               eduArticle.setCreatetime(contribute.getCreatetime());
               eduArticle.setAudio(contribute.getAudio());
               eduArticle.setVedio(contribute.getVedio());
+              eduArticle.setAuthor(contribute.getUserName());
               eduArticle.setIspublic("1");
               eduArticle.setIstop("0");
               eduArticle.setState(contribute.getCheckin().toString());

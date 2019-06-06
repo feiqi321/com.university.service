@@ -140,4 +140,7 @@ public interface UserMapper {
     //查询用户相关信息 -vvtxw
     public User queryInfo(Integer userId);
 
+    //修改学校时保存信息
+    public void updateEduUserUsername(User user);
+
 }

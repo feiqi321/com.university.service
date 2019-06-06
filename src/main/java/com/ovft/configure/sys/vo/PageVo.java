@@ -9,6 +9,11 @@ import java.util.Date;
  * @create 2019-04-17 10:37
  */
 public class PageVo {
+
+    private  Integer sid;  //问卷调查的id
+
+    private  Integer tid;   //问卷调查内部栏目id
+
     private int pageSize;
 
     private int pageNum;
@@ -32,6 +37,22 @@ public class PageVo {
     private Integer isenable;
 
     private Integer isFree;
+
+    public Integer getTid() {
+        return tid;
+    }
+
+    public void setTid(Integer tid) {
+        this.tid = tid;
+    }
+
+    public Integer getSid() {
+        return sid;
+    }
+
+    public void setSid(Integer sid) {
+        this.sid = sid;
+    }
 
     public Integer getIsFree() {
         return isFree;

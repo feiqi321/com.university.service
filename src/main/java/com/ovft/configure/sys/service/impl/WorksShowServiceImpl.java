@@ -33,7 +33,7 @@ public class WorksShowServiceImpl implements WorksShowService {
         PageInfo pageInfo = new PageInfo<>(noticeList);
         return new WebResult("200", "查询成功", pageInfo);
     }
-
+    //首页学员展示（教师风采）推荐
     @Override
     public WebResult findIndexShowAll(PageVo pageVo) {
         if(pageVo.getPageSize() == 0) {
@@ -45,7 +45,7 @@ public class WorksShowServiceImpl implements WorksShowService {
         PageInfo pageInfo = new PageInfo<>(noticeList);
         return new WebResult("200", "查询成功", pageInfo);
     }
-
+    //添加点赞数
     @Transactional
     @Override
     public Integer addThumbup(Integer id) {
