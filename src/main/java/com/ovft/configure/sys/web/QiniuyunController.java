@@ -2,9 +2,11 @@ package com.ovft.configure.sys.web;
 
 import com.google.gson.Gson;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Base64File;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.service.FileDownService;
 import com.ovft.configure.sys.service.TeacherService;
+import com.ovft.configure.sys.service.impl.BASE64DecodedMultipartFile;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -50,6 +52,15 @@ public class QiniuyunController {
     @Value("${qiniuyun.filePrefix}")
     private String filePrefix;
 
+    /**
+     *  app端  图片上传
+     * @return
+     */
+    @RequestMapping(value = "/uploadAppImage", method = RequestMethod.POST)
+    public WebResult upload(@RequestBody Base64File base64File, HttpServletRequest request) {
+        MultipartFile file = BASE64DecodedMultipartFile.base64Convert(base64File.getContent());
+        return uploadFile(request, file);
+    }
 
     /**
      * 文件上传
@@ -58,6 +69,10 @@ public class QiniuyunController {
      */
     @PostMapping(value = "/videoImport")
     public WebResult courseListImport(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+        return uploadFile(request, file);
+    }
+
+    private WebResult uploadFile(HttpServletRequest request, MultipartFile file) {
         String token = request.getHeader("token");
         if(file == null) {
             return new WebResult("400", "请上传文件", "");

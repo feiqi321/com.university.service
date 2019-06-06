@@ -23,6 +23,17 @@ public class EduCourseVo extends EduCourse {
 
     private String name;
 
+    //可报名剩余人数
+    private Integer nowtotal;
+
+    public Integer getNowtotal() {
+        return nowtotal;
+    }
+
+    public void setNowtotal(Integer nowtotal) {
+        this.nowtotal = nowtotal;
+    }
+
     public String getName() {
         return name;
     }

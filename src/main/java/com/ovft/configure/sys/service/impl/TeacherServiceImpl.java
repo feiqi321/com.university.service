@@ -3,11 +3,12 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.constant.ConstantClassField;
+import com.ovft.configure.constant.OrderStatus;
+import com.ovft.configure.constant.Status;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
-import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.SecurityUtils;
 import com.ovft.configure.sys.vo.EduCourseVo;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -45,7 +47,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Resource
     public UserMapper userMapper;
     @Resource
-    public UserService userService;
+    public EduCourseMapper eduCourseMapper;
+    @Resource
+    public EduOfflineOrderMapper eduOfflineOrderMapper;
+    @Resource
+    OrderMapper orderMapper;
 
     /**
      * 请假申请列表
@@ -234,8 +240,34 @@ public class TeacherServiceImpl implements TeacherService {
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
-        PageInfo pageInfo = new PageInfo<>(courseList);
+        courseList.forEach(courseVo -> {
+            Integer courseId = courseVo.getCourseId();
+            //0.可以报名的人数
+            //查询专业接受报名的人数
+            int acceptNum = eduCourseMapper.queryAcceptNum(courseId);
 
+            if (acceptNum == 0) {
+                courseVo.setNowtotal(acceptNum);
+            } else {
+                //查询用户所对应的专业显示已经购买人数
+                Map<String, Object> param = new HashMap<>();
+                param.put("course_id", courseId);
+                param.put("payment_status", OrderStatus.PAY);
+
+                int olineNum = orderMapper.countPayCourseNum(param);
+
+                //查询用户所对应的专业线下的总人数
+
+                Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(Status.PAY);
+
+                //得到最终报名人数
+                Integer payNum = olineNum + offNum;
+                //可报名剩余人数
+                int nowtotal = acceptNum - payNum;
+                courseVo.setNowtotal(nowtotal>=0 ? nowtotal:0);
+            }
+        });
+        PageInfo pageInfo = new PageInfo<>(courseList);
         return new WebResult("200", "查询成功", pageInfo);
     }
 
