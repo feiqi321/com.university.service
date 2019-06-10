@@ -10,6 +10,7 @@ import com.ovft.configure.sys.service.EduOfflineOrderService;
 import com.ovft.configure.sys.utils.AgeUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.utils.OrderIdUtil;
+import net.sf.saxon.functions.Put;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,9 @@ public class EduCourseServiceImpl implements EduCourseService {
 
     @Resource
     private EduOfflineOrderMapper eduOfflineOrderMapper;
+
+    @Resource
+    private EduPayrecordMapper eduPayrecordMapper;
 
     /**
      * 按学校的id来查找专业类别
@@ -177,7 +181,28 @@ public class EduCourseServiceImpl implements EduCourseService {
                 return map;
             }
 
-            //3.限制可报名的学员分类   查询用户所对应的学员分类人数
+            //3.限制可报名的报名学科门数
+            //查询线下的报名门数
+            Integer offCourseNum = eduOfflineOrderMapper.queryCountCourseNum(userId);
+            //查询线上的报名门数
+            Integer oLineCourseNum = eduPayrecordMapper.queryCourseNum(userId);
+            Integer allCourse = offCourseNum + oLineCourseNum;
+            //查询条件限制的门数
+            Map<String, Object> param = new HashMap<>();
+            param.put("courseId", courseId);
+            param.put("schoolId", schoolId);
+            Integer courseNum = eduRegistMapper.queryCourseNum(param);
+
+            if (allCourse >= courseNum) {
+                map.put("为了您的身体健康，本课程只允许报" + courseNum + "门，您报名课程已经超过", "");
+                return map;
+            }
+
+            //4.同级课程优先购买
+            //先查询自己之前订单中，是否有此类同类的课程，如果有可以报名
+
+
+            //5.限制可报名的学员分类   查询用户所对应的学员分类人数
             if (user.getEmployer() == null || user.getEmployer() == "") {
                 map.put("请填写完善个人的基本信息，再来报名", "");
                 return map;
@@ -204,6 +229,14 @@ public class EduCourseServiceImpl implements EduCourseService {
                     }
                 }
             }
+
+
+
+
+
+
+
+
 
           /*
             //如果传入的学员类别不为空，方可报名

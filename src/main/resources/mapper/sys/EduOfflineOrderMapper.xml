@@ -357,6 +357,18 @@
   </select>
 
 
+    <!--    3.查找线下报名门数
+        <select id="queryCountCourseNum" parameterType="Integer" resultType="Integer">
+                    select
+                    count(course_id)
+                    from
+                    edu_offline_num
+                    where
+                    user_id =#{userId}
+                    and pay_status=1
+      </select>-->
+
+
     <!--3.查找线下报名门数-->
     <select id="queryCountCourseNum" parameterType="Integer" resultType="Integer">
   		      select
@@ -365,7 +377,7 @@
                 edu_offline_num
                 where
                 user_id =#{userId}
-                and pay_status=1
+                and pay_status=2
   </select>
 
 

@@ -4,6 +4,7 @@ import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.bean.EduRegistExample;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -38,4 +39,7 @@ public interface EduRegistMapper {
 
     //查找学校名称
     List<String> selectNameBySchoolId(Integer schoolId);
+
+    //查询限制的课程门数
+    Integer queryCourseNum(Map<String, Object> map);
 }

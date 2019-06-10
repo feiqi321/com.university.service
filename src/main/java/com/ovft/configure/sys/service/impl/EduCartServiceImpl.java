@@ -101,4 +101,12 @@ public class EduCartServiceImpl implements EduCartService {
         EduCartVo eduCartVo = eduCartMapper.queryOrderInfoFromCart(map);
         return eduCartVo;
     }
+
+    @Override
+    public List<EduCart> queryCartByUserIdAndGoodSId(Integer userId, Integer goodsId) {
+        EduCartExample eduCartExample = new EduCartExample();
+        eduCartExample.createCriteria().andUserIdEqualTo(userId).andGoodsIdEqualTo(goodsId);
+        List<EduCart> eduCarts = eduCartMapper.selectByExample(eduCartExample);
+        return eduCarts;
+    }
 }

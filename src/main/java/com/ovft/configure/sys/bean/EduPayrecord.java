@@ -54,7 +54,17 @@ public class EduPayrecord implements Serializable {
     /**
      * 支付状态
      */
-    private String paystatus;
+    private String payStatus;
+
+    /**
+     * 用户id
+     */
+    private Integer userId;
+
+    /**
+     * 课程id
+     */
+    private Integer courseId;
 
     private static final long serialVersionUID = 1L;
 
@@ -130,12 +140,28 @@ public class EduPayrecord implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getPaystatus() {
-        return paystatus;
+    public String getPayStatus() {
+        return payStatus;
     }
 
-    public void setPaystatus(String paystatus) {
-        this.paystatus = paystatus;
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     @Override
@@ -159,7 +185,9 @@ public class EduPayrecord implements Serializable {
             && (this.getCourseStarttime() == null ? other.getCourseStarttime() == null : this.getCourseStarttime().equals(other.getCourseStarttime()))
             && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
             && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
-            && (this.getPaystatus() == null ? other.getPaystatus() == null : this.getPaystatus().equals(other.getPaystatus()));
+            && (this.getPayStatus() == null ? other.getPayStatus() == null : this.getPayStatus().equals(other.getPayStatus()))
+            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+            && (this.getCourseId() == null ? other.getCourseId() == null : this.getCourseId().equals(other.getCourseId()));
     }
 
     @Override
@@ -175,7 +203,9 @@ public class EduPayrecord implements Serializable {
         result = prime * result + ((getCourseStarttime() == null) ? 0 : getCourseStarttime().hashCode());
         result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
         result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
-        result = prime * result + ((getPaystatus() == null) ? 0 : getPaystatus().hashCode());
+        result = prime * result + ((getPayStatus() == null) ? 0 : getPayStatus().hashCode());
+        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
+        result = prime * result + ((getCourseId() == null) ? 0 : getCourseId().hashCode());
         return result;
     }
 
@@ -194,7 +224,9 @@ public class EduPayrecord implements Serializable {
         sb.append(", courseStarttime=").append(courseStarttime);
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);
-        sb.append(", paystatus=").append(paystatus);
+        sb.append(", payStatus=").append(payStatus);
+        sb.append(", userId=").append(userId);
+        sb.append(", courseId=").append(courseId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

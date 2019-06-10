@@ -22,7 +22,7 @@
         <result column="offline_regist" jdbcType="VARCHAR" property="offlineRegist"/>
         <result column="course_num" jdbcType="INTEGER" property="courseNum"/>
     </resultMap>
-    
+
     <sql id="Example_Where_Clause">
         <where>
             <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -84,11 +84,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        id, registstart_time, registend_time, start_age, end_age, regist_category_one, regist_category_two,
-        regist_category_three, regist_category_four, regist_category_five, regist_category_six,
-        upate_time, school_id, course_id, school_name, course_name, regist_priority, offline_regist,
-        course_num
-    </sql>
+    id, registstart_time, registend_time, start_age, end_age, regist_category_one, regist_category_two, 
+    regist_category_three, regist_category_four, regist_category_five, regist_category_six, 
+    upate_time, school_id, course_id, school_name, course_name, regist_priority, offline_regist
+  </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduRegistExample" resultMap="BaseResultMap">
         select
         <if test="distinct">
@@ -118,9 +117,9 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-        delete from edu_regist
-        where id = #{id,jdbcType=INTEGER}
-    </delete>
+    delete from edu_regist
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduRegistExample">
         delete from edu_regist
         <if test="_parameter != null">
@@ -137,16 +136,14 @@
         regist_category_four, regist_category_five,
         regist_category_six, upate_time, school_id,
         course_id, school_name, course_name,
-        regist_priority, offline_regist, course_num
-        )
+        regist_priority, offline_regist)
         values (#{registstartTime,jdbcType=TIMESTAMP}, #{registendTime,jdbcType=TIMESTAMP},
         #{startAge,jdbcType=INTEGER}, #{endAge,jdbcType=INTEGER}, #{registCategoryOne,jdbcType=VARCHAR},
         #{registCategoryTwo,jdbcType=VARCHAR}, #{registCategoryThree,jdbcType=VARCHAR},
         #{registCategoryFour,jdbcType=VARCHAR}, #{registCategoryFive,jdbcType=VARCHAR},
         #{registCategorySix,jdbcType=VARCHAR}, #{upateTime,jdbcType=TIMESTAMP}, #{schoolId,jdbcType=INTEGER},
         #{courseId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR},
-        #{registPriority,jdbcType=VARCHAR}, #{offlineRegist,jdbcType=VARCHAR}, #{courseNum,jdbcType=INTEGER}
-        )
+        #{registPriority,jdbcType=VARCHAR}, #{offlineRegist,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduRegist">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -205,9 +202,6 @@
             <if test="offlineRegist != null">
                 offline_regist,
             </if>
-            <if test="courseNum != null">
-                course_num,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="registstartTime != null">
@@ -260,9 +254,6 @@
             </if>
             <if test="offlineRegist != null">
                 #{offlineRegist,jdbcType=VARCHAR},
-            </if>
-            <if test="courseNum != null">
-                #{courseNum,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -329,9 +320,6 @@
             </if>
             <if test="record.offlineRegist != null">
                 offline_regist = #{record.offlineRegist,jdbcType=VARCHAR},
-            </if>
-            <if test="record.courseNum != null">
-                course_num = #{record.courseNum,jdbcType=INTEGER},
             </if>
         </set>
         <if test="_parameter != null">
@@ -488,5 +476,15 @@
     edu_regist r
     LEFT JOIN edu_school s on s.school_id=r.school_id where r.school_id=#{school_id}
   </select>
+
+
+    <!--查找限制报名门数-->
+    <select id="queryCourseNum" parameterType="map" resultType="Integer">
+        select
+        course_num
+        from edu_regist
+        where school_id = #{schoolId}
+        and course_id=#{courseId}
+    </select>
 
 </mapper>

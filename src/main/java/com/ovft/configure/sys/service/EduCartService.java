@@ -31,4 +31,7 @@ public interface EduCartService {
 
     //查询出订单的购物车信息
     EduCartVo queryOrderInfoFromCart(Integer userId, Integer goodsId);
+
+    //查询购物车是否有此教材
+    List<EduCart> queryCartByUserIdAndGoodSId(Integer userId, Integer goodsId);
 }
