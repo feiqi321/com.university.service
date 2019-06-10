@@ -190,7 +190,7 @@ public class OrderController {
 
     /**
      * 查找总订单
-     * 订单的状态 1待付款,2已经取消，3.待收货,4已完成
+     * 订单的状态 1待付款,  2已经取消，3.待收货,    4已完成
      *
      * @param request
      * @return
@@ -199,7 +199,7 @@ public class OrderController {
     public WebResult showOrder(Integer orderStatus, HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-
+//        Integer userId = 65;
         List<OrderVo> orderVoList = orderService.showOrder(userId, orderStatus);
         return new WebResult(StatusCode.OK, "提交成功", orderVoList);
     }

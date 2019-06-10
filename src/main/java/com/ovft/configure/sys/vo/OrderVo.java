@@ -10,7 +10,7 @@ import java.util.Date;
  * @create 2019-04-14 16:59
  */
 public class OrderVo extends Order {
-    private Integer schoolId;
+    private String schoolId;
     private String schoolName;
     private String courseName;
 
@@ -102,11 +102,11 @@ public class OrderVo extends Order {
     private String endTime;
 
 
-    public Integer getSchoolId() {
+    public String getSchoolId() {
         return schoolId;
     }
 
-    public void setSchoolId(Integer schoolId) {
+    public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
     }
 

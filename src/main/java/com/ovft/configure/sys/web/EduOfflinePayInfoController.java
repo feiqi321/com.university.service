@@ -5,6 +5,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduOfflinePayInfo;
 import com.ovft.configure.sys.service.EduOfflinePayInfoService;
 import com.ovft.configure.sys.vo.PageBean;
+import com.ovft.configure.sys.vo.QueryOffLineVos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +42,6 @@ public class EduOfflinePayInfoController {
     }
 
 
-
-
     /**
      * 下载列表
      *
@@ -54,8 +53,8 @@ public class EduOfflinePayInfoController {
      */
     @GetMapping("donwshows")
     public WebResult donwShowsQueryOffline(Integer schoolId, String schoolName, String telephone, String payStatus) {
-        List<EduOfflinePayInfo> eduOfflinePayInfos = eduOfflinePayInfoService.queryAllOff(schoolId, schoolName, telephone, payStatus);
-        return new WebResult(StatusCode.OK, "查询成功", eduOfflinePayInfos);
+        List<QueryOffLineVos> queryOffLineVos = eduOfflinePayInfoService.queryAllOff(schoolId, schoolName, telephone, payStatus);
+        return new WebResult(StatusCode.OK, "查询成功", queryOffLineVos);
     }
 
     /**

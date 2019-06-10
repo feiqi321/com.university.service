@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class QueryOffLineVos {
     private Integer id;
+    private Integer userId;
     private String schoolName;
     private String userName;
     private String phone;
@@ -20,6 +21,14 @@ public class QueryOffLineVos {
     private String payStatus;
     private Date updateTime;
 
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Date getUpdateTime() {
         return updateTime;

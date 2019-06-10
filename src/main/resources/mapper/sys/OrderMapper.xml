@@ -515,17 +515,41 @@
 
 
     <!--4.查找订单的详细信息-->
-    <select id="showOrders" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
-       SELECT
-		o.*,
-		i.course_name,
-		i.num
-		from edu_order o
-		LEFT JOIN edu_order_item i on i.order_id=o.id
-		where o.user_Id=#{userId} and o.order_status=#{orderStatus}
+    <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
+        SELECT
+        o.*,
+        i.course_name,
+        i.num
+        from edu_order o
+        LEFT JOIN edu_order_item i on i.order_id=o.id
+        <where>
+            <if test="userId != null and userId!=''">
+                and user_Id=#{userId}
+            </if>
+            <if test="orderStatus != null and orderStatus!=''">
+                and order_status=#{orderStatus}
+            </if>
+        </where>
     </select>
 
-    <!--5.查找总订单信息-->
+    <select id="showOrders" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
+        SELECT
+        o.*,
+        i.course_name,
+        i.num
+        from edu_order o
+        LEFT JOIN edu_order_item i on i.order_id=o.id
+        <where>
+            <if test="userId != null and userId!=''">
+                and user_Id=#{userId}
+            </if>
+            <if test="orderStatus != null and orderStatus!=''">
+                and order_status=#{orderStatus}
+            </if>
+        </where>
+    </select>
+
+<!--    &lt;!&ndash;5.查找总订单信息&ndash;&gt;
     <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
         select
         *
@@ -539,7 +563,7 @@
                 and order_status=#{orderStatus}
             </if>
         </where>
-    </select>
+    </select>-->
 
     <!--６.查找订单的数量-->
     <select id="countOrderNum" parameterType="Integer" resultType="Integer">

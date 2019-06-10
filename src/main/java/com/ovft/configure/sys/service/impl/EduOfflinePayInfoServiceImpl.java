@@ -73,7 +73,7 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
             queryOffLineVos.setAccountAllMoney(accountAllMoney);
             queryOffLineVos.setUpdateTime(eduOfflinePayInfo.getPayUpdatetime());
             queryOffLineVos.setId(eduOfflinePayInfo.getId());
-
+            queryOffLineVos.setUserId(eduOfflinePayInfo.getUserId());
             queryOffLineVoss.add(queryOffLineVos);
         }
 
@@ -97,7 +97,7 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
 
 
     @Override
-    public List<EduOfflinePayInfo> queryAllOff(Integer schoolId, String schoolName, String telephone, String
+    public List<QueryOffLineVos> queryAllOff(Integer schoolId, String schoolName, String telephone, String
             payStatus) {
         Map<String, Object> map = new HashMap<>();
         map.put("schoolName", schoolName);
@@ -105,7 +105,31 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
         map.put("payStatus", payStatus);
         map.put("schoolId", schoolId);
         List<EduOfflinePayInfo> eduOfflinePayInfos = eduOfflinePayInfoMapper.selectOfflineList(map);
-        return eduOfflinePayInfos;
+
+        List<QueryOffLineVos> queryOffLineVoss = new ArrayList<>();
+
+        for (EduOfflinePayInfo eduOfflinePayInfo : eduOfflinePayInfos) {
+            EduOfflineNumExample eduOfflineNumExample = new EduOfflineNumExample();
+            eduOfflineNumExample.createCriteria().andUserIdEqualTo(eduOfflinePayInfo.getUserId()).andSchoolIdEqualTo(eduOfflinePayInfo.getSchoolId());
+            List<EduOfflineNum> eduOfflineNums = eduOfflineNumMapper.selectByExample(eduOfflineNumExample);
+            BigDecimal accountAllMoney = new BigDecimal(0);//放在里头累计
+            for (EduOfflineNum eduOfflineNum : eduOfflineNums) {
+                accountAllMoney = accountAllMoney.add(eduOfflineNum.getCoursePrice());
+            }
+            QueryOffLineVos queryOffLineVos = new QueryOffLineVos();//放里头防止覆盖
+            queryOffLineVos.setOfflineNums(eduOfflineNums);
+            queryOffLineVos.setUserName(eduOfflinePayInfo.getUserName());
+            queryOffLineVos.setPhone(eduOfflinePayInfo.getTelephone());
+            queryOffLineVos.setSchoolName(eduOfflinePayInfo.getSchoolName());
+            queryOffLineVos.setPayStatus(eduOfflinePayInfo.getPayStatus());
+            queryOffLineVos.setAccountAllMoney(accountAllMoney);
+            queryOffLineVos.setUpdateTime(eduOfflinePayInfo.getPayUpdatetime());
+            queryOffLineVos.setId(eduOfflinePayInfo.getId());
+            queryOffLineVos.setUserId(eduOfflinePayInfo.getUserId());
+            queryOffLineVoss.add(queryOffLineVos);
+        }
+
+        return queryOffLineVoss;
     }
 
     @Override
@@ -122,6 +146,11 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
         eduOfflineOrderitemExample1.createCriteria().andUserIdEqualTo(eduOfflinePayInfo.getUserId());
         List<EduOfflineOrderitem> eduOfflineOrderitems = eduOfflineOrderitemMapper.selectByExample(eduOfflineOrderitemExample1);
 
+        //根据userid查询出所有课程订单信息
+        EduOfflineNumExample eduOfflineNumExample = new EduOfflineNumExample();
+        eduOfflineNumExample.createCriteria().andUserIdEqualTo(eduOfflinePayInfo.getUserId());
+        List<EduOfflineNum> eduOfflineNums = eduOfflineNumMapper.selectByExample(eduOfflineNumExample);
+
         //如果支付的状态修改成功，传入的已经缴费1
         if (res > 0 && eduOfflinePayInfo.getPayStatus().equals("1")) {
             for (EduOfflineOrder eduOfflineOrder : eduOfflineOrders) {
@@ -132,6 +161,10 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
                 eduOfflineOrderitem.setPayStatus("1");
                 eduOfflineOrderitemMapper.updateByPrimaryKeySelective(eduOfflineOrderitem);
             }
+            for (EduOfflineNum eduOfflineNum : eduOfflineNums) {
+                eduOfflineNum.setPayStatus("1");
+                eduOfflineNumMapper.updateByPrimaryKeySelective(eduOfflineNum);
+            }
 
         } else if (res > 0 && eduOfflinePayInfo.getPayStatus().equals("2")) {
             for (EduOfflineOrder eduOfflineOrder : eduOfflineOrders) {
@@ -141,6 +174,10 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
             for (EduOfflineOrderitem eduOfflineOrderitem : eduOfflineOrderitems) {
                 eduOfflineOrderitem.setPayStatus("2");
                 eduOfflineOrderitemMapper.updateByPrimaryKeySelective(eduOfflineOrderitem);
+            }
+            for (EduOfflineNum eduOfflineNum : eduOfflineNums) {
+                eduOfflineNum.setPayStatus("2");
+                eduOfflineNumMapper.updateByPrimaryKeySelective(eduOfflineNum);
             }
         } else {
             return -1;
@@ -170,6 +207,11 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
             EduOfflineOrderitemExample eduOfflineOrderitemExample1 = new EduOfflineOrderitemExample();
             eduOfflineOrderitemExample1.createCriteria().andUserIdEqualTo(OfflinePayInfo.getUserId());
             List<EduOfflineOrderitem> eduOfflineOrderitems = eduOfflineOrderitemMapper.selectByExample(eduOfflineOrderitemExample1);
+            //根据userid查询出所有课程订单信息
+            EduOfflineNumExample eduOfflineNumExample = new EduOfflineNumExample();
+            eduOfflineNumExample.createCriteria().andUserIdEqualTo(OfflinePayInfo.getUserId());
+            List<EduOfflineNum> eduOfflineNums = eduOfflineNumMapper.selectByExample(eduOfflineNumExample);
+
 
             //如果支付的状态修改成功，传入的已经缴费1
             if (res > 0 && eduOfflinePayInfo.getPayStatus().equals(OrderStatus.OFFPAY)) {
@@ -183,6 +225,10 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
                     //更改已经支付状态
                     eduOfflineOrderitemMapper.updateByPrimaryKeySelective(eduOfflineOrderitem);
                 }
+                for (EduOfflineNum eduOfflineNum : eduOfflineNums) {
+                    eduOfflineNum.setPayStatus(OrderStatus.OFFPAY);
+                    eduOfflineNumMapper.updateByPrimaryKeySelective(eduOfflineNum);
+                }
 
             } else if (res > 0 && eduOfflinePayInfo.getPayStatus().equals(OrderStatus.OFFUNPAY)) {
                 for (EduOfflineOrder eduOfflineOrder : eduOfflineOrders) {
@@ -194,6 +240,10 @@ public class EduOfflinePayInfoServiceImpl implements EduOfflinePayInfoService {
                     //更改已经未支付状态
                     eduOfflineOrderitem.setPayStatus(OrderStatus.OFFUNPAY);
                     eduOfflineOrderitemMapper.updateByPrimaryKeySelective(eduOfflineOrderitem);
+                }
+                for (EduOfflineNum eduOfflineNum : eduOfflineNums) {
+                    eduOfflineNum.setPayStatus(OrderStatus.OFFUNPAY);
+                    eduOfflineNumMapper.updateByPrimaryKeySelective(eduOfflineNum);
                 }
             } else {
                 return -1;

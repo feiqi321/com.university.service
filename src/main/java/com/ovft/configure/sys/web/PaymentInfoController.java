@@ -24,6 +24,7 @@ import com.ovft.configure.sys.vo.QueryOffLineVos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,6 +93,7 @@ public class PaymentInfoController {
 
 
     @GetMapping(value = "alipay/submit")
+    @Transactional
     public WebResult paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String schoolId1 = request.getHeader("schoolId");
         int schoolId = Integer.parseInt(schoolId1);
@@ -166,6 +168,7 @@ public class PaymentInfoController {
         eduOfflineNum.setCourseName(eduCourseVo.getCourseName());
         eduOfflineNum.setCoursePrice(eduCourseVo.getCoursePrice());
         eduOfflineNum.setPayStatus(String.valueOf(Status.UNPAY));
+        eduOfflineNum.setSchoolId(Integer.parseInt(eduCourseVo.getSchoolId()));
 
 
         int res = eduOfflineOrderService.updateOffOrder(eduOfflineOrder);
@@ -208,10 +211,11 @@ public class PaymentInfoController {
         //查询支付订单表里的用户只有一个
         List<EduOfflinePayInfo> eduOfflinePayInfos = eduOfflinePayInfoService.queryAllPayInfo(queryOffLineVos.getPhone());
         if (eduOfflinePayInfos.size() == 0) {
+            //没有用户信息就添加
             res2 = eduOfflinePayInfoService.insertPayInfo(edufflinePayInfo);
         }
 
-        if (res > 0 && res1 > 0 && res2 > 0) {
+        if (res > 0 && res1 > 0) {
             return 1;
         }
         return -1;
@@ -238,7 +242,7 @@ public class PaymentInfoController {
         order.setUserId(userId);
         order.setCreateTime(new Date());
         order.setOrderStatus(OrderStatus.UNREMOVE);//未取消
-        order.setTotalAmount(courseInfo.getCoursePrice().longValue());
+        order.setTotalAmount(courseInfo.getCoursePrice());
         order.setTradeBody(courseInfo.getCourseName());
         orderMapper.insertSelective(order);
 

@@ -124,7 +124,7 @@ public class EduCheckController {
         for (OrderVo orderVo : orderVos) {
             Date nowTime = new Date();
             long now = nowTime.getTime();//当前时间戳
-            int schoolId = orderVo.getSchoolId();
+            String schoolId = orderVo.getSchoolId();
             Date startDate = orderVo.getStartDate();//获取开班当前日期
             SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
             String formatstartDate = date.format(startDate);//获取开班当前日期字符串
@@ -148,7 +148,7 @@ public class EduCheckController {
                 long fitTime = classStartTime - 1800000;
                 if ((fitTime <= currentTime) && (currentTime <= classStartTime)) {
                     //4.打卡之前判断是否在学校区域内
-                    School school = schoolService.queryRecordBySchoolId(schoolId);
+                    School school = schoolService.queryRecordBySchoolId(Integer.parseInt(schoolId));
                     String longitude = school.getLongitude();//经度
                     String[] splits = longitude.split("\\.");
 

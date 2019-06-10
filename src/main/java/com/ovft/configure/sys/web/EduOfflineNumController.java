@@ -24,15 +24,11 @@ public class EduOfflineNumController {
 
 
     @PostMapping("delete")
-    public WebResult deleteOffLineNumCourse(@RequestBody EduOfflineNum eduOfflineNum){
+    public WebResult deleteOffLineNumCourse(@RequestBody EduOfflineNum eduOfflineNum) {
         Integer res = eduOfflineNumService.deleteOffLineNumCourse(eduOfflineNum);
-        if (res>0){
-            return  new WebResult(StatusCode.OK,"删除成功","");
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "删除成功", "");
         }
-        return  new WebResult(StatusCode.ERROR,"删除失败","");
-
-
-
-
+        return new WebResult(StatusCode.ERROR, "删除失败", "");
     }
 }

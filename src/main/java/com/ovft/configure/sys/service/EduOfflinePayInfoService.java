@@ -2,6 +2,7 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.sys.bean.EduOfflinePayInfo;
 import com.ovft.configure.sys.vo.PageBean;
+import com.ovft.configure.sys.vo.QueryOffLineVos;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface EduOfflinePayInfoService {
     PageBean queryAllOffInfo(Integer page, Integer size, Integer schoolId, String schoolName, String telephone, String payStatus);
 
     //下线支付付款信息列表
-    List<EduOfflinePayInfo> queryAllOff(Integer schoolId, String schoolName, String telephone, String payStatus);
+    List<QueryOffLineVos> queryAllOff(Integer schoolId, String schoolName, String telephone, String payStatus);
 
     //修改缴费状态
     Integer updatePayStatus(EduOfflinePayInfo eduOfflinePayInfo);

@@ -38,6 +38,4 @@ public interface EduRegistMapper {
 
     //查找学校名称
     List<String> selectNameBySchoolId(Integer schoolId);
-
-
 }

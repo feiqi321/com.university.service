@@ -102,12 +102,12 @@ public class TeacherServiceImpl implements TeacherService {
         pageVo.setSearch(courseVo.getCourseName());
         List<EduCourse> eqName = teacherMapper.selectCourseListBySchoolId(pageVo);
         for (EduCourse eduCourse : eqName) {
-            if(eduCourse.getCourseName().equals(courseVo.getCourseName())) {
-                if(courseVo.getCourseId() == null) {
-                    return new WebResult("400", "已有“"+courseVo.getCourseName() + "”,请先停用！", "");
+            if (eduCourse.getCourseName().equals(courseVo.getCourseName())) {
+                if (courseVo.getCourseId() == null) {
+                    return new WebResult("400", "已有“" + courseVo.getCourseName() + "”,请先停用！", "");
                 }
-                if(!courseVo.getCourseId().equals(eduCourse.getCourseId())) {
-                    return new WebResult("400", "已有“"+courseVo.getCourseName() + "”,请先停用！", "");
+                if (!courseVo.getCourseId().equals(eduCourse.getCourseId())) {
+                    return new WebResult("400", "已有“" + courseVo.getCourseName() + "”,请先停用！", "");
                 }
             }
         }
@@ -186,9 +186,9 @@ public class TeacherServiceImpl implements TeacherService {
         Date endDate = courseVo.getEndDate();
 
         //如果课程启用, 相关字段验证
-        if(courseVo.getIsenable().compareTo(1) == 0) {
+        if (courseVo.getIsenable().compareTo(1) == 0) {
             WebResult security = security(courseVo, classList);
-            if(security != null) {
+            if (security != null) {
                 return security;
             }
         }
@@ -214,7 +214,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherMapper.insertCourse(course);
         }
 
-        if(classList != null) {
+        if (classList != null) {
             for (EduClass eduClass : classList) {
                 eduClass.setCourseIds(course.getCourseId());
                 classMapper.insert(eduClass);
@@ -299,7 +299,7 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public WebResult deleteCourse(String[] courseIds) {
-        if(courseIds == null || courseIds.length == 0) {
+        if (courseIds == null || courseIds.length == 0) {
             return new WebResult("400", "请选择课程", "");
         }
         for (String s : courseIds) {
@@ -329,52 +329,55 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult userList(PageVo pageVo) {
 
-              if (pageVo.getPageSize() == 0) {
-                  List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
-                  return new WebResult("200", "查询成功", users);
-              }
+        if (pageVo.getPageSize() == 0) {
+            List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
+            return new WebResult("200", "查询成功", users);
+        }
 
-              //筛选查询（按checkin条件进行查询）
-        if (pageVo.getCheckin()==null) {
-              PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-              List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
+        //筛选查询（按checkin条件进行查询）
+        if (pageVo.getCheckin() == null) {
+            PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+            List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
 
-              PageInfo pageInfo = new PageInfo<>(users);
-              return new WebResult("200", "查询成功", pageInfo);
-          }else{
-                    User user=new User();
+            PageInfo pageInfo = new PageInfo<>(users);
+            return new WebResult("200", "查询成功", pageInfo);
+        } else {
+            User user = new User();
             user.setSchoolId(pageVo.getSchoolId());
             user.setCheckin(pageVo.getCheckin());
-               if (user.getSchoolId()==null)  {
-                   List<User> user1 = userMapper.findUserByCheckin(user);
-                   PageInfo pageInfo = new PageInfo<>(user1);
-                   return new WebResult("200", "查询成功", pageInfo);
-               }
-              List<User> users2 = userMapper.findUserByCheckinAndSchoolId(user);
+            if (user.getSchoolId() == null) {
+                List<User> user1 = userMapper.findUserByCheckin(user);
+                PageInfo pageInfo = new PageInfo<>(user1);
+                return new WebResult("200", "查询成功", pageInfo);
+            }
+            List<User> users2 = userMapper.findUserByCheckinAndSchoolId(user);
             PageInfo pageInfo = new PageInfo<>(users2);
             return new WebResult("200", "查询成功", pageInfo);
 
-          }
+        }
 
     }
+
     /**
      * 学员注销申请列表
+     *
      * @return
      */
     @Override
     public WebResult userWithdrawVoList(PageVo pageVo) {
-        if(pageVo.getPageSize() == 0) {
+        if (pageVo.getPageSize() == 0) {
             List<User> users = teacherMapper.selectWithdrawList(pageVo.getSchoolId(), null);
-            return new WebResult("200","查询成功", users);
+            return new WebResult("200", "查询成功", users);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<User> users = teacherMapper.selectWithdrawList(pageVo.getSchoolId(), null);
         PageInfo pageInfo = new PageInfo<>(users);
-        return new WebResult("200","查询成功", pageInfo);
+        return new WebResult("200", "查询成功", pageInfo);
     }
 
     /**
      * 课程 启用/停用 页面
+     *
      * @param course
      * @return
      */
@@ -382,19 +385,19 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult updateIsenable(EduCourseVo course) {
         String[] courseIds = course.getCourseIds();
-        if(courseIds == null || courseIds.length == 0) {
+        if (courseIds == null || courseIds.length == 0) {
             return new WebResult("400", "请选择课程", "");
         }
         PageVo pageVo = new PageVo();
         for (String s : courseIds) {
             Integer courseId = Integer.valueOf(s);
             course.setCourseId(courseId);
-            if(course.getIsenable().equals(1)) {
+            if (course.getIsenable().equals(1)) {
                 //检查是否有相同的课程已经启用
                 EduCourse eqName = teacherMapper.selectByCourseId(courseId);
                 List<EduClass> classList = teacherMapper.selectClassByCourseId(eqName.getCourseId());
                 WebResult security = security(eqName, classList);
-                if(security != null) {
+                if (security != null) {
                     return security;
                 }
                 pageVo.setSchoolId(Integer.valueOf(eqName.getSchoolId()));
@@ -422,6 +425,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 添加/修改 学员
+     *
      * @param user
      * @return
      */
@@ -487,20 +491,20 @@ public class TeacherServiceImpl implements TeacherService {
 //            }
 //        }
         if (finduserbyphone == null) {
-              //未注册的情况
+            //未注册的情况
             //1. finduserbyphone == null && userId == null  新注册的学员
-                //初始密码为000000
-                String password = "000000";
-                user.setPassword(MD5Utils.md5Password(password));
-                userMapper.addUser(user);
-                userMapper.saveInfoItems(user);
-                return new WebResult("200", "保存成功", "");
-        }else {
-                //2. finduserbyphone == null && userId != null  原已经注册过的学员,修改了手机号
-                userMapper.updateByUserId(user.getPhone(), user.getUserId());
-            }
+            //初始密码为000000
+            String password = "000000";
+            user.setPassword(MD5Utils.md5Password(password));
+            userMapper.addUser(user);
+            userMapper.saveInfoItems(user);
+            return new WebResult("200", "保存成功", "");
+        } else {
+            //2. finduserbyphone == null && userId != null  原已经注册过的学员,修改了手机号
+            userMapper.updateByUserId(user.getPhone(), user.getUserId());
+        }
 
-        if(finduserbyphone != null && user.getUserId() != null && user.getUserId().compareTo(finduserbyphone.getUserId())!= 0) {
+        if (finduserbyphone != null && user.getUserId() != null && user.getUserId().compareTo(finduserbyphone.getUserId()) != 0) {
             return new WebResult("400", "该手机号已被注册", "");
         }
         user.setUserId(finduserbyphone.getUserId());
@@ -514,7 +518,7 @@ public class TeacherServiceImpl implements TeacherService {
 
             Integer schoolId = findUser.getSchoolId();
             Integer schoolId1 = user.getSchoolId();
-            if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId())!=0) {
+            if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId()) != 0) {
                 return new WebResult("400", "该用户已是其他学校学员", "");
             }
             userMapper.updateInfoItems(user);
@@ -522,25 +526,29 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
     }
+
     /**
      * 学员审核状态修改
+     *
      * @return
      */
     @Transactional
     @Override
-    public WebResult updateCheckIn(Integer userId,Integer checkin) {
-        teacherMapper.updateCheckIn(userId,checkin);
-        return new WebResult("200","操作成功","");
+    public WebResult updateCheckIn(Integer userId, Integer checkin) {
+        teacherMapper.updateCheckIn(userId, checkin);
+        return new WebResult("200", "操作成功", "");
     }
+
     /**
      * 学员注销状态修改
+     *
      * @return
      */
     @Transactional
     @Override
-    public WebResult updateWithdrawCheckIn(Integer wid,Integer checkin) {
-        teacherMapper.updateWithdrawCheckIn(wid,checkin);
-        return new WebResult("200","操作成功","");
+    public WebResult updateWithdrawCheckIn(Integer wid, Integer checkin) {
+        teacherMapper.updateWithdrawCheckIn(wid, checkin);
+        return new WebResult("200", "操作成功", "");
     }
 
 }
