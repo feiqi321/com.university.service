@@ -205,13 +205,6 @@ public class EduCourseServiceImpl implements EduCourseService {
                 }
             }
 
-            //4.限制可报名的报名学科门数
-            //查询线下的报名人数
-            Integer offCourseNum = eduOfflineOrderMapper.queryCountCourseNum(userId);
-            //查询线上的报名人数
-
-
-
           /*
             //如果传入的学员类别不为空，方可报名
             if (eduRegist.getRegistCategoryOne() != null && eduRegist.getRegistCategoryOne().equals(user.getEmployer())) {
