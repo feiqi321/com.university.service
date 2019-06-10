@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.constant.OrderStatus;
-import com.ovft.configure.constant.Status;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
@@ -257,8 +256,7 @@ public class TeacherServiceImpl implements TeacherService {
                 int olineNum = orderMapper.countPayCourseNum(param);
 
                 //查询用户所对应的专业线下的总人数
-
-                Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(Status.PAY);
+                Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
 
                 //得到最终报名人数
                 Integer payNum = olineNum + offNum;
