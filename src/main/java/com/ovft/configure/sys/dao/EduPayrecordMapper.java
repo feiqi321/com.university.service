@@ -2,7 +2,9 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.EduPayrecord;
 import com.ovft.configure.sys.bean.EduPayrecordExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface EduPayrecordMapper {
@@ -27,4 +29,7 @@ public interface EduPayrecordMapper {
     int updateByPrimaryKeySelective(EduPayrecord record);
 
     int updateByPrimaryKey(EduPayrecord record);
+
+    //查询线上的报名门数
+    Integer queryCourseNum(Integer userId);
 }

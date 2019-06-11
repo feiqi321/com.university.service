@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.ovft.configure.sys.bean.EduOfflineAddresstime;
 import com.ovft.configure.sys.bean.EduOfflineAddresstimeExample;
 import com.ovft.configure.sys.dao.EduOfflineAddresstimeMapper;
-import com.ovft.configure.sys.dao.EduRegistMapper;
 import com.ovft.configure.sys.service.EduOfflineAddressService;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.stereotype.Service;

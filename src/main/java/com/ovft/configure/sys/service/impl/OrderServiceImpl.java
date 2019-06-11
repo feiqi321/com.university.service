@@ -6,10 +6,7 @@ import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.OrderService;
 import com.ovft.configure.sys.utils.OrderIdUtil;
-import com.ovft.configure.sys.vo.EduCartVo;
-import com.ovft.configure.sys.vo.OrderVo;
-import com.ovft.configure.sys.vo.QueryOrderVos;
-import com.ovft.configure.sys.vo.SubmitOrderVos;
+import com.ovft.configure.sys.vo.*;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -59,36 +56,42 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void insertCartToOrder(SubmitOrderVos submitOrderVos, HttpServletRequest request) {
+        //待加  重复提交订单
+
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
+        String schoolId = request.getHeader("schoolId");
         BigDecimal accountAllMoney = new BigDecimal(0);
         Order order = new Order();
 
         order.setUserId(userId);
         order.setOrderSn(OrderIdUtil.getOrderIdByTime());
-        order.setOrderStatus(OrderStatus.UNREMOVE);
+        order.setOrderStatus(OrderStatus.UNPay);
         order.setCreateTime(new Date());
-        order.setTotalAmount(accountAllMoney.longValue());
+        order.setTotalAmount(submitOrderVos.getTotalMoney());
         order.setConsignee(submitOrderVos.getUserName());
         order.setTelephone(submitOrderVos.getPhone());
         order.setAddress(submitOrderVos.getAddress());
         order.setSendType(submitOrderVos.getSendType());
         order.setTosendPrice(submitOrderVos.getToSendPrice());
+        order.setSchoolId(schoolId);
         order.setRemark(submitOrderVos.getRemark());
         orderMapper.insertSelective(order);
 
-        List<OrderDetail> orderItems = submitOrderVos.getOrderItems();
-        for (OrderDetail orderItem : orderItems) {
+        //生存一对多的关系
+        List<OrderDetailVo> orderItemsVo = submitOrderVos.getOrderItemsVo();
+        for (OrderDetailVo orderItem : orderItemsVo) {
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrderId(orderItem.getId());
+            orderDetail.setOrderId(Long.valueOf(order.getId()));
             orderDetail.setNum(orderItem.getNum());
-            orderDetail.setOrderPrice(orderItem.getOrderPrice());
-            orderDetail.setCourseName(orderItem.getCourseName());
-            orderDetail.setImgUrl(orderItem.getImgUrl());
-            orderDetail.setCourseId(orderItem.getCourseId());
+            orderDetail.setOrderPrice(orderItem.getShopPrice());
+            orderDetail.setCourseName(orderItem.getBooksName());
+            orderDetail.setImgUrl(orderItem.getOriginalImg());
+            orderDetail.setCourseId(Long.valueOf(orderItem.getGoodsId()));
             orderDetailMapper.insertSelective(orderDetail);
+            order.setImgUrl(orderItem.getOriginalImg());
+            orderMapper.insertSelective(order);
         }
-
 
     }
 

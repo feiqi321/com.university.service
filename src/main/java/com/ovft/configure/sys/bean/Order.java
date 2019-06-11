@@ -46,7 +46,7 @@ public class Order implements Serializable {
     /**
      * 总金额
      */
-    private Long totalAmount;
+    private BigDecimal totalAmount;
 
     /**
      * 付款方式
@@ -98,6 +98,16 @@ public class Order implements Serializable {
      * 备注
      */
     private String remark;
+
+    private String schoolId;
+
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -157,11 +167,11 @@ public class Order implements Serializable {
         this.paymentTime = paymentTime;
     }
 
-    public Long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 

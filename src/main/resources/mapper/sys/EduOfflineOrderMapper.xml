@@ -318,10 +318,13 @@
 
     <!--1.查找线下报名记录-->
     <select id="queryAllOffRecord" parameterType="Integer" resultType="com.ovft.configure.sys.vo.EduOfflineOrderVo">
-  		select
+  	 		select
 	a.payment_address,
 	a.payment_starttime,
 	a.payment_endtime,
+	o.id,
+	o.user_id,
+	o.course_id,
 	o.school_name,
 	o.course_name,
 	o.couse_price,
@@ -349,7 +352,32 @@
                 from
                 edu_offline_order
                 where
-                pay_status =#{pay_status}
+                course_id=#{courseId} and
+                pay_status =1
+  </select>
+
+
+    <!--    3.查找线下报名门数
+        <select id="queryCountCourseNum" parameterType="Integer" resultType="Integer">
+                    select
+                    count(course_id)
+                    from
+                    edu_offline_num
+                    where
+                    user_id =#{userId}
+                    and pay_status=1
+      </select>-->
+
+
+    <!--3.查找线下报名门数-->
+    <select id="queryCountCourseNum" parameterType="Integer" resultType="Integer">
+  		      select
+                count(course_id)
+                from
+                edu_offline_num
+                where
+                user_id =#{userId}
+                and pay_status=2
   </select>
 
 

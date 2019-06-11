@@ -14,7 +14,7 @@ public class SubmitOrderVos {
     private String userName;
     private String address;
     private String phone;
-    private List<OrderDetail> orderItems;
+    private List<OrderDetailVo> orderItemsVo;
     private String sendType;
     private BigDecimal toSendPrice;
     private String remark;
@@ -45,12 +45,12 @@ public class SubmitOrderVos {
         this.address = address;
     }
 
-    public List<OrderDetail> getOrderItems() {
-        return orderItems;
+    public List<OrderDetailVo> getOrderItemsVo() {
+        return orderItemsVo;
     }
 
-    public void setOrderItems(List<OrderDetail> orderItems) {
-        this.orderItems = orderItems;
+    public void setOrderItemsVo(List<OrderDetailVo> orderItemsVo) {
+        this.orderItemsVo = orderItemsVo;
     }
 
     public String getSendType() {

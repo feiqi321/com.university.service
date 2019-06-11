@@ -33,6 +33,9 @@ public interface EduOfflineOrderMapper {
     //查询线下支付记录
     List<EduOfflineOrder> queryAllOffRecord(Integer userId);
 
-    //现象支付的人数
-    Integer queryOffRecordNum(Integer payStatus);
+    //线下支付的人数
+    Integer queryOffRecordNum(Integer courseId);
+
+    //统计报名课程的门数
+    Integer queryCountCourseNum(Integer userId);
 }

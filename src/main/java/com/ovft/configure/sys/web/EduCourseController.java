@@ -131,6 +131,7 @@ public class EduCourseController {
         //获取请求头的userId
         Map<String, Object> map = eduCourseService.queryCourseByCourseId(userId, courseId, request);
         Iterator<String> it = map.keySet().iterator();
+
         if (it != null) {
             while (it.hasNext()) {
                 String message = it.next();

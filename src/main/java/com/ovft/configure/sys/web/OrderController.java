@@ -78,7 +78,9 @@ public class OrderController {
             SimpleDateFormat sf = new SimpleDateFormat();
             String startDate = sf.format(orderVo.getStartDate());
             eduPayrecord.setCourseStarttime(startDate);
-            eduPayrecord.setPaystatus(String.valueOf(orderVo.getPaymentStatus()));
+            eduPayrecord.setPayStatus(String.valueOf(orderVo.getPaymentStatus()));
+            eduPayrecord.setUserId(userId);
+            eduPayrecord.setCourseId(orderVo.getCourseId());
             eduPayrecordService.insertPayRecord(eduPayrecord);
         }
 
@@ -169,6 +171,12 @@ public class OrderController {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
         Page<Object> pageAll = PageHelper.startPage(1, 2);
+        //查询购物车是否有此教材
+        List<EduCart> eduCarts = eduCartService.queryCartByUserIdAndGoodSId(userId, goodsId);
+        if (eduCarts.size() == 0) {
+            //先把该商品添加到购物车
+            eduCartService.addCart(goodsId, 1, userId);
+        }
         EduCartVo OrderIfoFromOrder = eduCartService.queryOrderInfoFromCart(userId, goodsId);
         long total = pageAll.getTotal();
         List<Address> addresses = addressMapper.selectByUserId(userId);

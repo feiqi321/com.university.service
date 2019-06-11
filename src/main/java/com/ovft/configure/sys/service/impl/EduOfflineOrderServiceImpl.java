@@ -1,11 +1,10 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.ovft.configure.sys.bean.EduOfflineOrder;
-import com.ovft.configure.sys.bean.EduOfflineOrderExample;
-import com.ovft.configure.sys.bean.EduOfflineOrderitemExample;
-import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.bean.*;
+import com.ovft.configure.sys.dao.EduOfflineNumMapper;
 import com.ovft.configure.sys.dao.EduOfflineOrderMapper;
 import com.ovft.configure.sys.dao.EduOfflineOrderitemMapper;
+import com.ovft.configure.sys.dao.EduOfflinePayInfoMapper;
 import com.ovft.configure.sys.service.EduOfflineOrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +24,12 @@ public class EduOfflineOrderServiceImpl implements EduOfflineOrderService {
 
     @Resource
     private EduOfflineOrderitemMapper eduOfflineOrderitemMapper;
+
+    @Resource
+    private EduOfflineNumMapper eduOfflineNumMapper;
+
+    @Resource
+    private EduOfflinePayInfoMapper eduOfflinePayInfoMapper;
 
 
     @Override
@@ -83,5 +88,38 @@ public class EduOfflineOrderServiceImpl implements EduOfflineOrderService {
             eduOfflineOrderitemMapper.deleteByExample(eduOfflineOrderitemExample);
         }
         return res;
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteOffOrderByUserIdAndCourseId(EduOfflineOrder eduOfflineOrder) {
+        EduOfflineOrderExample eduOfflineOrderExample = new EduOfflineOrderExample();
+        eduOfflineOrderExample.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId()).andCourseIdEqualTo(eduOfflineOrder.getCourseId());
+        int res = eduOfflineOrderMapper.deleteByExample(eduOfflineOrderExample);
+
+        EduOfflineOrderitemExample eduOfflineOrderitemExample = new EduOfflineOrderitemExample();
+        eduOfflineOrderitemExample.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId()).andCourseIdEqualTo(eduOfflineOrder.getCourseId());
+        int res1 = eduOfflineOrderitemMapper.deleteByExample(eduOfflineOrderitemExample);
+
+        EduOfflineNumExample eduOfflineNumExample = new EduOfflineNumExample();
+        eduOfflineNumExample.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId()).andCourseIdEqualTo(eduOfflineOrder.getCourseId());
+        int res2 = eduOfflineNumMapper.deleteByExample(eduOfflineNumExample);
+
+        //删除课程订单的相关信息后
+        //查询是否还有订单，如果订单数量为0，则要删除payInfo的信息
+        EduOfflineOrderExample eduOfflineOrderExample2 = new EduOfflineOrderExample();
+        eduOfflineOrderExample2.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId());
+        List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderMapper.selectByExample(eduOfflineOrderExample);
+        if (eduOfflineOrders.size() == 0) {
+            EduOfflinePayInfoExample eduOfflinePayInfoExample = new EduOfflinePayInfoExample();
+            eduOfflinePayInfoExample.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId());
+            eduOfflinePayInfoMapper.deleteByExample(eduOfflinePayInfoExample);
+        }
+
+
+        if (res > 0 && res1 > 0 && res2 > 0) {
+            return 1;
+        }
+        return -2;
     }
 }

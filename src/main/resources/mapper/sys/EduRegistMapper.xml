@@ -20,7 +20,9 @@
         <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
         <result column="regist_priority" jdbcType="VARCHAR" property="registPriority"/>
         <result column="offline_regist" jdbcType="VARCHAR" property="offlineRegist"/>
+        <result column="course_num" jdbcType="INTEGER" property="courseNum"/>
     </resultMap>
+
     <sql id="Example_Where_Clause">
         <where>
             <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -343,7 +345,8 @@
         school_name = #{record.schoolName,jdbcType=VARCHAR},
         course_name = #{record.courseName,jdbcType=VARCHAR},
         regist_priority = #{record.registPriority,jdbcType=VARCHAR},
-        offline_regist = #{record.offlineRegist,jdbcType=VARCHAR}
+        offline_regist = #{record.offlineRegist,jdbcType=VARCHAR},
+        course_num = #{record.courseNum,jdbcType=INTEGER}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -402,31 +405,34 @@
             <if test="offlineRegist != null">
                 offline_regist = #{offlineRegist,jdbcType=VARCHAR},
             </if>
+            <if test="courseNum != null">
+                course_num = #{courseNum,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduRegist">
-    update edu_regist
-    set registstart_time = #{registstartTime,jdbcType=TIMESTAMP},
-      registend_time = #{registendTime,jdbcType=TIMESTAMP},
-      start_age = #{startAge,jdbcType=INTEGER},
-      end_age = #{endAge,jdbcType=INTEGER},
-      regist_category_one = #{registCategoryOne,jdbcType=VARCHAR},
-      regist_category_two = #{registCategoryTwo,jdbcType=VARCHAR},
-      regist_category_three = #{registCategoryThree,jdbcType=VARCHAR},
-      regist_category_four = #{registCategoryFour,jdbcType=VARCHAR},
-      regist_category_five = #{registCategoryFive,jdbcType=VARCHAR},
-      regist_category_six = #{registCategorySix,jdbcType=VARCHAR},
-      upate_time = #{upateTime,jdbcType=TIMESTAMP},
-      school_id = #{schoolId,jdbcType=INTEGER},
-      course_id = #{courseId,jdbcType=INTEGER},
-      school_name = #{schoolName,jdbcType=VARCHAR},
-      course_name = #{courseName,jdbcType=VARCHAR},
-      regist_priority = #{registPriority,jdbcType=VARCHAR},
-      offline_regist = #{offlineRegist,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
+        update edu_regist
+        set registstart_time = #{registstartTime,jdbcType=TIMESTAMP},
+        registend_time = #{registendTime,jdbcType=TIMESTAMP},
+        start_age = #{startAge,jdbcType=INTEGER},
+        end_age = #{endAge,jdbcType=INTEGER},
+        regist_category_one = #{registCategoryOne,jdbcType=VARCHAR},
+        regist_category_two = #{registCategoryTwo,jdbcType=VARCHAR},
+        regist_category_three = #{registCategoryThree,jdbcType=VARCHAR},
+        regist_category_four = #{registCategoryFour,jdbcType=VARCHAR},
+        regist_category_five = #{registCategoryFive,jdbcType=VARCHAR},
+        regist_category_six = #{registCategorySix,jdbcType=VARCHAR},
+        upate_time = #{upateTime,jdbcType=TIMESTAMP},
+        school_id = #{schoolId,jdbcType=INTEGER},
+        course_id = #{courseId,jdbcType=INTEGER},
+        school_name = #{schoolName,jdbcType=VARCHAR},
+        course_name = #{courseName,jdbcType=VARCHAR},
+        regist_priority = #{registPriority,jdbcType=VARCHAR},
+        offline_regist = #{offlineRegist,jdbcType=VARCHAR},
+        course_num = #{courseNum,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
     <!--查询每个科目可以报名的人数vvtxw-->
     <select id="selectByCourseId" parameterType="int"
@@ -440,26 +446,26 @@
     <!--查询每个科目可以报名的人数vvtxw-->
     <select id="selectByOne" parameterType="int"
             resultType="com.ovft.configure.sys.vo.EduRegistVo">
-    select
-    r.id,
-    r.registstart_time,
-    r.registend_time,
-    r.start_age,
-    r.end_age,
-    r.regist_category_one,
-    r.regist_category_two,
-    r.regist_category_three,
-    r.regist_category_four,
-    r.regist_category_five,
-    r.regist_category_six,
-    r.upate_time,
-    c.course_name courseName,
-    e1.school_name schoolName
-    from edu_regist r
-    LEFT JOIN edu_course c on c.course_id=r.course_id
-    left join edu_school e1 on r.school_id=e1.school_id
-    WHERE id=#{id}
-  </select>
+        select
+        r.id,
+        r.registstart_time,
+        r.registend_time,
+        r.start_age,
+        r.end_age,
+        r.regist_category_one,
+        r.regist_category_two,
+        r.regist_category_three,
+        r.regist_category_four,
+        r.regist_category_five,
+        r.regist_category_six,
+        r.upate_time,
+        c.course_name courseName,
+        e1.school_name schoolName
+        from edu_regist r
+        LEFT JOIN edu_course c on c.course_id=r.course_id
+        left join edu_school e1 on r.school_id=e1.school_id
+        WHERE id=#{id}
+    </select>
 
     <!--根据学校查询学校名字vvtxw-->
     <select id="selectNameBySchoolId" parameterType="int"
@@ -471,5 +477,14 @@
     LEFT JOIN edu_school s on s.school_id=r.school_id where r.school_id=#{school_id}
   </select>
 
+
+    <!--查找限制报名门数-->
+    <select id="queryCourseNum" parameterType="map" resultType="Integer">
+        select
+        course_num
+        from edu_regist
+        where school_id = #{schoolId}
+        and course_id=#{courseId}
+    </select>
 
 </mapper>

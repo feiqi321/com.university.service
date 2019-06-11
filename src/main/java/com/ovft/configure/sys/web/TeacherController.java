@@ -338,7 +338,6 @@ public class TeacherController {
      */
     @GetMapping(value = "/findWithdrawByCheckinAndSchoolId")
     public WebResult findWithdrawByCheckinAndSchoolId(@RequestBody WithdrawVo withdrawVo){
-
         return userService.findWithdrawByCheckinAndSchoolId(withdrawVo);
     }
 }

@@ -51,7 +51,6 @@ public class EduBookGoodsServiceImpl implements EduBookGoodsService {
             map.put("extendCatId", extendCatId);
 
             eduBookGoods = eduBookGoodsMapper.queryAllBooksGoods(map);
-
         }
 
         long total = pageAll.getTotal();

@@ -1304,6 +1304,66 @@ public class EduRegistExample {
             addCriterion("offline_regist not between", value1, value2, "offlineRegist");
             return (Criteria) this;
         }
+
+        public Criteria andCourseNumIsNull() {
+            addCriterion("course_num is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumIsNotNull() {
+            addCriterion("course_num is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumEqualTo(Integer value) {
+            addCriterion("course_num =", value, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumNotEqualTo(Integer value) {
+            addCriterion("course_num <>", value, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumGreaterThan(Integer value) {
+            addCriterion("course_num >", value, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("course_num >=", value, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumLessThan(Integer value) {
+            addCriterion("course_num <", value, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumLessThanOrEqualTo(Integer value) {
+            addCriterion("course_num <=", value, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumIn(List<Integer> values) {
+            addCriterion("course_num in", values, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumNotIn(List<Integer> values) {
+            addCriterion("course_num not in", values, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumBetween(Integer value1, Integer value2) {
+            addCriterion("course_num between", value1, value2, "courseNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCourseNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("course_num not between", value1, value2, "courseNum");
+            return (Criteria) this;
+        }
     }
 
     /**

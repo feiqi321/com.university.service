@@ -212,8 +212,8 @@ public class EduRegistServiceImpl implements EduRegistService {
         return i;
     }
 
+    //全局设置更新
     private void updateAllCondition(EduRegist eduRegist) {
-
         //查出全局设置条件
         EduRegistExample eduRegistExample1 = new EduRegistExample();
         eduRegistExample1.createCriteria().andCourseIdEqualTo(eduRegist.getCourseId()).andSchoolIdEqualTo(eduRegist.getSchoolId());
@@ -242,6 +242,7 @@ public class EduRegistServiceImpl implements EduRegistService {
                 regist.setRegistCategoryTwo(eduRegistAll.getRegistCategoryTwo());
                 regist.setSchoolName(eduRegistAll.getSchoolName());
                 regist.setOfflineRegist(eduRegistAll.getOfflineRegist());
+                regist.setCourseNum(eduRegistAll.getCourseNum());
                 eduRegistMapper.updateByPrimaryKeySelective(regist);
             }
         }
@@ -361,6 +362,7 @@ public class EduRegistServiceImpl implements EduRegistService {
             newEduRegist.setRegistCategorySix(regist.getRegistCategorySix());
             newEduRegist.setRegistCategoryTwo(regist.getRegistCategoryTwo());
             newEduRegist.setSchoolName(regist.getSchoolName());
+            newEduRegist.setCourseNum(regist.getCourseNum());
             i = eduRegistMapper.updateByPrimaryKeySelective(newEduRegist);
             if (i > 0) {
                 return i;

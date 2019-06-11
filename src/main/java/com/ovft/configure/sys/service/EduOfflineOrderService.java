@@ -35,4 +35,6 @@ public interface EduOfflineOrderService {
     //取消订单
     Integer deleteOffOrderByUserPhone(EduOfflineOrder eduOfflineOrder);
 
+    //取消订单
+    Integer deleteOffOrderByUserIdAndCourseId(EduOfflineOrder eduOfflineOrder);
 }

@@ -54,6 +54,7 @@ public class EduBooksInfoController {
         }
 
         EduBooksInfoVo eduBooksInfo = eduBooksInfoService.selectBookById(id);
+
         long cartNum = eduCartService.countCartNum(userId);
         eduBooksInfo.setCountNum(cartNum);
 
