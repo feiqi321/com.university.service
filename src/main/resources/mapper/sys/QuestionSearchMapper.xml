@@ -9,6 +9,43 @@
        endtime,schoolName,author,top_image,tid) values (default,#{schoolId},#{searchName},#{content},#{createTime},
        #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid})
      </insert>
+     <!--修改问卷调查主题-->
+     <update id="updateSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
+             keyProperty="sid">
+       update   edu_search_question
+            <set>
+         <if test="schoolId != null and schoolId != ''">
+             schoolId=#{schoolId},
+         </if>
+         <if test="searchName != null and searchName != ''">
+             search_name=#{searchName},
+         </if>
+
+         <if test="content != null and content != ''">
+             content=#{content},
+         </if>
+         <if test="createTime != null and createTime != ''">
+             createtime=#{createTime},
+         </if>
+         <if test="updateTime != null and updateTime != ''">
+             updatetime=#{updateTime},
+         </if>
+         <if test="endTime != null and endTime != ''">
+             endtime=#{endTime},
+         </if>
+         <if test="schoolName != null and schoolName != ''">
+             schoolName=#{schoolName},
+         </if>
+         <if test="author != null and author != ''">
+             author=#{author},
+         </if>
+         <if test="topImage != null and topImage != ''">
+             top_image=#{topImage},
+         </if>
+            </set>
+         where sid=#{sid}
+
+     </update>
     <!--添加问卷题目-->
     <insert id="createQuestion" parameterType="com.ovft.configure.sys.bean.Question">
        insert  into  edu_question_item(qid,sid,question,answer) values (default,#{sid},#{question},#{answer})
@@ -32,24 +69,118 @@
             #{item.item1},
             #{item.item1_num},
             #{item.item1_grade},
+            #{item.item1_image}
             #{item.item2},
             #{item.item2_num},
             #{item.item2_grade},
+            #{item.item2_image}
             #{item.item3},
             #{item.item3_num},
             #{item.item3_grade},
+            #{item.item3_image}
             #{item.item4},
             #{item.item4_num},
             #{item.item4_grade},
+            #{item.item4_image}
             #{item.item5},
             #{item.item5_num},
             #{item.item5_grade},
+            #{item.item5_image}
             #{item.item6},
             #{item.item6_num},
             #{item.item6_grade}
+            #{item.item6_image}
             )
         </foreach>
     </insert>
+
+    <!--批量修改问卷题目及选项记录-->
+    <update id="updateBigQuestionItem"  parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update edu_question
+            <set>
+                <if test="sid != null and sid != ''">
+                    sid=#{item.sid},
+                </if>
+                <if test="question != null and question != ''">
+                    question=#{item.question},
+                </if>
+                <if test="item1 != null and item1 != ''">
+                    item1=#{item.item1},
+                </if>
+                <if test="item1_num != null and item1_num != ''">
+                    item1_num=#{item.item1_num},
+                </if>
+                <if test="item1_grade != null and item1_grade != ''">
+                    item1_grade=#{item.item1_grade},
+                </if>
+                <if test="item1_image != null and item1_image != ''">
+                    item1_image= #{item.item1_image},
+                </if>
+                <if test="item2 != null and item2 != ''">
+                    item2=#{item.item2},
+                </if>
+                <if test="item2_num != null and item2_num != ''">
+                    item2_num=#{item.item2_num},
+                </if>
+                <if test="item2_grade != null and item2_grade != ''">
+                    item2_grade=#{item.item2_grade},
+                </if>
+                <if test="item2_image != null and item2_image != ''">
+                    item2_image= #{item.item2_image},
+                </if>
+                <if test="item3 != null and item3 != ''">
+                    item3=#{item.item3},
+                </if>
+                <if test="item3_num != null and item3_num != ''">
+                    item3_num=#{item.item3_num},
+                </if>
+                <if test="item3_grade != null and item3_grade != ''">
+                    item3_grade=#{item.item3_grade},
+                </if>
+                <if test="item3_image != null and item3_image != ''">
+                    item3_image= #{item.item3_image},
+                </if>
+                <if test="item4 != null and item4 != ''">
+                    item4=#{item.item4},
+                </if>
+                <if test="item4_num != null and item4_num != ''">
+                    item4_num=#{item.item4_num},
+                </if>
+                <if test="item4_grade != null and item4_grade != ''">
+                    item4_grade=#{item.item4_grade},
+                </if>
+                <if test="item4_image != null and item4_image != ''">
+                    item4_image= #{item.item4_image},
+                </if>
+                <if test="item5 != null and item5 != ''">
+                    item5=#{item.item5},
+                </if>
+                <if test="item5_num != null and item5_num != ''">
+                    item5_num=#{item.item5_num},
+                </if>
+                <if test="item5_grade != null and item5_grade != ''">
+                    item5_grade=#{item.item5_grade},
+                </if>
+                <if test="item5_image != null and item5_image != ''">
+                    item5_image= #{item.item5_image},
+                </if>
+                <if test="item6 != null and item6 != ''">
+                    item6=#{item.item6},
+                </if>
+                <if test="item6_num != null and item6_num != ''">
+                    item6_num=#{item.item6_num},
+                </if>
+                <if test="item6_grade != null and item6_grade != ''">
+                    item6_grade=#{item.item6_grade},
+                </if>
+                <if test="item6_image != null and item6_image != ''">
+                    item6_image= #{item.item6_image},
+                </if>
+            </set>
+            where qid = #{item.qid}
+        </foreach>
+    </update>
 
     <!--删除对应问卷主题记录-->
     <delete id="deleteSearchQuestion" parameterType="int">

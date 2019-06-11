@@ -36,19 +36,31 @@ public class QuestionSearchImpl implements QuestionSearchService {
     public WebResult createSearchQuestion(SearchQuestion searchQuestion) {
         String schoolById = schoolMapper.findSchoolById(searchQuestion.getSchoolId());
         searchQuestion.setSchoolName(schoolById);
-        searchQuestion.setCreateTime(new Date());
-        searchQuestion.setUpdateTime(new Date());
-        questionSearchMapper.createSearchQuestion(searchQuestion);
-        //批量添加问题及选项
-
-        List<Question> questions = searchQuestion.getQuestions();
-        //设置question的sid与问卷主题标的主键id进行绑定
-        for (int i = 0; i < searchQuestion.getQuestions().size(); i++) {
-            questions.get(i).setSid(searchQuestion.getSid());
-
+        if (searchQuestion.getSid()==null) {
+            searchQuestion.setCreateTime(new Date());
         }
-        questionSearchMapper.insertBigQuestionItem(questions);
-        return new WebResult("200", "添加成功", "");
+        searchQuestion.setUpdateTime(new Date());
+        if (searchQuestion.getSid()==null) {
+            questionSearchMapper.createSearchQuestion(searchQuestion);
+
+            //批量添加问题及选项
+
+            List<Question> questions = searchQuestion.getQuestions();
+            //设置question的sid与问卷主题标的主键sid进行绑定
+            for (int i = 0; i < searchQuestion.getQuestions().size(); i++) {
+                questions.get(i).setSid(searchQuestion.getSid());
+
+            }
+
+            questionSearchMapper.insertBigQuestionItem(questions);
+            return new WebResult("200", "添加成功", "");
+
+        }else{
+            questionSearchMapper.updateSearchQuestion(searchQuestion);
+                List questions=searchQuestion.getQuestions();
+            questionSearchMapper.updateBigQuestionItem(questions);
+            return new WebResult("200", "修改成功", "");
+        }
     }
 
     //删除问卷调查（SearchQuestion）

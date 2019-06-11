@@ -17,12 +17,16 @@ import java.util.List;
 public interface QuestionSearchMapper {
     //添加问卷调查主题（SearchQuestion）
     public void createSearchQuestion(SearchQuestion searchQuestion);
+    //修改问卷调查主题（SearchQuestion）
+    public void updateSearchQuestion(SearchQuestion searchQuestion);
     //添加问卷题目（SearchQuestion）
     public void createQuestion(Question question);
     //添加问卷题目选项（SearchQuestion）
     public void createQuestionItem(QuestionItem questionItem);
     //批量添加问卷题目及选项记录（SearchQuestion）
     public void insertBigQuestionItem(List<Question> question);
+    //批量修改问卷题目及选项记录（SearchQuestion）
+    public void updateBigQuestionItem(List<Question> question);
     //删除一篇问卷主题
     public void deleteSearchQuestion(Integer sid);
     //删除一篇问卷调查题目及选项

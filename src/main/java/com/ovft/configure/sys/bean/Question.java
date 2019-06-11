@@ -4,28 +4,82 @@ package com.ovft.configure.sys.bean;
  * 调查问卷问题选项结果表
  **/
 public class Question {
-    private Integer qid;
-    private Integer sid;    //问卷调查主表记录id
-    private String question;
-    private String item1;
-    private Integer item1_num;
-    private String item1_grade;
+    private Integer qid;             //题目id
+    private Integer sid;             //问卷调查主表记录id
+    private String question;         //题目名称
+    private String item1;            //选项一
+    private Integer item1_num;       //选项一被选择的数量
+    private String item1_grade;      //选项一的分数（权重）
+    private String item1_image;      //选项一的图片（例如投票里面的选项图片）
     private String item2;
     private Integer item2_num;
     private String item2_grade;
+    private String item2_image;
     private String item3;
     private Integer item3_num;
     private String item3_grade;
+    private String item3_image;
     private String item4;
     private Integer item4_num;
     private String item4_grade;
+    private String item4_image;
     private String item5;
     private Integer item5_num;
     private String item5_grade;
+    private String item5_image;
     private String item6;
     private Integer item6_num;
     private String item6_grade;
+    private String item6_image;
     private Integer tid;
+
+    public String getItem1_image() {
+        return item1_image;
+    }
+
+    public String getItem2_image() {
+        return item2_image;
+    }
+
+    public String getItem3_image() {
+        return item3_image;
+    }
+
+    public String getItem4_image() {
+        return item4_image;
+    }
+
+    public String getItem5_image() {
+        return item5_image;
+    }
+
+    public String getItem6_image() {
+        return item6_image;
+    }
+
+    public void setItem1_image(String item1_image) {
+        this.item1_image = item1_image;
+    }
+
+    public void setItem2_image(String item2_image) {
+        this.item2_image = item2_image;
+    }
+
+    public void setItem3_image(String item3_image) {
+        this.item3_image = item3_image;
+    }
+
+    public void setItem4_image(String item4_image) {
+        this.item4_image = item4_image;
+    }
+
+    public void setItem5_image(String item5_image) {
+        this.item5_image = item5_image;
+    }
+
+    public void setItem6_image(String item6_image) {
+        this.item6_image = item6_image;
+    }
 
     public Integer getTid() {
         return tid;

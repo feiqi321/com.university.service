@@ -24,7 +24,7 @@ public class QuestionSearchController {
     private RedisUtil redisUtil;
 
     /**
-     * 添加问卷调查主题（SearchQuestion）
+     * 添加修改问卷调查主题（SearchQuestion）
      *
      * @param
      * @return
@@ -58,8 +58,21 @@ public class QuestionSearchController {
      * @return
      */
     @PostMapping(value = "/server/deleteSearchQuestion")
-    public WebResult deleteSearchQuestion(@RequestBody SearchQuestion searchQuestion) {
-       return questionSearchService.deleteSearchQuestion(searchQuestion.getSid());
+    public WebResult deleteSearchQuestion(@RequestBody SearchQuestion searchQuestion,HttpServletRequest request) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if (o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if (hget.getRole() != 0) {
+                searchQuestion.setSchoolId(hget.getSchoolId());
+            }
+            return questionSearchService.deleteSearchQuestion(searchQuestion.getSid());
+        } else {
+            return new WebResult("50012", "请先登录", "");
+        }
     }
 
     /**
