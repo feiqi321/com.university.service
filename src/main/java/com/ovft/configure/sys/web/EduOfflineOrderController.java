@@ -42,9 +42,9 @@ public class EduOfflineOrderController {
     public WebResult deleteOffOrderByUserPhone(@RequestBody EduOfflineOrder eduOfflineOrder) {
         Integer res = eduOfflineOrderService.deleteOffOrderByUserIdAndCourseId(eduOfflineOrder);
         if (res > 0) {
-            return new WebResult(StatusCode.OK, "取消成功", "");
+            return new WebResult(StatusCode.OK, "删除成功", "");
         }
-        return new WebResult(StatusCode.ERROR, "取消失败", "");
+        return new WebResult(StatusCode.ERROR, "删除失败", "");
     }
 
 

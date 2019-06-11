@@ -109,13 +109,12 @@ public class EduOfflineOrderServiceImpl implements EduOfflineOrderService {
         //查询是否还有订单，如果订单数量为0，则要删除payInfo的信息
         EduOfflineOrderExample eduOfflineOrderExample2 = new EduOfflineOrderExample();
         eduOfflineOrderExample2.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId());
-        List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderMapper.selectByExample(eduOfflineOrderExample);
+        List<EduOfflineOrder> eduOfflineOrders = eduOfflineOrderMapper.selectByExample(eduOfflineOrderExample2);
         if (eduOfflineOrders.size() == 0) {
             EduOfflinePayInfoExample eduOfflinePayInfoExample = new EduOfflinePayInfoExample();
             eduOfflinePayInfoExample.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId());
             eduOfflinePayInfoMapper.deleteByExample(eduOfflinePayInfoExample);
         }
-
 
         if (res > 0 && res1 > 0 && res2 > 0) {
             return 1;

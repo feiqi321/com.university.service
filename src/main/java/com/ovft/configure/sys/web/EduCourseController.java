@@ -24,7 +24,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("apply")
+    @RequestMapping("apply")
 public class EduCourseController {
 
     @Autowired
