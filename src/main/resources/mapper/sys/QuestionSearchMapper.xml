@@ -94,8 +94,8 @@
         </foreach>
     </insert>
 
-    批量修改问卷题目及选项记录
-    <update id="updateBigQuestionItem" parameterType="java.util.List">
+    <!--批量修改问卷题目及选项记录-->
+    <update id="updateBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="false">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             update edu_question  set
 
@@ -129,7 +129,7 @@
         </foreach>
     </update>
 
-    <update id="updateQuestionItemNum" parameterType="java.util.List" useGeneratedKeys="false" >
+    <update id="updateQuestionItemNum" parameterType="com.ovft.configure.sys.bean.Question" useGeneratedKeys="false" >
 
             update edu_question  set
             item1_num=#{item1_num},
@@ -141,41 +141,7 @@
             where qid= #{item.qid}
 
     </update>
-    <update id="updateBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="false" >
-        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update edu_question
-            <set>
 
-                <if test="item.item1 !=null">
-                    item1 = #{item.item1,jdbcType=VARCHAR},
-                </if>
-                <if test="item.item1_num !=null">
-                    item1_num = #{item.item1_num,jdbcType=INTEGER},
-                </if>
-                <if test="item.item1_grade !=null">
-                    item1_grade = #{item.item1_grade,jdbcType=VARCHAR},
-                </if>
-                <if test="item.item1_image !=null">
-                    item1_image = #{item.item1_image,jdbcType=VARCHAR},
-                </if>
-
-                <if test="item.item2 !=null">
-                    item2 = #{item.item2,jdbcType=VARCHAR},
-                </if>
-                <if test="item.item2_num !=null">
-                    item2_num = #{item.item2_num,jdbcType=INTEGER},
-                </if>
-                <if test="item.item2_grade !=null">
-                    item2_grade = #{item.item2_grade,jdbcType=VARCHAR},
-                </if>
-                <if test="item.item2_image !=null">
-                    item2_image = #{item.item2_image,jdbcType=VARCHAR},
-                </if>
-
-            </set>
-            where qid = #{item.qid,jdbcType=INTEGER}
-        </foreach>
-    </update>
 
     <!--删除对应问卷主题记录-->
     <delete id="deleteSearchQuestion" parameterType="int">
@@ -258,12 +224,11 @@
     </select>
 
     <!--添加问卷题目结果-->
-    <insert id="createAnswerRecord" parameterType="com.ovft.configure.sys.bean.AnswerRecord" useGeneratedKeys="true"
-            keyProperty="sid">
+    <insert id="createAnswerRecord" parameterType="com.ovft.configure.sys.bean.AnswerRecord" >
        insert  into  edu_answer_record a (aid,uid,userName,schoolName,answer,title,a.advice_info adviceInfo,total_grade totalGrade) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade})
      </insert>
     <!--查询问卷题目结果-->
-    <select id="createAnswerRecord" resultType="java.lang.Integer" >
+    <select id="queryAnswerRecordGrade" resultType="java.lang.Integer" >
        select  a.total_grade totalGrade  from   edu_answer_record a
      </select>
 
