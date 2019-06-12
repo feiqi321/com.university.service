@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ovft.configure.sys.dao.QuestionSearchMapper" >
-     <!--添加问卷调查主题-->
-     <insert id="createSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
-             keyProperty="sid">
+<mapper namespace="com.ovft.configure.sys.dao.QuestionSearchMapper">
+    <!--添加问卷调查主题-->
+    <insert id="createSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
+            keyProperty="sid">
        insert  into  edu_search_question(sid,schoolId,search_name,content,createtime,updatetime,
        endtime,schoolName,author,top_image,tid) values (default,#{schoolId},#{searchName},#{content},#{createTime},
        #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid})
      </insert>
-     <!--修改问卷调查主题-->
-     <update id="updateSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
-             keyProperty="sid">
-       update   edu_search_question
-            <set>
-         <if test="schoolId != null and schoolId != ''">
-             schoolId=#{schoolId},
-         </if>
-         <if test="searchName != null and searchName != ''">
-             search_name=#{searchName},
-         </if>
+    <!--修改问卷调查主题-->
+    <update id="updateSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
+            keyProperty="sid">
+        update edu_search_question
+        <set>
+            <if test="schoolId != null and schoolId != ''">
+                schoolId=#{schoolId},
+            </if>
+            <if test="searchName != null and searchName != ''">
+                search_name=#{searchName},
+            </if>
 
-         <if test="content != null and content != ''">
-             content=#{content},
-         </if>
-         <if test="createTime != null and createTime != ''">
-             createtime=#{createTime},
-         </if>
-         <if test="updateTime != null and updateTime != ''">
-             updatetime=#{updateTime},
-         </if>
-         <if test="endTime != null and endTime != ''">
-             endtime=#{endTime},
-         </if>
-         <if test="schoolName != null and schoolName != ''">
-             schoolName=#{schoolName},
-         </if>
-         <if test="author != null and author != ''">
-             author=#{author},
-         </if>
-         <if test="topImage != null and topImage != ''">
-             top_image=#{topImage},
-         </if>
-            </set>
-         where sid=#{sid}
+            <if test="content != null and content != ''">
+                content=#{content},
+            </if>
+            <if test="createTime != null">
+                createtime=#{createTime},
+            </if>
+            <if test="updateTime != null">
+                updatetime=#{updateTime},
+            </if>
+            <if test="endTime != null">
+                endtime=#{endTime},
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                schoolName=#{schoolName},
+            </if>
+            <if test="author != null and author != ''">
+                author=#{author},
+            </if>
+            <if test="topImage != null and topImage != ''">
+                top_image=#{topImage},
+            </if>
+        </set>
+        where sid=#{sid}
 
-     </update>
+    </update>
     <!--添加问卷题目-->
     <insert id="createQuestion" parameterType="com.ovft.configure.sys.bean.Question">
        insert  into  edu_question_item(qid,sid,question,answer) values (default,#{sid},#{question},#{answer})
      </insert>
-     <!--添加问卷题目选项-->
-     <insert id="createQuestionItem" parameterType="com.ovft.configure.sys.bean.QuestionItem" useGeneratedKeys="true"
-             keyProperty="sid">
+    <!--添加问卷题目选项-->
+    <insert id="createQuestionItem" parameterType="com.ovft.configure.sys.bean.QuestionItem" useGeneratedKeys="true"
+            keyProperty="sid">
        insert  into  edu_question_item(id,qid,Item_char,content,sid,num) values (default,#{qid},#{itemChar},#{content},#{sid},#{num})
      </insert>
     <!--批量添加问卷题目及选项记录-->
     <insert id="insertBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="false">
         insert into edu_question
-        (qid,sid,question,item1,item1_num,item1_grade,item2,item2_num,item2_grade,item3,item3_num,item3_grade,item4,item4_num,item4_grade,
-        item5,item5_num,item5_grade,item6,item6_num,item6_grade)
+        (qid,sid,question,item1,item1_num,item1_grade,item1_image,item2,item2_num,item2_grade,item2_image,item3,item3_num,item3_grade,item3_image,item4,item4_num,item4_grade,
+        item4_image,item5,item5_num,item5_grade,item5_image,item6,item6_num,item6_grade,item6_image)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
@@ -69,116 +69,111 @@
             #{item.item1},
             #{item.item1_num},
             #{item.item1_grade},
-            #{item.item1_image}
+            #{item.item1_image},
             #{item.item2},
             #{item.item2_num},
             #{item.item2_grade},
-            #{item.item2_image}
+            #{item.item2_image},
             #{item.item3},
             #{item.item3_num},
             #{item.item3_grade},
-            #{item.item3_image}
+            #{item.item3_image},
             #{item.item4},
             #{item.item4_num},
             #{item.item4_grade},
-            #{item.item4_image}
+            #{item.item4_image},
             #{item.item5},
             #{item.item5_num},
             #{item.item5_grade},
-            #{item.item5_image}
+            #{item.item5_image},
             #{item.item6},
             #{item.item6_num},
-            #{item.item6_grade}
+            #{item.item6_grade},
             #{item.item6_image}
             )
         </foreach>
     </insert>
 
-    <!--批量修改问卷题目及选项记录-->
-    <update id="updateBigQuestionItem"  parameterType="java.util.List">
+    批量修改问卷题目及选项记录
+    <update id="updateBigQuestionItem" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update edu_question  set
+
+                question=#{item.question},
+                item1=#{item.item1},
+                item1_num=#{item.item1_num},
+                item1_grade=#{item.item1_grade},
+                item1_image= #{item.item1_image},
+                item2=#{item.item2},
+                item2_num=#{item.item2_num},
+                item2_grade=#{item.item2_grade},
+                item2_image= #{item.item2_image},
+                item3=#{item.item3},
+                item3_num=#{item.item3_num},
+                item3_grade=#{item.item3_grade},
+                item3_image= #{item.item3_image},
+                item4=#{item.item4},
+                item4_num=#{item.item4_num},
+                item4_grade=#{item.item4_grade},
+                item4_image= #{item.item4_image},
+                item5=#{item.item5},
+                item5_num=#{item.item5_num},
+                item5_grade=#{item.item5_grade},
+                item5_image= #{item.item5_image},
+                item6=#{item.item6},
+                item6_num=#{item.item6_num},
+                item6_grade=#{item.item6_grade},
+                item6_image= #{item.item6_image}
+
+            where qid= #{item.qid}
+        </foreach>
+    </update>
+
+    <update id="updateQuestionItemNum" parameterType="java.util.List" useGeneratedKeys="false" >
+
+            update edu_question  set
+            item1_num=#{item1_num},
+            item2_num=#{item2_num},
+            item3_num=#{item3_num},
+            item4_num=#{item4_num},
+            item5_num=#{item5_num},
+            item6_num=#{item6_num}
+            where qid= #{item.qid}
+
+    </update>
+    <update id="updateBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="false" >
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             update edu_question
             <set>
-                <if test="sid != null and sid != ''">
-                    sid=#{item.sid},
+
+                <if test="item.item1 !=null">
+                    item1 = #{item.item1,jdbcType=VARCHAR},
                 </if>
-                <if test="question != null and question != ''">
-                    question=#{item.question},
+                <if test="item.item1_num !=null">
+                    item1_num = #{item.item1_num,jdbcType=INTEGER},
                 </if>
-                <if test="item1 != null and item1 != ''">
-                    item1=#{item.item1},
+                <if test="item.item1_grade !=null">
+                    item1_grade = #{item.item1_grade,jdbcType=VARCHAR},
                 </if>
-                <if test="item1_num != null and item1_num != ''">
-                    item1_num=#{item.item1_num},
+                <if test="item.item1_image !=null">
+                    item1_image = #{item.item1_image,jdbcType=VARCHAR},
                 </if>
-                <if test="item1_grade != null and item1_grade != ''">
-                    item1_grade=#{item.item1_grade},
+
+                <if test="item.item2 !=null">
+                    item2 = #{item.item2,jdbcType=VARCHAR},
                 </if>
-                <if test="item1_image != null and item1_image != ''">
-                    item1_image= #{item.item1_image},
+                <if test="item.item2_num !=null">
+                    item2_num = #{item.item2_num,jdbcType=INTEGER},
                 </if>
-                <if test="item2 != null and item2 != ''">
-                    item2=#{item.item2},
+                <if test="item.item2_grade !=null">
+                    item2_grade = #{item.item2_grade,jdbcType=VARCHAR},
                 </if>
-                <if test="item2_num != null and item2_num != ''">
-                    item2_num=#{item.item2_num},
+                <if test="item.item2_image !=null">
+                    item2_image = #{item.item2_image,jdbcType=VARCHAR},
                 </if>
-                <if test="item2_grade != null and item2_grade != ''">
-                    item2_grade=#{item.item2_grade},
-                </if>
-                <if test="item2_image != null and item2_image != ''">
-                    item2_image= #{item.item2_image},
-                </if>
-                <if test="item3 != null and item3 != ''">
-                    item3=#{item.item3},
-                </if>
-                <if test="item3_num != null and item3_num != ''">
-                    item3_num=#{item.item3_num},
-                </if>
-                <if test="item3_grade != null and item3_grade != ''">
-                    item3_grade=#{item.item3_grade},
-                </if>
-                <if test="item3_image != null and item3_image != ''">
-                    item3_image= #{item.item3_image},
-                </if>
-                <if test="item4 != null and item4 != ''">
-                    item4=#{item.item4},
-                </if>
-                <if test="item4_num != null and item4_num != ''">
-                    item4_num=#{item.item4_num},
-                </if>
-                <if test="item4_grade != null and item4_grade != ''">
-                    item4_grade=#{item.item4_grade},
-                </if>
-                <if test="item4_image != null and item4_image != ''">
-                    item4_image= #{item.item4_image},
-                </if>
-                <if test="item5 != null and item5 != ''">
-                    item5=#{item.item5},
-                </if>
-                <if test="item5_num != null and item5_num != ''">
-                    item5_num=#{item.item5_num},
-                </if>
-                <if test="item5_grade != null and item5_grade != ''">
-                    item5_grade=#{item.item5_grade},
-                </if>
-                <if test="item5_image != null and item5_image != ''">
-                    item5_image= #{item.item5_image},
-                </if>
-                <if test="item6 != null and item6 != ''">
-                    item6=#{item.item6},
-                </if>
-                <if test="item6_num != null and item6_num != ''">
-                    item6_num=#{item.item6_num},
-                </if>
-                <if test="item6_grade != null and item6_grade != ''">
-                    item6_grade=#{item.item6_grade},
-                </if>
-                <if test="item6_image != null and item6_image != ''">
-                    item6_image= #{item.item6_image},
-                </if>
+
             </set>
-            where qid = #{item.qid}
+            where qid = #{item.qid,jdbcType=INTEGER}
         </foreach>
     </update>
 
@@ -187,15 +182,16 @@
            delete from  edu_search_question where sid=#{sid}
     </delete>
 
-     <!--删除对应问卷的题目及选项-->
+    <!--删除对应问卷的题目及选项-->
     <delete id="deleteQuestionItem" parameterType="int">
            delete from  edu_question where sid=#{sid}
     </delete>
 
     <!--后台条件查询问卷调查-->
-    <select id="findSearchQuestionAll"  resultType="com.ovft.configure.sys.bean.SearchQuestion">
-        select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime, s.updatetime,s.endtime,s.schoolName,
-         s.top_image as topImage,s.author,s.tid
+    <select id="findSearchQuestionAll" resultType="com.ovft.configure.sys.bean.SearchQuestion">
+        select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime,
+        s.updatetime,s.endtime,s.schoolName,
+        s.top_image as topImage,s.author,s.tid
         from edu_search_question s
 
         where 1=1
@@ -209,17 +205,39 @@
             AND s.tid = #{tid}
         </if>
         <!--<if test="type != null and type != ''">-->
-            <!--AND a.type = #{type}-->
+        <!--AND a.type = #{type}-->
         <!--</if>-->
         <if test="search != null and search != ''">
-            AND (s.searchName  like CONCAT('%',#{search},'%')  or s.author like CONCAT('%',#{search},'%'))
+            AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
         </if>
 
         ORDER BY s.createtime DESC,s.updatetime DESC
     </select>
-    <select id="findQuestionAll"  resultType="com.ovft.configure.sys.bean.Question">
-        select q.qid,q.question,q.item1,q.item1_num,item1_grade,q.item2,q.item2_num,item2_grade
-        ,q.item3,q.item3_num,item3_grade,q.item4,q.item4_num,item4_grade,q.item5,q.item5_num,item5_grade,q.item6,q.item6_num,item6_grade,q.tid
+    <!--进入详情页（无选项分数字段返回）-->
+    <select id="findQuestionAll" resultType="com.ovft.configure.sys.bean.Question">
+        select q.qid,q.question,q.item1,q.item1_num,q.item1_image,q.item2,q.item2_num
+        ,q.item2_image,q.item3,q.item3_num,q.item3_image,q.item4,q.item4_num,q.item4_image,q.item5,q.item5_num,q.item5_image,q.item6,q.item6_num,q.item6_image,q.tid
+        from edu_question q
+        where 1=1
+        <if test="sid != null and sid != ''">
+            AND q.sid = #{sid}
+        </if>
+
+        <if test="tid != null and tid != ''">
+            AND q.tid = #{tid}
+        </if>
+        <!--<if test="type != null and type != ''">-->
+        <!--AND a.type = #{type}-->
+        <!--</if>-->
+        <if test="search != null and search != ''">
+            AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+        </if>
+
+    </select>
+    <!--查询题目及选项分数-->
+    <select id="findQuestionAllAndGrade" resultType="com.ovft.configure.sys.bean.Question">
+        select q.qid,q.question,q.item1,q.item1_num,item1_grade,q.item1_image,q.item2,q.item2_num,item2_grade
+        ,q.item2_image,q.item3,q.item3_num,item3_grade,q.item3_image,q.item4,q.item4_num,item4_grade,q.item4_image,q.item5,q.item5_num,item5_grade,q.item5_image,q.item6,q.item6_num,item6_grade,q.item6_image,q.tid
         from edu_question q
 
         where 1=1
@@ -234,10 +252,20 @@
         <!--AND a.type = #{type}-->
         <!--</if>-->
         <if test="search != null and search != ''">
-            AND (s.searchName  like CONCAT('%',#{search},'%')  or s.author like CONCAT('%',#{search},'%'))
+            AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
         </if>
 
     </select>
+
+    <!--添加问卷题目结果-->
+    <insert id="createAnswerRecord" parameterType="com.ovft.configure.sys.bean.AnswerRecord" useGeneratedKeys="true"
+            keyProperty="sid">
+       insert  into  edu_answer_record a (aid,uid,userName,schoolName,answer,title,a.advice_info adviceInfo,total_grade totalGrade) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade})
+     </insert>
+    <!--查询问卷题目结果-->
+    <select id="createAnswerRecord" resultType="java.lang.Integer" >
+       select  a.total_grade totalGrade  from   edu_answer_record a
+     </select>
 
 
 

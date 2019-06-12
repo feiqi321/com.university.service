@@ -74,6 +74,19 @@ public class QuestionSearchController {
             return new WebResult("50012", "请先登录", "");
         }
     }
+    /**
+     * 添加用户调查结果记录
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/user/createAnswerRecord")
+    public WebResult createAnswerRecord(@RequestBody AnswerRecord answerRecord,HttpServletRequest request) {
+             Integer userId=Integer.parseInt(request.getHeader("userId"));
+             answerRecord.setUid(userId);
+             return questionSearchService.createAnswerRecord(answerRecord);
+
+    }
 
     /**
      * 问卷调查列表及模糊查询（分页）
