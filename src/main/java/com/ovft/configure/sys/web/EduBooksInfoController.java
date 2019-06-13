@@ -2,15 +2,16 @@ package com.ovft.configure.sys.web;
 
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.EduBooksInfo;
 import com.ovft.configure.sys.service.EduBooksInfoService;
 import com.ovft.configure.sys.service.EduCartService;
 import com.ovft.configure.sys.vo.EduBooksInfoVo;
+import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author vvtxw
@@ -60,4 +61,90 @@ public class EduBooksInfoController {
 
         return new WebResult(StatusCode.OK, "查询成功", eduBooksInfo);
     }
+
+    /**
+     * 添加教材详情
+     *
+     * @param eduBooksInfo
+     * @return
+     */
+    @PostMapping(value = "add")
+    public WebResult addBookInfo(@RequestBody EduBooksInfo eduBooksInfo) {
+        Integer res = eduBooksInfoService.addBookInfo(eduBooksInfo);
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "添加成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "添加失败", "");
+    }
+
+    /**
+     * 删除教材详情
+     *
+     * @param eduBooksInfo
+     * @return
+     */
+    @PostMapping(value = "delete")
+    public WebResult deleteBookInfo(@RequestBody EduBooksInfo eduBooksInfo) {
+        Integer res = eduBooksInfoService.deleteBookInfo(eduBooksInfo);
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "删除成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "删除失败", "");
+    }
+
+    /**
+     * 修改教材详情
+     *
+     * @param eduBooksInfo
+     * @return
+     */
+    @PostMapping(value = "update")
+    public WebResult updateBookInfo(@RequestBody EduBooksInfo eduBooksInfo) {
+        Integer res = eduBooksInfoService.updateBookInfo(eduBooksInfo);
+        if (res > 0) {
+            return new WebResult(StatusCode.OK, "修改成功", "");
+        }
+        return new WebResult(StatusCode.ERROR, "修改失败", "");
+    }
+
+    /**
+     * 修改教材详情
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "selectone")
+    public WebResult selectoneBookInfo(Integer id) {
+        EduBooksInfo eduBooksInfo = eduBooksInfoService.selectoneBookInfo(id);
+        return new WebResult(StatusCode.OK, "查询成功", eduBooksInfo);
+    }
+
+    /**
+     * 分页显示教材详情
+     *
+     * @param page
+     * @param size
+     * @param schoolId
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "shows")
+    public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId, Integer id) {
+        PageBean pageBean = eduBooksInfoService.showPageBookInfo(page, size, schoolId, id);
+        return new WebResult(StatusCode.OK, "查询成功", pageBean);
+    }
+
+    /**
+     * 根据教材id查询教材的名称
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "selectone")
+    public WebResult queryBookNameById(Integer id) {
+        List<String> eduBooksName = eduBooksInfoService.queryBookNameById(id);
+        return new WebResult(StatusCode.OK, "查询成功", eduBooksName);
+    }
+
+
 }

@@ -144,5 +144,4 @@ public class EduRegistController {
         return new WebResult(StatusCode.ERROR, "删除特殊设置失败", "");
     }
 
-
 }

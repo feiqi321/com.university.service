@@ -348,4 +348,21 @@
   </select>
 
 
+    <!--2.查找教材详情-->
+    <select id="queryForPage" parameterType="map"
+            resultType="com.ovft.configure.sys.bean.EduBooksInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_books_info
+        <where>
+            <if test="id != null and id!=''">
+                and id = #{id}
+            </if>
+            <if test="schoolId != null and schoolId!=''">
+                and school_id = #{schoolId}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>
