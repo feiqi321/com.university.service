@@ -9,29 +9,77 @@ public class Question {
     private String question;         //题目名称
     private String item1;            //选项一
     private Integer item1_num;       //选项一被选择的数量
-    private String item1_grade;      //选项一的分数（权重）
+    private Integer item1_grade;      //选项一的分数（权重）
     private String item1_image;      //选项一的图片（例如投票里面的选项图片）
     private String item2;
     private Integer item2_num;
-    private String item2_grade;
+    private Integer item2_grade;
     private String item2_image;
     private String item3;
     private Integer item3_num;
-    private String item3_grade;
+    private Integer item3_grade;
     private String item3_image;
     private String item4;
     private Integer item4_num;
-    private String item4_grade;
+    private Integer item4_grade;
     private String item4_image;
     private String item5;
     private Integer item5_num;
-    private String item5_grade;
+    private Integer item5_grade;
     private String item5_image;
     private String item6;
     private Integer item6_num;
-    private String item6_grade;
+    private Integer item6_grade;
     private String item6_image;
     private Integer tid;
+
+    public Integer getItem1_grade() {
+        return item1_grade;
+    }
+
+    public Integer getItem2_grade() {
+        return item2_grade;
+    }
+
+    public Integer getItem3_grade() {
+        return item3_grade;
+    }
+
+    public Integer getItem4_grade() {
+        return item4_grade;
+    }
+
+    public Integer getItem5_grade() {
+        return item5_grade;
+    }
+
+    public Integer getItem6_grade() {
+        return item6_grade;
+    }
+
+    public void setItem1_grade(Integer item1_grade) {
+        this.item1_grade = item1_grade;
+    }
+
+    public void setItem2_grade(Integer item2_grade) {
+        this.item2_grade = item2_grade;
+    }
+
+    public void setItem3_grade(Integer item3_grade) {
+        this.item3_grade = item3_grade;
+    }
+
+    public void setItem4_grade(Integer item4_grade) {
+        this.item4_grade = item4_grade;
+    }
+
+    public void setItem5_grade(Integer item5_grade) {
+        this.item5_grade = item5_grade;
+    }
+
+    public void setItem6_grade(Integer item6_grade) {
+        this.item6_grade = item6_grade;
+    }
 
     public String getItem1_image() {
         return item1_image;
@@ -109,20 +157,12 @@ public class Question {
         return item1_num;
     }
 
-    public String getItem1_grade() {
-        return item1_grade;
-    }
-
     public String getItem2() {
         return item2;
     }
 
     public Integer getItem2_num() {
         return item2_num;
-    }
-
-    public String getItem2_grade() {
-        return item2_grade;
     }
 
     public String getItem3() {
@@ -133,20 +173,12 @@ public class Question {
         return item3_num;
     }
 
-    public String getItem3_grade() {
-        return item3_grade;
-    }
-
     public String getItem4() {
         return item4;
     }
 
     public Integer getItem4_num() {
         return item4_num;
-    }
-
-    public String getItem4_grade() {
-        return item4_grade;
     }
 
     public String getItem5() {
@@ -157,20 +189,12 @@ public class Question {
         return item5_num;
     }
 
-    public String getItem5_grade() {
-        return item5_grade;
-    }
-
     public String getItem6() {
         return item6;
     }
 
     public Integer getItem6_num() {
         return item6_num;
-    }
-
-    public String getItem6_grade() {
-        return item6_grade;
     }
 
     public void setQid(Integer qid) {
@@ -193,20 +217,12 @@ public class Question {
         this.item1_num = item1_num;
     }
 
-    public void setItem1_grade(String item1_grade) {
-        this.item1_grade = item1_grade;
-    }
-
     public void setItem2(String item2) {
         this.item2 = item2;
     }
 
     public void setItem2_num(Integer item2_num) {
         this.item2_num = item2_num;
-    }
-
-    public void setItem2_grade(String item2_grade) {
-        this.item2_grade = item2_grade;
     }
 
     public void setItem3(String item3) {
@@ -217,20 +233,12 @@ public class Question {
         this.item3_num = item3_num;
     }
 
-    public void setItem3_grade(String item3_grade) {
-        this.item3_grade = item3_grade;
-    }
-
     public void setItem4(String item4) {
         this.item4 = item4;
     }
 
     public void setItem4_num(Integer item4_num) {
         this.item4_num = item4_num;
-    }
-
-    public void setItem4_grade(String item4_grade) {
-        this.item4_grade = item4_grade;
     }
 
     public void setItem5(String item5) {
@@ -241,10 +249,6 @@ public class Question {
         this.item5_num = item5_num;
     }
 
-    public void setItem5_grade(String item5_grade) {
-        this.item5_grade = item5_grade;
-    }
-
     public void setItem6(String item6) {
         this.item6 = item6;
     }
@@ -253,7 +257,4 @@ public class Question {
         this.item6_num = item6_num;
     }
 
-    public void setItem6_grade(String item6_grade) {
-        this.item6_grade = item6_grade;
-    }
 }

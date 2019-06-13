@@ -1,10 +1,14 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.AnswerRecord;
 import com.ovft.configure.sys.bean.Question;
 import com.ovft.configure.sys.bean.QuestionItem;
 import com.ovft.configure.sys.bean.SearchQuestion;
 import com.ovft.configure.sys.vo.PageVo;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 //问卷调查
 public interface QuestionSearchService {
@@ -18,6 +22,8 @@ public interface QuestionSearchService {
      public WebResult deleteSearchQuestion(Integer sid);
      //问卷调查列表
      public WebResult findSearchQuestionAll(PageVo pageVo);
+     //添加用户调查结果记录
+     public WebResult createAnswerRecord(AnswerRecord answerRecord);
 
 
 

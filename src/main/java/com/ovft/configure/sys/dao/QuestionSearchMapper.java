@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.AnswerRecord;
 import com.ovft.configure.sys.bean.Question;
 import com.ovft.configure.sys.bean.QuestionItem;
 import com.ovft.configure.sys.bean.SearchQuestion;
@@ -8,6 +9,7 @@ import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import javax.validation.constraints.Max;
 import java.util.List;
 
 /**
@@ -22,11 +24,11 @@ public interface QuestionSearchMapper {
     //添加问卷题目（SearchQuestion）
     public void createQuestion(Question question);
     //添加问卷题目选项（SearchQuestion）
-    public void createQuestionItem(QuestionItem questionItem);
+    public void createQuestionItem( QuestionItem questionItem);
     //批量添加问卷题目及选项记录（SearchQuestion）
-    public void insertBigQuestionItem(List<Question> question);
+    public void insertBigQuestionItem( List<Question> list);
     //批量修改问卷题目及选项记录（SearchQuestion）
-    public void updateBigQuestionItem(List<Question> question);
+    public void updateBigQuestionItem(List<Question> list);
     //删除一篇问卷主题
     public void deleteSearchQuestion(Integer sid);
     //删除一篇问卷调查题目及选项
@@ -35,5 +37,15 @@ public interface QuestionSearchMapper {
     public List<SearchQuestion> findSearchQuestionAll(@Param("sid")Integer sid, @Param("schoolId")Integer schoolId,@Param("tid")Integer tid,@Param("search") String search);
     //问卷调查列表
     public List<Question> findQuestionAll(@Param("sid")Integer sid,@Param("tid")Integer tid,@Param("search") String search);
+    //问卷调查列表
+    public List<Question> findQuestionAllAndGrade(@Param("sid")Integer sid,@Param("tid")Integer tid,@Param("search") String search);
+    //添加用户调查结果记录
+    public void createAnswerRecord(AnswerRecord answerRecord);
+    //添加用户调查结果记录
+    public List<Integer> queryAnswerRecordGrade();
+    //修改问卷题目及选项记录ItemNum（SearchQuestion）
+    public void updateQuestionItemNum(Question question);
+
+
 
 }
