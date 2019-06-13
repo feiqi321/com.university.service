@@ -3,7 +3,7 @@ package com.ovft.configure.sys.bean;
 import java.io.Serializable;
 
 /**
- * @author 
+ * @author
  */
 public class EduCart implements Serializable {
     /**
@@ -25,6 +25,11 @@ public class EduCart implements Serializable {
      * 数量
      */
     private Integer num;
+
+    /**
+     * 学校id
+     */
+    private String schoolId;
 
     private static final long serialVersionUID = 1L;
 
@@ -60,6 +65,14 @@ public class EduCart implements Serializable {
         this.num = num;
     }
 
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -73,9 +86,10 @@ public class EduCart implements Serializable {
         }
         EduCart other = (EduCart) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getGoodsId() == null ? other.getGoodsId() == null : this.getGoodsId().equals(other.getGoodsId()))
-            && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()));
+                && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+                && (this.getGoodsId() == null ? other.getGoodsId() == null : this.getGoodsId().equals(other.getGoodsId()))
+                && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()))
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()));
     }
 
     @Override
@@ -86,6 +100,7 @@ public class EduCart implements Serializable {
         result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
         result = prime * result + ((getGoodsId() == null) ? 0 : getGoodsId().hashCode());
         result = prime * result + ((getNum() == null) ? 0 : getNum().hashCode());
+        result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
         return result;
     }
 
@@ -99,6 +114,7 @@ public class EduCart implements Serializable {
         sb.append(", userId=").append(userId);
         sb.append(", goodsId=").append(goodsId);
         sb.append(", num=").append(num);
+        sb.append(", schoolId=").append(schoolId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

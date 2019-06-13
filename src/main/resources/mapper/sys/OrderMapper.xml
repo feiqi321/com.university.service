@@ -454,12 +454,11 @@
     f.payment_status,
     u.employer
     from edu_order o
-    LEFT JOIN edu_order_item i on i.order_id=o.id
+    LEFT JOIN edu_order_detail i on i.order_id=o.id
     LEFT JOIN edu_payment_info f on f.order_id = o.id
     LEFT JOIN edu_user u on  u.user_id=o.user_id
     ) t
-    WHERE course_id=#{course_id} and payment_status=#{payment_status} and employer=#
-    {employer}
+    WHERE course_id=#{course_id} and payment_status=#{payment_status} and employer=#{employer}
   </select>
 
     <!--2.查找专业相关报名人数-->
@@ -473,7 +472,7 @@
     i.course_id,
     f.payment_status
     from edu_order o
-    LEFT JOIN edu_order_item i on i.order_id=o.id
+    LEFT JOIN edu_order_detail i on i.order_id=o.id
     LEFT JOIN edu_payment_info f on f.order_id = o.id
     ) t
     WHERE course_id=#{course_id} and payment_status=#{payment_status}
@@ -506,7 +505,7 @@
     i.course_id,
     f.payment_status
     from edu_order o
-    LEFT JOIN edu_order_item i on i.order_id=o.id
+    LEFT JOIN edu_order_detail i on i.order_id=o.id
     LEFT JOIN edu_payment_info f on f.order_id = o.id
     ) t
 
@@ -517,11 +516,8 @@
     <!--4.查找订单的详细信息-->
     <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
         SELECT
-        o.*,
-        i.course_name,
-        i.num
+        o.*
         from edu_order o
-        LEFT JOIN edu_order_item i on i.order_id=o.id
         <where>
             <if test="userId != null and userId!=''">
                 and user_Id=#{userId}
@@ -538,7 +534,7 @@
         i.course_name,
         i.num
         from edu_order o
-        LEFT JOIN edu_order_item i on i.order_id=o.id
+        LEFT JOIN edu_order_detail i on i.order_id=o.id
         <where>
             <if test="userId != null and userId!=''">
                 and user_Id=#{userId}
@@ -549,28 +545,28 @@
         </where>
     </select>
 
-<!--    &lt;!&ndash;5.查找总订单信息&ndash;&gt;
-    <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
-        select
-        *
-        from
-        edu_order
-        <where>
-            <if test="userId != null and userId!=''">
-                and user_Id=#{userId}
-            </if>
-            <if test="orderStatus != null and orderStatus!=''">
-                and order_status=#{orderStatus}
-            </if>
-        </where>
-    </select>-->
+    <!--    &lt;!&ndash;5.查找总订单信息&ndash;&gt;
+        <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
+            select
+            *
+            from
+            edu_order
+            <where>
+                <if test="userId != null and userId!=''">
+                    and user_Id=#{userId}
+                </if>
+                <if test="orderStatus != null and orderStatus!=''">
+                    and order_status=#{orderStatus}
+                </if>
+            </where>
+        </select>-->
 
     <!--６.查找订单的数量-->
     <select id="countOrderNum" parameterType="Integer" resultType="Integer">
         SELECT
         count(course_id)
         from
-        edu_order_item
+        edu_order_detail
         where order_id=#{orderId}
     </select>
 

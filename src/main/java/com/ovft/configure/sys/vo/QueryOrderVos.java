@@ -12,6 +12,7 @@ import java.util.List;
 
 public class QueryOrderVos {
     private List<Address> address;
+
     private PageBean eduBookGoods;
 
     public List<Address> getAddress() {

@@ -6,6 +6,7 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="goods_id" jdbcType="INTEGER" property="goodsId"/>
         <result column="num" jdbcType="INTEGER" property="num"/>
+        <result column="school_id" jdbcType="VARCHAR" property="schoolId"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -68,7 +69,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, user_id, goods_id, num
+    id, user_id, goods_id, num, school_id
   </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduCartExample" resultMap="BaseResultMap">
         select
@@ -112,10 +113,10 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into edu_cart (user_id, goods_id, num
-        )
-        values (#{userId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}
-        )
+        insert into edu_cart (user_id, goods_id, num,
+        school_id)
+        values (#{userId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, #{num,jdbcType=INTEGER},
+        #{schoolId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduCart">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -132,6 +133,9 @@
             <if test="num != null">
                 num,
             </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">
@@ -142,6 +146,9 @@
             </if>
             <if test="num != null">
                 #{num,jdbcType=INTEGER},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -166,6 +173,9 @@
             <if test="record.num != null">
                 num = #{record.num,jdbcType=INTEGER},
             </if>
+            <if test="record.schoolId != null">
+                school_id = #{record.schoolId,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -176,7 +186,8 @@
         set id = #{record.id,jdbcType=INTEGER},
         user_id = #{record.userId,jdbcType=INTEGER},
         goods_id = #{record.goodsId,jdbcType=INTEGER},
-        num = #{record.num,jdbcType=INTEGER}
+        num = #{record.num,jdbcType=INTEGER},
+        school_id = #{record.schoolId,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -193,6 +204,9 @@
             <if test="num != null">
                 num = #{num,jdbcType=INTEGER},
             </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -200,7 +214,8 @@
     update edu_cart
     set user_id = #{userId,jdbcType=INTEGER},
       goods_id = #{goodsId,jdbcType=INTEGER},
-      num = #{num,jdbcType=INTEGER}
+      num = #{num,jdbcType=INTEGER},
+      school_id = #{schoolId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 

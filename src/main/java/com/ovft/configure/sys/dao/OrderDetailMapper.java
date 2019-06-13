@@ -5,7 +5,7 @@ import com.ovft.configure.sys.bean.OrderDetailExample;
 
 import java.util.List;
 
-import com.ovft.configure.sys.bean.OrderExample;
+import com.ovft.configure.sys.vo.OrderDetailVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface OrderDetailMapper {
@@ -19,7 +19,7 @@ public interface OrderDetailMapper {
 
     int insertSelective(OrderDetail record);
 
-    List<OrderDetail> selectByExample(OrderExample example);
+    List<OrderDetail> selectByExample(OrderDetailExample example);
 
     OrderDetail selectByPrimaryKey(Long id);
 
@@ -31,8 +31,9 @@ public interface OrderDetailMapper {
 
     int updateByPrimaryKey(OrderDetail record);
 
-    Integer countOneOrderNum(Integer userId, Integer couserId);
-
     //查询所有的订单详情
     List<OrderDetail> selectByOrderId(Integer orderId);
+
+    //查询所有的订单详情
+    List<OrderDetailVo> selectById(Integer id);
 }

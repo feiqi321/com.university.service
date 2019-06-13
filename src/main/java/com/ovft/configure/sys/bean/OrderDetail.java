@@ -39,6 +39,21 @@ public class OrderDetail implements Serializable {
      */
     private Integer num;
 
+    /**
+     * 教材作者
+     */
+    private String bookAuthor;
+
+    /**
+     * 学校id
+     */
+    private Integer schoolId;
+
+    /**
+     * 学校名称
+     */
+    private String schoolName;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -97,6 +112,30 @@ public class OrderDetail implements Serializable {
         this.num = num;
     }
 
+    public String getBookAuthor() {
+        return bookAuthor;
+    }
+
+    public void setBookAuthor(String bookAuthor) {
+        this.bookAuthor = bookAuthor;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -115,7 +154,10 @@ public class OrderDetail implements Serializable {
             && (this.getCourseName() == null ? other.getCourseName() == null : this.getCourseName().equals(other.getCourseName()))
             && (this.getImgUrl() == null ? other.getImgUrl() == null : this.getImgUrl().equals(other.getImgUrl()))
             && (this.getOrderPrice() == null ? other.getOrderPrice() == null : this.getOrderPrice().equals(other.getOrderPrice()))
-            && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()));
+            && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()))
+            && (this.getBookAuthor() == null ? other.getBookAuthor() == null : this.getBookAuthor().equals(other.getBookAuthor()))
+            && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
+            && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()));
     }
 
     @Override
@@ -129,6 +171,9 @@ public class OrderDetail implements Serializable {
         result = prime * result + ((getImgUrl() == null) ? 0 : getImgUrl().hashCode());
         result = prime * result + ((getOrderPrice() == null) ? 0 : getOrderPrice().hashCode());
         result = prime * result + ((getNum() == null) ? 0 : getNum().hashCode());
+        result = prime * result + ((getBookAuthor() == null) ? 0 : getBookAuthor().hashCode());
+        result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
+        result = prime * result + ((getSchoolName() == null) ? 0 : getSchoolName().hashCode());
         return result;
     }
 
@@ -145,6 +190,9 @@ public class OrderDetail implements Serializable {
         sb.append(", imgUrl=").append(imgUrl);
         sb.append(", orderPrice=").append(orderPrice);
         sb.append(", num=").append(num);
+        sb.append(", bookAuthor=").append(bookAuthor);
+        sb.append(", schoolId=").append(schoolId);
+        sb.append(", schoolName=").append(schoolName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

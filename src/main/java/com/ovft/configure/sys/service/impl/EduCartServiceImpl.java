@@ -30,7 +30,7 @@ public class EduCartServiceImpl implements EduCartService {
     private EduBookGoodsMapper eduBookGoodsMapper;
 
     @Override
-    public void addCart(Integer goodsId, Integer goodsNum, Integer userId) {
+    public void addCart(Integer goodsId, Integer goodsNum, Integer userId, Integer schoolId) {
         EduCartExample example = new EduCartExample();
         example.createCriteria().andUserIdEqualTo(userId).andGoodsIdEqualTo(goodsId);
         List<EduCart> eduCarts = eduCartMapper.selectByExample(example);
@@ -39,6 +39,7 @@ public class EduCartServiceImpl implements EduCartService {
             eduCart.setGoodsId(goodsId);
             eduCart.setUserId(userId);
             eduCart.setNum(goodsNum);
+            eduCart.setSchoolId(String.valueOf(schoolId));
             eduCartMapper.insert(eduCart);
             return;
         }

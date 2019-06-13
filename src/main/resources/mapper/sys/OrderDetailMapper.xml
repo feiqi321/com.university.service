@@ -9,6 +9,9 @@
         <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
         <result column="order_price" jdbcType="DECIMAL" property="orderPrice"/>
         <result column="num" jdbcType="INTEGER" property="num"/>
+        <result column="book_author" jdbcType="VARCHAR" property="bookAuthor"/>
+        <result column="school_Id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -71,7 +74,8 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, order_id, course_id, course_name, img_url, order_price, num
+    id, order_id, course_id, course_name, img_url, order_price, num, book_author, school_Id, 
+    school_name
   </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.OrderDetailExample"
             resultMap="BaseResultMap">
@@ -80,7 +84,7 @@
             distinct
         </if>
         <include refid="Base_Column_List"/>
-        from edu_order_item
+        from edu_order_detail
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
@@ -99,15 +103,15 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from edu_order_item
+        from edu_order_detail
         where id = #{id,jdbcType=BIGINT}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from edu_order_item
+    delete from edu_order_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.OrderDetailExample">
-        delete from edu_order_item
+        delete from edu_order_detail
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
@@ -116,18 +120,20 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into edu_order_item (order_id, course_id, course_name,
-        img_url, order_price, num
+        insert into edu_order_detail (order_id, course_id, course_name,
+        img_url, order_price, num,
+        book_author, school_Id, school_name
         )
         values (#{orderId,jdbcType=BIGINT}, #{courseId,jdbcType=BIGINT}, #{courseName,jdbcType=VARCHAR},
-        #{imgUrl,jdbcType=VARCHAR}, #{orderPrice,jdbcType=DECIMAL}, #{num,jdbcType=INTEGER}
+        #{imgUrl,jdbcType=VARCHAR}, #{orderPrice,jdbcType=DECIMAL}, #{num,jdbcType=INTEGER},
+        #{bookAuthor,jdbcType=VARCHAR}, #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR}
         )
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.OrderDetail">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into edu_order_item
+        insert into edu_order_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">
                 order_id,
@@ -146,6 +152,15 @@
             </if>
             <if test="num != null">
                 num,
+            </if>
+            <if test="bookAuthor != null">
+                book_author,
+            </if>
+            <if test="schoolId != null">
+                school_Id,
+            </if>
+            <if test="schoolName != null">
+                school_name,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -167,17 +182,26 @@
             <if test="num != null">
                 #{num,jdbcType=INTEGER},
             </if>
+            <if test="bookAuthor != null">
+                #{bookAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <select id="countByExample" parameterType="com.ovft.configure.sys.bean.OrderDetailExample"
             resultType="java.lang.Long">
-        select count(*) from edu_order_item
+        select count(*) from edu_order_detail
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </select>
     <update id="updateByExampleSelective" parameterType="map">
-        update edu_order_item
+        update edu_order_detail
         <set>
             <if test="record.id != null">
                 id = #{record.id,jdbcType=BIGINT},
@@ -200,26 +224,38 @@
             <if test="record.num != null">
                 num = #{record.num,jdbcType=INTEGER},
             </if>
+            <if test="record.bookAuthor != null">
+                book_author = #{record.bookAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="record.schoolId != null">
+                school_Id = #{record.schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="record.schoolName != null">
+                school_name = #{record.schoolName,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
     <update id="updateByExample" parameterType="map">
-        update edu_order_item
+        update edu_order_detail
         set id = #{record.id,jdbcType=BIGINT},
         order_id = #{record.orderId,jdbcType=BIGINT},
         course_id = #{record.courseId,jdbcType=BIGINT},
         course_name = #{record.courseName,jdbcType=VARCHAR},
         img_url = #{record.imgUrl,jdbcType=VARCHAR},
         order_price = #{record.orderPrice,jdbcType=DECIMAL},
-        num = #{record.num,jdbcType=INTEGER}
+        num = #{record.num,jdbcType=INTEGER},
+        book_author = #{record.bookAuthor,jdbcType=VARCHAR},
+        school_Id = #{record.schoolId,jdbcType=INTEGER},
+        school_name = #{record.schoolName,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
     <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.OrderDetail">
-        update edu_order_item
+        update edu_order_detail
         <set>
             <if test="orderId != null">
                 order_id = #{orderId,jdbcType=BIGINT},
@@ -239,24 +275,42 @@
             <if test="num != null">
                 num = #{num,jdbcType=INTEGER},
             </if>
+            <if test="bookAuthor != null">
+                book_author = #{bookAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolId != null">
+                school_Id = #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                school_name = #{schoolName,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.OrderDetail">
-    update edu_order_item
+    update edu_order_detail
     set order_id = #{orderId,jdbcType=BIGINT},
       course_id = #{courseId,jdbcType=BIGINT},
       course_name = #{courseName,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
       order_price = #{orderPrice,jdbcType=DECIMAL},
-      num = #{num,jdbcType=INTEGER}
+      num = #{num,jdbcType=INTEGER},
+      book_author = #{bookAuthor,jdbcType=VARCHAR},
+      school_Id = #{schoolId,jdbcType=INTEGER},
+      school_name = #{schoolName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
     <!--查询订单相关信息vvtxw-->
     <select id="selectByOrderId" parameterType="Integer"
             resultType="com.ovft.configure.sys.bean.OrderDetail">
-    SELECT * from edu_order_item where order_id = #{orderId}
+    SELECT * from edu_order_detail where order_id = #{orderId}
+  </select>
+
+    <!--查询订单相关信息vvtxw-->
+    <select id="selectById" parameterType="Integer"
+            resultType="com.ovft.configure.sys.vo.OrderDetailVo">
+    SELECT * from edu_order_detail where order_id = #{orderId}
   </select>
 
 

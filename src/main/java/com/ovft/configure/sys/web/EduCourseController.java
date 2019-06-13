@@ -24,7 +24,7 @@ import java.util.Map;
  */
 
 @RestController
-    @RequestMapping("apply")
+@RequestMapping("apply")
 public class EduCourseController {
 
     @Autowired
@@ -52,7 +52,7 @@ public class EduCourseController {
 
         EduCourse course = new EduCourse();
         course.setSchoolId(String.valueOf(schoolId));
-        course.setIsenable(ConstantClassField.ISONLINE);
+        course.setIsenable(ConstantClassField.ISONLINE);//本学校的上线课程
         List<EduCourse> eduCourseId = eduCourseService.listCourseCategoryByShoolId(course);
 
         EduCourseVo eduCourseVo = (EduCourseVo) redisTemplate.opsForValue().get("schoolId" + schoolId);

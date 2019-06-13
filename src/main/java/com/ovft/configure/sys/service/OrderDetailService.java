@@ -6,5 +6,5 @@ package com.ovft.configure.sys.service;
  */
 public interface OrderDetailService {
 
-     Integer queryOderId(Integer courseId);
+    Integer queryOderId(Integer courseId);
 }

@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.vo;
 
+
 import com.ovft.configure.sys.bean.OrderDetail;
 
 import java.math.BigDecimal;

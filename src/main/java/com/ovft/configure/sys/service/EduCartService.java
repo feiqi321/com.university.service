@@ -1,12 +1,9 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.sys.bean.EduCart;
-import com.ovft.configure.sys.bean.EduCartExample;
 import com.ovft.configure.sys.vo.EduCartVo;
 import com.ovft.configure.sys.vo.PageBean;
-import com.ovft.configure.sys.vo.PageBeanVo;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -15,7 +12,7 @@ import java.util.List;
  */
 public interface EduCartService {
     //添加购物车
-    void addCart(Integer goodsId, Integer goodsNum, Integer userId);
+    void addCart(Integer goodsId, Integer goodsNum, Integer userId, Integer schoolId);
 
     //展示购物车
     PageBean showAllCartByUserId(Integer userId);

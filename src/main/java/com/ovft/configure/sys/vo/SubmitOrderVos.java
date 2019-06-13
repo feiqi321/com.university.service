@@ -1,9 +1,7 @@
 package com.ovft.configure.sys.vo;
 
-import com.alipay.api.domain.OrderItem;
-import com.ovft.configure.sys.bean.OrderDetail;
-
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +18,58 @@ public class SubmitOrderVos {
     private String remark;
     private BigDecimal totalMoney;
 
+
+    /**
+     * 订单编号
+     */
+    private String orderSn;
+
+    /**
+     * 订单创建时间
+     */
+    private Date createTime;
+    /**
+     * 付款方式
+     */
+    private String paymentWay;
+
+    /**
+     * 付款时间
+     */
+    private Date paymentTime;
+
+
+    public String getOrderSn() {
+        return orderSn;
+    }
+
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getPaymentWay() {
+        return paymentWay;
+    }
+
+    public void setPaymentWay(String paymentWay) {
+        this.paymentWay = paymentWay;
+    }
+
+    public Date getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(Date paymentTime) {
+        this.paymentTime = paymentTime;
+    }
 
     public String getPhone() {
         return phone;

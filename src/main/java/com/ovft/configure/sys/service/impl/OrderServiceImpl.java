@@ -1,6 +1,6 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.alipay.api.domain.OrderItem;
+
 import com.ovft.configure.constant.OrderStatus;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
@@ -56,14 +56,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void insertCartToOrder(SubmitOrderVos submitOrderVos, HttpServletRequest request) {
-        //待加  重复提交订单
-
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
         String schoolId = request.getHeader("schoolId");
-        BigDecimal accountAllMoney = new BigDecimal(0);
-        Order order = new Order();
 
+        //生存教材订单
+        Order order = new Order();
         order.setUserId(userId);
         order.setOrderSn(OrderIdUtil.getOrderIdByTime());
         order.setOrderStatus(OrderStatus.UNPay);
@@ -78,34 +76,45 @@ public class OrderServiceImpl implements OrderService {
         order.setRemark(submitOrderVos.getRemark());
         orderMapper.insertSelective(order);
 
-        //生存一对多的关系
+
+        //重复提交订单查询数据表是否有此教材的订单，
         List<OrderDetailVo> orderItemsVo = submitOrderVos.getOrderItemsVo();
+        //生存一对多的关系
         for (OrderDetailVo orderItem : orderItemsVo) {
+//            OrderDetailExample orderDetailExample = new OrderDetailExample();
+//            orderDetailExample.createCriteria().andCourseIdEqualTo(Long.valueOf(orderItem.getGoodsId()));
+//            List<OrderDetail> orderDetails = orderDetailMapper.selectByExample(orderDetailExample);
+//            if (orderDetails.size() == 0) {
             OrderDetail orderDetail = new OrderDetail();
+                /*if (order.getId() == null) {
+                    orderMapper.insertSelective(order);
+                }*/
+            //生成订单详情
             orderDetail.setOrderId(Long.valueOf(order.getId()));
             orderDetail.setNum(orderItem.getNum());
             orderDetail.setOrderPrice(orderItem.getShopPrice());
             orderDetail.setCourseName(orderItem.getBooksName());
             orderDetail.setImgUrl(orderItem.getOriginalImg());
             orderDetail.setCourseId(Long.valueOf(orderItem.getGoodsId()));
+            orderDetail.setSchoolId(orderItem.getSchoolId());
+            orderDetail.setSchoolName(orderItem.getSchoolName());
+            orderDetail.setBookAuthor(orderItem.getBooksAuthor());
+
             orderDetailMapper.insertSelective(orderDetail);
             order.setImgUrl(orderItem.getOriginalImg());
-            orderMapper.insertSelective(order);
+            orderMapper.updateByPrimaryKeySelective(order);
+
+            //删除购物车数据
+            EduCartExample eduCartExample = new EduCartExample();
+            eduCartExample.createCriteria().andUserIdEqualTo(userId).andGoodsIdEqualTo(orderItem.getGoodsId());
+            eduCartMapper.deleteByExample(eduCartExample);
+            /*    return;
+            } else {
+                return;
+            }*/
         }
 
-    }
 
-    @Override
-    public List<OrderVo> showOrders(Integer userId, Integer orderStatus) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userId", userId);
-        map.put("orderStatus", orderStatus);
-
-        List<OrderVo> orderVoList = orderMapper.showOrders(map);
-     /*   for (OrderVo orderVo : orderVoList) {
-            Integer num = orderDetailMapper.countOneOrderNum(orderVo.getUserId(), orderVo.getCourseId());
-        }*/
-        return orderVoList;
     }
 
     @Override
@@ -115,12 +124,23 @@ public class OrderServiceImpl implements OrderService {
         map.put("orderStatus", orderStatus);
 
         List<OrderVo> orderVoList = orderMapper.showOrder(map);
+
         for (OrderVo orderVo : orderVoList) {
-            int num = orderMapper.countOrderNum(orderVo.getId());
-            orderVo.setNum(num);
+            //根据订单id查询教材名称
+            List<OrderDetail> orderDetails = orderDetailMapper.selectByOrderId(orderVo.getId());
+            for (OrderDetail orderDetail : orderDetails) {
+                orderVo.setCourseName(orderDetail.getCourseName());
+            }
+            //根据订单id查询课程的门数
+            OrderDetailExample orderDetailExample = new OrderDetailExample();
+            orderDetailExample.createCriteria().andOrderIdEqualTo(Long.valueOf(orderVo.getId()));
+            long num = orderDetailMapper.countByExample(orderDetailExample);
+            int num2 = (int) num;
+            orderVo.setNum(num2);
         }
         return orderVoList;
     }
+
 
     @Override
     public int offAndSubmitOrders(Order order) {
@@ -141,6 +161,26 @@ public class OrderServiceImpl implements OrderService {
             return 1;
         }
         return -1;
+    }
+
+    @Override
+    public SubmitOrderVos showOrders(OrderVo orderVo) {
+        SubmitOrderVos submitOrderVos = new SubmitOrderVos();
+        submitOrderVos.setAddress(orderVo.getAddress());
+        submitOrderVos.setPhone(orderVo.getTelephone());
+        submitOrderVos.setSendType(orderVo.getSendType());
+        submitOrderVos.setToSendPrice(orderVo.getTosendPrice());
+        submitOrderVos.setRemark(orderVo.getRemark());
+        submitOrderVos.setTotalMoney(orderVo.getTotalAmount());
+        submitOrderVos.setOrderSn(orderVo.getOrderSn());
+        submitOrderVos.setCreateTime(orderVo.getCreateTime());
+        submitOrderVos.setPaymentWay(orderVo.getPaymentWay());
+        submitOrderVos.setPaymentTime(orderVo.getPaymentTime());
+        submitOrderVos.setUserName(orderVo.getConsignee());
+        //查询课程列表
+        List<OrderDetailVo> orderDetails = orderDetailMapper.selectById(orderVo.getId());
+        submitOrderVos.setOrderItemsVo(orderDetails);
+        return submitOrderVos;
     }
 
 

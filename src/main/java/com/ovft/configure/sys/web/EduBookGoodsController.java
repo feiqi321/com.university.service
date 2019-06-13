@@ -7,6 +7,7 @@ import com.ovft.configure.sys.service.EduBookGoodsService;
 import com.ovft.configure.sys.vo.PageBean;
 import com.ovft.configure.sys.vo.QueryBookVos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,6 +21,10 @@ public class EduBookGoodsController {
     @Autowired
     private EduBookGoodsService eduBookGoodsService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+
     /**
      * 分页查询所有教材
      *
@@ -28,6 +33,7 @@ public class EduBookGoodsController {
     @GetMapping(value = "bookshow")
     public WebResult queryAllshowBooks(@RequestParam(value = "catId") Integer catId, @RequestParam(value = "extendCatId") Integer extendCatId) {
         QueryBookVos queryBookVos = eduBookGoodsService.queryAllBookesForPage(catId, extendCatId);
+
         return new WebResult(StatusCode.OK, "查询成功", queryBookVos);
     }
 

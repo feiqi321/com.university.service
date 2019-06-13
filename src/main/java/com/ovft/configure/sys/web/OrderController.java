@@ -170,12 +170,15 @@ public class OrderController {
     public WebResult nowToPay(Integer goodsId, HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
+
+        String schoolId1 = request.getHeader("schoolId");
+        Integer schoolId = Integer.valueOf(schoolId1);
         Page<Object> pageAll = PageHelper.startPage(1, 2);
         //查询购物车是否有此教材
         List<EduCart> eduCarts = eduCartService.queryCartByUserIdAndGoodSId(userId, goodsId);
         if (eduCarts.size() == 0) {
             //先把该商品添加到购物车
-            eduCartService.addCart(goodsId, 1, userId);
+            eduCartService.addCart(goodsId, 1, userId, schoolId);
         }
         EduCartVo OrderIfoFromOrder = eduCartService.queryOrderInfoFromCart(userId, goodsId);
         long total = pageAll.getTotal();
@@ -198,7 +201,7 @@ public class OrderController {
 
     /**
      * 查找总订单
-     * 订单的状态 1待付款,2已经取消，3.待收货,4已完成
+     * 订单的状态 1待付款 ,2已经取消，3.待收货,4已完成
      *
      * @param request
      * @return
@@ -213,19 +216,18 @@ public class OrderController {
     }
 
     /**
-     * 查找总订单详情订单
+     * 查找总订单  各个订单订单详情
      * 订单的状态 1待付款,2已经取消，3.待收货,4已完成
      *
      * @param request
      * @return
      */
-    @GetMapping(value = "showorders")
-    public WebResult showOrders(Integer orderStatus, HttpServletRequest request) {
+    @PostMapping(value = "showorders")
+    public WebResult showOrders(@RequestBody OrderVo orderVo, HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-
-        List<OrderVo> orderVoList = orderService.showOrders(userId, orderStatus);
-        return new WebResult(StatusCode.OK, "提交成功", orderVoList);
+        SubmitOrderVos submitOrderVos = orderService.showOrders(orderVo);
+        return new WebResult(StatusCode.OK, "提交成功", submitOrderVos);
     }
 
 

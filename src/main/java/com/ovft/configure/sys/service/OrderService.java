@@ -33,8 +33,6 @@ public interface OrderService {
     //添加教材订单
     void insertCartToOrder(SubmitOrderVos submitOrderVos, HttpServletRequest request);
 
-    //显示相关订单
-    List<OrderVo> showOrders(Integer userId, Integer orderStatus);
 
     //显示总订单
     List<OrderVo> showOrder(Integer userId, Integer orderStatus);
@@ -44,6 +42,9 @@ public interface OrderService {
 
     //删除订单
     int deleteOrder(Order order);
+
+    //显示相关订单详情页面
+    SubmitOrderVos showOrders(OrderVo orderVo);
 
 
 
