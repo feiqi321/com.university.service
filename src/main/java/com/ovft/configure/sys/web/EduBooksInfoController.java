@@ -108,7 +108,7 @@ public class EduBooksInfoController {
     }
 
     /**
-     * 修改教材详情
+     * 查询一个教材详情
      *
      * @param id
      * @return
@@ -125,25 +125,25 @@ public class EduBooksInfoController {
      * @param page
      * @param size
      * @param schoolId
-     * @param id
+     * @param bookGoodsId
      * @return
      */
     @GetMapping(value = "shows")
-    public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId, Integer id) {
-        PageBean pageBean = eduBooksInfoService.showPageBookInfo(page, size, schoolId, id);
+    public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId, Integer bookGoodsId) {
+        PageBean pageBean = eduBooksInfoService.showPageBookInfo(page, size, schoolId, bookGoodsId);
         return new WebResult(StatusCode.OK, "查询成功", pageBean);
     }
 
     /**
      * 根据教材id查询教材的名称
      *
-     * @param id
+     * @param schoolId
      * @return
      */
-    @GetMapping(value = "selectone")
-    public WebResult queryBookNameById(Integer id) {
-        List<String> eduBooksName = eduBooksInfoService.queryBookNameById(id);
-        return new WebResult(StatusCode.OK, "查询成功", eduBooksName);
+    @GetMapping(value = "allname")
+    public WebResult queryBookNameById(Integer schoolId) {
+        List<String> strings = eduBooksInfoService.queryBookNameById(schoolId);
+        return new WebResult(StatusCode.OK, "查询成功", strings);
     }
 
 

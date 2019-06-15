@@ -14,6 +14,8 @@
         <result column="describe_book" jdbcType="VARCHAR" property="describeBook"/>
         <result column="introduction_author" jdbcType="VARCHAR" property="introductionAuthor"/>
         <result column="freight_pirce" jdbcType="VARCHAR" property="freightPirce"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -76,9 +78,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, book_goods_id, publish_address, format_book, edition_book, page_size, recommend_unit, 
-    book_sn, describe_note, describe_book, " introduction_author", freight_pirce
-  </sql>
+        id, book_goods_id, publish_address, format_book, edition_book, page_size, recommend_unit,
+        book_sn, describe_note, describe_book, introduction_author, freight_pirce, school_id,
+        school_name
+    </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduBooksInfoExample"
             resultMap="BaseResultMap">
         select
@@ -109,9 +112,9 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from edu_books_info
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+        delete from edu_books_info
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduBooksInfoExample">
         delete from edu_books_info
         <if test="_parameter != null">
@@ -125,11 +128,13 @@
         insert into edu_books_info (book_goods_id, publish_address, format_book,
         edition_book, page_size, recommend_unit,
         book_sn, describe_note, describe_book,
-        "introduction_author", freight_pirce)
+        introduction_author, freight_pirce, school_id,
+        school_name)
         values (#{bookGoodsId,jdbcType=INTEGER}, #{publishAddress,jdbcType=VARCHAR}, #{formatBook,jdbcType=VARCHAR},
         #{editionBook,jdbcType=VARCHAR}, #{pageSize,jdbcType=DOUBLE}, #{recommendUnit,jdbcType=VARCHAR},
         #{bookSn,jdbcType=VARCHAR}, #{describeNote,jdbcType=VARCHAR}, #{describeBook,jdbcType=VARCHAR},
-        #{introductionAuthor,jdbcType=VARCHAR}, #{freightPirce,jdbcType=VARCHAR})
+        #{introductionAuthor,jdbcType=VARCHAR}, #{freightPirce,jdbcType=VARCHAR}, #{schoolId,jdbcType=INTEGER},
+        #{schoolName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduBooksInfo">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -165,10 +170,16 @@
                 describe_book,
             </if>
             <if test="introductionAuthor != null">
-                " introduction_author",
+                introduction_author,
             </if>
             <if test="freightPirce != null">
                 freight_pirce,
+            </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
+            <if test="schoolName != null">
+                school_name,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -204,6 +215,12 @@
             </if>
             <if test="freightPirce != null">
                 #{freightPirce,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -248,10 +265,16 @@
                 describe_book = #{record.describeBook,jdbcType=VARCHAR},
             </if>
             <if test="record.introductionAuthor != null">
-                " introduction_author" = #{record.introductionAuthor,jdbcType=VARCHAR},
+                introduction_author = #{record.introductionAuthor,jdbcType=VARCHAR},
             </if>
             <if test="record.freightPirce != null">
                 freight_pirce = #{record.freightPirce,jdbcType=VARCHAR},
+            </if>
+            <if test="record.schoolId != null">
+                school_id = #{record.schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="record.schoolName != null">
+                school_name = #{record.schoolName,jdbcType=VARCHAR},
             </if>
         </set>
         <if test="_parameter != null">
@@ -270,8 +293,10 @@
         book_sn = #{record.bookSn,jdbcType=VARCHAR},
         describe_note = #{record.describeNote,jdbcType=VARCHAR},
         describe_book = #{record.describeBook,jdbcType=VARCHAR},
-        "introduction_author" = #{record.introductionAuthor,jdbcType=VARCHAR},
-        freight_pirce = #{record.freightPirce,jdbcType=VARCHAR}
+        introduction_author = #{record.introductionAuthor,jdbcType=VARCHAR},
+        freight_pirce = #{record.freightPirce,jdbcType=VARCHAR},
+        school_id = #{record.schoolId,jdbcType=INTEGER},
+        school_name = #{record.schoolName,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -307,10 +332,16 @@
                 describe_book = #{describeBook,jdbcType=VARCHAR},
             </if>
             <if test="introductionAuthor != null">
-                "introduction_author" = #{introductionAuthor,jdbcType=VARCHAR},
+                introduction_author = #{introductionAuthor,jdbcType=VARCHAR},
             </if>
             <if test="freightPirce != null">
                 freight_pirce = #{freightPirce,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                school_name = #{schoolName,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -326,8 +357,10 @@
       book_sn = #{bookSn,jdbcType=VARCHAR},
       describe_note = #{describeNote,jdbcType=VARCHAR},
       describe_book = #{describeBook,jdbcType=VARCHAR},
-      "introduction_author" = #{introductionAuthor,jdbcType=VARCHAR},
-      freight_pirce = #{freightPirce,jdbcType=VARCHAR}
+      introduction_author = #{introductionAuthor,jdbcType=VARCHAR},
+      freight_pirce = #{freightPirce,jdbcType=VARCHAR},
+      school_id = #{schoolId,jdbcType=INTEGER},
+      school_name = #{schoolName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -348,20 +381,33 @@
   </select>
 
 
-    <!--2.查找教材详情-->
+    <!--2.分页查找教材详情-->
     <select id="queryForPage" parameterType="map"
             resultType="com.ovft.configure.sys.bean.EduBooksInfo">
         select
         <include refid="Base_Column_List"/>
         from edu_books_info
         <where>
-            <if test="id != null and id!=''">
-                and id = #{id}
+            <if test="bookGoodsId != null and bookGoodsId!=''">
+                and book_goods_id = #{bookGoodsId}
             </if>
             <if test="schoolId != null and schoolId!=''">
                 and school_id = #{schoolId}
             </if>
         </where>
+    </select>
+
+    <!--3.查找所有的教材名字-->
+    <select id="queryBookNameById" parameterType="map"
+            resultType="String">
+        select
+        g.books_name
+        from edu_books_info i
+        LEFT JOIN
+        edu_book_goods g on g.id=i.book_goods_id
+        where
+        i.book_goods_id=#{bookGoodsId}
+        and i.school_id=#{schoolId}
     </select>
 
 

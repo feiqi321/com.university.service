@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduOrderSettlementMapper">
+    <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduOrderSettlement">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="settlement_show_id" jdbcType="INTEGER" property="settlementShowId"/>
+        <result column="settlement_status" jdbcType="INTEGER" property="settlementStatus"/>
+        <result column="settle_time" jdbcType="TIMESTAMP" property="settleTime"/>
+        <result column="settle_num" jdbcType="VARCHAR" property="settleNum"/>
+        <result column="settle_money" jdbcType="DECIMAL" property="settleMoney"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, settlement_show_id, settlement_status, settle_time, settle_num, settle_money, 
+    school_id, school_name
+  </sql>
+    <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduOrderSettlementExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from edu_order_settlement
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_order_settlement
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from edu_order_settlement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduOrderSettlementExample">
+        delete from edu_order_settlement
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduOrderSettlement">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_order_settlement (settlement_show_id, settlement_status,
+        settle_time, settle_num, settle_money,
+        school_id, school_name)
+        values (#{settlementShowId,jdbcType=INTEGER}, #{settlementStatus,jdbcType=INTEGER},
+        #{settleTime,jdbcType=TIMESTAMP}, #{settleNum,jdbcType=VARCHAR}, #{settleMoney,jdbcType=DECIMAL},
+        #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduOrderSettlement">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into edu_order_settlement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="settlementShowId != null">
+                settlement_show_id,
+            </if>
+            <if test="settlementStatus != null">
+                settlement_status,
+            </if>
+            <if test="settleTime != null">
+                settle_time,
+            </if>
+            <if test="settleNum != null">
+                settle_num,
+            </if>
+            <if test="settleMoney != null">
+                settle_money,
+            </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
+            <if test="schoolName != null">
+                school_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="settlementShowId != null">
+                #{settlementShowId,jdbcType=INTEGER},
+            </if>
+            <if test="settlementStatus != null">
+                #{settlementStatus,jdbcType=INTEGER},
+            </if>
+            <if test="settleTime != null">
+                #{settleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="settleNum != null">
+                #{settleNum,jdbcType=VARCHAR},
+            </if>
+            <if test="settleMoney != null">
+                #{settleMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.ovft.configure.sys.bean.EduOrderSettlementExample"
+            resultType="java.lang.Long">
+        select count(*) from edu_order_settlement
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update edu_order_settlement
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.settlementShowId != null">
+                settlement_show_id = #{record.settlementShowId,jdbcType=INTEGER},
+            </if>
+            <if test="record.settlementStatus != null">
+                settlement_status = #{record.settlementStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.settleTime != null">
+                settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.settleNum != null">
+                settle_num = #{record.settleNum,jdbcType=VARCHAR},
+            </if>
+            <if test="record.settleMoney != null">
+                settle_money = #{record.settleMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="record.schoolId != null">
+                school_id = #{record.schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="record.schoolName != null">
+                school_name = #{record.schoolName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update edu_order_settlement
+        set id = #{record.id,jdbcType=INTEGER},
+        settlement_show_id = #{record.settlementShowId,jdbcType=INTEGER},
+        settlement_status = #{record.settlementStatus,jdbcType=INTEGER},
+        settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
+        settle_num = #{record.settleNum,jdbcType=VARCHAR},
+        settle_money = #{record.settleMoney,jdbcType=DECIMAL},
+        school_id = #{record.schoolId,jdbcType=INTEGER},
+        school_name = #{record.schoolName,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.EduOrderSettlement">
+        update edu_order_settlement
+        <set>
+            <if test="settlementShowId != null">
+                settlement_show_id = #{settlementShowId,jdbcType=INTEGER},
+            </if>
+            <if test="settlementStatus != null">
+                settlement_status = #{settlementStatus,jdbcType=INTEGER},
+            </if>
+            <if test="settleTime != null">
+                settle_time = #{settleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="settleNum != null">
+                settle_num = #{settleNum,jdbcType=VARCHAR},
+            </if>
+            <if test="settleMoney != null">
+                settle_money = #{settleMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                school_name = #{schoolName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduOrderSettlement">
+    update edu_order_settlement
+    set settlement_show_id = #{settlementShowId,jdbcType=INTEGER},
+      settlement_status = #{settlementStatus,jdbcType=INTEGER},
+      settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      settle_num = #{settleNum,jdbcType=VARCHAR},
+      settle_money = #{settleMoney,jdbcType=DECIMAL},
+      school_id = #{schoolId,jdbcType=INTEGER},
+      school_name = #{schoolName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!--3.查找线上报名门数-->
+    <select id="queryAllSettlementStatus" parameterType="map"
+            resultType="com.ovft.configure.sys.bean.EduOrderSettlement">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        edu_order_settlement
+        where
+        school_id =#{schoolId}
+        and settlement_status=#{settlementStatus}
+    </select>
+
+
+</mapper>

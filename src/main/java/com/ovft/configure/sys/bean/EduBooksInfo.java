@@ -3,7 +3,7 @@ package com.ovft.configure.sys.bean;
 import java.io.Serializable;
 
 /**
- * @author 
+ * @author
  */
 public class EduBooksInfo implements Serializable {
     /**
@@ -65,6 +65,16 @@ public class EduBooksInfo implements Serializable {
      * 运费
      */
     private String freightPirce;
+
+    /**
+     * 学校id
+     */
+    private Integer schoolId;
+
+    /**
+     * 学校名称
+     */
+    private String schoolName;
 
     private static final long serialVersionUID = 1L;
 
@@ -164,6 +174,22 @@ public class EduBooksInfo implements Serializable {
         this.freightPirce = freightPirce;
     }
 
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -177,17 +203,19 @@ public class EduBooksInfo implements Serializable {
         }
         EduBooksInfo other = (EduBooksInfo) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getBookGoodsId() == null ? other.getBookGoodsId() == null : this.getBookGoodsId().equals(other.getBookGoodsId()))
-            && (this.getPublishAddress() == null ? other.getPublishAddress() == null : this.getPublishAddress().equals(other.getPublishAddress()))
-            && (this.getFormatBook() == null ? other.getFormatBook() == null : this.getFormatBook().equals(other.getFormatBook()))
-            && (this.getEditionBook() == null ? other.getEditionBook() == null : this.getEditionBook().equals(other.getEditionBook()))
-            && (this.getPageSize() == null ? other.getPageSize() == null : this.getPageSize().equals(other.getPageSize()))
-            && (this.getRecommendUnit() == null ? other.getRecommendUnit() == null : this.getRecommendUnit().equals(other.getRecommendUnit()))
-            && (this.getBookSn() == null ? other.getBookSn() == null : this.getBookSn().equals(other.getBookSn()))
-            && (this.getDescribeNote() == null ? other.getDescribeNote() == null : this.getDescribeNote().equals(other.getDescribeNote()))
-            && (this.getDescribeBook() == null ? other.getDescribeBook() == null : this.getDescribeBook().equals(other.getDescribeBook()))
-            && (this.getIntroductionAuthor() == null ? other.getIntroductionAuthor() == null : this.getIntroductionAuthor().equals(other.getIntroductionAuthor()))
-            && (this.getFreightPirce() == null ? other.getFreightPirce() == null : this.getFreightPirce().equals(other.getFreightPirce()));
+                && (this.getBookGoodsId() == null ? other.getBookGoodsId() == null : this.getBookGoodsId().equals(other.getBookGoodsId()))
+                && (this.getPublishAddress() == null ? other.getPublishAddress() == null : this.getPublishAddress().equals(other.getPublishAddress()))
+                && (this.getFormatBook() == null ? other.getFormatBook() == null : this.getFormatBook().equals(other.getFormatBook()))
+                && (this.getEditionBook() == null ? other.getEditionBook() == null : this.getEditionBook().equals(other.getEditionBook()))
+                && (this.getPageSize() == null ? other.getPageSize() == null : this.getPageSize().equals(other.getPageSize()))
+                && (this.getRecommendUnit() == null ? other.getRecommendUnit() == null : this.getRecommendUnit().equals(other.getRecommendUnit()))
+                && (this.getBookSn() == null ? other.getBookSn() == null : this.getBookSn().equals(other.getBookSn()))
+                && (this.getDescribeNote() == null ? other.getDescribeNote() == null : this.getDescribeNote().equals(other.getDescribeNote()))
+                && (this.getDescribeBook() == null ? other.getDescribeBook() == null : this.getDescribeBook().equals(other.getDescribeBook()))
+                && (this.getIntroductionAuthor() == null ? other.getIntroductionAuthor() == null : this.getIntroductionAuthor().equals(other.getIntroductionAuthor()))
+                && (this.getFreightPirce() == null ? other.getFreightPirce() == null : this.getFreightPirce().equals(other.getFreightPirce()))
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
+                && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()));
     }
 
     @Override
@@ -206,6 +234,8 @@ public class EduBooksInfo implements Serializable {
         result = prime * result + ((getDescribeBook() == null) ? 0 : getDescribeBook().hashCode());
         result = prime * result + ((getIntroductionAuthor() == null) ? 0 : getIntroductionAuthor().hashCode());
         result = prime * result + ((getFreightPirce() == null) ? 0 : getFreightPirce().hashCode());
+        result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
+        result = prime * result + ((getSchoolName() == null) ? 0 : getSchoolName().hashCode());
         return result;
     }
 
@@ -227,6 +257,8 @@ public class EduBooksInfo implements Serializable {
         sb.append(", describeBook=").append(describeBook);
         sb.append(", introductionAuthor=").append(introductionAuthor);
         sb.append(", freightPirce=").append(freightPirce);
+        sb.append(", schoolId=").append(schoolId);
+        sb.append(", schoolName=").append(schoolName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -2,8 +2,8 @@ package com.ovft.configure.sys.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.ovft.configure.sys.bean.EduBookGoods;
 import com.ovft.configure.sys.bean.EduBooksInfo;
+import com.ovft.configure.sys.bean.EduBooksInfoExample;
 import com.ovft.configure.sys.dao.EduBooksInfoMapper;
 import com.ovft.configure.sys.service.EduBooksInfoService;
 import com.ovft.configure.sys.vo.EduBooksInfoVo;
@@ -11,6 +11,7 @@ import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,19 +52,30 @@ public class EduBooksInfoServiceImpl implements EduBooksInfoService {
     }
 
     @Override
-    public PageBean showPageBookInfo(Integer page, Integer size, String schoolId, Integer id) {
+    public PageBean showPageBookInfo(Integer page, Integer size, String schoolId, Integer bookGoodsId) {
         Page<Object> pageAll = PageHelper.startPage(page, size);
         Map<String, Object> map = new HashMap<>();
         map.put("schoolId", schoolId);
-        map.put("id", id);
+        map.put("bookGoodsId", bookGoodsId);
         List<EduBooksInfo> eduBooksInfos = eduBooksInfoMapper.queryForPage(map);
         long total = pageAll.getTotal();
         return new PageBean(page, size, total, eduBooksInfos);
     }
 
     @Override
-    public List<String> queryBookNameById(Integer id) {
-        /*eduBooksInfoMapper.*/
-        return null;
+    public List<String> queryBookNameById(Integer schoolId) {
+        //查询出教材全部信息
+        EduBooksInfoExample eduBooksInfoExample = new EduBooksInfoExample();
+        eduBooksInfoExample.createCriteria().andSchoolIdEqualTo(schoolId);
+        List<EduBooksInfo> eduBooksInfos = eduBooksInfoMapper.selectByExample(eduBooksInfoExample);
+        List<String> bookNames = new ArrayList<>();
+        for (EduBooksInfo eduBooksInfo : eduBooksInfos) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("schoolId", schoolId);
+            map.put("bookGoodsId", eduBooksInfo.getBookGoodsId());
+            String name = eduBooksInfoMapper.queryBookNameById(map);
+            bookNames.add(name);
+        }
+        return bookNames;
     }
 }

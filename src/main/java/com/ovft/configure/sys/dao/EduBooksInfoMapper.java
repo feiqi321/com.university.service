@@ -1,11 +1,10 @@
 package com.ovft.configure.sys.dao;
 
-import com.ovft.configure.sys.bean.EduBooksInfo;
-import com.ovft.configure.sys.bean.EduBooksInfoExample;
-
 import java.util.List;
 import java.util.Map;
 
+import com.ovft.configure.sys.bean.EduBooksInfo;
+import com.ovft.configure.sys.bean.EduBooksInfoExample;
 import com.ovft.configure.sys.vo.EduBooksInfoVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -38,5 +37,6 @@ public interface EduBooksInfoMapper {
     //分页查询教材详情信息
     List<EduBooksInfo> queryForPage(Map<String, Object> map);
 
-
+    //根据id查询名字
+    String queryBookNameById(Map<String, Object> map);
 }
