@@ -6,9 +6,13 @@
     <insert id="createSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
             keyProperty="sid">
        insert  into  edu_search_question(sid,schoolId,search_name,content,createtime,updatetime,
-       endtime,schoolName,author,top_image,tid) values (default,#{schoolId},#{searchName},#{content},#{createTime},
-       #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid})
+       endtime,schoolName,author,top_image,tid,visits) values (default,#{schoolId},#{searchName},#{content},#{createTime},
+       #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid},#{visits})
      </insert>
+    <!--修改问卷调查主题浏览量-->
+    <update id="updateSearchQuestionVisits" parameterType="int" >
+       update edu_search_question set visits=#{visits} where sid=#{sid}
+     </update>
     <!--修改问卷调查主题-->
     <update id="updateSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
             keyProperty="sid">
@@ -42,9 +46,11 @@
             <if test="topImage != null and topImage != ''">
                 top_image=#{topImage},
             </if>
+            <if test="visits != null and visits != ''">
+                visits=#{visits}
+            </if>
         </set>
         where sid=#{sid}
-
     </update>
     <!--添加问卷题目-->
     <insert id="createQuestion" parameterType="com.ovft.configure.sys.bean.Question">
@@ -55,41 +61,63 @@
             keyProperty="sid">
        insert  into  edu_question_item(id,qid,Item_char,content,sid,num) values (default,#{qid},#{itemChar},#{content},#{sid},#{num})
      </insert>
+    <!--添加投票题目选项-->
+    <insert id="createBigVoteItem" parameterType="java.util.List" useGeneratedKeys="true"
+            keyProperty="sid">
+       insert  into  edu_vote_item (id,sid,item,num,image,question,userId,visits) values
+        <foreach collection="list" item="ll" index="index" separator=",">
+
+        (
+            default,
+            #{ll.sid},
+            #{ll.item},
+            #{ll.num},
+            #{ll.image},
+            #{ll.question},
+            #{ll.userId},
+            #{ll.visits}
+
+            )
+        </foreach>
+     </insert>
     <!--批量添加问卷题目及选项记录-->
-    <insert id="insertBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="false">
+    <insert id="insertBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="true"   keyProperty="qid">
         insert into edu_question
-        (qid,sid,question,item1,item1_num,item1_grade,item1_image,item2,item2_num,item2_grade,item2_image,item3,item3_num,item3_grade,item3_image,item4,item4_num,item4_grade,
+        (qid,sid,topId,downId,question,item1,item1_num,item1_grade,item1_image,item2,item2_num,item2_grade,item2_image,item3,item3_num,item3_grade,item3_image,item4,item4_num,item4_grade,
         item4_image,item5,item5_num,item5_grade,item5_image,item6,item6_num,item6_grade,item6_image)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
             #{item.qid},
             #{item.sid},
+            #{item.topId},
+            #{item.downId},
             #{item.question},
             #{item.item1},
-            #{item.item1_num},
-            #{item.item1_grade},
-            #{item.item1_image},
+            #{item.item1Num},
+            #{item.item1Grade},
+            #{item.item1Image},
             #{item.item2},
-            #{item.item2_num},
-            #{item.item2_grade},
-            #{item.item2_image},
+            #{item.item2Num},
+            #{item.item2Grade},
+            #{item.item2Image},
             #{item.item3},
-            #{item.item3_num},
-            #{item.item3_grade},
-            #{item.item3_image},
+            #{item.item3Num},
+            #{item.item3Grade},
+            #{item.item3Image},
             #{item.item4},
-            #{item.item4_num},
-            #{item.item4_grade},
-            #{item.item4_image},
+            #{item.item4Num},
+            #{item.item4Grade},
+            #{item.item4Image},
             #{item.item5},
-            #{item.item5_num},
-            #{item.item5_grade},
-            #{item.item5_image},
+            #{item.item5Num},
+            #{item.item5Grade},
+            #{item.item5Image},
             #{item.item6},
-            #{item.item6_num},
-            #{item.item6_grade},
-            #{item.item6_image}
+            #{item.item6Num},
+            #{item.item6Grade},
+            #{item.item6Image}
+
             )
         </foreach>
     </insert>
@@ -97,48 +125,51 @@
     <!--批量修改问卷题目及选项记录-->
     <update id="updateBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="false">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update edu_question  set
-
+            update edu_question  <set>
                 question=#{item.question},
                 item1=#{item.item1},
-                item1_num=#{item.item1_num},
-                item1_grade=#{item.item1_grade},
-                item1_image= #{item.item1_image},
+                item1_num=#{item.item1Num},
+                item1_grade=#{item.item1Grade},
+                item1_image= #{item.item1Image},
                 item2=#{item.item2},
-                item2_num=#{item.item2_num},
-                item2_grade=#{item.item2_grade},
-                item2_image= #{item.item2_image},
+                item2_num=#{item.item2Num},
+                item2_grade=#{item.item2Grade},
+                item2_image= #{item.item2Image},
                 item3=#{item.item3},
-                item3_num=#{item.item3_num},
-                item3_grade=#{item.item3_grade},
-                item3_image= #{item.item3_image},
+                item3_num=#{item.item3Num},
+                item3_grade=#{item.item3Grade},
+                item3_image= #{item.item3Image},
                 item4=#{item.item4},
-                item4_num=#{item.item4_num},
-                item4_grade=#{item.item4_grade},
-                item4_image= #{item.item4_image},
+                item4_num=#{item.item4Num},
+                item4_grade=#{item.item4Grade},
+                item4_image= #{item.item4Image},
                 item5=#{item.item5},
-                item5_num=#{item.item5_num},
-                item5_grade=#{item.item5_grade},
-                item5_image= #{item.item5_image},
+                item5_num=#{item.item5Num},
+                item5_grade=#{item.item5Grade},
+                item5_image= #{item.item5Image},
                 item6=#{item.item6},
-                item6_num=#{item.item6_num},
-                item6_grade=#{item.item6_grade},
-                item6_image= #{item.item6_image}
-
-            where qid= #{item.qid}
+                item6_num=#{item.item6Num},
+                item6_grade=#{item.item6Grade},
+                item6_image= #{item.item6Image}
+        </set>
+            where  qid= #{item.qid}
         </foreach>
     </update>
+
+    <!--批量修改问卷题目及选项记录-->
+
+
 
     <update id="updateQuestionItemNum" parameterType="com.ovft.configure.sys.bean.Question" useGeneratedKeys="false" >
 
             update edu_question  set
-            item1_num=#{item1_num},
-            item2_num=#{item2_num},
-            item3_num=#{item3_num},
-            item4_num=#{item4_num},
-            item5_num=#{item5_num},
-            item6_num=#{item6_num}
-            where qid= #{item.qid}
+            item1_num=#{item1Num},
+            item2_num=#{item2Num},
+            item3_num=#{item3Num},
+            item4_num=#{item4Num},
+            item5_num=#{item5Num},
+            item6_num=#{item6Num}
+            where qid= #{qid}
 
     </update>
 
@@ -152,12 +183,20 @@
     <delete id="deleteQuestionItem" parameterType="int">
            delete from  edu_question where sid=#{sid}
     </delete>
+    <!--删除对应问卷的题目及选项(topId)-->
+    <delete id="deleteQuestionItemByTopid" parameterType="int">
+           delete from  edu_question where topId=#{topId}
+    </delete>
+    <!--删除对应问卷的题目及选项(downId)-->
+    <delete id="deleteQuestionItemBydownid" parameterType="int">
+           delete from  edu_question where downId=#{downId}
+    </delete>
 
     <!--后台条件查询问卷调查-->
     <select id="findSearchQuestionAll" resultType="com.ovft.configure.sys.bean.SearchQuestion">
         select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime,
         s.updatetime,s.endtime,s.schoolName,
-        s.top_image as topImage,s.author,s.tid
+        s.top_image as topImage,s.author,s.tid,s.visits
         from edu_search_question s
 
         where 1=1
@@ -179,14 +218,76 @@
 
         ORDER BY s.createtime DESC,s.updatetime DESC
     </select>
+
+    <!--app端“综合” 进行条件查询-->
+    <select id="findSearchQuestioncomposite" resultType="com.ovft.configure.sys.bean.SearchQuestion">
+    select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime,
+    s.updatetime,s.endtime,s.schoolName,
+    s.top_image as topImage,s.author,s.tid,s.visits
+    from edu_search_question s
+
+    where 1=1
+    <if test="sid != null and sid != ''">
+        AND s.sid = #{sid}
+    </if>
+    <if test="schoolId != null and schoolId != ''">
+        AND s.schoolId = #{schoolId}
+    </if>
+    <if test="tid != null and tid != ''">
+        AND s.tid = #{tid}
+    </if>
+    <!--<if test="type != null and type != ''">-->
+    <!--AND a.type = #{type}-->
+    <!--</if>-->
+    <if test="search != null and search != ''">
+        AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+    </if>
+
+    ORDER BY s.visit DESC,s.updatetime DESC
+    </select>
+    <!--app端“热门” 进行条件查询-->
+    <select id="findSearchQuestionbyVisit" resultType="com.ovft.configure.sys.bean.SearchQuestion">
+    select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime,
+    s.updatetime,s.endtime,s.schoolName,
+    s.top_image as topImage,s.author,s.tid,s.visits
+    from edu_search_question s
+
+    where 1=1
+    <if test="sid != null and sid != ''">
+        AND s.sid = #{sid}
+    </if>
+    <if test="schoolId != null and schoolId != ''">
+        AND s.schoolId = #{schoolId}
+    </if>
+    <if test="tid != null and tid != ''">
+        AND s.tid = #{tid}
+    </if>
+    <!--<if test="type != null and type != ''">-->
+    <!--AND a.type = #{type}-->
+    <!--</if>-->
+    <if test="search != null and search != ''">
+        AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+    </if>
+
+    ORDER BY s.visit DESC
+    </select>
+
     <!--进入详情页（无选项分数字段返回）-->
     <select id="findQuestionAll" resultType="com.ovft.configure.sys.bean.Question">
-        select q.qid,q.question,q.item1,q.item1_num,q.item1_image,q.item2,q.item2_num
-        ,q.item2_image,q.item3,q.item3_num,q.item3_image,q.item4,q.item4_num,q.item4_image,q.item5,q.item5_num,q.item5_image,q.item6,q.item6_num,q.item6_image,q.tid
+        select q.qid,q.question,q.item1,q.item1_num item1Num,q.item1_image item1Image,q.item2,q.item2_num item2Num
+        ,q.item2_image item2Image,q.item3,q.item3_num item3Num,q.item3_image item3Image,q.item4,q.item4_num item4Num,
+        q.item4_image item4Image,q.item5,q.item5_num item5Num,q.item5_image item5Image,q.item6,q.item6_num item6Num,
+        q.item6_image item6Image,q.tid
         from edu_question q
         where 1=1
         <if test="sid != null and sid != ''">
             AND q.sid = #{sid}
+        </if>
+        <if test="topId != null and topId != ''">
+            AND q.topId = #{topId}
+        </if>
+        <if test="downId != null and downId != ''">
+            AND q.downId = #{downId}
         </if>
 
         <if test="tid != null and tid != ''">
@@ -202,8 +303,9 @@
     </select>
     <!--查询题目及选项分数-->
     <select id="findQuestionAllAndGrade" resultType="com.ovft.configure.sys.bean.Question">
-        select q.qid,q.question,q.item1,q.item1_num,item1_grade,q.item1_image,q.item2,q.item2_num,item2_grade
-        ,q.item2_image,q.item3,q.item3_num,item3_grade,q.item3_image,q.item4,q.item4_num,item4_grade,q.item4_image,q.item5,q.item5_num,item5_grade,q.item5_image,q.item6,q.item6_num,item6_grade,q.item6_image,q.tid
+        select q.qid,q.question,q.item1,q.item1_num as item1Num,q.item1_grade as  item1Grade,q.item1_image item1Image,q.item2,q.item2_num item2Num,item2_grade item2Grade
+        ,q.item2_image item2Image,q.item3,q.item3_num item3Num,item3_grade item3Grade,q.item3_image item3Image,q.item4,q.item4_num item4Num,item4_grade item4Grade,q.item4_image item4Image,
+        q.item5,q.item5_num item5Num,item5_grade item5Grade,q.item5_image item5Image,q.item6,q.item6_num item6Num,item6_grade item6Grade,q.item6_image item6Image,q.tid
         from edu_question q
 
         where 1=1
@@ -225,13 +327,104 @@
 
     <!--添加问卷题目结果-->
     <insert id="createAnswerRecord" parameterType="com.ovft.configure.sys.bean.AnswerRecord" >
-       insert  into  edu_answer_record a (aid,uid,userName,schoolName,answer,title,a.advice_info adviceInfo,total_grade totalGrade) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade})
+       insert  into  edu_answer_record(aid,uid,userName,schoolName,answer,title,advice_info,total_grade,sid) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade},#{sid})
      </insert>
-    <!--查询问卷题目结果-->
+    <!--查询问卷总分结果-->
     <select id="queryAnswerRecordGrade" resultType="java.lang.Integer" >
        select  a.total_grade totalGrade  from   edu_answer_record a
      </select>
+    <!--所有用户答题结果记录-->
+    <select id="findAnswerRecord" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.bean.AnswerRecord" >
+       select  aid,uid,userName,schoolName,answer,title,advice_info adviceInfo,total_grade totalGrade,sid  from   edu_answer_record where 1=1
+        <if test="schoolId!=null">
+            and school_id=#{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
+     </select>
+    <!--所有用户答题结果记录-->
+    <select id="findAnswerRecordbyUserId" parameterType="int" resultType="String">
+       select  userName  from   edu_answer_record WHERE  uid=#{uid}
+     </select>
+    <!--查询对应投票-->
+    <select id="findVoteItemAll"  resultType="com.ovft.configure.sys.bean.VoteItem">
+       select  *  from   edu_vote_item
+        where 1=1
+        <if test="schoolId!=null">
+            and school_id=#{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
 
+     </select>
+    <!--查询对应投票-->
+    <select id="findVoteItembySid" parameterType="int" resultType="com.ovft.configure.sys.bean.VoteItem">
+       select  *  from   edu_vote_item  WHERE  sid=#{sid}
+     </select>
+    <!--查询对应投票-->
+    <select id="findVoteItembyId" parameterType="int" resultType="com.ovft.configure.sys.bean.VoteItem">
+       select  *  from   edu_vote_item  WHERE  id=#{id}
+     </select>
+    <!--查询对应投票(userId)-->
+    <select id="findVoteItembyuserId" parameterType="int" resultType="com.ovft.configure.sys.bean.VoteItem">
+       select  *  from   edu_vote_item  WHERE  userId=#{userId}
+     </select>
+    <!--删除对应问卷的题目及选项-->
+    <delete id="deleteVoteItembyId" parameterType="int">
+           delete from  edu_vote_item where sid=#{sid}
+    </delete>
+    <!--修改投票选项的num的次数-->
+    <update id="updateVoteItem" parameterType="int">
+        update  edu_vote_item set num=#{num} where id=#{id}
+    </update>
+
+    <!--多表查询课程列表（线上的）-->
+    <select id="findMyCourseAlltop" parameterType="com.ovft.configure.sys.vo.PageVo"
+            resultType="com.ovft.configure.sys.vo.MyCourseAll">
+        select
+        o.id id,c.course_name courseName,o.school_id schoolId,a.name courseTeacher,c.end_date endDate
+        from
+        edu_offline_num o,
+        edu_course c,
+        edu_admin a
+        where
+        o.course_id =c.course_id and c.course_teacher=a.admin_id
+        <if test="userId!=null">
+            and o.user_id=#{userId}
+        </if>
+        <if test="schoolId!=null">
+            and o.school_id=#{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND o.course_name like CONCAT('%',#{search},'%')
+        </if>
+
+
+    </select>
+    <!--多表查询课程列表（线下的）-->
+    <select id="findMyCourseAlldown" parameterType="com.ovft.configure.sys.vo.PageVo"
+            resultType="com.ovft.configure.sys.vo.MyCourseAll">
+        select
+        p.id id, c.course_name courseName,p.school_id schoolId,a.name courseTeacher,c.end_date endDate
+
+        from
+        edu_payrecord p,
+        edu_course c,
+        edu_admin a
+        where
+           p.course_id=c.course_id and c.course_teacher=a.admin_id
+        <if test="userId!=null">
+            and p.user_id=#{userId}
+        </if>
+        <if test="schoolId!=null">
+            and p.school_id=#{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND p.course_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
 
 
 </mapper>

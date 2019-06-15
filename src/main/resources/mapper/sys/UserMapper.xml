@@ -305,7 +305,7 @@
             and userId=#{userId}
         </if>
         <if test="search != null and search != ''">
-            AND user_name like CONCAT('%',#{search},'%')
+            AND user_name like CONCAT('%',concat(#{search}),'%')
         </if>
     </select>
     <!--查询学员投稿记录列表 -->

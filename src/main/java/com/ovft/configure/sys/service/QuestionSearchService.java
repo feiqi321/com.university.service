@@ -19,11 +19,25 @@ public interface QuestionSearchService {
 //     //添加问卷题目选项（SearchQuestion）
 //     public WebResult createQuestionItem(QuestionItem questionItem);
      //删除一篇问卷题目及选项
-     public WebResult deleteSearchQuestion(Integer sid);
+     public WebResult deleteSearchQuestion(Integer sid,Integer tid,Integer topId,Integer downId);
      //问卷调查列表
      public WebResult findSearchQuestionAll(PageVo pageVo);
+     //按热门条件问卷调查列表
+     public WebResult findSearchQuestionAllbyVisits(PageVo pageVo);
+     //按综合条件问卷调查列表
+     public WebResult findSearchQuestioncomposite(PageVo pageVo);
      //添加用户调查结果记录
      public WebResult createAnswerRecord(AnswerRecord answerRecord);
+    //查询用户调查结果记录
+    public WebResult findAnswerRecord(PageVo pageVo);
+    //查询用户调查结果记录
+    public WebResult findVoteRecord(PageVo pageVo);
+    //提交用户调查结果记录
+    public WebResult submitVoteRecord(Integer id,Integer userId);
+    //教师评价列表
+    public WebResult findCourseTopic(PageVo pageVo);
+    //教师评价列表
+    public WebResult findMyCourseList(PageVo pageVo);
 
 
 

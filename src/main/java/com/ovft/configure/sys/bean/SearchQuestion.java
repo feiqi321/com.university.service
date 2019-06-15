@@ -7,18 +7,55 @@ import java.util.List;
  * 调查问卷
  **/
 public class SearchQuestion {
-      private Integer sid;
-      private Integer schoolId;   //报名学校id
-      private String searchName;
-      private String content;
-      private Date createTime;
-      private Date updateTime;
-      private Date endTime;
-      private String schoolName;
-      private String author;  //创建人
-      private String topImage;
-      private Integer tid;    //投票内部分类栏目id
-      private List<Question> questions;
+
+    private Integer sid;
+    private Integer schoolId;   //报名学校id
+    private String searchName;
+    private String content;
+    private Date createTime;
+    private Date updateTime;
+    private Date endTime;
+    private String schoolName;
+    private String author;  //创建人
+    private String topImage;
+    private Integer tid;    //投票内部分类栏目id
+    private int visits;
+    private List<Question> questions;
+    private List<VoteItem> voteItems;    //投票接口时传入
+    private  Integer topId;      //类型为2的时候  即教师评价时   线上报名id              注：用户的课程分为edu_payrecord、edu_offline_num两张表，因为在添加没门课的题目时须进行绑定而设计
+    private  Integer downId;      //类型为2的时候  即教师评价时   线上报名id                   *在进入某门课程时会关联这两个id,为避免重复而设计
+
+    public Integer getTopId() {
+        return topId;
+    }
+
+    public Integer getDownId() {
+        return downId;
+    }
+
+    public void setTopId(Integer topId) {
+        this.topId = topId;
+    }
+
+    public void setDownId(Integer downId) {
+        this.downId = downId;
+    }
+
+    public List<VoteItem> getVoteItems() {
+        return voteItems;
+    }
+
+    public void setVoteItems(List<VoteItem> voteItems) {
+        this.voteItems = voteItems;
+    }
+
+    public int getVisits() {
+        return visits;
+    }
+
+    public void setVisits(int visits) {
+        this.visits = visits;
+    }
 
     public Integer getTid() {
         return tid;
@@ -28,7 +65,9 @@ public class SearchQuestion {
         this.tid = tid;
     }
 
-    public List<Question> getQuestions() { return questions; }
+    public List<Question> getQuestions() {
+        return questions;
+    }
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;

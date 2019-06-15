@@ -37,7 +37,7 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/regist")
-    public WebResult regist(@RequestBody User user) {
+    public WebResult regist(@RequestBody User user,HttpServletRequest request) {
         user.setUserName(user.getPhone());
         return userService.addUser(user);
     }

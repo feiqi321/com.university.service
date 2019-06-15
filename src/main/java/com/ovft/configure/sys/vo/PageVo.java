@@ -38,6 +38,26 @@ public class PageVo {
 
     private Integer isFree;
 
+    private Integer topId;
+
+    private Integer downId;
+
+    public Integer getTopId() {
+        return topId;
+    }
+
+    public Integer getDownId() {
+        return downId;
+    }
+
+    public void setTopId(Integer topId) {
+        this.topId = topId;
+    }
+
+    public void setDownId(Integer downId) {
+        this.downId = downId;
+    }
+
     public Integer getTid() {
         return tid;
     }

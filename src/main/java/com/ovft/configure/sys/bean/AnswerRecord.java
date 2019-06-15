@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import com.ovft.configure.sys.vo.AnswerRecordVo;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,10 +16,28 @@ public class AnswerRecord {
       private String answer;
       private String title;
       private String adviceInfo;
-      private List<Integer>  answerNums;
-      private HashMap<Integer,String> answerValues;
+      private int []  answerNums;
+      private List<AnswerRecordVo> answerValues;
       private List<Question> list;
       private Integer  totalGrade;
+      private Integer  sid;
+
+
+    public Integer getSid() {
+        return sid;
+    }
+
+    public void setSid(Integer sid) {
+        this.sid = sid;
+    }
+
+    public List<AnswerRecordVo> getAnswerValues() {
+        return answerValues;
+    }
+
+    public void setAnswerValues(List<AnswerRecordVo> answerValues) {
+        this.answerValues = answerValues;
+    }
 
     public List<Question> getList() {
         return list;
@@ -35,19 +55,12 @@ public class AnswerRecord {
         this.totalGrade = totalGrade;
     }
 
-    public List<Integer> getAnswerNums() {
+
+    public int[] getAnswerNums() {
         return answerNums;
     }
 
-    public void setAnswerValues(HashMap<Integer, String> answerValues) {
-        this.answerValues = answerValues;
-    }
-
-    public HashMap<Integer, String> getAnswerValues() {
-        return answerValues;
-    }
-
-    public void setAnswerNums(List<Integer> answerNums) {
+    public void setAnswerNums(int[] answerNums) {
         this.answerNums = answerNums;
     }
 
@@ -65,6 +78,10 @@ public class AnswerRecord {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public String getAnswer() {
+        return answer;
     }
 
     public void setAnswer(String answer) {
@@ -95,9 +112,7 @@ public class AnswerRecord {
         return schoolName;
     }
 
-    public String getAnswer() {
-        return answer;
-    }
+
 
     public String getTitle() {
         return title;
