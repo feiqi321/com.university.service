@@ -2,12 +2,12 @@ package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Activities;
-import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.MyActivities;
 import com.ovft.configure.sys.dao.ActivitiesMapper;
 import com.ovft.configure.sys.dao.AdminMapper;
 import com.ovft.configure.sys.dao.MyActivitiesMapper;
 import com.ovft.configure.sys.service.MyActivitiesService;
+import com.ovft.configure.sys.vo.AdminVo;
 import com.ovft.configure.sys.vo.MyActivitiesVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -77,7 +77,8 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
 
             }
             if(myActivities.getAdminId() != null) {
-                Admin admin = adminMapper.selectById(myActivities.getAdminId());
+                List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(myActivities.getAdminId(), activities.getSchoolId(), null);
+                AdminVo admin = adminVos.get(0);
                 if(admin.getRole().equals(1) && !category.contains("管理员")) {
                     return new WebResult("400", "该活动只有" + category + "能报名", "");
                 }
@@ -102,16 +103,15 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
     }
 
     @Override
-    public WebResult deleteMyActivities(Integer id) {
-        MyActivities myActivities = myActivitiesMapper.selectById(id);
-        Activities activities = activitiesMapper.selectById(myActivities.getActivitiesId());
+    public WebResult deleteMyActivities(Integer activitiesId, Integer userId) {
+        Activities activities = activitiesMapper.selectById(activitiesId);
+        List<MyActivities> myActivities = myActivitiesMapper.selectByUserOrActivities(userId, null, activitiesId);
         Date registEndTime = activities.getRegistEndTime();
         Date date = new Date();
         if(date.after(registEndTime)) {
             return new WebResult("400", "活动报名已截止,不能取消报名", "");
         }
-
-        myActivitiesMapper.deleteMyActivities(id);
+        myActivitiesMapper.deleteMyActivities(myActivities.get(0).getId());
         return new WebResult("200", "删除成功", "");
     }
 
@@ -134,5 +134,20 @@ public class MyActivitiesServiceImpl implements MyActivitiesService {
             activities.setIsRegist(isRegist.size());
         }
         return new WebResult("200", "查询成功", activities);
+    }
+
+    @Transactional
+    @Override
+    public WebResult deleteMyActivitiesPc(Integer id) {
+        MyActivities myActivities = myActivitiesMapper.selectById(id);
+        Activities activities = activitiesMapper.selectById(myActivities.getActivitiesId());
+        Date registEndTime = activities.getRegistEndTime();
+        Date date = new Date();
+        if(date.after(registEndTime)) {
+            return new WebResult("400", "活动报名已截止,不能取消报名", "");
+        }
+
+        myActivitiesMapper.deleteMyActivities(id);
+        return new WebResult("200", "删除成功", "");
     }
 }

@@ -2,7 +2,6 @@ package com.ovft.configure.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.constant.OrderStatus;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
@@ -10,6 +9,7 @@ import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.SecurityUtils;
+import com.ovft.configure.sys.vo.AdminVo;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
@@ -148,18 +148,6 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * 进入添加课程页面
-     *
-     * @param schoolId
-     * @return
-     */
-    @Override
-    public WebResult intoCourse(Integer schoolId) {
-        List<Map<String, Object>> teacherList = adminMapper.selectBySchool(ConstantClassField.ROLE_TEACHER_STATUS, schoolId);
-        return new WebResult("200", "查询成功", teacherList);
-    }
-
-    /**
      * 添加/修改  课程
      *
      * @param courseVo
@@ -285,7 +273,8 @@ public class TeacherServiceImpl implements TeacherService {
         courseVo.setClassList(classList);
         School school = schoolMapper.selectById(Integer.valueOf(courseVo.getSchoolId()));
         courseVo.setSchoolName(school == null ? "" : school.getSchoolName());
-        Admin admin = adminMapper.selectById(Integer.valueOf(courseVo.getCourseTeacher()));
+        List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(Integer.valueOf(courseVo.getCourseTeacher()), school.getSchoolId(), null);
+        AdminVo admin = adminVos.get(0);
         courseVo.setTeacherName(admin == null ? "" : admin.getName());
 
         return new WebResult("200", "查询成功", courseVo);

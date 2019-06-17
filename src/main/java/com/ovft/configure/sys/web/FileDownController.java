@@ -8,6 +8,7 @@ import com.ovft.configure.sys.dao.AdminMapper;
 import com.ovft.configure.sys.dao.TeacherMapper;
 import com.ovft.configure.sys.service.FileDownService;
 import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.vo.AdminVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.poi.hssf.usermodel.*;
 import org.slf4j.Logger;
@@ -119,7 +120,8 @@ public class FileDownController {
                 HSSFRow row = sheet.createRow(rowNum);
                 row.createCell(0).setCellValue(course.getCourseId());
 
-                Admin teacher = adminMapper.selectById(Integer.valueOf(course.getCourseTeacher()));
+                List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(Integer.valueOf(course.getCourseTeacher()), pageVo.getSchoolId(), null);
+                AdminVo teacher = adminVos.get(0);
                 row.createCell(1).setCellValue(teacher.getName());
                 row.createCell(2).setCellValue(course.getCourseName());
                 row.createCell(3).setCellValue(course.getPlaceClass());

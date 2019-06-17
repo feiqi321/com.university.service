@@ -11,8 +11,6 @@ public interface TeacherService {
 
     public WebResult vacateChackList(PageVo pageVo);
 
-    public WebResult intoCourse(Integer schoolId);
-
     public WebResult createCourse(EduCourseVo courseVo);
 
     public WebResult vacateApprover(Integer vacateId, Integer isCheck);

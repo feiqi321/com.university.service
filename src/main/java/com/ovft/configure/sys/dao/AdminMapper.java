@@ -1,11 +1,12 @@
 package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.Admin;
+import com.ovft.configure.sys.bean.School;
+import com.ovft.configure.sys.vo.AdminVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @ClassName AdminMapper
@@ -16,34 +17,39 @@ import java.util.Map;
 @Mapper
 public interface AdminMapper {
 
-    public Admin selectById(@Param("adminId") Integer adminId);
+    /*public Admin selectById(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId);*/
 
     public Admin selectByPhone(@Param("phone") String phone);
 
-    public List<Map<String, Object>> selectBySchool(@Param("role") Integer role, @Param("schoolId") Integer schoolId);
+    public List<School> selectByPhoneList(@Param("phone") String phone);
 
-    public List<Map<String, Object>> selectTeacherBySchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId);
+    /**
+     * 多表查询， 查询当前学校的admin
+     * @param adminId
+     * @param schoolId
+     * @param role
+     * @return
+     */
+    public List<AdminVo> selectByAdminAndSchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId, @Param("role") Integer role);
 
     public void creatAdmin(Admin admin);
 
     /**
-     *  添加教师
+     * 添加admin子表
+     * @param admin
      */
-    public void createTeacherSchool(Admin admin);
+    public void createAdminSchool(Admin admin);
 
     public void updateByPassword(@Param("adminId") Integer adminId, @Param("password") String password);
 
     public void updateByPrimary(Admin admin);
 
-    /**
-     *  修改教师
-     */
-    public void updateTeacherSchool(Admin admin);
+    public void updateAdminSchool(Admin admin);
 
     public void deleteById(@Param("adminId") Integer adminId);
 
     /**
-     *  删除教师
+     *  删除admin子表
      */
-    public void deleteTeacherSchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId);
+    public void deleteAdminSchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId);
 }

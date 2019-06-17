@@ -267,16 +267,6 @@ public class TeacherController {
     }
 
     /**
-     * 进入添加课程页面
-     * @param schoolId
-     * @return
-     */
-    @GetMapping(value = "/intoCourse")
-    public WebResult intoCourse(@RequestParam(value = "schoolId")Integer schoolId) {
-        return teacherService.intoCourse(schoolId);
-    }
-
-    /**
      * 添加/修改 课程
      * @param courseVo
      * @return

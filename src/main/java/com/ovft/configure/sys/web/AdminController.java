@@ -5,13 +5,12 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.EduArticle;
-import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.AdminService;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.vo.AdminVo;
 import com.ovft.configure.sys.vo.PageVo;
-import com.ovft.configure.sys.vo.WithdrawVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,18 +52,28 @@ public class AdminController {
     }
 
     /**
+     * 根据手机号获取学校列表
+     * @param phone
+     * @return
+     */
+    @GetMapping(value = "/findSchoolByPhone")
+    public WebResult findSchoolByPhone(String phone) {
+        return adminService.findSchoolByPhone(phone);
+    }
+
+    /**
      * 修改密码
      *
      * @param oldPassword
      * @param newPassword
      * @return
      */
-    @PostMapping(value = "/updatePassword")
+    /*@PostMapping(value = "/updatePassword")
     public WebResult updatePasword(HttpServletRequest request, @RequestParam(value = "oldPassword") String oldPassword,
                                    @RequestParam(value = "newPassword") String newPassword) {
         Integer adminId = (Integer) request.getAttribute("adminId");
         return adminService.updatePassword(adminId, oldPassword, newPassword);
-    }
+    }*/
 
     /**
      * 修改手机号
@@ -72,12 +81,12 @@ public class AdminController {
      * @param newPhone
      * @return
      */
-    @PostMapping(value = "/updatePhone")
+   /* @PostMapping(value = "/updatePhone")
     public WebResult updatePhone(HttpServletRequest request, @RequestParam(value = "newPhone") String newPhone,
                                  @RequestParam(value = "securityCode") String securityCode) {
         Integer adminId = (Integer) request.getAttribute("adminId");
         return adminService.updatePhone(adminId, newPhone, securityCode);
-    }
+    }*/
 
     /**
      * 管理员/教师列表
@@ -104,27 +113,21 @@ public class AdminController {
     }
 
     /**
-     * 添加 管理员/教师
+     * 添加 管理员(带角色)
      *
-     * @param admin
+     * @param adminVo
      * @return
      */
-    @PostMapping(value = "/createAdmin")
-    public WebResult createAdmin(HttpServletRequest request, @RequestBody Admin admin) {
+    @PostMapping(value = "/createAdminRole")
+    public WebResult createAdminRole(HttpServletRequest request, @RequestBody AdminVo adminVo) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
-        if(o != null) {
-            Integer id = (Integer) o;
-            // 如果是pc端登录，更新token缓存失效时间
-            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
-            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-            if(hget.getRole() != 0) {
-                admin.setSchoolId(hget.getSchoolId());
-            }
-            return adminService.createAdmin(admin);
-        }else {
-            return new WebResult("50012", "请重新登录", "");
+        Integer id = (Integer) o;
+        Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+        if(hget.getRole() != 0) {
+            adminVo.setSchoolId(hget.getSchoolId());
         }
+        return adminService.createAdminRole(adminVo);
     }
 
     /**

@@ -66,7 +66,7 @@ public class MyActivitiesController {
     public WebResult myActivitiesList(HttpServletRequest request) {
         String userId = request.getHeader("userId");
         if(StringUtils.isBlank(userId) || userId.equals("null")) {
-            return new WebResult("400", "请登录！", "");
+            return new WebResult("50012", "请登录！", "");
         }
         return myActivitiesService.myActivitiesList(Integer.parseInt(request.getHeader("userId")), null);
     }
@@ -81,7 +81,7 @@ public class MyActivitiesController {
     public WebResult registMyActivities(HttpServletRequest request, @RequestBody MyActivities myActivities) {
         String userId = request.getHeader("userId");
         if(StringUtils.isBlank(userId) || userId.equals("null")) {
-            return new WebResult("400", "请登录！", "");
+            return new WebResult("50012", "请登录！", "");
         }
         myActivities.setUserId(Integer.parseInt(userId));
         return myActivitiesService.registMyActivities(myActivities);
@@ -90,12 +90,16 @@ public class MyActivitiesController {
     /**
      * 删除 我报名的活动
      *
-     * @param id
+     * @param activitiesId
      * @return
      */
     @GetMapping(value = "/deleteMyActivities")
-    public WebResult deleteMyActivities(@RequestParam(value = "id") Integer id) {
-        return myActivitiesService.deleteMyActivities(id);
+    public WebResult deleteMyActivities(HttpServletRequest request, @RequestParam(value = "activitiesId") Integer activitiesId) {
+        String userId = request.getHeader("userId");
+        if(StringUtils.isBlank(userId) || userId.equals("null")) {
+            return new WebResult("50012", "请登录！", "");
+        }
+        return myActivitiesService.deleteMyActivities(activitiesId,Integer.parseInt(userId));
     }
 
 }

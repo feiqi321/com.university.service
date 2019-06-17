@@ -99,9 +99,13 @@ public class VideoServiceImpl implements VideoService {
     //子表 视频教学 列表
     @Override
     public WebResult videoItemList(Integer userId, Integer videoId) {
+        Video video = videoMapper.selectById(videoId);
         List<VideoItem> videoItemList = videoMapper.selectItemList(videoId);
         if(userId != null) {
-            videoItemList.forEach(videoItem -> videoItem.setVideo(null));
+            videoItemList.forEach(videoItem -> {
+                videoItem.setVideo(null);
+                videoItem.setTotalTitle(video.getTitle());
+            });
             List<MyVideo> myVideos = videoMapper.selectMyVideo(userId, videoId);
             if(myVideos.size()!=0) {
                 isLearn(myVideos.get(0).getItems(), videoItemList);
@@ -176,8 +180,8 @@ public class VideoServiceImpl implements VideoService {
     public WebResult myVideoLearn(Integer videoId, Integer userId) {
         List<MyVideo> myVideos = videoMapper.selectMyVideo(userId, videoId);
         List<VideoItem> videoItemList = videoMapper.selectItemList(videoId);
+        Video video = videoMapper.selectById(videoId);
         if(myVideos.size() == 0) {
-            Video video = videoMapper.selectById(videoId);
             if(video.getIsFree().equals(1)) {
                 return new WebResult("400", "请购买该视频", "");
             }
@@ -187,8 +191,10 @@ public class VideoServiceImpl implements VideoService {
             myVideo.setDate(new Date());
             myVideo.setItems(videoItemList.get(0).getItemId()+"");
             videoMapper.createMyVideo(myVideo);
+            myVideos.add(myVideo);
         }
         VideoItem lastVideoItem = findLastVideoItem(myVideos.get(0));
+        lastVideoItem.setTotalTitle(video.getTitle());
         return new WebResult("200", "查询成功", lastVideoItem);
     }
 
@@ -206,9 +212,10 @@ public class VideoServiceImpl implements VideoService {
         VideoItem videoItem = videoMapper.selectItemById(itemId);
 
         Integer videoId = videoItem.getVideoId();
+        Video video = videoMapper.selectById(videoId);
+        videoItem.setTotalTitle(video.getTitle());
         List<MyVideo> myVideos = videoMapper.selectMyVideo(userId, videoId);
         if(myVideos.size() == 0) {
-            Video video = videoMapper.selectById(videoId);
             // 是否免费   0-免费， 1-收费
             if(video.getIsFree().equals(1)) {
                 //是否试听    0-非试听 1-试听

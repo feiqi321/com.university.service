@@ -9,6 +9,15 @@ import com.ovft.configure.sys.bean.Admin;
  */
 public class AdminVo extends Admin {
     private String schoolName;
+    private Integer[] roleIds;
+
+    public Integer[] getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(Integer[] roleIds) {
+        this.roleIds = roleIds;
+    }
 
     public AdminVo() {
 

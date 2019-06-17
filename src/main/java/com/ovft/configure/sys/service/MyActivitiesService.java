@@ -9,7 +9,9 @@ public interface MyActivitiesService {
 
     public WebResult registMyActivities(MyActivities myActivities);
 
-    public WebResult deleteMyActivities(Integer id);
+    public WebResult deleteMyActivities(Integer activitiesId, Integer userId);
+
+    public WebResult deleteMyActivitiesPc(Integer userId);
 
     public WebResult findMyActivities(Integer activitiesId, Integer userId);
 }

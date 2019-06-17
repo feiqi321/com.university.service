@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.RoleMapper" >
+
+    <!--/**
+    * 角色
+    */-->
+    <select id="selectById"  resultType="com.ovft.configure.sys.bean.Role">
+        SELECT r.role_id as roleId, r.role_name as roleName, r.school_id as schoolId, s.school_name as schoolName
+        FROM edu_role r
+        LEFT JOIN edu_school s on r.school_id = s.school_id
+        where r.role_id = #{roleId}
+    </select>
+
+    <select id="selectByAdminIdList" resultType="com.ovft.configure.sys.bean.Role">
+        SELECT r.role_id as roleId, r.role_name as roleName, r.school_id as schoolId
+        FROM edu_admin_role a
+        LEFT JOIN edu_role r on a.role_id = r.role_id
+        WHERE a.admin_id = #{adminId} and a.school_id = #{schoolId}
+    </select>
+
+    <select id="selectBySchoolIdList" resultType="com.ovft.configure.sys.bean.Role">
+        SELECT r.role_id as roleId, r.role_name as roleName, r.school_id as schoolId, s.school_name as schoolName
+        FROM edu_role r
+        LEFT JOIN edu_school s on r.school_id = s.school_id
+        WHERE 1=1
+        <if test="schoolId != null">
+            AND r.school_id = #{schoolId}
+        </if>
+    </select>
+
+    <insert id="createRole" parameterType="com.ovft.configure.sys.bean.Role" useGeneratedKeys="true"
+            keyProperty="roleId">
+        insert into edu_role(role_id, role_name,school_id)
+        values (#{roleId}, #{roleName}, #{schoolId})
+    </insert>
+
+    <update id="updateRole" parameterType="com.ovft.configure.sys.bean.Role">
+        update edu_role
+        set role_name = #{roleName}
+        where role_id = #{roleId}
+    </update>
+
+    <delete id="deleteRole">
+        delete from edu_role where role_id = #{roleId}
+    </delete>
+
+    <!--
+        权限
+    -->
+    <select id="selectPermissionList" resultType="com.ovft.configure.sys.bean.Permission">
+        SELECT p.permission_id as permissionId, p.permission_name as permissionName, p.chinese_name chineseName, p.url ,p.remarks
+        FROM edu_role_permission r
+        LEFT JOIN edu_permission p on r.permission_id = p.permission_id
+        WHERE r.role_id = #{roleId}
+    </select>
+
+    <select id="selectPermissionAll" resultType="com.ovft.configure.sys.bean.Permission">
+        SELECT permission_id as permissionId, permission_name as permissionName, chinese_name chineseName, url, remarks
+        FROM edu_permission
+        where 1=1
+        <if test="remarks != null">
+            AND remarks = #{remarks}
+        </if>
+    </select>
+
+    <select id="groupRemark" resultType="java.lang.String">
+        SELECT remarks
+        FROM edu_permission
+        GROUP BY remarks
+    </select>
+
+    <!--
+    用户-角色
+    -->
+    <insert id="insertAdminRole" parameterType="com.ovft.configure.sys.vo.AdminRole" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into edu_admin_role (role_id, admin_id, school_id)
+        values (#{roleId}, #{adminId}, #{schoolId})
+    </insert>
+
+    <delete id="deleteAdminRole">
+        delete from edu_admin_role where 1=1
+        <if test="adminId != null">
+            AND admin_id = #{adminId}
+        </if>
+        <if test="roleId != null">
+            AND role_id = #{roleId}
+        </if>
+        <if test="schoolId != null">
+            AND school_id = #{schoolId}
+        </if>
+    </delete>
+
+    <!--
+    角色 - 权限
+    -->
+    <insert id="insertByRolePermission" >
+        insert into edu_role_permission (role_id, permission_id)
+        values (#{roleId}, #{permissionId})
+    </insert>
+
+    <delete id="deleteRolePermission">
+        delete from edu_role_permission where role_id = #{roleId}
+    </delete>
+
+</mapper>

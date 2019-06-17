@@ -17,27 +17,6 @@
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
     </resultMap>
 
-    <select id="selectById"  resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from edu_admin
-        where admin_id = #{adminId}
-    </select>
-
-    <select id="selectBySchool"  resultType="java.util.Map">
-        select
-        a.admin_id adminId, a.name, a.phone, a.image, a.role, a.school_id schoolId, s.school_name as schoolName, a.post
-        from edu_admin a
-        left join edu_school s on a.school_id = s.school_id
-        where 1=1
-        <if test="role != null">
-            and a.role = #{role}
-        </if>
-        <if test="schoolId != null and schoolId != ''">
-            and a.school_id = #{schoolId}
-        </if>
-    </select>
-
     <select id="selectByPhone"  resultType="com.ovft.configure.sys.bean.Admin">
          select admin_id as adminId, name, password, phone, image, role, school_id as schoolId, post from edu_admin where phone = #{phone}
     </select>
@@ -86,38 +65,49 @@
         where admin_id = #{adminId}
   </delete>
 
-    <select id="selectTeacherBySchool"  resultType="java.util.Map">
+    <select id="selectByAdminAndSchool"  resultType="com.ovft.configure.sys.vo.AdminVo">
         select
-        a.admin_id adminId, a.name, a.phone, a.image, a.role, t.school_id schoolId, s.school_name as schoolName, t.post
+        a.admin_id adminId, a.name, a.phone, a.image, t.role, t.school_id schoolId, s.school_name as schoolName
         from edu_admin a
-        LEFT JOIN edu_teacher_school t on a.admin_id = t.admin_id
+        LEFT JOIN edu_admin_school t on a.admin_id = t.admin_id
         LEFT JOIN edu_school s on t.school_id = s.school_id
-        where a.role = 2
+        where 1=1
         <if test="adminId != null">
             and a.admin_id = #{adminId}
         </if>
         <if test="schoolId != null">
             and t.school_id = #{schoolId}
         </if>
+        <if test="role != null">
+            and t.role = #{role}
+        </if>
     </select>
 
-    <insert id="createTeacherSchool" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="id">
-         insert into edu_teacher_school(school_id, admin_id, post)
-         values (#{schoolId}, #{adminId}, #{post})
+    <select id="selectByPhoneList"  resultType="com.ovft.configure.sys.bean.School">
+        select t.school_id schoolId, s.school_name as schoolName
+        from edu_admin a
+        LEFT JOIN edu_admin_school t on a.admin_id = t.admin_id
+        LEFT JOIN edu_school s on t.school_id = s.school_id
+        where a.phone = #{phone}
+    </select>
+
+    <insert id="createAdminSchool" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="id">
+         insert into edu_admin_school(school_id, admin_id, role)
+         values (#{schoolId}, #{adminId}, #{role})
     </insert>
 
-    <update id="updateTeacherSchool" parameterType="com.ovft.configure.sys.bean.Admin">
-        update edu_teacher_school
+    <update id="updateAdminSchool" parameterType="com.ovft.configure.sys.bean.Admin">
+        update edu_admin_school
         <set>
-            <if test="post != null">
-                post = #{post},
+            <if test="role != null">
+                role = #{role},
             </if>
         </set>
         where admin_id = #{adminId} and school_id = #{schoolId}
     </update>
 
-    <delete id="deleteTeacherSchool" parameterType="java.lang.Integer">
-        delete from edu_teacher_school
+    <delete id="deleteAdminSchool" parameterType="java.lang.Integer">
+        delete from edu_admin_school
         where admin_id = #{adminId} and school_id = #{schoolId}
     </delete>
 

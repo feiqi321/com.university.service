@@ -150,7 +150,7 @@ public class ActivitiesController {
      */
     @GetMapping(value = "/deleteMyActivities")
     public WebResult deleteMyActivities(@RequestParam(value = "id") Integer id) {
-        return myActivitiesService.deleteMyActivities(id);
+        return myActivitiesService.deleteMyActivitiesPc(id);
     }
 
 }

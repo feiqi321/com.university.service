@@ -8,6 +8,7 @@ import com.ovft.configure.sys.bean.FineCourse;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.FileDownService;
+import com.ovft.configure.sys.vo.AdminVo;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import com.qiniu.common.QiniuException;
@@ -159,11 +160,11 @@ public class FileDownServiceImpl implements FileDownService {
                 }
             } else {
                 String teacher = row.getCell(2).getStringCellValue();
-                List<Map<String, Object>> maps = adminMapper.selectTeacherBySchool(null, Integer.valueOf(course.getSchoolId()));
-                for (Map<String, Object> map : maps) {
-                    String name = (String) map.get("name");
+                List<AdminVo> maps = adminMapper.selectByAdminAndSchool(null, Integer.valueOf(course.getSchoolId()), 2);
+                for (AdminVo admin : maps) {
+                    String name = admin.getName();
                     if(name.equals(teacher)) {
-                        Integer adminId = (Integer) map.get("adminId");
+                        Integer adminId = admin.getAdminId();
                         course.setCourseTeacher(adminId.toString());
                         break;
                     }

@@ -103,12 +103,6 @@ public class FineCourseController {
      */
     @PostMapping(value = "/fineCourse/fineCourseList")
     public WebResult courseList(HttpServletRequest request, @RequestBody PageVo pageVo) {
-        /*String token = request.getHeader("token");
-        String schoolId = request.getHeader("schoolId");
-        if(StringUtils.isBlank(schoolId)) {
-            return new WebResult("400", "请选择学校", "");
-        }
-        pageVo.setSchoolId(Integer.valueOf(schoolId));*/
         return fineCourseService.fineCourseList(pageVo);
     }
 
@@ -118,7 +112,7 @@ public class FineCourseController {
      * @return
      */
     @GetMapping(value = "/fineCourse/findFineCourse")
-    public WebResult findCourse(HttpServletRequest request, Integer fineId) {
+    public WebResult findCourse(HttpServletRequest request, @RequestParam(value = "fineId") Integer fineId) {
         return fineCourseService.findCourse(fineId);
     }
 

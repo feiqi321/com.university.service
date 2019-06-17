@@ -38,8 +38,21 @@ public class VideoItem implements Serializable {
      */
     private Integer isLearn;
 
+    /**
+     * 总标题
+     */
+    private String totalTitle;
+
     public Integer getIsLearn() {
         return isLearn;
+    }
+
+    public String getTotalTitle() {
+        return totalTitle;
+    }
+
+    public void setTotalTitle(String totalTitle) {
+        this.totalTitle = totalTitle;
     }
 
     public void setIsLearn(Integer isLearn) {

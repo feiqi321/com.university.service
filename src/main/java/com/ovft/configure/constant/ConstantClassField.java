@@ -13,9 +13,14 @@ public class ConstantClassField {
     public static final String SINGLE_SIGN_ON = "SSO_ADMIN";
 
     /**
-     * redis
+     * redis        用户信息
      */
     public static final String ADMIN_INFO = "ADMIN_INFO";
+
+    /**
+     * redis    用户权限
+     */
+    public static final String ADMIN_PERMISSION = "ADMIN_PERMISSION";
 
     /**
      * 管理员状态  0-超级管理员

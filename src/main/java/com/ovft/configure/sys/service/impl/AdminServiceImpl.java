@@ -5,10 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
+import com.ovft.configure.sys.bean.Role;
 import com.ovft.configure.sys.bean.School;
 import com.ovft.configure.sys.dao.AdminMapper;
+import com.ovft.configure.sys.dao.RoleMapper;
 import com.ovft.configure.sys.dao.SchoolMapper;
 import com.ovft.configure.sys.service.AdminService;
+import com.ovft.configure.sys.service.RoleService;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.utils.SecurityUtils;
@@ -23,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @ClassName AdminServiceImpl
@@ -45,6 +45,10 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private RoleService roleService;
+    @Resource
+    private RoleMapper roleMapper;
 
     /**
      * 登录
@@ -61,6 +65,12 @@ public class AdminServiceImpl implements AdminService {
         }
         //查询该手机号是否已经存在
         Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
+        if(adminPhone.getRole() != 0) {
+            if(admin.getSchoolId() == null) {
+                return new WebResult("400", "请选择学校", "");
+            }
+            adminPhone.setSchoolId(admin.getSchoolId());
+        }
         if (adminPhone == null) {
             return new WebResult("400", "手机号未注册", "");
         }
@@ -90,6 +100,9 @@ public class AdminServiceImpl implements AdminService {
 
         //存放用户信息
         boolean bo = redisUtil.hset(ConstantClassField.ADMIN_INFO, adminPhone.getAdminId().toString(), adminPhone);
+        //存放用户权限
+        HashSet<String> permission = roleService.selectByAdminId(adminPhone.getAdminId(), adminPhone.getSchoolId());
+        redisUtil.hset(ConstantClassField.ADMIN_PERMISSION, adminPhone.getAdminId().toString(), permission);
 
         if(adminPhone.getSchoolId() != null) {
             School school = schoolMapper.selectById(adminPhone.getSchoolId());
@@ -110,7 +123,7 @@ public class AdminServiceImpl implements AdminService {
      * @param newPassword
      * @return
      */
-    @Transactional
+ /*   @Transactional
     @Override
     public WebResult updatePassword(Integer adminId, String oldPassword, String newPassword) {
         Admin admin = adminMapper.selectById(adminId);
@@ -127,16 +140,15 @@ public class AdminServiceImpl implements AdminService {
         password = MD5Utils.md5Password(newPassword);
         adminMapper.updateByPassword(adminId, password);
         return new WebResult("200", "修改成功", "");
-    }
+    }*/
 
     /**
      * 修改手机号
      *
      * @param adminId
-     * @param newPhone
      * @return
      */
-    @Override
+    /*@Override
     public WebResult updatePhone(Integer adminId, String newPhone, String securityCode) {
         if (!SecurityUtils.securityPhone(newPhone)) {
             return new WebResult("400", "请输入正确的手机号", "");
@@ -160,27 +172,27 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.updateByPrimary(adminPhone);
 
         return new WebResult("200", "修改成功", "");
-    }
+    }*/
 
     @Override
     public WebResult findAdmin(Integer adminId, Integer schoolId) {
-        Admin admin = adminMapper.selectById(adminId);
-        AdminVo adminVo = new AdminVo(admin);
-        if(admin.getRole().equals(2)) {
-            List<Map<String, Object>> maps = adminMapper.selectTeacherBySchool(adminId, schoolId);
-            if(maps.size() != 0) {
-                Map<String, Object> map = maps.get(0);
-                adminVo.setPost((String) map.get("post"));
-                adminVo.setSchoolId((Integer) map.get("schoolId"));
+        List<AdminVo> maps = adminMapper.selectByAdminAndSchool(adminId, schoolId, null);
+        AdminVo admin = maps.get(0);
+        //获取角色
+        if(schoolId != null) {
+            List<Role> roles = roleMapper.selectByAdminIdList(adminId, schoolId);
+            Integer[] roleIds = new Integer[roles.size()];
+            for (int i = 0; i < roles.size(); i++) {
+                roleIds[i] = roles.get(i).getRoleId();
             }
+            admin.setRoleIds(roleIds);
         }
-        School school = schoolMapper.selectById(adminVo.getSchoolId());
-        adminVo.setSchoolName(school == null ? "" : school.getSchoolName());
-        return new WebResult("200", "查询成功", adminVo);
+
+        return new WebResult("200", "查询成功",admin);
     }
 
     /**
-     * 删除管理员、教师
+     * 删除管理员
      *
      * @param adminId
      * @return
@@ -189,11 +201,13 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public WebResult deleteAdmin(Integer adminId, Integer schoolId) {
         if(schoolId != null) {
-            adminMapper.deleteTeacherSchool(adminId, schoolId);
-            List<Map<String, Object>> maps = adminMapper.selectTeacherBySchool(adminId, null);
+            adminMapper.deleteAdminSchool(adminId, schoolId);
+            List<AdminVo> maps = adminMapper.selectByAdminAndSchool(adminId, null, null);
             if(maps.size() == 0) {
                 adminMapper.deleteById(adminId);
             }
+            //删除 用户-角色
+            roleMapper.deleteAdminRole(adminId, null, schoolId);
             return new WebResult("200", "删除成功", "");
         }
         adminMapper.deleteById(adminId);
@@ -201,7 +215,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     /**
-     * 管理员/教师列表
+     * 管理员列表
      *
      * @param pageVo
      * @return
@@ -210,88 +224,55 @@ public class AdminServiceImpl implements AdminService {
     public WebResult adminList(PageVo pageVo) {
         Integer schoolId = pageVo.getSchoolId();
         if (pageVo.getPageSize() == 0) {
-            if(pageVo.getRole()!= null && pageVo.getRole().equals(2)) {
-                List<Map<String, Object>> teacherList = adminMapper.selectTeacherBySchool(null, schoolId);
-                return new WebResult("200", "查询成功", teacherList);
-            }
-            List<Map<String, Object>> teacherList = adminMapper.selectBySchool(pageVo.getRole(), schoolId);
-            return new WebResult("200", "查询成功", teacherList);
+            List<AdminVo> adminList = adminMapper.selectByAdminAndSchool(null, schoolId, pageVo.getRole());
+            return new WebResult("200", "查询成功", adminList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "a.admin_id");
-        List<Map<String, Object>> teacherList;
-        if(pageVo.getRole()!= null && pageVo.getRole().equals(2)) {
-            teacherList = adminMapper.selectTeacherBySchool(null, schoolId);
-        } else {
-            teacherList = adminMapper.selectBySchool(pageVo.getRole(), schoolId);
-        }
-        PageInfo pageInfo = new PageInfo<>(teacherList);
+        List<AdminVo> adminList = adminMapper.selectByAdminAndSchool(null, schoolId, pageVo.getRole());
+        PageInfo pageInfo = new PageInfo<>(adminList);
         return new WebResult("200", "查询成功", pageInfo);
     }
 
-    /**
-     * 添加/修改  管理员、教师
-     *
-     * @param admin
-     * @return
-     */
+    //添加 管理员(带角色)
     @Transactional
     @Override
-    public WebResult createAdmin(Admin admin) {
+    public WebResult createAdminRole(AdminVo admin) {
         if (StringUtils.isBlank(admin.getName())) {
             return new WebResult("400", "姓名不能为空", "");
         }
         if (!SecurityUtils.securityPhone(admin.getPhone())) {
             return new WebResult("400", "请输入正确的手机号", "");
         }
-        //添加 管理员、教师时学校id不能为空
-        if (admin.getSchoolId() == null) {
-            return new WebResult("400", "请选择学校", "");
+        if(admin.getRole() == null) {
+            return new WebResult("400", "请选择角色", "");
+        }
+        if(!admin.getRole().equals(0)) {
+            //添加 学校管理员时学校id不能为空
+            if (admin.getSchoolId() == null) {
+                return new WebResult("400", "请选择学校", "");
+            }
+            //添加人员（role = 2,3）时角色列表不能为空
+            if(admin.getRole().equals(2) || admin.getRole().equals(3)){
+                if(admin.getRoleIds() == null || admin.getRoleIds().length == 0) {
+                    return new WebResult("400", "请选择角色", "");
+                }
+            }
+        }else {
+            admin.setSchoolId(null);
         }
         Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
-        //添加教师
-        if(admin.getRole().equals(2)) {
-            if(admin.getAdminId() == null) {
-                //查询该手机号是否已经存在
-                if (adminPhone != null) {
-                    admin.setAdminId(adminPhone.getAdminId());
-                } else {
-                    //初始密码为000000
-                    String password = "000000";
-                    admin.setPassword(MD5Utils.md5Password(password));
-                    adminMapper.creatAdmin(admin);
-                }
-            } else {
-                //查询该手机号是否已经存在
-                if (adminPhone != null && adminPhone.getAdminId() != admin.getAdminId()) {
-                    return new WebResult("400", "手机号已存在", "");
-                }
-                adminMapper.updateByPrimary(admin);
-            }
-            List<Map<String, Object>> maps = adminMapper.selectTeacherBySchool(admin.getAdminId(), admin.getSchoolId());
-            if(maps.size() == 0) {
-                adminMapper.createTeacherSchool(admin);
-            } else {
-                adminMapper.updateTeacherSchool(admin);
-            }
-            return new WebResult("200", "操作成功", "");
-        }
-
         //添加管理员
         if(admin.getAdminId() == null) {
             //查询该手机号是否已经存在
-            if (adminPhone != null) {
-                return new WebResult("400", "手机号已存在", "");
+            if (adminPhone == null) {
+                //初始密码为000000
+                String password = "000000";
+                if(!StringUtils.isBlank(admin.getPassword())) {
+                    password = admin.getPassword();
+                }
+                admin.setPassword(MD5Utils.md5Password(password));
+                adminMapper.creatAdmin(admin);
             }
-
-            //初始密码为000000
-            String password = "000000";
-            if(!StringUtils.isBlank(admin.getPassword()) && admin.getRole() != 2) {
-                password = admin.getPassword();
-            }
-            admin.setPassword(MD5Utils.md5Password(password));
-
-            adminMapper.creatAdmin(admin);
-            return new WebResult("200", "添加成功", "");
         } else {
             //查询该手机号是否已经存在
             if (adminPhone != null && adminPhone.getAdminId() != admin.getAdminId()) {
@@ -301,8 +282,32 @@ public class AdminServiceImpl implements AdminService {
                 admin.setPassword(MD5Utils.md5Password(admin.getPassword()));
             }
             adminMapper.updateByPrimary(admin);
-            return new WebResult("200", "修改成功", "");
         }
+        addAdminSchool(admin);
+        if(admin.getRole().equals(2) || admin.getRole().equals(3)){
+            roleService.addAdminRole(admin.getRoleIds(), admin.getAdminId(), admin.getSchoolId());
+        }
+        return new WebResult("200", "操作成功", "");
+    }
+
+    public void addAdminSchool(Admin admin) {
+        List<AdminVo> maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), admin.getSchoolId(), null);
+        if(maps.size() == 0) {
+            adminMapper.createAdminSchool(admin);
+        } else {
+            adminMapper.updateAdminSchool(admin);
+        }
+    }
+
+    // 根据手机号获取学校列表
+    @Override
+    public WebResult findSchoolByPhone(String phone) {
+        boolean b = SecurityUtils.securityPhone(phone);
+        if(!b) {
+            return new WebResult("400", "请输入正确的手机号", "");
+        }
+        List<School> schoolList = adminMapper.selectByPhoneList(phone);
+        return new WebResult("200", "操作成功", schoolList);
     }
 
 
