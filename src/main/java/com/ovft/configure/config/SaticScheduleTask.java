@@ -2,6 +2,7 @@ package com.ovft.configure.config;
 
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.service.FileDownService;
+import com.ovft.configure.sys.service.QuestionSearchService;
 import com.ovft.configure.sys.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,7 +21,10 @@ public class SaticScheduleTask {
     @Autowired
     public TeacherService teacherService;
     @Autowired
+    public QuestionSearchService questionSearchService;
+    @Autowired
     FileDownService fileDownService;
+
 
     //3.添加定时任务
     @Scheduled(cron = "0 0 1 * * ?")
@@ -38,6 +42,12 @@ public class SaticScheduleTask {
         }catch (Exception e) {
             e.getMessage();
         }
+        //假删除问卷对应问卷调查相关记录（当调查问卷里面的相关记录到截止时间时会执行此操作）
+        try {
+            questionSearchService.deleteScheduleTask();
+        }catch (Exception e) {
+            e.getMessage();
+        }
         //定期删除文件
 //        try {
 //            fileDownService.deleteFile();
@@ -45,7 +55,5 @@ public class SaticScheduleTask {
 //            e.getMessage();
 //        }
     }
-    private  void  configureTasksVote(){
 
-    }
 }

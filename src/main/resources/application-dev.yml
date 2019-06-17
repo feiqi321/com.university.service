@@ -20,8 +20,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://120.27.16.130/elderly_edu?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-
+    url: jdbc:mysql://120.27.16.130/elderly_edu?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: root
     password: 20190425
   jackson:
