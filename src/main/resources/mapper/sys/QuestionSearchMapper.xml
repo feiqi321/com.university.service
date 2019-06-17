@@ -6,8 +6,8 @@
     <insert id="createSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
             keyProperty="sid">
        insert  into  edu_search_question(sid,schoolId,search_name,content,createtime,updatetime,
-       endtime,schoolName,author,top_image,tid,visits) values (default,#{schoolId},#{searchName},#{content},#{createTime},
-       #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid},#{visits})
+       endtime,schoolName,author,top_image,tid,visits,status) values (default,#{schoolId},#{searchName},#{content},#{createTime},
+       #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid},#{visits},#{status})
      </insert>
     <!--修改问卷调查主题浏览量-->
     <update id="updateSearchQuestionVisits" parameterType="int" >
@@ -121,6 +121,19 @@
             )
         </foreach>
     </insert>
+    <!--批量修改投票及选项记录-->
+    <update id="updateBigVoteItem" parameterType="java.util.List" useGeneratedKeys="false">
+        <foreach collection="list" item="ll" index="index" open="" close="" separator=";">
+            update edu_vote_item  <set>
+              item=#{ll.item},
+              num=#{ll.num},
+              image=#{ll.image},
+              question=#{ll.question},
+              userId=#{ll.userId}
+        </set>
+            where  id= #{ll.id}
+        </foreach>
+    </update>
 
     <!--批量修改问卷题目及选项记录-->
     <update id="updateBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="false">
@@ -156,10 +169,7 @@
         </foreach>
     </update>
 
-    <!--批量修改问卷题目及选项记录-->
-
-
-
+    <!--修改对应题目及选项记录被选择数-->
     <update id="updateQuestionItemNum" parameterType="com.ovft.configure.sys.bean.Question" useGeneratedKeys="false" >
 
             update edu_question  set
@@ -196,7 +206,7 @@
     <select id="findSearchQuestionAll" resultType="com.ovft.configure.sys.bean.SearchQuestion">
         select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime,
         s.updatetime,s.endtime,s.schoolName,
-        s.top_image as topImage,s.author,s.tid,s.visits
+        s.top_image as topImage,s.author,s.tid,s.visits,s.status
         from edu_search_question s
 
         where 1=1
@@ -378,6 +388,10 @@
     <!--修改投票选项的num的次数-->
     <update id="updateVoteItem" parameterType="int">
         update  edu_vote_item set num=#{num} where id=#{id}
+    </update>
+    <!--修改投票选项的num的次数-->
+    <update id="updateSearchQuestionStatues" parameterType="int">
+        update  edu_search_question set status=#{status} where id=#{sid}
     </update>
 
     <!--多表查询课程列表（线上的）-->

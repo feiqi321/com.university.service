@@ -38,7 +38,9 @@ public interface QuestionSearchService {
     public WebResult findCourseTopic(PageVo pageVo);
     //教师评价列表
     public WebResult findMyCourseList(PageVo pageVo);
+    //定时删除相关问卷（即：相关问卷到截止时间就会被删除）
+    public void deleteScheduleTask();
 
 
 
- }
+}

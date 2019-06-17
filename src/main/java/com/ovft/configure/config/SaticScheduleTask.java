@@ -45,4 +45,7 @@ public class SaticScheduleTask {
 //            e.getMessage();
 //        }
     }
+    private  void  configureTasksVote(){
+
+    }
 }

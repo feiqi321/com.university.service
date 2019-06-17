@@ -41,6 +41,19 @@ public class WorksShowController {
 
 }
     /**
+     * 学员展示列表及模糊查询（分页）
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/server/findUserShowAll")
+    public WebResult serverUserShowAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        pageVo.setType("7");
+        return worksShowService.findUserShowAll(pageVo);
+
+    }
+
+    /**
      * 教师风采列表及模糊查询（分页）
      *
      * @param pageVo
@@ -52,6 +65,20 @@ public class WorksShowController {
             return worksShowService.findUserShowAll(pageVo);
 
 }
+
+    /**
+     * 教师风采列表及模糊查询（分页）
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/server/findTeacherShowAll")
+    public WebResult serverTeacherShowAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        pageVo.setType("8");
+        return worksShowService.findUserShowAll(pageVo);
+
+    }
+
     /**
      * 学员展示首页推荐
      *
@@ -87,6 +114,18 @@ public class WorksShowController {
     public WebResult queryUserShowById(@RequestParam(value = "id", required = true) Integer id) {
         return eduArticleService.queryNoticeById(id);
     }
+
+    /**
+     * 进入学员详情页
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/server/queryUserShowById")
+    public WebResult serverUserShowById(@RequestParam(value = "id", required = true) Integer id) {
+        return eduArticleService.queryNoticeById(id);
+    }
+
     /**
      * 进入教师详情页
      *
@@ -97,6 +136,18 @@ public class WorksShowController {
     public WebResult queryTeacherShowById(@RequestParam(value = "id", required = true) Integer id) {
         return eduArticleService.queryNoticeById(id);
     }
+
+    /**
+     * 进入教师详情页
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/server/queryTeacherShowById")
+    public WebResult serverTeacherShowById(@RequestParam(value = "id", required = true) Integer id) {
+        return eduArticleService.queryNoticeById(id);
+    }
+
     /**
      * 后台添加、修改学员展示
      *

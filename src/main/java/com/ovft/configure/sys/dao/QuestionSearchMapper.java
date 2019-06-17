@@ -29,6 +29,8 @@ public interface QuestionSearchMapper {
     public void insertBigQuestionItem( List<Question> list);
     //批量修改问卷题目及选项记录（SearchQuestion）
     public void updateBigQuestionItem(List<Question> list);
+    //批量修改问卷题目及选项记录（SearchQuestion）
+    public void updateBigVoteItem(List<VoteItem> list);
     //删除一篇问卷主题
     public void deleteSearchQuestion(Integer sid);
     //删除相关的问卷调查题目及选项
@@ -75,6 +77,8 @@ public interface QuestionSearchMapper {
     public VoteItem findVoteItembyuserId(Integer userId);
     //修改投票对应选项
     public void updateVoteItem(Integer num,Integer id);
+    //修改投票对应选项
+    public void updateSearchQuestionStatues(Integer status,Integer sid);
 
 
 

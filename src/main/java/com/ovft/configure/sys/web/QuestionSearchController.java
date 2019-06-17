@@ -105,7 +105,7 @@ public class QuestionSearchController {
              return  questionSearchService.submitVoteRecord(voteItem.getId(),userId);
     }
     /**
-     * 查看所有用户填写结果记录
+     * 查看所有用户问卷填写结果记录
      *
      * @param
      * @return
