@@ -72,22 +72,41 @@ public class QuestionSearchImpl implements QuestionSearchService {
             }
         }
         if(searchQuestion.getTid()==2){  //类型为教师评价是处理
-           if (searchQuestion.getTopId()!=null) {    //为线上报名时
-               searchQuestion.setTid(0);
-               questionSearchMapper.createSearchQuestion(searchQuestion);
-               //设置对应的topId或者downId与问卷主题标的进行绑定
-               for (int i = 0; i < searchQuestion.getQuestions().size(); i++) {
-                   searchQuestion.getQuestions().get(i).setTopId(searchQuestion.getTopId());
 
-               }
-           }
-           if (searchQuestion.getDownId()!=null) {     //线下报名时
-               //设置对应的topId或者downId与问卷主题标的进行绑定
-               for (int i = 0; i < searchQuestion.getQuestions().size(); i++) {
-                   searchQuestion.getQuestions().get(i).setDownId(searchQuestion.getDownId());
-               }
-           }
+            //修改edu_search_question表记录
+            if(searchQuestion.getTopId()!=null&&searchQuestion.getDownId()==null){    //线上报名时
+                List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(null, searchQuestion.getTopId(), null, null, null, null);
+                if (searchQuestionAll.size()==0){
+                searchQuestion.setTid(0);    //当添加调查
+                questionSearchMapper.createSearchQuestion(searchQuestion);
+                    //设置对应的topId或者topId与问卷主题标的进行绑定
+                for (int i = 0; i < searchQuestion.getQuestions().size(); i++) {
+                    searchQuestion.getQuestions().get(i).setTopId(searchQuestion.getTopId());
 
+                }
+                }else {
+                    //修改时
+                    questionSearchMapper.updateSearchQuestion(searchQuestion);
+                }
+            }
+            //修改edu_search_question表记录
+            if(searchQuestion.getTopId()==null&&searchQuestion.getDownId()!=null) {
+                    //线下报名时
+                List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(null, null, searchQuestion.getDownId(), null, null, null);
+
+                if (searchQuestionAll.size()==0){
+                    searchQuestion.setTid(0);    //当添加调查
+                    questionSearchMapper.createSearchQuestion(searchQuestion);
+                    //设置对应的topId或者downId与问卷主题标的进行绑定
+                    for (int i = 0; i < searchQuestion.getQuestions().size(); i++) {
+                        searchQuestion.getQuestions().get(i).setDownId(searchQuestion.getDownId());
+                    }
+                }else {
+                    //修改时
+
+                    questionSearchMapper.updateSearchQuestion(searchQuestion);
+                }
+            }
                if (searchQuestion.getQuestions().get(0).getQid()==null) {
                    questionSearchMapper.insertBigQuestionItem(searchQuestion.getQuestions());
                    return new WebResult("200", "添加成功", "");
@@ -203,7 +222,10 @@ public class QuestionSearchImpl implements QuestionSearchService {
         List<MyCourseAll> myCourseAlldown = questionSearchMapper.findMyCourseAlldown(pageVo);
         List<MyCourseAll> list=new ArrayList();
         for (int m=0;m<myCourseAlltop.size();m++){
-             myCourseAlltop.get(m).setStatu(0);
+             myCourseAlltop.get(m).setStatu("线上报名");
+            Integer schoolId = myCourseAlltop.get(m).getSchoolId();
+            String schoolName = schoolMapper.findSchoolById(schoolId);
+            myCourseAlltop.get(m).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd ");
             String format = formatter.format(myCourseAlltop.get(m).getEndDate());
             if (Integer.parseInt(format.substring(5,7))>6){
@@ -214,7 +236,10 @@ public class QuestionSearchImpl implements QuestionSearchService {
             list.add(myCourseAlltop.get(m));
          }
         for (int n=0;n<myCourseAlldown.size();n++){
-             myCourseAlldown.get(n).setStatu(1);
+             myCourseAlldown.get(n).setStatu("线下报名");
+            Integer schoolId = myCourseAlldown.get(n).getSchoolId();
+            String schoolName = schoolMapper.findSchoolById(schoolId);
+            myCourseAlldown.get(n).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd ");
             String format = formatter.format(myCourseAlldown.get(n).getEndDate());
             if (Integer.parseInt(format.substring(5,7))>6){
@@ -242,14 +267,18 @@ public class QuestionSearchImpl implements QuestionSearchService {
     public WebResult findSearchQuestionAll(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
             //进入详情页
-            if (pageVo.getSid() != null) {     //进入某篇问卷调查的详情页==>> 2.
+            if (pageVo.getSid() != null||pageVo.getTopId()!=null||pageVo.getDownId()!=null) {     //进入某篇问卷调查的详情页==>> 2.
 
 
                 List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getSid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getSearch());
-                 if (pageVo.getTid()==1||pageVo.getTid()==2) {  //教师评价
-                     List<Question> questions = questionSearchMapper.findQuestionAll(null,null,pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
-                     searchQuestionAll2.get(0).setQuestions(questions);
-                 }
+                if (pageVo.getTid()==1) {
+                    List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
+                        searchQuestionAll2.get(0).setQuestions(questions);
+                }
+                if (pageVo.getTid()==2||pageVo.getTid()==0) {
+                    List<Question> questions = questionSearchMapper.findQuestionAll(null, null,pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
+                    searchQuestionAll2.get(0).setQuestions(questions);
+                }
                  if (pageVo.getTid()==3){//返回对应投票详情
                      List<VoteItem> voteItembySid = questionSearchMapper.findVoteItembySid(pageVo.getSid());
                      searchQuestionAll2.get(0).setVoteItems(voteItembySid);
@@ -271,11 +300,15 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         //进入详情页
-        if (pageVo.getSid() != null) {  //进入某篇问卷调查的详情页==>> 2.
+        if (pageVo.getSid() != null||pageVo.getTopId()!=null||pageVo.getDownId()!=null) {  //进入某篇问卷调查的详情页==>> 2.
 
             List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getSid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getSearch());
-            if (pageVo.getTid()==1||pageVo.getTid()==2) {
+            if (pageVo.getTid()==1) {
                 List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
+                searchQuestionAll.get(0).setQuestions(questions);
+            }
+            if (pageVo.getTid()==2) {
+                List<Question> questions = questionSearchMapper.findQuestionAll(null, null,pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
                 searchQuestionAll.get(0).setQuestions(questions);
             }
             if (pageVo.getTid()==3){//返回对应投票详情

@@ -4,7 +4,11 @@ import java.util.Date;
 
 public class MyCourseAll  {
 
-    private int statu;
+
+    /**
+     * 报名方式
+     */
+    private String statu;
 
     /**
      * 课程名称
@@ -29,10 +33,22 @@ public class MyCourseAll  {
     /**
      * 所属学校id
      */
+    private String schoolName;
+    /**
+     * 所属学校id
+     */
     private String Courseyear;
 
     public String getCourseyear() {
         return Courseyear;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 
     public void setCourseyear(String courseyear) {
@@ -79,11 +95,11 @@ public class MyCourseAll  {
         this.schoolId = schoolId;
     }
 
-    public void setStatu(int statu) {
+    public void setStatu(String statu) {
         this.statu = statu;
     }
 
-    public int getStatu() {
+    public String getStatu() {
         return statu;
     }
 }
