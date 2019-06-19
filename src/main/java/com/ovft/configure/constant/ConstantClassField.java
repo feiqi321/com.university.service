@@ -42,5 +42,13 @@ public class ConstantClassField {
      */
     public static final Integer ISONLINE = 1;
 
+    /**
+     *  在校任职    宣传员
+     */
+    public static final String SCHOOL_JOB_XCY = "宣传员";
 
+    /**
+     *  在校任职    物资管理员
+     */
+    public static final String SCHOOL_JOB_WZGLY  = "物资管理员";
 }

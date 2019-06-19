@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @create 2019-05-16 11:47
  */
 @RestController
-@RequestMapping("server/booksell")
+@RequestMapping("booksell")
 public class EduBookGoodsController {
 
     @Autowired
@@ -60,7 +60,7 @@ public class EduBookGoodsController {
      * @param eduBookGoods
      * @return
      */
-    @PostMapping(value = "addbooks")
+    @PostMapping(value = "server/addbooks")
     public WebResult addBooks(@RequestBody EduBookGoods eduBookGoods) {
         Integer res = eduBookGoodsService.addBooks(eduBookGoods);
         if (res > 0) {
@@ -75,7 +75,7 @@ public class EduBookGoodsController {
      * @param id
      * @return
      */
-    @GetMapping(value = "showone")
+    @GetMapping(value = "server/showone")
     public WebResult queryById(Integer id) {
         EduBookGoods eduBookGoods = eduBookGoodsService.queryById(id);
         return new WebResult(StatusCode.OK, "查询成功", eduBookGoods);
@@ -89,7 +89,7 @@ public class EduBookGoodsController {
      * @param schoolId
      * @return
      */
-    @GetMapping(value = "shows")
+    @GetMapping(value = "server/shows")
     public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId, String booksAuthor, String booksSn, Byte isOnSale) {
         PageBean pageBean = eduBookGoodsService.showPageBooks(page, size, schoolId, booksAuthor, booksSn, isOnSale);
         return new WebResult(StatusCode.OK, "查询成功", pageBean);
@@ -102,7 +102,7 @@ public class EduBookGoodsController {
      * @param eduBookGoods
      * @return
      */
-    @PostMapping(value = "updateco")
+    @PostMapping(value = "server/updateco")
     public WebResult updateCodition(@RequestBody EduBookGoods eduBookGoods) {
         int result = eduBookGoodsService.updateBook(eduBookGoods);
         if (result > 0) {
@@ -117,7 +117,7 @@ public class EduBookGoodsController {
      * @param eduBookGoods
      * @return
      */
-    @PostMapping(value = "deleteco")
+    @PostMapping(value = "server/deleteco")
     public WebResult deleteCodition(@RequestBody EduBookGoods eduBookGoods) {
         int result = eduBookGoodsService.deleteBook(eduBookGoods);
         if (result > 0) {
@@ -132,7 +132,7 @@ public class EduBookGoodsController {
      * @param eduBookGoods
      * @return
      */
-    @PostMapping(value = "UpdataIsOnSale")
+    @PostMapping(value = "server/UpdataIsOnSale")
     public WebResult upGoodsBook(@RequestBody EduBookGoods eduBookGoods) {
         Integer res = eduBookGoodsService.UpdataIsOnSale(eduBookGoods);
         if (res > 0) {
@@ -147,7 +147,7 @@ public class EduBookGoodsController {
      * @param eduBookGoods
      * @return
      */
-    @PostMapping(value = "bathUpdataIsOnSale")
+    @PostMapping(value = "server/bathUpdataIsOnSale")
     public WebResult bathUpdataPaystatus(@RequestBody EduBookGoods eduBookGoods) {
         Integer res = eduBookGoodsService.bathUpdataIsOnSale(eduBookGoods);
         if (res > 0) {

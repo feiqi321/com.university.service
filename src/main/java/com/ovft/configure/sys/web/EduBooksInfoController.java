@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("server/bookInfo")
+@RequestMapping("bookInfo")
 public class EduBooksInfoController {
 
     @Autowired
@@ -68,7 +68,7 @@ public class EduBooksInfoController {
      * @param eduBooksInfo
      * @return
      */
-    @PostMapping(value = "add")
+    @PostMapping(value = "server/add")
     public WebResult addBookInfo(@RequestBody EduBooksInfo eduBooksInfo) {
         Integer res = eduBooksInfoService.addBookInfo(eduBooksInfo);
         if (res > 0) {
@@ -83,7 +83,7 @@ public class EduBooksInfoController {
      * @param eduBooksInfo
      * @return
      */
-    @PostMapping(value = "delete")
+    @PostMapping(value = "server/delete")
     public WebResult deleteBookInfo(@RequestBody EduBooksInfo eduBooksInfo) {
         Integer res = eduBooksInfoService.deleteBookInfo(eduBooksInfo);
         if (res > 0) {
@@ -98,7 +98,7 @@ public class EduBooksInfoController {
      * @param eduBooksInfo
      * @return
      */
-    @PostMapping(value = "update")
+    @PostMapping(value = "server/update")
     public WebResult updateBookInfo(@RequestBody EduBooksInfo eduBooksInfo) {
         Integer res = eduBooksInfoService.updateBookInfo(eduBooksInfo);
         if (res > 0) {
@@ -113,7 +113,7 @@ public class EduBooksInfoController {
      * @param id
      * @return
      */
-    @GetMapping(value = "selectone")
+    @GetMapping(value = "server/selectone")
     public WebResult selectoneBookInfo(Integer id) {
         EduBooksInfo eduBooksInfo = eduBooksInfoService.selectoneBookInfo(id);
         return new WebResult(StatusCode.OK, "查询成功", eduBooksInfo);
@@ -128,7 +128,7 @@ public class EduBooksInfoController {
      * @param bookGoodsId
      * @return
      */
-    @GetMapping(value = "shows")
+    @GetMapping(value = "server/shows")
     public WebResult showPage(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId, Integer bookGoodsId) {
         PageBean pageBean = eduBooksInfoService.showPageBookInfo(page, size, schoolId, bookGoodsId);
         return new WebResult(StatusCode.OK, "查询成功", pageBean);
@@ -140,7 +140,7 @@ public class EduBooksInfoController {
      * @param schoolId
      * @return
      */
-    @GetMapping(value = "allname")
+    @GetMapping(value = "server/allname")
     public WebResult queryBookNameById(Integer schoolId) {
         List<String> strings = eduBooksInfoService.queryBookNameById(schoolId);
         return new WebResult(StatusCode.OK, "查询成功", strings);
