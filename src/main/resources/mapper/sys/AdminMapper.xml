@@ -78,6 +78,9 @@
         <if test="schoolId != null">
             and t.school_id = #{schoolId}
         </if>
+        <if test="role == null">
+            and t.role != 2
+        </if>
         <if test="role != null">
             and t.role = #{role}
         </if>

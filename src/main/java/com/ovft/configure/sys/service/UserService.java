@@ -3,11 +3,9 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
-import com.ovft.configure.sys.bean.UserItem;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface UserService {
     //用户注册
@@ -110,4 +108,5 @@ public interface UserService {
     public User queryInfo(Integer userId);
 
 
+    public WebResult studentsCount(Integer schoolId);
 }

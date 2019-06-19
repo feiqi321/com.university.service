@@ -1,9 +1,7 @@
 package com.ovft.configure.sys.dao;
 
-import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
-import com.ovft.configure.sys.bean.UserItem;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -143,4 +141,5 @@ public interface UserMapper {
     //修改学校时保存信息
     public void updateEduUserUsername(User user);
 
+    public Integer studentsCount(@Param("schoolId") Integer schoolId, @Param("sex") Integer sex, @Param("political") String political);
 }

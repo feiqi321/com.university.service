@@ -65,12 +65,14 @@ public class AdminServiceImpl implements AdminService {
         }
         //查询该手机号是否已经存在
         Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
+        /*//管理员只属于多个学校时打开
+        List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(adminPhone.getAdminId(), admin.getSchoolId(), null);
         if(adminPhone.getRole() != 0) {
             if(admin.getSchoolId() == null) {
                 return new WebResult("400", "请选择学校", "");
             }
             adminPhone.setSchoolId(admin.getSchoolId());
-        }
+        }*/
         if (adminPhone == null) {
             return new WebResult("400", "手机号未注册", "");
         }
@@ -80,6 +82,8 @@ public class AdminServiceImpl implements AdminService {
         }
         HashMap<String, Object> map = new HashMap();
         map.put("admin", adminPhone);
+        /*//管理员只属于多个学校时打开
+        map.put("admin", adminVos.get(0));*/
 
         //添加token
         String token = UUID.randomUUID().toString();
@@ -100,6 +104,8 @@ public class AdminServiceImpl implements AdminService {
 
         //存放用户信息
         boolean bo = redisUtil.hset(ConstantClassField.ADMIN_INFO, adminPhone.getAdminId().toString(), adminPhone);
+        /*//管理员只属于多个学校时打开
+        boolean bo = redisUtil.hset(ConstantClassField.ADMIN_INFO, adminPhone.getAdminId().toString(), adminVos.get(0));*/
         //存放用户权限
         HashSet<String> permission = roleService.selectByAdminId(adminPhone.getAdminId(), adminPhone.getSchoolId());
         redisUtil.hset(ConstantClassField.ADMIN_PERMISSION, adminPhone.getAdminId().toString(), permission);
@@ -272,6 +278,8 @@ public class AdminServiceImpl implements AdminService {
                 }
                 admin.setPassword(MD5Utils.md5Password(password));
                 adminMapper.creatAdmin(admin);
+            } else {
+                admin.setAdminId(adminPhone.getAdminId());
             }
         } else {
             //查询该手机号是否已经存在
@@ -309,6 +317,5 @@ public class AdminServiceImpl implements AdminService {
         List<School> schoolList = adminMapper.selectByPhoneList(phone);
         return new WebResult("200", "操作成功", schoolList);
     }
-
 
 }

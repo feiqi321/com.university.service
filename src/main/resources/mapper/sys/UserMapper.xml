@@ -128,7 +128,7 @@
             i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
         i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
-        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId,i.school_job,i.remark
         from edu_user u
         left join edu_user_item i on u.user_id = i.user_id
         where u.user_id = #{userId} and i.school_id is not null and i.school_id!=0;
@@ -398,5 +398,18 @@
         cid=#{cid}
         </if>
     </update>
+
+    <select id="studentsCount" resultType="java.lang.Integer">
+        select COUNT(*)
+        from edu_user_item
+        where school_id = #{schoolId}
+        <if test="sex!=null">
+            and sex = #{sex}
+        </if>
+        <if test="political!=null">
+            and political = #{political}
+        </if>
+
+    </select>
 
 </mapper>

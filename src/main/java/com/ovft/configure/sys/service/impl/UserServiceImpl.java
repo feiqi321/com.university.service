@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.EduCourse;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduClassMapper;
 import com.ovft.configure.sys.dao.SchoolMapper;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -723,6 +721,26 @@ public class UserServiceImpl implements UserService {
     public User queryInfo(Integer userId) {
         User user = userMapper.queryInfo(userId);
         return user;
+    }
+
+    //获取学员人数，男生数量，女生数量，党员数量
+    @Override
+    public WebResult studentsCount(Integer schoolId) {
+        //学员人数
+        Integer studentsCount = userMapper.studentsCount(schoolId, null, null);
+        //男生数量
+        Integer maleCount = userMapper.studentsCount(schoolId, 1, null);
+        //女生数量
+        Integer femaleCount = userMapper.studentsCount(schoolId, 2, null);
+        // 党员数量
+        Integer politicalCount = userMapper.studentsCount(schoolId, null, "党员");
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("studentsCount",studentsCount);
+        map.put("maleCount",maleCount);
+        map.put("femaleCount",femaleCount);
+        map.put("politicalCount",politicalCount);
+        return new WebResult("200","查询成功",map);
     }
 
 }

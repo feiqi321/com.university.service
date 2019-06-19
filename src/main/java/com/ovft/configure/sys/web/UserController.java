@@ -1,7 +1,6 @@
 
 package com.ovft.configure.sys.web;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.jfinal.aop.Before;
 import com.ovft.configure.config.CORSInterceptor;
 import com.ovft.configure.http.result.WebResult;
@@ -11,10 +10,10 @@ import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -316,5 +315,18 @@ public class UserController {
     @GetMapping(value = "/findContributeByCid")
     public WebResult findContributeByCid(@Param("cid") Integer cid){
         return userService.findContributeByCid(cid);
+    }
+
+    /**
+     * 获取学员人数，男生数量，女生数量,党员数量
+     * @return
+     */
+    @GetMapping(value = "/studentsCount")
+    public WebResult studentsCount(HttpServletRequest request){
+        String schoolIdStr = request.getHeader("schoolId");
+        if(StringUtils.isBlank(schoolIdStr)){
+            return new WebResult("400", "请选择学校", "");
+        }
+        return userService.studentsCount(Integer.parseInt(schoolIdStr));
     }
 }

@@ -95,7 +95,7 @@ public class RoleServiceImpl implements RoleService {
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<Role> roles = roleMapper.selectBySchoolIdList(pageVo.getSchoolId());
         PageInfo pageInfo = new PageInfo<>(roles);
-        return new WebResult("200", "获取学角色表成功", pageInfo);
+        return new WebResult("200", "获取角色列表成功", pageInfo);
     }
 
     @Transactional
@@ -161,6 +161,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public WebResult addAdminRole(Integer[] roleIds, Integer adminId, Integer schoolId) {
+        roleMapper.deleteAdminRole(adminId, null, schoolId);
         for(int i = 0, length = roleIds.length; i < length; i++) {
             roleMapper.insertAdminRole(adminId, roleIds[i], schoolId);
         }
