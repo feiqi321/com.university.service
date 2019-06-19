@@ -3,6 +3,7 @@
 <mapper namespace="com.ovft.configure.sys.dao.EduSettlementOrderDetailsMapper">
     <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduSettlementOrderDetails">
         <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_settlement_id" jdbcType="INTEGER" property="orderSettlementId"/>
         <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
         <result column="trading_time" jdbcType="TIMESTAMP" property="tradingTime"/>
         <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
@@ -78,9 +79,9 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, order_number, trading_time, resource_name, payment_type, settlement_status, telephone, 
-    school_id, school_name, transaction_amount, settlement_amount, payrecord_id, order_id, 
-    video_id
+    id, order_settlement_id, order_number, trading_time, resource_name, payment_type, 
+    settlement_status, telephone, school_id, school_name, transaction_amount, settlement_amount, 
+    payrecord_id, order_id, video_id
   </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduSettlementOrderDetailsExample"
             resultMap="BaseResultMap">
@@ -125,16 +126,17 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into edu_settlement_order_details (order_number, trading_time, resource_name,
-        payment_type, settlement_status, telephone,
-        school_id, school_name, transaction_amount,
-        settlement_amount, payrecord_id, order_id,
-        video_id)
-        values (#{orderNumber,jdbcType=VARCHAR}, #{tradingTime,jdbcType=TIMESTAMP}, #{resourceName,jdbcType=VARCHAR},
-        #{paymentType,jdbcType=VARCHAR}, #{settlementStatus,jdbcType=INTEGER}, #{telephone,jdbcType=VARCHAR},
-        #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR}, #{transactionAmount,jdbcType=DECIMAL},
-        #{settlementAmount,jdbcType=DECIMAL}, #{payrecordId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER},
-        #{videoId,jdbcType=INTEGER})
+        insert into edu_settlement_order_details (order_settlement_id, order_number, trading_time,
+        resource_name, payment_type, settlement_status,
+        telephone, school_id, school_name,
+        transaction_amount, settlement_amount, payrecord_id,
+        order_id, video_id)
+        values (#{orderSettlementId,jdbcType=INTEGER}, #{orderNumber,jdbcType=VARCHAR},
+        #{tradingTime,jdbcType=TIMESTAMP},
+        #{resourceName,jdbcType=VARCHAR}, #{paymentType,jdbcType=VARCHAR}, #{settlementStatus,jdbcType=INTEGER},
+        #{telephone,jdbcType=VARCHAR}, #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR},
+        #{transactionAmount,jdbcType=DECIMAL}, #{settlementAmount,jdbcType=DECIMAL}, #{payrecordId,jdbcType=INTEGER},
+        #{orderId,jdbcType=INTEGER}, #{videoId,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduSettlementOrderDetails">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -142,6 +144,9 @@
         </selectKey>
         insert into edu_settlement_order_details
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderSettlementId != null">
+                order_settlement_id,
+            </if>
             <if test="orderNumber != null">
                 order_number,
             </if>
@@ -183,6 +188,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderSettlementId != null">
+                #{orderSettlementId,jdbcType=INTEGER},
+            </if>
             <if test="orderNumber != null">
                 #{orderNumber,jdbcType=VARCHAR},
             </if>
@@ -237,6 +245,9 @@
             <if test="record.id != null">
                 id = #{record.id,jdbcType=INTEGER},
             </if>
+            <if test="record.orderSettlementId != null">
+                order_settlement_id = #{record.orderSettlementId,jdbcType=INTEGER},
+            </if>
             <if test="record.orderNumber != null">
                 order_number = #{record.orderNumber,jdbcType=VARCHAR},
             </if>
@@ -284,6 +295,7 @@
     <update id="updateByExample" parameterType="map">
         update edu_settlement_order_details
         set id = #{record.id,jdbcType=INTEGER},
+        order_settlement_id = #{record.orderSettlementId,jdbcType=INTEGER},
         order_number = #{record.orderNumber,jdbcType=VARCHAR},
         trading_time = #{record.tradingTime,jdbcType=TIMESTAMP},
         resource_name = #{record.resourceName,jdbcType=VARCHAR},
@@ -304,6 +316,9 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.ovft.configure.sys.bean.EduSettlementOrderDetails">
         update edu_settlement_order_details
         <set>
+            <if test="orderSettlementId != null">
+                order_settlement_id = #{orderSettlementId,jdbcType=INTEGER},
+            </if>
             <if test="orderNumber != null">
                 order_number = #{orderNumber,jdbcType=VARCHAR},
             </if>
@@ -348,7 +363,8 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduSettlementOrderDetails">
     update edu_settlement_order_details
-    set order_number = #{orderNumber,jdbcType=VARCHAR},
+    set order_settlement_id = #{orderSettlementId,jdbcType=INTEGER},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
       trading_time = #{tradingTime,jdbcType=TIMESTAMP},
       resource_name = #{resourceName,jdbcType=VARCHAR},
       payment_type = #{paymentType,jdbcType=VARCHAR},
@@ -364,11 +380,13 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <select id="showSettlementDetail" parameterType="com.ovft.configure.sys.vo.EduSettlementOrderDetailsVo"
+    <!--1.根据学校和结算状态查询结算数据-->
+    <select id="showSettlementDetail" parameterType="map"
             resultType="com.ovft.configure.sys.vo.EduSettlementOrderDetailsVo">
         select
         <include refid="Base_Column_List"/>
-        from edu_settlement_order_details
+        from
+        edu_settlement_order_details
         <where>
             <if test="startTime != null">
                 and trading_time <![CDATA[>=]]> #{startTime}
@@ -380,7 +398,7 @@
                 AND settlement_status = #{settlementStatus}
             </if>
             <if test="resourceName != null and resourceName!=''">
-                AND resource_name = #{resourceName}
+                AND resource_name like '%${resourceName}%'
             </if>
             <if test="orderNumber != null and orderNumber!=''">
                 AND order_number = #{orderNumber}
@@ -396,4 +414,6 @@
             </if>
         </where>
     </select>
+
+
 </mapper>

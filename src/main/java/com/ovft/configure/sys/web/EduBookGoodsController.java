@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @create 2019-05-16 11:47
  */
 @RestController
-@RequestMapping("booksell")
+@RequestMapping("server/booksell")
 public class EduBookGoodsController {
 
     @Autowired

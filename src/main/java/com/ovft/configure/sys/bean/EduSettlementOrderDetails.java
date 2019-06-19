@@ -14,6 +14,11 @@ public class EduSettlementOrderDetails implements Serializable {
     private Integer id;
 
     /**
+     * 订单结算id
+     */
+    private Integer orderSettlementId;
+
+    /**
      * 订单号
      */
     private String orderNumber;
@@ -86,6 +91,14 @@ public class EduSettlementOrderDetails implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getOrderSettlementId() {
+        return orderSettlementId;
+    }
+
+    public void setOrderSettlementId(Integer orderSettlementId) {
+        this.orderSettlementId = orderSettlementId;
     }
 
     public String getOrderNumber() {
@@ -205,6 +218,7 @@ public class EduSettlementOrderDetails implements Serializable {
         }
         EduSettlementOrderDetails other = (EduSettlementOrderDetails) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
+            && (this.getOrderSettlementId() == null ? other.getOrderSettlementId() == null : this.getOrderSettlementId().equals(other.getOrderSettlementId()))
             && (this.getOrderNumber() == null ? other.getOrderNumber() == null : this.getOrderNumber().equals(other.getOrderNumber()))
             && (this.getTradingTime() == null ? other.getTradingTime() == null : this.getTradingTime().equals(other.getTradingTime()))
             && (this.getResourceName() == null ? other.getResourceName() == null : this.getResourceName().equals(other.getResourceName()))
@@ -225,6 +239,7 @@ public class EduSettlementOrderDetails implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getOrderSettlementId() == null) ? 0 : getOrderSettlementId().hashCode());
         result = prime * result + ((getOrderNumber() == null) ? 0 : getOrderNumber().hashCode());
         result = prime * result + ((getTradingTime() == null) ? 0 : getTradingTime().hashCode());
         result = prime * result + ((getResourceName() == null) ? 0 : getResourceName().hashCode());
@@ -248,6 +263,7 @@ public class EduSettlementOrderDetails implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", orderSettlementId=").append(orderSettlementId);
         sb.append(", orderNumber=").append(orderNumber);
         sb.append(", tradingTime=").append(tradingTime);
         sb.append(", resourceName=").append(resourceName);

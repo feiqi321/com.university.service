@@ -1,8 +1,6 @@
 package com.ovft.configure.sys.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ovft.configure.sys.bean.EduSettlementOrderDetails;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -17,6 +15,16 @@ public class EduSettlementOrderDetailsVo extends EduSettlementOrderDetails {
     private Integer pageNum;
     private Integer pageSize;
 
+    private Integer[] ids;
+
+
+    public Integer[] getIds() {
+        return ids;
+    }
+
+    public void setIds(Integer[] ids) {
+        this.ids = ids;
+    }
 
     public Date getStartTime() {
         return startTime;

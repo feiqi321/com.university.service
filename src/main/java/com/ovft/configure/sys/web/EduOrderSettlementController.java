@@ -22,7 +22,7 @@ import java.util.List;
  * @create 2019-06-15 10:24
  */
 @RestController
-@RequestMapping("settlement")
+@RequestMapping("server/settlement")
 public class EduOrderSettlementController {
 
     @Autowired
@@ -38,10 +38,11 @@ public class EduOrderSettlementController {
     @GetMapping(value = "shows")
     public WebResult showsSettlement(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, @RequestParam(value = "schoolId", defaultValue = "1", required = true) Integer schoolId, @RequestParam(value = "settlementStatus", defaultValue = "2", required = true) Integer settlementStatus) {
         EduOrderSettlementVo eduOrderSettlementVo = new EduOrderSettlementVo();
-        //查询出结算的相关金额总数据根据学校
+        //根据学校查询出结算的相关金额总数据
         EduSettlementShowExample eduSettlementShowExample = new EduSettlementShowExample();
         eduSettlementShowExample.createCriteria().andSchoolIdEqualTo(schoolId);
         List<EduSettlementShow> eduSettlementShows = eduSettlementShowMapper.selectByExample(eduSettlementShowExample);
+
         eduOrderSettlementVo.setEduSettlementShows(eduSettlementShows);
         //查询出状态的结算情况
         PageBean pageBean = eduOrderSettlementService.showsSettlement(page, size, schoolId, settlementStatus);

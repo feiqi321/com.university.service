@@ -31,7 +31,7 @@ public class EduOrderSettlement implements Serializable {
     /**
      * 结算订单数
      */
-    private String settleNum;
+    private Integer settleNum;
 
     /**
      * 结算金额
@@ -82,11 +82,11 @@ public class EduOrderSettlement implements Serializable {
         this.settleTime = settleTime;
     }
 
-    public String getSettleNum() {
+    public Integer getSettleNum() {
         return settleNum;
     }
 
-    public void setSettleNum(String settleNum) {
+    public void setSettleNum(Integer settleNum) {
         this.settleNum = settleNum;
     }
 

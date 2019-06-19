@@ -376,62 +376,52 @@ public class EduOrderSettlementExample {
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumEqualTo(String value) {
+        public Criteria andSettleNumEqualTo(Integer value) {
             addCriterion("settle_num =", value, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumNotEqualTo(String value) {
+        public Criteria andSettleNumNotEqualTo(Integer value) {
             addCriterion("settle_num <>", value, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumGreaterThan(String value) {
+        public Criteria andSettleNumGreaterThan(Integer value) {
             addCriterion("settle_num >", value, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumGreaterThanOrEqualTo(String value) {
+        public Criteria andSettleNumGreaterThanOrEqualTo(Integer value) {
             addCriterion("settle_num >=", value, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumLessThan(String value) {
+        public Criteria andSettleNumLessThan(Integer value) {
             addCriterion("settle_num <", value, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumLessThanOrEqualTo(String value) {
+        public Criteria andSettleNumLessThanOrEqualTo(Integer value) {
             addCriterion("settle_num <=", value, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumLike(String value) {
-            addCriterion("settle_num like", value, "settleNum");
-            return (Criteria) this;
-        }
-
-        public Criteria andSettleNumNotLike(String value) {
-            addCriterion("settle_num not like", value, "settleNum");
-            return (Criteria) this;
-        }
-
-        public Criteria andSettleNumIn(List<String> values) {
+        public Criteria andSettleNumIn(List<Integer> values) {
             addCriterion("settle_num in", values, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumNotIn(List<String> values) {
+        public Criteria andSettleNumNotIn(List<Integer> values) {
             addCriterion("settle_num not in", values, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumBetween(String value1, String value2) {
+        public Criteria andSettleNumBetween(Integer value1, Integer value2) {
             addCriterion("settle_num between", value1, value2, "settleNum");
             return (Criteria) this;
         }
 
-        public Criteria andSettleNumNotBetween(String value1, String value2) {
+        public Criteria andSettleNumNotBetween(Integer value1, Integer value2) {
             addCriterion("settle_num not between", value1, value2, "settleNum");
             return (Criteria) this;
         }

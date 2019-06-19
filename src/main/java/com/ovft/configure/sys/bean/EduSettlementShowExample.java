@@ -315,62 +315,52 @@ public class EduSettlementShowExample {
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledEqualTo(String value) {
+        public Criteria andAlreadySettledEqualTo(BigDecimal value) {
             addCriterion("already_settled =", value, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledNotEqualTo(String value) {
+        public Criteria andAlreadySettledNotEqualTo(BigDecimal value) {
             addCriterion("already_settled <>", value, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledGreaterThan(String value) {
+        public Criteria andAlreadySettledGreaterThan(BigDecimal value) {
             addCriterion("already_settled >", value, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledGreaterThanOrEqualTo(String value) {
+        public Criteria andAlreadySettledGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("already_settled >=", value, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledLessThan(String value) {
+        public Criteria andAlreadySettledLessThan(BigDecimal value) {
             addCriterion("already_settled <", value, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledLessThanOrEqualTo(String value) {
+        public Criteria andAlreadySettledLessThanOrEqualTo(BigDecimal value) {
             addCriterion("already_settled <=", value, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledLike(String value) {
-            addCriterion("already_settled like", value, "alreadySettled");
-            return (Criteria) this;
-        }
-
-        public Criteria andAlreadySettledNotLike(String value) {
-            addCriterion("already_settled not like", value, "alreadySettled");
-            return (Criteria) this;
-        }
-
-        public Criteria andAlreadySettledIn(List<String> values) {
+        public Criteria andAlreadySettledIn(List<BigDecimal> values) {
             addCriterion("already_settled in", values, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledNotIn(List<String> values) {
+        public Criteria andAlreadySettledNotIn(List<BigDecimal> values) {
             addCriterion("already_settled not in", values, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledBetween(String value1, String value2) {
+        public Criteria andAlreadySettledBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("already_settled between", value1, value2, "alreadySettled");
             return (Criteria) this;
         }
 
-        public Criteria andAlreadySettledNotBetween(String value1, String value2) {
+        public Criteria andAlreadySettledNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("already_settled not between", value1, value2, "alreadySettled");
             return (Criteria) this;
         }

@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="no_settlement" jdbcType="DECIMAL" property="noSettlement" />
     <result column="clearing" jdbcType="DECIMAL" property="clearing" />
-    <result column="already_settled" jdbcType="VARCHAR" property="alreadySettled" />
+    <result column="already_settled" jdbcType="DECIMAL" property="alreadySettled" />
     <result column="school_id" jdbcType="INTEGER" property="schoolId" />
     <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
   </resultMap>
@@ -114,7 +114,7 @@
     </selectKey>
     insert into edu_settlement_show (no_settlement, clearing, already_settled, 
       school_id, school_name)
-    values (#{noSettlement,jdbcType=DECIMAL}, #{clearing,jdbcType=DECIMAL}, #{alreadySettled,jdbcType=VARCHAR}, 
+    values (#{noSettlement,jdbcType=DECIMAL}, #{clearing,jdbcType=DECIMAL}, #{alreadySettled,jdbcType=DECIMAL}, 
       #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduSettlementShow">
@@ -147,7 +147,7 @@
         #{clearing,jdbcType=DECIMAL},
       </if>
       <if test="alreadySettled != null">
-        #{alreadySettled,jdbcType=VARCHAR},
+        #{alreadySettled,jdbcType=DECIMAL},
       </if>
       <if test="schoolId != null">
         #{schoolId,jdbcType=INTEGER},
@@ -176,7 +176,7 @@
         clearing = #{record.clearing,jdbcType=DECIMAL},
       </if>
       <if test="record.alreadySettled != null">
-        already_settled = #{record.alreadySettled,jdbcType=VARCHAR},
+        already_settled = #{record.alreadySettled,jdbcType=DECIMAL},
       </if>
       <if test="record.schoolId != null">
         school_id = #{record.schoolId,jdbcType=INTEGER},
@@ -194,7 +194,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       no_settlement = #{record.noSettlement,jdbcType=DECIMAL},
       clearing = #{record.clearing,jdbcType=DECIMAL},
-      already_settled = #{record.alreadySettled,jdbcType=VARCHAR},
+      already_settled = #{record.alreadySettled,jdbcType=DECIMAL},
       school_id = #{record.schoolId,jdbcType=INTEGER},
       school_name = #{record.schoolName,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -211,7 +211,7 @@
         clearing = #{clearing,jdbcType=DECIMAL},
       </if>
       <if test="alreadySettled != null">
-        already_settled = #{alreadySettled,jdbcType=VARCHAR},
+        already_settled = #{alreadySettled,jdbcType=DECIMAL},
       </if>
       <if test="schoolId != null">
         school_id = #{schoolId,jdbcType=INTEGER},
@@ -226,7 +226,7 @@
     update edu_settlement_show
     set no_settlement = #{noSettlement,jdbcType=DECIMAL},
       clearing = #{clearing,jdbcType=DECIMAL},
-      already_settled = #{alreadySettled,jdbcType=VARCHAR},
+      already_settled = #{alreadySettled,jdbcType=DECIMAL},
       school_id = #{schoolId,jdbcType=INTEGER},
       school_name = #{schoolName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

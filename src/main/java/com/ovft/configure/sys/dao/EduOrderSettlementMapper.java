@@ -6,7 +6,6 @@ import com.ovft.configure.sys.bean.EduOrderSettlementExample;
 import java.util.List;
 import java.util.Map;
 
-import com.ovft.configure.sys.bean.EduOrderSettlementVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface EduOrderSettlementMapper {

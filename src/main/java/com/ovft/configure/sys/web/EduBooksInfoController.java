@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("bookInfo")
+@RequestMapping("server/bookInfo")
 public class EduBooksInfoController {
 
     @Autowired

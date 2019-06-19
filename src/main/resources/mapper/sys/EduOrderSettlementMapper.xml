@@ -6,7 +6,7 @@
         <result column="settlement_show_id" jdbcType="INTEGER" property="settlementShowId"/>
         <result column="settlement_status" jdbcType="INTEGER" property="settlementStatus"/>
         <result column="settle_time" jdbcType="TIMESTAMP" property="settleTime"/>
-        <result column="settle_num" jdbcType="VARCHAR" property="settleNum"/>
+        <result column="settle_num" jdbcType="INTEGER" property="settleNum"/>
         <result column="settle_money" jdbcType="DECIMAL" property="settleMoney"/>
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
         <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
@@ -122,7 +122,7 @@
         settle_time, settle_num, settle_money,
         school_id, school_name)
         values (#{settlementShowId,jdbcType=INTEGER}, #{settlementStatus,jdbcType=INTEGER},
-        #{settleTime,jdbcType=TIMESTAMP}, #{settleNum,jdbcType=VARCHAR}, #{settleMoney,jdbcType=DECIMAL},
+        #{settleTime,jdbcType=TIMESTAMP}, #{settleNum,jdbcType=INTEGER}, #{settleMoney,jdbcType=DECIMAL},
         #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduOrderSettlement">
@@ -164,7 +164,7 @@
                 #{settleTime,jdbcType=TIMESTAMP},
             </if>
             <if test="settleNum != null">
-                #{settleNum,jdbcType=VARCHAR},
+                #{settleNum,jdbcType=INTEGER},
             </if>
             <if test="settleMoney != null">
                 #{settleMoney,jdbcType=DECIMAL},
@@ -200,7 +200,7 @@
                 settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
             </if>
             <if test="record.settleNum != null">
-                settle_num = #{record.settleNum,jdbcType=VARCHAR},
+                settle_num = #{record.settleNum,jdbcType=INTEGER},
             </if>
             <if test="record.settleMoney != null">
                 settle_money = #{record.settleMoney,jdbcType=DECIMAL},
@@ -222,7 +222,7 @@
         settlement_show_id = #{record.settlementShowId,jdbcType=INTEGER},
         settlement_status = #{record.settlementStatus,jdbcType=INTEGER},
         settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
-        settle_num = #{record.settleNum,jdbcType=VARCHAR},
+        settle_num = #{record.settleNum,jdbcType=INTEGER},
         settle_money = #{record.settleMoney,jdbcType=DECIMAL},
         school_id = #{record.schoolId,jdbcType=INTEGER},
         school_name = #{record.schoolName,jdbcType=VARCHAR}
@@ -243,7 +243,7 @@
                 settle_time = #{settleTime,jdbcType=TIMESTAMP},
             </if>
             <if test="settleNum != null">
-                settle_num = #{settleNum,jdbcType=VARCHAR},
+                settle_num = #{settleNum,jdbcType=INTEGER},
             </if>
             <if test="settleMoney != null">
                 settle_money = #{settleMoney,jdbcType=DECIMAL},
@@ -262,14 +262,14 @@
     set settlement_show_id = #{settlementShowId,jdbcType=INTEGER},
       settlement_status = #{settlementStatus,jdbcType=INTEGER},
       settle_time = #{settleTime,jdbcType=TIMESTAMP},
-      settle_num = #{settleNum,jdbcType=VARCHAR},
+      settle_num = #{settleNum,jdbcType=INTEGER},
       settle_money = #{settleMoney,jdbcType=DECIMAL},
       school_id = #{schoolId,jdbcType=INTEGER},
       school_name = #{schoolName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <!--3.查找线上报名门数-->
+    <!--1.根据学校和结算状态查询结算数据-->
     <select id="queryAllSettlementStatus" parameterType="map"
             resultType="com.ovft.configure.sys.bean.EduOrderSettlement">
         select
@@ -280,6 +280,4 @@
         school_id =#{schoolId}
         and settlement_status=#{settlementStatus}
     </select>
-
-
 </mapper>

@@ -186,6 +186,66 @@ public class EduSettlementOrderDetailsExample {
             return (Criteria) this;
         }
 
+        public Criteria andOrderSettlementIdIsNull() {
+            addCriterion("order_settlement_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdIsNotNull() {
+            addCriterion("order_settlement_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdEqualTo(Integer value) {
+            addCriterion("order_settlement_id =", value, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdNotEqualTo(Integer value) {
+            addCriterion("order_settlement_id <>", value, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdGreaterThan(Integer value) {
+            addCriterion("order_settlement_id >", value, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("order_settlement_id >=", value, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdLessThan(Integer value) {
+            addCriterion("order_settlement_id <", value, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdLessThanOrEqualTo(Integer value) {
+            addCriterion("order_settlement_id <=", value, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdIn(List<Integer> values) {
+            addCriterion("order_settlement_id in", values, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdNotIn(List<Integer> values) {
+            addCriterion("order_settlement_id not in", values, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdBetween(Integer value1, Integer value2) {
+            addCriterion("order_settlement_id between", value1, value2, "orderSettlementId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderSettlementIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("order_settlement_id not between", value1, value2, "orderSettlementId");
+            return (Criteria) this;
+        }
+
         public Criteria andOrderNumberIsNull() {
             addCriterion("order_number is null");
             return (Criteria) this;

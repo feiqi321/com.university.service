@@ -3,9 +3,6 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.ovft.configure.sys.bean.EduOrderSettlement;
-import com.ovft.configure.sys.bean.EduOrderSettlementVo;
-import com.ovft.configure.sys.bean.EduSettlementShow;
-import com.ovft.configure.sys.bean.EduSettlementShowExample;
 import com.ovft.configure.sys.dao.EduOrderSettlementMapper;
 import com.ovft.configure.sys.dao.EduSettlementShowMapper;
 import com.ovft.configure.sys.service.EduOrderSettlementService;
@@ -29,7 +26,6 @@ public class EduOrderSettlementServiceImpl implements EduOrderSettlementService 
 
     @Resource
     private EduSettlementShowMapper eduSettlementShowMapper;
-
 
     @Override
     public PageBean showsSettlement(Integer page, Integer size, Integer schoolId, Integer settlementStatus) {

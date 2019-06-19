@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * @author
+ * @author 
  */
 public class EduSettlementShow implements Serializable {
     /**
@@ -23,9 +23,9 @@ public class EduSettlementShow implements Serializable {
     private BigDecimal clearing;
 
     /**
-     * 已结算3
+     *  已结算3
      */
-    private String alreadySettled;
+    private BigDecimal alreadySettled;
 
     /**
      * 学校id
@@ -63,11 +63,11 @@ public class EduSettlementShow implements Serializable {
         this.clearing = clearing;
     }
 
-    public String getAlreadySettled() {
+    public BigDecimal getAlreadySettled() {
         return alreadySettled;
     }
 
-    public void setAlreadySettled(String alreadySettled) {
+    public void setAlreadySettled(BigDecimal alreadySettled) {
         this.alreadySettled = alreadySettled;
     }
 
@@ -100,11 +100,11 @@ public class EduSettlementShow implements Serializable {
         }
         EduSettlementShow other = (EduSettlementShow) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-                && (this.getNoSettlement() == null ? other.getNoSettlement() == null : this.getNoSettlement().equals(other.getNoSettlement()))
-                && (this.getClearing() == null ? other.getClearing() == null : this.getClearing().equals(other.getClearing()))
-                && (this.getAlreadySettled() == null ? other.getAlreadySettled() == null : this.getAlreadySettled().equals(other.getAlreadySettled()))
-                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
-                && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()));
+            && (this.getNoSettlement() == null ? other.getNoSettlement() == null : this.getNoSettlement().equals(other.getNoSettlement()))
+            && (this.getClearing() == null ? other.getClearing() == null : this.getClearing().equals(other.getClearing()))
+            && (this.getAlreadySettled() == null ? other.getAlreadySettled() == null : this.getAlreadySettled().equals(other.getAlreadySettled()))
+            && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
+            && (this.getSchoolName() == null ? other.getSchoolName() == null : this.getSchoolName().equals(other.getSchoolName()));
     }
 
     @Override
