@@ -4,7 +4,9 @@ import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.EduArticle;
+import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.EduArticleService;
+import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +27,8 @@ public class EduArticleController {
     private EduArticleService eduArticleService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private UserService userService;
 
     /**
      * 1-通知公告, 3-校园介绍,  4-联盟资讯,   5-政策法规
@@ -121,6 +125,35 @@ public class EduArticleController {
      */
     @GetMapping(value = "/server/article/deleteNotice")
     public WebResult deleteNotice(@RequestParam(value = "id") Integer id) {
+        return eduArticleService.deleteNotice(id);
+    }
+
+    /**
+     *  app权限   文章列表
+     * @return
+     */
+    @PostMapping(value = "/api/article/notice")
+    public WebResult apiQueryAllNotice(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        String userId = request.getHeader("userId");
+        if(StringUtils.isBlank(userId)) {
+            return new WebResult("50012", "请先登录", "");
+        }
+        User user = userService.queryByItemsId(Integer.valueOf(userId));
+        if(user.getSchoolJob() == null || !user.getSchoolJob().equals(ConstantClassField.SCHOOL_JOB_XCY)) {
+            return new WebResult("400", "暂无该权限，请联系管理员添加", "");
+        }
+        pageVo.setSchoolId(user.getSchoolId());
+        return eduArticleService.queryAllNotice(pageVo);
+    }
+
+    /**
+     * app删除文章   app权限
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/api/article/deleteNotice")
+    public WebResult apiDeleteNotice(@RequestParam(value = "id") Integer id) {
         return eduArticleService.deleteNotice(id);
     }
 
