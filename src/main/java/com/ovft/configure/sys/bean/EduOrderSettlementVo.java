@@ -12,7 +12,18 @@ import java.util.List;
 public class EduOrderSettlementVo {
     private List<EduSettlementShow> eduSettlementShows;
 
+    private Integer[] ids;
+
     private PageBean eduOrderSettlements;
+
+
+    public Integer[] getIds() {
+        return ids;
+    }
+
+    public void setIds(Integer[] ids) {
+        this.ids = ids;
+    }
 
     public PageBean getEduOrderSettlements() {
         return eduOrderSettlements;

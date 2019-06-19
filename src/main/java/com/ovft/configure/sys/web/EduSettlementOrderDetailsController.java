@@ -21,7 +21,7 @@ public class EduSettlementOrderDetailsController {
     private EduSettlementOrderDetailsService eduSettlementOrderDetailsService;
 
     /**
-     * 订单明细模糊查询类表
+     * 订单明细模糊查询类表      //	结算状态未结算1正在结算2已结算3
      *
      * @param eduSettlementOrderDetailsVo
      * @return
@@ -33,7 +33,7 @@ public class EduSettlementOrderDetailsController {
     }
 
     /**
-     * 未结算账单---> 更换为--->  结算中状态
+     * 未结算账单---> 更换为--->  结算中状态     //	结算状态未结算1正在结算2已结算3
      *
      * @param eduSettlementOrderDetails
      * @return
@@ -51,7 +51,7 @@ public class EduSettlementOrderDetailsController {
     }
 
     /**
-     * 未结算账单---> 更换为--->  结算中状态
+     * 未结算账单---> 更换为--->  结算中状态      //	结算状态未结算1正在结算2已结算3
      *
      * @param eduSettlementOrderDetailsVo
      * @return
@@ -75,7 +75,7 @@ public class EduSettlementOrderDetailsController {
     /**
      * 一键结算中
      *
-     * @param eduSettlementOrderDetails
+     * @param eduSettlementOrderDetails //	结算状态未结算1正在结算2已结算3
      * @return
      */
     @PostMapping(value = "bathupdates")

@@ -43,7 +43,7 @@ public class EduBooksInfoController {
         }
         Integer userId = Integer.valueOf(userId1);
 
-/*        String shcoolId1 = request.getHeader("shcoolId");
+/*       String shcoolId1 = request.getHeader("shcoolId");
         if (shcoolId1.equals("null")) {
             return new WebResult(StatusCode.ERROR, "选择的学校不能为空");
         }

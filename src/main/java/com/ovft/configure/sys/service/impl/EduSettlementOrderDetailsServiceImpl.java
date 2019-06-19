@@ -80,7 +80,7 @@ public class EduSettlementOrderDetailsServiceImpl implements EduSettlementOrderD
         eduOrderSettlement.setSettlementStatus(2);
         eduOrderSettlement.setSettleMoney(eduSettlementOrderDetails.getSettlementAmount());
         eduOrderSettlement.setSchoolId(eduSettlementOrderDetails.getSchoolId());
-        eduOrderSettlement.setSchoolName(eduOrderSettlement.getSchoolName());
+        eduOrderSettlement.setSchoolName(eduSettlementOrderDetails.getSchoolName());
         //结算中订单id关联订单详细id
         eduOrderSettlement.setSettlementShowId(eduSettlementShow.getId());
         eduOrderSettlementMapper.insertSelective(eduOrderSettlement);
