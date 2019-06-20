@@ -38,6 +38,18 @@ public class MyCourseAll  {
      * 所属学校id
      */
     private String Courseyear;
+    /**
+     * 教师评价图片
+     */
+    private String courseImage;
+
+    public String getCourseImage() {
+        return courseImage;
+    }
+
+    public void setCourseImage(String courseImage) {
+        this.courseImage = courseImage;
+    }
 
     public String getCourseyear() {
         return Courseyear;

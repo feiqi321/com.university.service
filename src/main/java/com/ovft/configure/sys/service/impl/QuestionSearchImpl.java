@@ -197,13 +197,28 @@ public class QuestionSearchImpl implements QuestionSearchService {
     //提交投票记录
     @Transactional
     @Override
-    public WebResult submitVoteRecord(Integer id,Integer userId) {
-        VoteItem voteItembyuserId = questionSearchMapper.findVoteItembyuserId(userId);
-           if (voteItembyuserId!=null){
-               return  new WebResult("200", "您已提交过此内容,无需重复操作！", "");
-           }
+    public WebResult submitVoteRecord(AnswerRecord answerRecord,Integer id) {
+        String userName = questionSearchMapper.findAnswerRecordbyUserId(answerRecord.getUid(),answerRecord.getList().get(0).getSid(),answerRecord.getTopId(),answerRecord.getDownId());
+        if (userName!=null){
+            return new WebResult("300", "您已提交过此内容,无需重复操作！", "");
+        }
         VoteItem itembyId = questionSearchMapper.findVoteItembyId(id);
            questionSearchMapper.updateVoteItem(itembyId.getNum()+1,id);
+        //用户所填的答案结果组成String类型,然后存入数据库
+        String answer = "";
+        List<AnswerRecordVo> answerValues = answerRecord.getAnswerValues();//用户所填每题题号加结果记录的集合
+        for (int n = 0; n <answerValues.size(); n++) {
+            if (n == 0) {
+                answer = answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() + ";";
+            }else {
+                answer = answer.concat(answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() + ";");
+            }
+        }
+
+        answerRecord.setAnswer(answer);
+        answerRecord.setSid(answerRecord.getList().get(0).getSid());//将题目所对应的问卷主题设置给answerRecord
+        questionSearchMapper.createAnswerRecord(answerRecord);
+
         return  new WebResult("200", "提交成功", "");
     }
 
@@ -222,7 +237,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         List<MyCourseAll> myCourseAlldown = questionSearchMapper.findMyCourseAlldown(pageVo);
         List<MyCourseAll> list=new ArrayList();
         for (int m=0;m<myCourseAlltop.size();m++){
-             myCourseAlltop.get(m).setStatu("线上报名");
+            myCourseAlltop.get(m).setStatu("线上报名");
             Integer schoolId = myCourseAlltop.get(m).getSchoolId();
             String schoolName = schoolMapper.findSchoolById(schoolId);
             myCourseAlltop.get(m).setSchoolName(schoolName);
@@ -428,9 +443,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
     @Override
     public WebResult createAnswerRecord(AnswerRecord answerRecord) {
 
-        String userName = questionSearchMapper.findAnswerRecordbyUserId(answerRecord.getUid());
-        if (userName==null){
-            return new WebResult("200", "您已提交过此内容,无需重复操作！", "");
+        String userName = questionSearchMapper.findAnswerRecordbyUserId(answerRecord.getUid(),answerRecord.getList().get(0).getSid(),answerRecord.getTopId(),answerRecord.getDownId());
+        if (userName!=null){
+            return new WebResult("300", "您已提交过此内容,无需重复操作！", "");
         }
         int [] answerNums = answerRecord.getAnswerNums();
         //找到对应主题的题目及选项(选项及分数权重的集合)的集合，主要针对教师评价

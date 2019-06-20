@@ -21,7 +21,33 @@ public class AnswerRecord {
       private List<Question> list;
       private Integer  totalGrade;
       private Integer  sid;
+      private Integer  topId;
+      private Integer  downId;
+      private Integer id;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getTopId() {
+        return topId;
+    }
+
+    public Integer getDownId() {
+        return downId;
+    }
+
+    public void setTopId(Integer topId) {
+        this.topId = topId;
+    }
+
+    public void setDownId(Integer downId) {
+        this.downId = downId;
+    }
 
     public Integer getSid() {
         return sid;

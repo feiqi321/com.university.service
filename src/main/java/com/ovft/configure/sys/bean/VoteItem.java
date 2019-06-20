@@ -6,7 +6,7 @@ public class VoteItem {
     private Integer  id;
     private  Integer sid;
     private String  item;
-    private Integer num;
+    private int num;
     private String  image;
     private String  question;
     private Integer userId;

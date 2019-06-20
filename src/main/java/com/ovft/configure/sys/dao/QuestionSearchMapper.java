@@ -48,7 +48,7 @@ public interface QuestionSearchMapper {
     //问卷调查列表包含选项分数的
     public List<Question> findQuestionAllAndGrade(@Param("sid")Integer sid,@Param("tid")Integer tid,@Param("search") String search);
     //添加用户调查结果记录
-    public List<AnswerRecord> createAnswerRecord(AnswerRecord answerRecord);
+    public  void  createAnswerRecord(AnswerRecord answerRecord);
     //查询用户调查总分结果记录
     public List<Integer> queryAnswerRecordGrade();
     //查询用户调查结果记录
@@ -62,7 +62,7 @@ public interface QuestionSearchMapper {
     //按综合条件问卷调查列表
     public List<SearchQuestion> findSearchQuestioncomposite(@Param("sid")Integer sid,@Param("topId")Integer topId,@Param("downId")Integer downId, @Param("schoolId")Integer schoolId,@Param("tid")Integer tid,@Param("search") String search);
     //查找对应用户
-    public String findAnswerRecordbyUserId(Integer userId);
+    public String findAnswerRecordbyUserId(@Param("uid") Integer userId,@Param("sid") Integer sid,@Param("topId") Integer topId,@Param("downId") Integer downId);
     //所有投票选项列表
     public List<VoteItem> findVoteItemAll();
     //我的所有课程
@@ -76,7 +76,7 @@ public interface QuestionSearchMapper {
     //查询投票对应选项(通过userId)
     public VoteItem findVoteItembyuserId(Integer userId);
     //修改投票对应选项
-    public void updateVoteItem(Integer num,Integer id);
+    public void updateVoteItem(@Param("num") int num,@Param("id") Integer id);
     //修改投票对应选项
     public void updateSearchQuestionStatues(Integer status,Integer sid);
 

@@ -354,7 +354,7 @@
 
     <!--添加问卷题目结果-->
     <insert id="createAnswerRecord" parameterType="com.ovft.configure.sys.bean.AnswerRecord" >
-       insert  into  edu_answer_record(aid,uid,userName,schoolName,answer,title,advice_info,total_grade,sid) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade},#{sid})
+       insert  into  edu_answer_record(aid,uid,userName,schoolName,answer,title,advice_info,total_grade,sid,topId,downId) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade},#{sid},#{topId},#{downId})
      </insert>
     <!--查询问卷总分结果-->
     <select id="queryAnswerRecordGrade" resultType="java.lang.Integer" >
@@ -372,7 +372,20 @@
      </select>
     <!--所有用户答题结果记录-->
     <select id="findAnswerRecordbyUserId" parameterType="int" resultType="String">
-       select  userName  from   edu_answer_record WHERE  uid=#{uid}
+       select  userName  from   edu_answer_record WHERE
+        <if test="uid!=null">
+            uid=#{uid}
+        </if>
+        <if test="sid!=null">
+            and sid=#{sid}
+        </if>
+        <if test="topId!=null">
+            and topId=#{topId}
+        </if>
+        <if test="downId!=null">
+            and downId=#{downId}
+        </if>
+
      </select>
     <!--查询对应投票-->
     <select id="findVoteItemAll"  resultType="com.ovft.configure.sys.bean.VoteItem">

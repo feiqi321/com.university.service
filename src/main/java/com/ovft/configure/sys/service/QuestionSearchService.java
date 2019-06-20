@@ -33,7 +33,7 @@ public interface QuestionSearchService {
     //查询用户调查结果记录
     public WebResult findVoteRecord(PageVo pageVo);
     //提交用户调查结果记录
-    public WebResult submitVoteRecord(Integer id,Integer userId);
+    public WebResult submitVoteRecord(AnswerRecord answerRecord,Integer id);
     //教师评价列表
     public WebResult findCourseTopic(PageVo pageVo);
     //教师评价列表
