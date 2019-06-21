@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashSet;
 
 public class PassportInterceptor implements HandlerInterceptor {
 
@@ -29,7 +30,7 @@ public class PassportInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 //        printLog(httpServletRequest);
         String servletPath = httpServletRequest.getServletPath();
- /*       if(servletPath.contains("/server")) {
+        if(servletPath.contains("/server")) {
             String token = httpServletRequest.getHeader("token");
             Object obj = redisUtil.get(token);
             if (obj != null) {
@@ -37,18 +38,18 @@ public class PassportInterceptor implements HandlerInterceptor {
                 // 如果是pc端登录，更新token缓存失效时间
                 redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
                 Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-                *//*if (hget.getRole() != 0 || hget.getRole() != 1) {
+                if (hget.getRole().equals(3) || hget.getRole().equals(2)) {
                     HashSet<String> permission = (HashSet) redisUtil.hget(ConstantClassField.ADMIN_PERMISSION, id.toString());
                     String uri = httpServletRequest.getRequestURI();
                     boolean contains = permission.contains(uri);
                     if(!contains) {
                         throw new MessageCenterException(new WebResult("400","您没有该权限，请联系管理员添加",""), null);
                     }
-                }*//*
+                }
             } else {
                 throw new MessageCenterException(new WebResult("50012","请先登录",""), null);
             }
-        }*/
+        }
         return true;
     }
 

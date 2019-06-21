@@ -44,11 +44,11 @@ public class EduArticleServiceImpl implements EduArticleService {
         }
 
         if(pageVo.getPageNum() == 0) {
-            List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, null);
+            List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, pageVo.getSearch());
             return new WebResult("200", "查询成功", noticeList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, null);
+        List<EduArticleVo> noticeList =  eduArticleMapper.findNoticeAll(null, schoolId, type, pageVo.getSearch());
         PageInfo pageInfo = new PageInfo<>(noticeList);
         return new WebResult("200", "查询成功", noticeList);
     }
