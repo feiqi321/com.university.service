@@ -40,6 +40,9 @@
         update edu_video
         set school_id = #{schoolId}, title = #{title}, teacher = #{teacher}, content = #{content},
         cover = #{cover}, is_free = #{isFree}, price = #{price}, act_price = #{actPrice}
+        <if test="visits != null">
+            , visits = #{visits}
+        </if>
         where video_id = #{videoId}
     </update>
 
@@ -85,10 +88,7 @@
         update edu_video_item
         <set>
             video_id = #{videoId}, title = #{title}, video = #{video}, duration = #{duration},
-            count = #{count}, is_test = #{isTest},
-            <if test="visits != null">
-                visits = #{visits}
-            </if>
+            count = #{count}, is_test = #{isTest}
         </set>
         where item_id = #{itemId}
     </update>
