@@ -340,9 +340,9 @@
             AND q.sid = #{sid}
         </if>
 
-        <if test="tid != null and tid != ''">
-            AND q.tid = #{tid}
-        </if>
+        <!--<if test="tid != null and tid != ''">-->
+            <!--AND q.tid = #{tid}-->
+        <!--</if>-->
         <!--<if test="type != null and type != ''">-->
         <!--AND a.type = #{type}-->
         <!--</if>-->
