@@ -32,6 +32,8 @@ public interface AdminMapper {
      */
     public List<AdminVo> selectByAdminAndSchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId, @Param("role") Integer role);
 
+    public List<AdminVo> selectByAdminList(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId, @Param("role") Integer role);
+
     public void creatAdmin(Admin admin);
 
     /**

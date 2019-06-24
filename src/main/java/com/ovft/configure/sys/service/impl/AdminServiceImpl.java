@@ -230,11 +230,11 @@ public class AdminServiceImpl implements AdminService {
     public WebResult adminList(PageVo pageVo) {
         Integer schoolId = pageVo.getSchoolId();
         if (pageVo.getPageSize() == 0) {
-            List<AdminVo> adminList = adminMapper.selectByAdminAndSchool(null, schoolId, pageVo.getRole());
+            List<AdminVo> adminList = adminMapper.selectByAdminList(null, schoolId, pageVo.getRole());
             return new WebResult("200", "查询成功", adminList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize(), "a.admin_id");
-        List<AdminVo> adminList = adminMapper.selectByAdminAndSchool(null, schoolId, pageVo.getRole());
+        List<AdminVo> adminList = adminMapper.selectByAdminList(null, schoolId, pageVo.getRole());
         PageInfo pageInfo = new PageInfo<>(adminList);
         return new WebResult("200", "查询成功", pageInfo);
     }
