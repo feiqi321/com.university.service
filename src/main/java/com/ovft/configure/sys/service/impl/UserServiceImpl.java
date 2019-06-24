@@ -2,6 +2,7 @@ package com.ovft.configure.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.EduClass;
@@ -113,9 +114,9 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", phoneResult.getMsg());
         }
 
-//        if (StringUtils.isBlank(user.getPassword())) {
-//            return new WebResult("400", "密码不能为空");
-//        }
+        if (StringUtils.isBlank(user.getPassword())) {
+            return new WebResult("400", "密码不能为空");
+        }
         //通过手机号码查找用户是否注册
         User finduserbyphone = userMapper.findUserByPhone(user);
         HashMap<String, Object> map = new HashMap();
@@ -125,27 +126,46 @@ public class UserServiceImpl implements UserService {
 
         //情况2.根据用户userId查找Item表（用户表2），判断用户是否已报名过学校记录
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
-        if (user1==null){
-//            String pasword = MD5Utils.md5Password(user.getPassword());
-//            if (!pasword.equals(finduserbyphone.getPassword())) {
-//                return new WebResult("400", "帐号或密码错误");
-//            }
+        if (user1==null){   //*****在用户只注册没有报名的时候
+            String pasword = MD5Utils.md5Password(user.getPassword());
+            if (!pasword.equals(finduserbyphone.getPassword())) {
+                return new WebResult("400", "帐号或密码错误");
+            }
             //如果不存在，则返回finduserbyphone
             map.put("user", finduserbyphone);
+            //添加token
+            String token = UUID.randomUUID().toString();
+
+            //pc端设置半年缓存过期
+            boolean isSet = redisUtil.set(token, finduserbyphone.getUserId(), 6 * 30 * 24 * 60 * 60);
+            if (!isSet) {
+                return new WebResult("400", "登录失败");
+            }
+            boolean b = redisUtil.hasKey(token);
+            map.put("token",token) ;
+
+            //单点登录功能 single sign on   SSO     ===>>在用户只注册没有报名的时候
+            Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
+            if(hget != null) {
+                String oldToken = (String) hget;
+                redisUtil.delete(oldToken);
+            }
+            redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString(), token);
             return new WebResult("200", "登录成功", map);
         }
 
           //如果存在，则返回user1
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
         user1.setSchoolName(schoolName);
-//        String pasword = MD5Utils.md5Password(user.getPassword());
-//        if (!pasword.equals(finduserbyphone.getPassword())) {
-//            return new WebResult("400", "帐号或密码错误");
-//        }
+        String pasword = MD5Utils.md5Password(user.getPassword());
+        if (!pasword.equals(finduserbyphone.getPassword())) {
+            return new WebResult("400", "帐号或密码错误");
+        }
         map.put("user", user1);
 
         //添加token
         String token = UUID.randomUUID().toString();
+
         //pc端设置半年缓存过期
         boolean isSet = redisUtil.set(token, finduserbyphone.getUserId(), 6 * 30 * 24 * 60 * 60);
         if (!isSet) {
@@ -153,6 +173,17 @@ public class UserServiceImpl implements UserService {
         }
         boolean b = redisUtil.hasKey(token);
         map.put("token",token) ;
+
+        //单点登录功能 single sign on   SSO
+        Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
+        if(hget != null) {
+            String oldToken = (String) hget;
+            redisUtil.delete(oldToken);
+        }
+        redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString(), token);
+
+
+
         WebResult result = new WebResult("200", "登录成功", map);
         return result;
     }
