@@ -43,7 +43,7 @@ public class ApproveController {
               // 如果是pc端登录，更新token缓存失效时间
               redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
               User hget = (User) redisUtil.hget(ConstantClassField.USER_INFO, id.toString());
-              String name = hget.getUserName();
+
               return  approveService.approve(approve.getUserId(),approve.getTypeId(),approve.getType());
           } else {
               return new WebResult("50012", "请先登录", "");

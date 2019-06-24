@@ -171,11 +171,15 @@ public class UserServiceImpl implements UserService {
         if (!isSet) {
             return new WebResult("400", "登录失败");
         }
+        //存放用户信息
+        boolean bo = redisUtil.hset(ConstantClassField.USER_INFO, finduserbyphone.getUserId().toString(), finduserbyphone);
         boolean b = redisUtil.hasKey(token);
+
         map.put("token",token) ;
 
         //单点登录功能 single sign on   SSO
         Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
+
         if(hget != null) {
             String oldToken = (String) hget;
             redisUtil.delete(oldToken);

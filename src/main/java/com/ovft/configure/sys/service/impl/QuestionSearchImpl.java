@@ -291,7 +291,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
                 if (pageVo.getTid()==1) {
 
-                    List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
+                    List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), null,pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
                     if (questions.isEmpty()){
                         return new WebResult("300","此问卷暂时还没有添加相关试题内容","" );
 
@@ -335,13 +335,13 @@ public class QuestionSearchImpl implements QuestionSearchService {
         //进入详情页
         if (pageVo.getSid() != null||pageVo.getTopId()!=null||pageVo.getDownId()!=null) {  //进入某篇问卷调查的详情页==>> 2.
 
-            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getSid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getSearch());
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getSid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSchoolId(), null, pageVo.getSearch());
             if (pageVo.getTid()==1) {
                 if (searchQuestionAll.get(0).getQuestions().isEmpty()){
                     return new WebResult("300","此问卷暂时还没有添加相关试题内容","" );
 
                 }
-                List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
+                List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), null,pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
                 searchQuestionAll.get(0).setQuestions(questions);
             }
             if (pageVo.getTid()==2) {

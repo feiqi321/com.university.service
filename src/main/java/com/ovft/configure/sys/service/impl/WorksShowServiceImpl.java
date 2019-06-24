@@ -49,6 +49,7 @@ public class WorksShowServiceImpl implements WorksShowService {
     @Transactional
     @Override
     public Integer addThumbup(Integer id) {
+
         EduArticle eduArticle = eduArticleMapper.selectAriticleById(id);
         eduArticle.setThumbup(eduArticle.getThumbup()+1);
         eduArticleMapper.updateNoticeThumbup(eduArticle.getId(),eduArticle.getThumbup());
