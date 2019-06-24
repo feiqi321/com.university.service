@@ -11,11 +11,19 @@ public class ConstantClassField {
      * redis  单点登录功能key   single sign on   SSO
      */
     public static final String SINGLE_SIGN_ON = "SSO_ADMIN";
+    /**
+     * redis  app单点登录功能key   single sign on   SSO
+     */
+    public static final String SINGLE_SIGN_ON_USER = "SSO_USER";
 
     /**
      * redis        用户信息
      */
     public static final String ADMIN_INFO = "ADMIN_INFO";
+    /**
+     * redis        app端用户信息
+     */
+    public static final String USER_INFO = "USER_INFO";
 
     /**
      * redis    用户权限
