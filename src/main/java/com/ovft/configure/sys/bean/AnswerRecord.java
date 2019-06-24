@@ -24,6 +24,24 @@ public class AnswerRecord {
       private Integer  topId;
       private Integer  downId;
       private Integer id;
+      private String type;
+      private int tid;
+
+    public int getTid() {
+        return tid;
+    }
+
+    public void setTid(int tid) {
+        this.tid = tid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Integer getId() {
         return id;

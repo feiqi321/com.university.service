@@ -211,12 +211,14 @@ public class QuestionSearchImpl implements QuestionSearchService {
             if (n == 0) {
                 answer = answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() + ";";
             }else {
-                answer = answer.concat(answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() + ";");
+                answer = answer.concat(answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() );
             }
         }
 
         answerRecord.setAnswer(answer);
+        answerRecord.setType("投票评选");
         answerRecord.setSid(answerRecord.getList().get(0).getSid());//将题目所对应的问卷主题设置给answerRecord
+
         questionSearchMapper.createAnswerRecord(answerRecord);
 
         return  new WebResult("200", "提交成功", "");
@@ -286,16 +288,32 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
 
                 List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getSid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getSearch());
+
                 if (pageVo.getTid()==1) {
+
                     List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
+                    if (questions.isEmpty()){
+                        return new WebResult("300","此问卷暂时还没有添加相关试题内容","" );
+
+                    }
                         searchQuestionAll2.get(0).setQuestions(questions);
                 }
                 if (pageVo.getTid()==2||pageVo.getTid()==0) {
+
                     List<Question> questions = questionSearchMapper.findQuestionAll(null, null,pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
+                    if (questions.isEmpty()){
+                        return new WebResult("300","此课程暂时还没有添加评价相关内容","" );
+
+                    }
                     searchQuestionAll2.get(0).setQuestions(questions);
                 }
                  if (pageVo.getTid()==3){//返回对应投票详情
+
                      List<VoteItem> voteItembySid = questionSearchMapper.findVoteItembySid(pageVo.getSid());
+                     if (voteItembySid.isEmpty()){
+                         return new WebResult("300","此投票暂时还没有添加相关选项内容","" );
+
+                     }
                      searchQuestionAll2.get(0).setVoteItems(voteItembySid);
                  }
                 questionSearchMapper.updateSearchQuestionVisits(searchQuestionAll2.get(0).getVisits()+1,searchQuestionAll2.get(0).getSid()); //让该篇问卷调查的浏览量+1
@@ -319,14 +337,27 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
             List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getSid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getSearch());
             if (pageVo.getTid()==1) {
+                if (searchQuestionAll.get(0).getQuestions().isEmpty()){
+                    return new WebResult("300","此问卷暂时还没有添加相关试题内容","" );
+
+                }
                 List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(),pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
                 searchQuestionAll.get(0).setQuestions(questions);
             }
             if (pageVo.getTid()==2) {
+                if (searchQuestionAll.isEmpty()){
+                    return new WebResult("300","此课程暂时还没有添加评价相关内容","" );
+
+                }
                 List<Question> questions = questionSearchMapper.findQuestionAll(null, null,pageVo.getTopId(),pageVo.getDownId(), pageVo.getSearch());
                 searchQuestionAll.get(0).setQuestions(questions);
             }
             if (pageVo.getTid()==3){//返回对应投票详情
+                if (searchQuestionAll.get(0).getVoteItems().isEmpty()){
+                    return new WebResult("300","此投票暂时还没有添加相关选项内容","" );
+
+                }
+
                 List<VoteItem> voteItembySid = questionSearchMapper.findVoteItembySid(pageVo.getSid());
                 searchQuestionAll.get(0).setVoteItems(voteItembySid);
             }
@@ -551,6 +582,12 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
 
         answerRecord.setAnswer(answer);
+        if (answerRecord.getTid()==2){
+               answerRecord.setType("教师评价");
+        }
+        if (answerRecord.getTid()==1){
+               answerRecord.setType("问卷调查");
+        }
         answerRecord.setSid(answerRecord.getList().get(0).getSid());//将题目所对应的问卷主题设置给answerRecord
         questionSearchMapper.createAnswerRecord(answerRecord);
         return new WebResult("200", "提交成功", "");
@@ -594,6 +631,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             }
 
            if (before&&!after&&samedate){
+                //
              questionSearchMapper.updateSearchQuestionStatues(2,searchQuestion.getSid());
 
            }
