@@ -307,6 +307,7 @@
         <if test="search != null and search != ''">
             AND user_name like CONCAT('%',concat(#{search}),'%')
         </if>
+        ORDER BY createtime DESC
     </select>
     <!--查询学员投稿记录列表 -->
     <select id="contributeList" parameterType="com.ovft.configure.sys.vo.PageVo"

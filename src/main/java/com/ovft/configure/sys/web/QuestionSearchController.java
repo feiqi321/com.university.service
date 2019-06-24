@@ -100,8 +100,11 @@ public class QuestionSearchController {
      * @return
      */
     @PostMapping(value = "/user/submitVoteRecord")
-    public WebResult submitVoteRecord(@RequestBody AnswerRecord answerRecord) {
-
+    public WebResult submitVoteRecord(@RequestBody AnswerRecord answerRecord,HttpServletRequest request) {
+             Integer userId=Integer.parseInt(request.getHeader("userId"));
+             if (userId!=null){
+                   answerRecord.setUid(userId);
+             }
              return  questionSearchService.submitVoteRecord(answerRecord,answerRecord.getId());
     }
     /**
