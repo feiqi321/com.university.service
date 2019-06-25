@@ -230,27 +230,30 @@ public class TeacherServiceImpl implements TeacherService {
         courseList.forEach(courseVo -> {
             Integer courseId = courseVo.getCourseId();
             //0.可以报名的人数
-            //查询专业接受报名的人数
-            int acceptNum = eduCourseMapper.queryAcceptNum(courseId);
-
-            if (acceptNum == 0) {
-                courseVo.setNowtotal(acceptNum);
+            if(courseVo.getPeopleNumber() == null) {
+                courseVo.setNowtotal(0);
             } else {
-                //查询用户所对应的专业显示已经购买人数
-                Map<String, Object> param = new HashMap<>();
-                param.put("course_id", courseId);
-                param.put("payment_status", OrderStatus.PAY);
+                //查询专业接受报名的人数
+                int acceptNum = eduCourseMapper.queryAcceptNum(courseId);
+                if (acceptNum == 0) {
+                    courseVo.setNowtotal(acceptNum);
+                } else {
+                    //查询用户所对应的专业显示已经购买人数
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("course_id", courseId);
+                    param.put("payment_status", OrderStatus.PAY);
 
-                int olineNum = orderMapper.countPayCourseNum(param);
+                    int olineNum = orderMapper.countPayCourseNum(param);
 
-                //查询用户所对应的专业线下的总人数
-                Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
+                    //查询用户所对应的专业线下的总人数
+                    Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
 
-                //得到最终报名人数
-                Integer payNum = olineNum + offNum;
-                //可报名剩余人数
-                int nowtotal = acceptNum - payNum;
-                courseVo.setNowtotal(nowtotal>=0 ? nowtotal:0);
+                    //得到最终报名人数
+                    Integer payNum = olineNum + offNum;
+                    //可报名剩余人数
+                    int nowtotal = acceptNum - payNum;
+                    courseVo.setNowtotal(nowtotal>=0 ? nowtotal:0);
+                }
             }
         });
         PageInfo pageInfo = new PageInfo<>(courseList);
