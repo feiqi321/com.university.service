@@ -469,6 +469,9 @@
             AND p.course_name like CONCAT('%',#{search},'%')
         </if>
     </select>
+    <select id="findCourseImage" parameterType="int" resultType="com.ovft.configure.sys.bean.VateType">
+        select type_name as typeName,image as image from edu_vate_type where vid=#{vid}
+    </select>
 
 
 </mapper>

@@ -79,6 +79,8 @@ public interface QuestionSearchMapper {
     public void updateVoteItem(@Param("num") int num,@Param("id") Integer id);
     //修改投票对应选项
     public void updateSearchQuestionStatues(Integer status,Integer sid);
+    //获取教师评价所有课程的默认图片
+    public VateType findCourseImage(Integer vid);
 
 
 
