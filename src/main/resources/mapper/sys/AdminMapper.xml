@@ -67,7 +67,8 @@
 
     <select id="selectByAdminList"  resultType="com.ovft.configure.sys.vo.AdminVo">
         select
-        a.admin_id adminId, a.name, a.phone, a.image, t.role, t.school_id schoolId, s.school_name as schoolName
+        a.admin_id adminId, a.name, a.phone, a.image, t.role, t.school_id schoolId, s.school_name as schoolName,
+        t.sex, t.resume, t.books, t.comments, t.post
         from edu_admin a
         LEFT JOIN edu_admin_school t on a.admin_id = t.admin_id
         LEFT JOIN edu_school s on t.school_id = s.school_id
@@ -88,7 +89,8 @@
 
     <select id="selectByAdminAndSchool"  resultType="com.ovft.configure.sys.vo.AdminVo">
         select
-        a.admin_id adminId, a.name, a.phone, a.image, t.role, t.school_id schoolId, s.school_name as schoolName
+        a.admin_id adminId, a.name, a.phone, a.image, t.role, t.school_id schoolId, s.school_name as schoolName,
+        t.sex, t.resume, t.books, t.comments, t.post
         from edu_admin a
         LEFT JOIN edu_admin_school t on a.admin_id = t.admin_id
         LEFT JOIN edu_school s on t.school_id = s.school_id
@@ -112,19 +114,20 @@
         where a.phone = #{phone}
     </select>
 
-    <insert id="createAdminSchool" parameterType="com.ovft.configure.sys.bean.Admin" useGeneratedKeys="true" keyProperty="id">
-         insert into edu_admin_school(school_id, admin_id, role)
-         values (#{schoolId}, #{adminId}, #{role})
+    <insert id="createAdminSchool" parameterType="com.ovft.configure.sys.vo.AdminVo" useGeneratedKeys="true" keyProperty="id">
+         insert into edu_admin_school(school_id, admin_id, role, sex, resume, books, comments, post)
+         values (#{schoolId}, #{adminId}, #{role}, #{sex}, #{resume}, #{books}, #{comments}, #{post})
     </insert>
 
     <update id="updateAdminSchool" parameterType="com.ovft.configure.sys.bean.Admin">
         update edu_admin_school
         <set>
-            <if test="role != null">
-                role = #{role},
-            </if>
+            role = #{role},sex = #{sex}, resume = #{resume}, books = #{books}, comments = #{comments}, post = #{post}, school_id = #{schoolId}
         </set>
-        where admin_id = #{adminId} and school_id = #{schoolId}
+        where admin_id = #{adminId}
+        <if test="role == 2">
+            and school_id = #{schoolId}
+        </if>
     </update>
 
     <delete id="deleteAdminSchool" parameterType="java.lang.Integer">
