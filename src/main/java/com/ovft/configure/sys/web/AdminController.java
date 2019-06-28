@@ -238,6 +238,7 @@ public class AdminController {
                 }else {
                     userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
                 }
+                return new WebResult("200","拒绝成功","");
             }else{
                 userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
 //        userService.deleteWithdraw(wid);
@@ -249,7 +250,7 @@ public class AdminController {
         }else {
             return new WebResult("50012", "请先登录", "");
         }
-        return null;
+
 //        userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
 //
 ////        userService.deleteWithdraw(wid);

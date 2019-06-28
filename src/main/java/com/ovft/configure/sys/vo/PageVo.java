@@ -16,6 +16,8 @@ public class PageVo {
 
     private int pageSize;
 
+    private int phone;    //用户手机号码
+
     private int pageNum;
 
     private String search;
@@ -41,6 +43,14 @@ public class PageVo {
     private Integer topId;
 
     private Integer downId;
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
 
     public Integer getTopId() {
         return topId;

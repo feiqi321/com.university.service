@@ -189,11 +189,12 @@
         from  edu_user u
         left join edu_user_item i on u.user_id = i.user_id
         where 1 =1
+
         <if test="schoolId != null">
             and i.school_id = #{schoolId}
         </if>
         <if test="search != null and search != ''">
-            AND user_name like CONCAT('%',#{search},'%')
+            AND u.user_name like CONCAT('%',#{search},'%') or u.phone like CONCAT('%',#{search},'%'))
         </if>
     </select>
     <!--查询用户注销申请记录-->

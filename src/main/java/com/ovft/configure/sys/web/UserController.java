@@ -226,6 +226,9 @@ public class UserController {
     @GetMapping(value = "/selectWithdraw")
     public WebResult selectWithdraw(HttpServletRequest request) {
         String userId = request.getHeader("userId");
+        if(userId==""||userId==null){
+            return new WebResult("400","","未获取到用户ID");
+        }
         WithdrawVo withdrawOne = userService.selectWithdrawOne(Integer.parseInt(userId));
         if (withdrawOne==null){
            return new WebResult("400","您尚未申请注销","");

@@ -365,6 +365,7 @@ public class UserServiceImpl implements UserService {
             userMapper.updateEduUserUsername(user);//使edu_user表里面与edu_user_Item表的user_name字段保持一致
             return new WebResult("200", "保存成功", "");
         } else {
+            user.setCheckin(1);
             userMapper.updateInfoItems(user);
             userMapper.updateEduUserUsername(user);//使edu_user表里面与edu_user_Item表的user_name字段保持一致
             return new WebResult("200", "修改成功", "");
