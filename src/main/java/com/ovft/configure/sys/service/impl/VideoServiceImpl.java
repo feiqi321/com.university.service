@@ -180,6 +180,9 @@ public class VideoServiceImpl implements VideoService {
     public WebResult myVideoLearn(Integer videoId, Integer userId) {
         List<MyVideo> myVideos = videoMapper.selectMyVideo(userId, videoId);
         List<VideoItem> videoItemList = videoMapper.selectItemList(videoId);
+        if(videoItemList.size() == 0) {
+            return new WebResult("400", "暂无视频", "");
+        }
         Video video = videoMapper.selectById(videoId);
         if(myVideos.size() == 0) {
             if(video.getIsFree().equals(1)) {

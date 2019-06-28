@@ -32,6 +32,7 @@ public interface AdminMapper {
      */
     public List<AdminVo> selectByAdminAndSchool(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId, @Param("role") Integer role);
 
+    //查找管理员列表
     public List<AdminVo> selectByAdminList(@Param("adminId") Integer adminId, @Param("schoolId") Integer schoolId, @Param("role") Integer role);
 
     public void creatAdmin(Admin admin);
@@ -40,13 +41,13 @@ public interface AdminMapper {
      * 添加admin子表
      * @param admin
      */
-    public void createAdminSchool(Admin admin);
+    public void createAdminSchool(AdminVo admin);
 
     public void updateByPassword(@Param("adminId") Integer adminId, @Param("password") String password);
 
     public void updateByPrimary(Admin admin);
 
-    public void updateAdminSchool(Admin admin);
+    public void updateAdminSchool(AdminVo admin);
 
     public void deleteById(@Param("adminId") Integer adminId);
 

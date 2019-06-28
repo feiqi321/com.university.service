@@ -257,8 +257,8 @@ public class AdminServiceImpl implements AdminService {
             if (admin.getSchoolId() == null) {
                 return new WebResult("400", "请选择学校", "");
             }
-            //添加人员（role = 2,3）时角色列表不能为空
-            if(admin.getRole().equals(2) || admin.getRole().equals(3)){
+            //添加人员（role = 3）时角色列表不能为空
+            if(admin.getRole().equals(3)){
                 if(admin.getRoleIds() == null || admin.getRoleIds().length == 0) {
                     return new WebResult("400", "请选择角色", "");
                 }
@@ -269,17 +269,18 @@ public class AdminServiceImpl implements AdminService {
         Admin adminPhone = adminMapper.selectByPhone(admin.getPhone());
         //添加管理员
         if(admin.getAdminId() == null) {
+            //初始密码为000000
+            String password = "000000";
+            if(!StringUtils.isBlank(admin.getPassword())) {
+                password = admin.getPassword();
+            }
+            admin.setPassword(MD5Utils.md5Password(password));
             //查询该手机号是否已经存在
             if (adminPhone == null) {
-                //初始密码为000000
-                String password = "000000";
-                if(!StringUtils.isBlank(admin.getPassword())) {
-                    password = admin.getPassword();
-                }
-                admin.setPassword(MD5Utils.md5Password(password));
                 adminMapper.creatAdmin(admin);
             } else {
                 admin.setAdminId(adminPhone.getAdminId());
+                adminMapper.updateByPrimary(admin);
             }
         } else {
             //查询该手机号是否已经存在
@@ -292,14 +293,19 @@ public class AdminServiceImpl implements AdminService {
             adminMapper.updateByPrimary(admin);
         }
         addAdminSchool(admin);
-        if(admin.getRole().equals(2) || admin.getRole().equals(3)){
+        if(admin.getRole().equals(3)){
             roleService.addAdminRole(admin.getRoleIds(), admin.getAdminId(), admin.getSchoolId());
         }
         return new WebResult("200", "操作成功", "");
     }
 
-    public void addAdminSchool(Admin admin) {
-        List<AdminVo> maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), admin.getSchoolId(), null);
+    public void addAdminSchool(AdminVo admin) {
+        List<AdminVo> maps;
+        if(admin.getRole() != 2) {
+            maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), null, null);
+        } else {
+            maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), admin.getSchoolId(), null);
+        }
         if(maps.size() == 0) {
             adminMapper.createAdminSchool(admin);
         } else {
