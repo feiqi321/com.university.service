@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName ActivitiesServiceImpl
@@ -33,12 +34,20 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     @Override
     public WebResult activitiesList(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
-            List<Activities> courseList = activitiesMapper.selectActivitiesList(pageVo);
-            return new WebResult("200", "查询成功", courseList);
+            List<Activities> activitiesList = activitiesMapper.selectActivitiesList(pageVo);
+            activitiesList.forEach(activities -> {
+                Integer integer = activitiesMapper.registCount(activities.getActivitiesId());
+                activities.setRegistNum(integer);
+            });
+            return new WebResult("200", "查询成功", activitiesList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-        List<Activities> courseList = activitiesMapper.selectActivitiesList(pageVo);
-        PageInfo pageInfo = new PageInfo<>(courseList);
+        List<Activities> activitiesList = activitiesMapper.selectActivitiesList(pageVo);
+        activitiesList.forEach(activities -> {
+            Integer integer = activitiesMapper.registCount(activities.getActivitiesId());
+            activities.setRegistNum(integer);
+        });
+        PageInfo pageInfo = new PageInfo<>(activitiesList);
 
         return new WebResult("200", "查询成功", pageInfo);
     }
@@ -113,5 +122,11 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     public WebResult deleteActivities(Integer activitiesId) {
         activitiesMapper.deleteActivities(activitiesId);
         return new WebResult("200", "删除成功", "");
+    }
+
+    @Override
+    public WebResult registList(Integer activitiesId) {
+        List<Map<String, Object>> maps = activitiesMapper.registList(activitiesId);
+        return new WebResult("200", "查询成功", maps);
     }
 }

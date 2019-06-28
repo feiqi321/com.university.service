@@ -14,4 +14,5 @@ public interface ActivitiesService {
 
     public WebResult deleteActivities(Integer activitiesId);
 
+    public WebResult registList(Integer activitiesId);
 }

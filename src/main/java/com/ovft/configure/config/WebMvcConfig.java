@@ -1,3 +1,4 @@
+/*
 package com.ovft.configure.config;
 
 import com.ovft.configure.interceptor.CorsInterceptor;
@@ -9,16 +10,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import javax.annotation.Resource;
 
+*/
 /**
  * Created by looyer on 2019/3/20.
- */
+ *//*
+
+
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Resource
     private CorsInterceptor corsInterceptor;
 
-    @Bean
+   @Bean
     public PassportInterceptor passportInterceptor() {
         return new PassportInterceptor();
     }
@@ -38,3 +42,5 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     }
 
 }
+
+*/

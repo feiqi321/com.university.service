@@ -145,12 +145,22 @@ public class ActivitiesController {
 
     /**
      * 删除 我报名的活动
-     * @param id
+     * @param activitiesId
      * @return
      */
     @GetMapping(value = "/deleteMyActivities")
-    public WebResult deleteMyActivities(@RequestParam(value = "id") Integer id) {
-        return myActivitiesService.deleteMyActivitiesPc(id);
+    public WebResult deleteMyActivities(@RequestParam(value = "activitiesId") Integer activitiesId) {
+        return myActivitiesService.deleteMyActivitiesPc(activitiesId);
+    }
+
+    /**
+     *活动报名列表
+     * @param activitiesId
+     * @return
+     */
+    @GetMapping(value = "/registList")
+    public WebResult registList(@RequestParam(value = "activitiesId") Integer activitiesId) {
+        return activitiesService.registList(activitiesId);
     }
 
 }

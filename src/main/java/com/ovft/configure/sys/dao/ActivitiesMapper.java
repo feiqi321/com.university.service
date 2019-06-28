@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName ActivitiesMapper
@@ -24,4 +25,10 @@ public interface ActivitiesMapper {
     public void updateActivities(Activities activities);
 
     public void deleteActivities(@Param("activitiesId") Integer activitiesId);
+
+    //查找报名人数
+    public Integer registCount(@Param("activitiesId") Integer activitiesId);
+
+    //活动报名列表
+    public List<Map<String, Object>> registList(@Param("activitiesId") Integer activitiesId);
 }

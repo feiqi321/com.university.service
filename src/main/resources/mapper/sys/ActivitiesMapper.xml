@@ -109,4 +109,15 @@
         delete from edu_activities where activities_id = #{activitiesId}
     </delete>
 
+    <select id="registCount"  resultType="java.lang.Integer">
+        select COUNT(*) from edu_my_activities WHERE activities_id = #{activitiesId}
+    </select>
+
+    <select id="registList"  resultType="java.util.Map">
+        select m.user_id userId, u.user_name userName, u.phone, m.regist_time registTime
+        from edu_my_activities m
+        LEFT JOIN edu_user u on m.user_id = u.user_id
+        WHERE m.activities_id = #{activitiesId}
+    </select>
+
 </mapper>
