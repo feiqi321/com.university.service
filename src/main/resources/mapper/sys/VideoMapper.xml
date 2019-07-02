@@ -124,4 +124,11 @@
         </if>
     </select>
 
+    <select id="myLearnList"  resultType="com.ovft.configure.sys.bean.Video">
+        SELECT v.video_id videoId, v.title, v.teacher, v.content, v.visits, v.is_free isFree, v.cover, v.price, v.act_price actPrice
+        from edu_my_video m
+        LEFT JOIN edu_video v on m.video_id = v.video_id
+        where m.user_id = #{userId}
+    </select>
+
 </mapper>

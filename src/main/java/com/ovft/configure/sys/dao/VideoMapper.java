@@ -49,4 +49,6 @@ public interface VideoMapper {
     public void updateMyVideo(MyVideo myVideo);
 
     public List<MyVideo> selectMyVideo(@Param("userId") Integer userId, @Param("videoId") Integer videoId);
+
+    public List<MyVideo> myLearnList(@Param("userId") Integer userId);
 }

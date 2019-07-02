@@ -204,7 +204,7 @@ public class VideoServiceImpl implements VideoService {
     //我的视频
     @Override
     public WebResult myLearnList(Integer userId) {
-        List<MyVideo> myVideos = videoMapper.selectMyVideo(userId, null);
+        List<MyVideo> myVideos = videoMapper.myLearnList(userId);
         return new WebResult("200", "查询成功", myVideos);
     }
 
