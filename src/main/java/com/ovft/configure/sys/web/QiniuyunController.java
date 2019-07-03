@@ -53,6 +53,17 @@ public class QiniuyunController {
     private String filePrefix;
 
     /**
+     * 后端返回的上传验证信息
+     * @return
+     */
+    @PostMapping(value = "/getToken")
+    public WebResult getToken() {
+        Auth auth = Auth.create(accessKey, secretKey);
+        String upToken = auth.uploadToken(bucket);
+        return new WebResult("200", "成功", upToken);
+    }
+
+    /**
      *  app端  图片上传
      * @return
      */

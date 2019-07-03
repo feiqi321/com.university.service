@@ -300,12 +300,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public void addAdminSchool(AdminVo admin) {
-        List<AdminVo> maps;
-        if(admin.getRole() != 2) {
-            maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), null, null);
-        } else {
-            maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), admin.getSchoolId(), null);
-        }
+        List<AdminVo> maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), admin.getSchoolId(), null);
         if(maps.size() == 0) {
             adminMapper.createAdminSchool(admin);
         } else {
