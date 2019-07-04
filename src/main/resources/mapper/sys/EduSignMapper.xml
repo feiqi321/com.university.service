@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduSignMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduSign">
+		<id column="sign_id" property="signId" />
+		<result column="user_id" property="userId" />
+		<result column="sign_time" property="signTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        sign_id AS signId, user_id AS userId, sign_time AS signTime
+    </sql>
+
+	<select id="selectLastByUserId"  resultType="com.ovft.configure.sys.bean.EduSign">
+		select
+		<include refid="Base_Column_List"/>
+		FROM edu_sign
+		WHERE date(sign_time) = curdate()
+		and user_id = #{userId}
+	</select>
+
+	<select id="selectMonthCount"  resultType="java.lang.Integer">
+		select count(*)
+		FROM edu_sign
+		WHERE date_format(sign_time,'%Y-%m')=date_format(now(),'%Y-%m')
+		and user_id = #{userId}
+	</select>
+
+	<insert id="createSign" parameterType="com.ovft.configure.sys.bean.EduSign" useGeneratedKeys="true"
+			keyProperty="signId">
+        insert into edu_sign(user_id, sign_time)
+         values (#{userId}, #{signTime})
+    </insert>
+
+</mapper>

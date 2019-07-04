@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.EduFlowersMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduFlowers">
+		<id column="flower_id" property="flowerId" />
+		<result column="user_id" property="userId" />
+		<result column="title" property="title" />
+		<result column="type" property="type" />
+		<result column="type_id" property="typeId" />
+		<result column="acquire" property="acquire" />
+		<result column="total_count" property="totalCount" />
+		<result column="time" property="time" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        flower_id AS flowerId, user_id AS userId, title, type, type_id AS typeId, acquire, total_count AS totalCount, time
+    </sql>
+
+	<select id="selectTotalFlower" resultType="java.lang.Integer">
+		SELECT total_count
+		FROM edu_flowers
+		WHERE user_id = #{userId}
+		ORDER BY flower_id DESC
+		LIMIT 0,1
+	</select>
+
+	<select id="selectListByUserId"  resultType="com.ovft.configure.sys.bean.EduFlowers">
+		select
+		<include refid="Base_Column_List"/>
+		FROM edu_flowers
+		WHERE user_id = #{userId}
+		ORDER BY flower_id DESC
+	</select>
+
+	<insert id="createFlower" parameterType="com.ovft.configure.sys.bean.EduFlowers" useGeneratedKeys="true"
+			keyProperty="flowerId">
+        insert into edu_flowers(user_id, title, type, type_id, acquire, total_count, time)
+         values (#{userId}, #{title}, #{type}, #{typeId}, #{acquire}, #{totalCount}, #{time})
+    </insert>
+
+</mapper>
