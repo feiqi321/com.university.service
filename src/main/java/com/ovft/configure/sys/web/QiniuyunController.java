@@ -3,9 +3,11 @@ package com.ovft.configure.sys.web;
 import com.google.gson.Gson;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Base64File;
+import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.service.FileDownService;
 import com.ovft.configure.sys.service.TeacherService;
+import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.service.impl.BASE64DecodedMultipartFile;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -41,6 +43,8 @@ public class QiniuyunController {
 
     @Autowired
     FileDownService fileDownService;
+    @Autowired
+    UserService userService;
 
     //...生成上传凭证，然后准备上传
     @Value("${qiniuyun.accessKey}")
@@ -49,8 +53,6 @@ public class QiniuyunController {
     private String secretKey;
     @Value("${qiniuyun.bucket}")
     private String bucket;
-    @Value("${qiniuyun.filePrefix}")
-    private String filePrefix;
 
     /**
      * 后端返回的上传验证信息
@@ -70,20 +72,44 @@ public class QiniuyunController {
     @RequestMapping(value = "/uploadAppImage", method = RequestMethod.POST)
     public WebResult upload(@RequestBody Base64File base64File, HttpServletRequest request) {
         MultipartFile file = BASE64DecodedMultipartFile.base64Convert(base64File.getContent());
-        return uploadFile(request, file);
+        return uploadFile(request, file, "");
+    }
+
+    /**
+     *  头像上传
+     * @return
+     */
+    @RequestMapping(value = "/headImage", method = RequestMethod.POST)
+    public WebResult headImage(@RequestBody Base64File base64File, HttpServletRequest request) {
+        MultipartFile file = BASE64DecodedMultipartFile.base64Convert(base64File.getContent());
+        WebResult webResult = uploadFile(request, file, "head/");
+        if(webResult.getCode().equals("200")) {
+            String userId1 = request.getHeader("userId");
+            Integer userId = Integer.parseInt(userId1);
+
+            User user = new User();
+            user.setImage((String) webResult.getData());
+            user.setUserId(userId);
+            userService.updateAddress(user);
+        }
+        return webResult;
     }
 
     /**
      * 文件上传
      * @param file
      * @return
+     * 学校轮播图上传   schoolImages/   学校轮播图，学校校徽
+     * 活动图片         activity/
+     *
+     *
      */
     @PostMapping(value = "/videoImport")
-    public WebResult courseListImport(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
-        return uploadFile(request, file);
+    public WebResult courseListImport(HttpServletRequest request, @RequestParam("file") MultipartFile file, @RequestParam("filePrefix") String filePrefix) {
+        return uploadFile(request, file, filePrefix);
     }
 
-    private WebResult uploadFile(HttpServletRequest request, MultipartFile file) {
+    private WebResult uploadFile(HttpServletRequest request, MultipartFile file, String filePrefix) {
         String token = request.getHeader("token");
         if(file == null) {
             return new WebResult("400", "请上传文件", "");
