@@ -26,7 +26,7 @@ public class PageVo {
 
     private Integer schoolId;
 
-    private int checkin;
+    private Integer checkin;
 
     private Integer wid;
 
@@ -239,14 +239,12 @@ public class PageVo {
         this.isenable = isenable;
     }
 
-
-
-    public void setCheckin(int checkin) {
-        this.checkin = checkin;
+    public Integer getCheckin() {
+        return checkin;
     }
 
-    public int getCheckin() {
-        return checkin;
+    public void setCheckin(Integer checkin) {
+        this.checkin = checkin;
     }
 
     public Integer getWid() {
