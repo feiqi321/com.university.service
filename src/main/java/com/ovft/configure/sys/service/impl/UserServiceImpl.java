@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
         if (user1==null){   //*****在用户只注册没有报名的时候
             String pasword = MD5Utils.md5Password(user.getPassword());
             if (!pasword.equals(finduserbyphone.getPassword())) {
-                return new WebResult("400", "帐号或密码错误");
+                return new WebResult("400", "输入的密码不正确！");
             }
             //如果不存在，则返回finduserbyphone
             map.put("user", finduserbyphone);
@@ -144,13 +144,13 @@ public class UserServiceImpl implements UserService {
             boolean b = redisUtil.hasKey(token);
             map.put("token",token) ;
 
-            //单点登录功能 single sign on   SSO     ===>>在用户只注册没有报名的时候
-            Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
-            if(hget != null) {
-                String oldToken = (String) hget;
-                redisUtil.delete(oldToken);
-            }
-            redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString(), token);
+//            //单点登录功能 single sign on   SSO     ===>>在用户只注册没有报名的时候
+//            Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
+//            if(hget != null) {
+//                String oldToken = (String) hget;
+//                redisUtil.delete(oldToken);
+//            }
+//            redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString(), token);
             return new WebResult("200", "登录成功", map);
         }
 
@@ -171,20 +171,20 @@ public class UserServiceImpl implements UserService {
         if (!isSet) {
             return new WebResult("400", "登录失败");
         }
-        //存放用户信息
-        boolean bo = redisUtil.hset(ConstantClassField.USER_INFO, finduserbyphone.getUserId().toString(), finduserbyphone);
-        boolean b = redisUtil.hasKey(token);
+//        //存放用户信息
+//        boolean bo = redisUtil.hset(ConstantClassField.USER_INFO, finduserbyphone.getUserId().toString(), finduserbyphone);
+//        boolean b = redisUtil.hasKey(token);
 
         map.put("token",token) ;
 
-        //单点登录功能 single sign on   SSO
-        Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
-
-        if(hget != null) {
-            String oldToken = (String) hget;
-            redisUtil.delete(oldToken);
-        }
-        redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString(), token);
+//        //单点登录功能 single sign on   SSO
+//        Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
+//
+//        if(hget != null) {
+//            String oldToken = (String) hget;
+//            redisUtil.delete(oldToken);
+//        }
+//        redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString(), token);
 
 
 
@@ -368,6 +368,7 @@ public class UserServiceImpl implements UserService {
             user.setCheckin(1);
             userMapper.updateInfoItems(user);
             userMapper.updateEduUserUsername(user);//使edu_user表里面与edu_user_Item表的user_name字段保持一致
+
             return new WebResult("200", "修改成功", "");
         }
     }

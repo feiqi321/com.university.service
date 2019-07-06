@@ -36,10 +36,10 @@ public class ApproveServiceImpl implements ApproveService {
     @Override
     public WebResult approve(Integer userId, Integer typeId, Integer type) {
         //每天只能点赞一次
-        Approve findApprove = approveMapper.selectByType(userId, typeId, type);
+        Approve approve = approveMapper.selectByType(userId, typeId, type);
 
-        Approve approve=new Approve();
-        if(findApprove == null) {
+        if(approve == null) {
+            approve=new Approve();
             approve.setUserId(userId);
             approve.setType(type);
             approve.setTypeId(typeId);
@@ -50,13 +50,13 @@ public class ApproveServiceImpl implements ApproveService {
             //判断两个Date是不是同一天
 //            SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 //            boolean equals = fmt.format(approve.getDate()).equals(fmt.format(new Date()));
-            boolean samedate = DateUtils.isSameDay(findApprove.getDate(), new Date());
+            boolean samedate = DateUtils.isSameDay(approve.getDate(), new Date());
             if(samedate) {
                 return new WebResult("400", "今天已点过赞了哟！", "");
             }
-            findApprove.setDate(new Date());
-            findApprove.setCount(approve.getCount() + 1);
-            approveMapper.updateApproveCount(findApprove);
+            approve.setDate(new Date());
+            approve.setCount(approve.getCount() + 1);
+            approveMapper.updateApproveCount(approve);
         }
         //todo   待添加各种类型的点赞总数
         //类型 1-精品课程， 2-学员风采， 3-教师风采

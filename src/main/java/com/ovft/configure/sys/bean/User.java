@@ -116,6 +116,16 @@ public class User {
     private String schoolJob;
     //备注
     private String remark;
+    //年龄
+    private Integer age;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
 
     public String getAreaId() {
         return areaId;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.UserClassMapper" >
+       <!--学员班级列表-->
+      <select id="userClassList" parameterType="com.ovft.configure.sys.bean.UserClass" resultType="com.ovft.configure.sys.bean.UserClass">
+          select c.class_id classId,c.class_name className,c.class_no classNo,c.job job,c.specialty specialty,
+          c.course_id courseId, c.remark remark from edu_user_class c
+          where 1=1
+          <if test="classId != null">
+              AND class_id = #{classId}
+          </if>
+          <if test="className != null and className !=''">
+              AND class_name = #{className}
+          </if>
+          <if test="classNo != null and classNo !=''">
+              AND class_no = #{classNo}
+          </if>
+          <if test="job != null and job !=''">
+              AND job = #{job}
+          </if>
+          <if test="courseId != null">
+              AND course_id = #{courseId}
+          </if>
+          <if test="job != null and job !=''">
+              AND specialty = #{specialty}
+          </if>
+       </select>
+
+
+
+</mapper>

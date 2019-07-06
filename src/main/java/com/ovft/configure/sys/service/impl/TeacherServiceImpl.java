@@ -7,6 +7,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
+import com.ovft.configure.sys.utils.AgeUtil;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.SecurityUtils;
 import com.ovft.configure.sys.vo.AdminVo;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -230,7 +233,7 @@ public class TeacherServiceImpl implements TeacherService {
         courseList.forEach(courseVo -> {
             Integer courseId = courseVo.getCourseId();
             //0.可以报名的人数
-            if(courseVo.getPeopleNumber() == null) {
+            if (courseVo.getPeopleNumber() == null) {
                 courseVo.setNowtotal(0);
             } else {
                 //查询专业接受报名的人数
@@ -252,7 +255,7 @@ public class TeacherServiceImpl implements TeacherService {
                     Integer payNum = olineNum + offNum;
                     //可报名剩余人数
                     int nowtotal = acceptNum - payNum;
-                    courseVo.setNowtotal(nowtotal>=0 ? nowtotal:0);
+                    courseVo.setNowtotal(nowtotal >= 0 ? nowtotal : 0);
                 }
             }
         });
@@ -314,6 +317,32 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
+     * 根据身份证号获取年龄
+     * @param certId
+     * @return
+     */
+    public static int getAgeByCertId(String certId) {
+        String birthday = "";
+        if (certId.length() == 18) {
+            birthday = certId.substring(6, 10) + "/"
+                    + certId.substring(10, 12) + "/"
+                    + certId.substring(12, 14);
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date now = new Date();
+        Date birth = new Date();
+        try {
+            birth = sdf.parse(birthday);
+        } catch (ParseException e) {
+        }
+        long intervalMilli = now.getTime() - birth.getTime();
+        int age = (int) (intervalMilli/(24 * 60 * 60 * 1000))/365;
+        System.out.println(age);
+        return age;
+    }
+
+
+    /**
      * 学员列表
      *
      * @return
@@ -322,31 +351,21 @@ public class TeacherServiceImpl implements TeacherService {
     public WebResult userList(PageVo pageVo) {
 
         if (pageVo.getPageSize() == 0) {
-            List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
-            return new WebResult("200", "查询成功", users);
-        }
-
-        //筛选查询（按checkin条件进行查询）
-        if (pageVo.getCheckin() == null) {
-            PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-            List<User> users = teacherMapper.selectUserList(pageVo.getSchoolId(), null);
-
-            PageInfo pageInfo = new PageInfo<>(users);
-            return new WebResult("200", "查询成功", pageInfo);
-        } else {
-            User user = new User();
-            user.setSchoolId(pageVo.getSchoolId());
-            user.setCheckin(pageVo.getCheckin());
-            if (user.getSchoolId() == null) {
-                List<User> user1 = userMapper.findUserByCheckin(user);
-                PageInfo pageInfo = new PageInfo<>(user1);
-                return new WebResult("200", "查询成功", pageInfo);
+            List<User> users = teacherMapper.selectUserList(pageVo);
+            for (int i = 0; i < users.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
+                String card=users.get(i).getIdentityCard();
+                int age = TeacherServiceImpl.getAgeByCertId(card);
+                users.get(i).setAge(age);
             }
-            List<User> users2 = userMapper.findUserByCheckinAndSchoolId(user);
-            PageInfo pageInfo = new PageInfo<>(users2);
-            return new WebResult("200", "查询成功", pageInfo);
+                return new WebResult("200", "查询成功", users);
+            } else {
 
-        }
+                PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+                List<User> users2 = teacherMapper.selectUserList(pageVo);
+                PageInfo pageInfo = new PageInfo<>(users2);
+                return new WebResult("200", "查询成功", pageInfo);
+
+            }
 
     }
 
@@ -413,6 +432,13 @@ public class TeacherServiceImpl implements TeacherService {
     public WebResult deleteVacate(Integer vacateId) {
         teacherMapper.deleteVacate(vacateId);
         return new WebResult("200", "删除成功", "");
+    }
+
+    @Transactional
+    @Override
+    public WebResult bigAuditUser(int[] userIds) {
+        teacherMapper.bigAuditUser(userIds);
+        return new WebResult("200", "操作成功", "");
     }
 
     /**

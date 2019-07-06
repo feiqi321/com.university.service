@@ -42,7 +42,7 @@ public interface QuestionSearchMapper {
     //删除相关的 投票题目及选项
     public void deleteVoteItembyId(Integer sid);
     //问卷调查列表
-    public List<SearchQuestion> findSearchQuestionAll(@Param("sid")Integer sid,@Param("topId")Integer topId,@Param("downId")Integer downId, @Param("schoolId")Integer schoolId,@Param("tid")Integer tid,@Param("search") String search);
+    public List<SearchQuestion> findSearchQuestionAll(@Param("sid")Integer sid,@Param("topId")Integer topId,@Param("downId")Integer downId, @Param("schoolId")Integer schoolId,@Param("tid")Integer tid,@Param("courseId")Integer courseId,@Param("search") String search);
     //问卷调查题目列表
     public List<Question> findQuestionAll(@Param("sid")Integer sid,@Param("tid")Integer tid,@Param("topId")Integer topId,@Param("downId")Integer downId,@Param("search") String search);
     //问卷调查列表包含选项分数的
@@ -81,8 +81,8 @@ public interface QuestionSearchMapper {
     public void updateSearchQuestionStatues(Integer status,Integer sid);
     //获取教师评价所有课程的默认图片
     public VateType findCourseImage(Integer vid);
-
-
+    //通过courseId获取edu_search_question表对应的试卷题目记录
+    public List<SearchQuestion> findSearchQuestionByCourseId(Integer courseId);
 
 
 

@@ -9,11 +9,13 @@ import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
+import com.ovft.configure.sys.vo.UserVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @ClassName TeacherController
@@ -174,7 +176,19 @@ public class TeacherController {
         return teacherService.updateCheckIn(userId,checkin);
     }
     /**
-     * 学员注销审核状态更改
+     * 后台（学员）一键审核通过
+     *
+     * 状态说明   "0"：通过，"1"待审核，"2"拒绝
+     * @return
+     */
+    @PostMapping(value = "/bigAuditUser")
+    public WebResult bigAuditUser(@RequestBody UserVo userVo){
+
+
+        return teacherService.bigAuditUser(userVo.getUserIds());
+    }
+    /**
+     * 学员"注销"审核状态更改
      * 状态说明   "0"：通过，"1"待审核，"2"拒绝
      * @return
      */

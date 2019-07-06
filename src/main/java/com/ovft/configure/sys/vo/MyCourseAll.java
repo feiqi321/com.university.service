@@ -42,6 +42,18 @@ public class MyCourseAll  {
      * 教师评价图片
      */
     private String courseImage;
+    /**
+     * 课程id
+     */
+    private int courseId;
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 
     public String getCourseImage() {
         return courseImage;

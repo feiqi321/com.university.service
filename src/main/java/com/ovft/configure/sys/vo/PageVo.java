@@ -26,7 +26,7 @@ public class PageVo {
 
     private Integer schoolId;
 
-    private Integer checkin;
+    private int checkin;
 
     private Integer wid;
 
@@ -43,6 +43,106 @@ public class PageVo {
     private Integer topId;
 
     private Integer downId;
+
+    private Integer courseId;
+
+    private  String employer;    //人员(学员)分类
+
+    private  String retired;  //退休状态
+
+    private  String sex;
+
+    private  String political;   //政治面貌
+
+    private String educational;  // 文化程度
+
+    private String  volunteer;    //是否是志愿者
+
+    private Integer startAge;        //开始年龄
+
+    private Integer afterAge;        //截止年龄
+
+    private Integer payStatus;      //支付状态
+
+    public Integer getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(Integer payStatus) {
+        this.payStatus = payStatus;
+    }
+
+    public Integer getStartAge() {
+        return startAge;
+    }
+
+    public Integer getAfterAge() {
+        return afterAge;
+    }
+
+    public void setStartAge(Integer startAge) {
+        this.startAge = startAge;
+    }
+
+    public void setAfterAge(Integer afterAge) {
+        this.afterAge = afterAge;
+    }
+
+    public String getEmployer() {
+        return employer;
+    }
+
+    public String getRetired() {
+        return retired;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public String getPolitical() {
+        return political;
+    }
+
+    public String getEducational() {
+        return educational;
+    }
+
+    public String getVolunteer() {
+        return volunteer;
+    }
+
+    public void setEmployer(String employer) {
+        this.employer = employer;
+    }
+
+    public void setRetired(String retired) {
+        this.retired = retired;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public void setPolitical(String political) {
+        this.political = political;
+    }
+
+    public void setEducational(String educational) {
+        this.educational = educational;
+    }
+
+    public void setVolunteer(String volunteer) {
+        this.volunteer = volunteer;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
 
     public int getPhone() {
         return phone;
@@ -139,12 +239,14 @@ public class PageVo {
         this.isenable = isenable;
     }
 
-    public Integer getCheckin() {
-        return checkin;
+
+
+    public void setCheckin(int checkin) {
+        this.checkin = checkin;
     }
 
-    public void setCheckin(Integer checkin) {
-        this.checkin = checkin;
+    public int getCheckin() {
+        return checkin;
     }
 
     public Integer getWid() {

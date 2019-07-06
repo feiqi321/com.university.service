@@ -47,7 +47,7 @@ public interface TeacherMapper {
     //根据id 删除请假申请
     public void deleteVacate(@Param("vacateId") Integer vacateId);
 
-    public List<User> selectUserList(@Param("schoolId") Integer schoolId, @Param("search") String search);
+    public List<User> selectUserList(@Param("pageVo") PageVo pageVo);
 
     public List<User> selectWithdrawList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
@@ -56,4 +56,7 @@ public interface TeacherMapper {
     public void updateWithdrawCheckIn(@Param("wid") Integer wid,@Param("checkin") Integer checkin);
 
     public List<EduCourse> shelvesCourse(Date date);
+
+    //学员一键审核通过
+    public void bigAuditUser(@Param("userIds")int [] userIds);
 }

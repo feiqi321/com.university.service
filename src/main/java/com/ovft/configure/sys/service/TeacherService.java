@@ -38,4 +38,6 @@ public interface TeacherService {
     public WebResult updateIsenable(EduCourseVo course);
 
     public WebResult deleteVacate(Integer vacateId);
+    //学员一键审核通过
+    public WebResult bigAuditUser(int [] userIds);
 }
