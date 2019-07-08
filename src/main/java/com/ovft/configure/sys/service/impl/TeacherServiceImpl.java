@@ -54,6 +54,9 @@ public class TeacherServiceImpl implements TeacherService {
     public EduOfflineOrderMapper eduOfflineOrderMapper;
     @Resource
     OrderMapper orderMapper;
+    @Resource
+    private UserClassMapper userClassMapper;
+
 
     /**
      * 请假申请列表
@@ -160,6 +163,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult createCourse(EduCourseVo courseVo) {
         EduCourse course = new EduCourse();
+        UserClass userClass=new UserClass();
         if (StringUtils.isBlank(courseVo.getCourseName())) {
             return new WebResult("400", "课程名称不能为空", "");
         }
@@ -193,7 +197,14 @@ public class TeacherServiceImpl implements TeacherService {
         course.setSchoolId(courseVo.getSchoolId());
         course.setIsenable(courseVo.getIsenable());
 
+
         Integer courseId = courseVo.getCourseId();
+        //封装班级（以课程分班级）
+        userClass.setClassName(courseVo.getCourseName());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
+        String format = formatter.format(new Date());
+        userClassMapper.userClassList();
+//        userClass.setClassNo(format.substring(0, 4)+);
         String msg = "课程添加成功";
         if (courseId != null) {
             course.setCourseId(courseId);
@@ -203,6 +214,7 @@ public class TeacherServiceImpl implements TeacherService {
             msg = "课程修改成功";
         } else {
             teacherMapper.insertCourse(course);
+//            userClassMapper.addUserClass();
         }
 
         if (classList != null) {

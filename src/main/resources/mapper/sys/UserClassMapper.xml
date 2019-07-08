@@ -26,6 +26,53 @@
               AND specialty = #{specialty}
           </if>
        </select>
+         <!--新增班级记录-->
+        <insert id="addUserClass" parameterType="com.ovft.configure.sys.bean.UserClass">
+            insert into edu_user_class values (default,ClassName,ClassNo,job,specialty,courseId,remark,schoolId,schoolName)
+        </insert>
+    <!--修改班级记录-->
+       <update id="updateUserClass" parameterType="com.ovft.configure.sys.bean.UserClass">
+           update  edu_user_class
+           <set>
+
+               <if test="className != null and className !=''">
+                   AND class_name = #{className}
+               </if>
+               <if test="classNo != null and classNo !=''">
+                   AND class_no = #{classNo}
+               </if>
+               <if test="job != null and job !=''">
+                   AND job = #{job}
+               </if>
+               <if test="specialty != null and specialty !=''">
+                   AND specialty = #{specialty}
+               </if>
+               <if test="courseId != null">
+                   AND course_id = #{courseId}
+               </if>
+               <if test="remark != null and remark!=''">
+                   AND remark = #{remark}
+               </if>
+               <if test="schoolId != null">
+                   AND school_id = #{schoolId}
+               </if>
+               where 1=1
+               <if test="classId != null">
+                   AND class_id = #{classId}
+               </if>
+               <if test="schoolId != null">
+                   AND school_id = #{schoolId}
+               </if>
+
+           </set>
+       </update>
+       <!--删除班级记录-->
+       <delete id="deleteUserClass" parameterType="int">
+               delete from edu_user_class where 1=1
+           <if test="classId != null">
+               AND class_id = #{classId}
+           </if>
+       </delete>
 
 
 

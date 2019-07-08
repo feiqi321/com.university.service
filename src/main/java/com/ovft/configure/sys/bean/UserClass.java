@@ -1,17 +1,36 @@
 package com.ovft.configure.sys.bean;
+
 /**
  * @ClassName UserClass 班级
  * @Author xzy
  * @Version 2.5
  **/
 public class UserClass {
-     private Integer classId;
-     private String ClassName;
-     private String ClassNo;    //编号
-     private String job;        //职业
-     private String specialty;  //所属专业
-     private Integer courseId;  //课程id
-     private String remark;      //备注
+    private Integer classId;
+    private String ClassName;
+    private String ClassNo;    //编号
+    private String job;        //职业
+    private String specialty;  //所属专业
+    private Integer courseId;  //课程id
+    private String remark;      //备注
+    private Integer schoolId;
+    private String schoolName;
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
 
     public Integer getClassId() {
         return classId;
@@ -79,6 +98,8 @@ public class UserClass {
                 ", specialty='" + specialty + '\'' +
                 ", courseId=" + courseId +
                 ", remark='" + remark + '\'' +
+                ", schoolId=" + schoolId +
+                ", schoolName='" + schoolName + '\'' +
                 '}';
     }
 }

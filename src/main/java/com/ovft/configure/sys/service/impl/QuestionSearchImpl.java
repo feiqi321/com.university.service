@@ -18,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * 调查问卷实现类
@@ -215,7 +212,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         return null;
     }
 
-    //app端教师评价列表
+    //app端教师评价列表()
     @Override
     public WebResult findMyCourseList(PageVo pageVo) {
 
@@ -319,13 +316,8 @@ public class QuestionSearchImpl implements QuestionSearchService {
             if (searchQuestionAll==null){
                 return new WebResult("200","没有找到对应试题","");
             }
-            if (pageVo.getUserId() != null) {//截止时间过了的app端不会显示，而后台可以看见
-                for (int i = 0; i < searchQuestionAll.size(); i++) {      //处理edu_search_question表里面status=0的，不让其展示
-                    if (searchQuestionAll.get(i).getStatus() == 2) {
-                        searchQuestionAll.remove(i);      //移除集合里面status=0的
-                    }
-                }
-            }
+//            int size=searchQuestionAll.size();
+
             return new WebResult("200", "查询成功", searchQuestionAll);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
@@ -369,13 +361,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
         //问卷调查列表==>> 1.
         List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
-        if (pageVo.getUserId() != null) {//截止时间过了的问卷，app端不会显示，而后台可以看见
-            for (int i = 0; i < searchQuestionAll2.size(); i++) {      //处理edu_search_question表里面status=0的，不让其展示
-                if (searchQuestionAll2.get(i).getStatus() == 2) {
-                    searchQuestionAll2.remove(i);      //移除集合里面status=0的
-                }
-            }
-        }
+
         PageInfo pageInfo = new PageInfo<>(searchQuestionAll2);
         return new WebResult("200", "查询成功", pageInfo);
     }

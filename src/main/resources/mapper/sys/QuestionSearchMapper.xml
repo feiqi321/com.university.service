@@ -221,6 +221,7 @@
         from edu_search_question s
 
         where 1=1
+        AND s.status = 1
         <if test="sid != null and sid != ''">
             AND s.sid = #{sid}
         </if>
@@ -381,6 +382,9 @@
         </if>
         <if test="sid!=null">
              and  sid=#{sid}
+        </if>
+        <if test="courseId!=null">
+             and courseId=#{courseId}
         </if>
         <if test="topId!=null">
              and topId=#{topId}

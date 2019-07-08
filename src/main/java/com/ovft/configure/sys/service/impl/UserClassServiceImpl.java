@@ -7,4 +7,5 @@ import com.ovft.configure.sys.service.UserClassService;
  * @Version 2.5
  **/
 public class UserClassServiceImpl implements UserClassService {
+
 }
