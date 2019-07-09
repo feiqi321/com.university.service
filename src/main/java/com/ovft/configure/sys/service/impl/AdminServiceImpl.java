@@ -207,6 +207,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public WebResult deleteAdmin(Integer adminId, Integer schoolId) {
         if(schoolId != null) {
+            //判断要删除的是否为教师，如果是教师，该教师是否为课程引用
+//            List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(adminId, schoolId, 2);
+
             adminMapper.deleteAdminSchool(adminId, schoolId);
             List<AdminVo> maps = adminMapper.selectByAdminAndSchool(adminId, null, null);
             if(maps.size() == 0) {

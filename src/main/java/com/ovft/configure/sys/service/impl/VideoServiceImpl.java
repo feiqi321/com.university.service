@@ -91,6 +91,11 @@ public class VideoServiceImpl implements VideoService {
     @Transactional
     @Override
     public WebResult deleteVideo(Integer videoId) {
+        List<MyVideo> myVideos = videoMapper.selectMyVideo(null, videoId);
+        if(myVideos.size() != 0) {
+            return new WebResult("400", "该视频已有人学习，不能删除", "");
+        }
+        videoMapper.deleteItemByVideoId(videoId);
         videoMapper.delete(videoId);
         return new WebResult("200", "删除成功", "");
     }

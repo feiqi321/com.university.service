@@ -30,7 +30,6 @@ public class VideoController {
 
     /**
      *  视频教学 列表
-     *
      * @param request
      * @return
      */
@@ -54,7 +53,6 @@ public class VideoController {
 
     /**
      * 添加/修改  视频教学
-     *
      * @param video
      * @return
      */
@@ -88,7 +86,6 @@ public class VideoController {
 
     /**
      * 删除 视频教学
-     *
      * @param videoId
      * @return
      */
@@ -99,7 +96,6 @@ public class VideoController {
 
     /**
      *  子表 视频教学 列表
-     *
      * @param videoId
      * @return
      */
@@ -110,7 +106,6 @@ public class VideoController {
 
     /**
      *  子表  添加/修改  视频教学
-     *
      * @param videoItem
      * @return
      */
@@ -131,7 +126,6 @@ public class VideoController {
 
     /**
      * 子表 删除 视频教学
-     *
      * @param itemId
      * @return
      */

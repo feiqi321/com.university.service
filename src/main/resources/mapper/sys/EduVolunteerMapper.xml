@@ -22,4 +22,59 @@
         volunteer_id AS volunteerId, user_id AS userId, title, image, place, number, flowers, content, visits, release_date AS releaseDate, activity_date AS activityDate
     </sql>
 
+	<select id="selectById"  resultType="com.ovft.configure.sys.bean.EduVolunteer">
+		select
+		<include refid="Base_Column_List"/>
+		from edu_volunteer
+		where volunteer_id = #{volunteerId}
+	</select>
+
+	<select id="selectList"  resultType="com.ovft.configure.sys.bean.EduVolunteer">
+		select
+		<include refid="Base_Column_List"/>
+		from edu_volunteer
+		where 1=1
+		<if test="userId != null">
+			AND user_id = #{userId}
+		</if>
+		order by volunteer_id desc
+	</select>
+
+	<insert id="createVolunteer" parameterType="com.ovft.configure.sys.bean.EduVolunteer" useGeneratedKeys="true"
+			keyProperty="volunteerId">
+        insert into edu_volunteer(user_id, title, image, place, number, flowers, content, visits, release_date, activity_date)
+         values (#{userId}, #{title}, #{image}, #{place}, #{number}, #{flowers}, #{content},
+         #{visits}, #{releaseDate}, #{activityDate})
+    </insert>
+
+	<update id="updateVisits">
+		update edu_volunteer
+		set visits = #{visits}
+		where volunteer_id = #{volunteerId}
+	</update>
+
+	<delete id="deleteVolunteer">
+        delete from edu_volunteer where volunteer_id = #{volunteerId}
+    </delete>
+
+	<select id="selectMyVolunteer"  resultType="com.ovft.configure.sys.bean.MyVolunteer">
+		select id, user_id as userId, volunteer_id as volunteerId
+		from edu_my_voluneer
+		where volunteer_id = #{volunteerId} AND user_id = #{userId}
+	</select>
+
+	<insert id="createMyVolunteer" parameterType="com.ovft.configure.sys.bean.MyVolunteer" useGeneratedKeys="true"
+			keyProperty="id">
+         insert into edu_my_voluneer(user_id, volunteer_id, regist_date)
+         values (#{userId}, #{volunteerId}, #{registDate})
+    </insert>
+
+	<select id="myRegistVolunteer"  resultType="com.ovft.configure.sys.bean.EduVolunteer">
+		SELECT v.volunteer_id AS volunteerId, v.user_id AS userId, v.title, v.image, v.place, v.number,
+			v.flowers, v.content, v.visits, v.release_date AS releaseDate, v.activity_date AS activityDate
+		FROM edu_my_voluneer m
+		LEFT JOIN edu_volunteer v on m.volunteer_id = v.volunteer_id
+		where m.user_id = #{userId}
+	</select>
+
 </mapper>

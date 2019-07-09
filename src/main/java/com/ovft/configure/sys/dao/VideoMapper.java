@@ -41,6 +41,8 @@ public interface VideoMapper {
 
     public void deleteItem(@Param("itemId") Integer itemId);
 
+    public void deleteItemByVideoId(@Param("videoId") Integer videoId);
+
     /**
      * 我的视频
      */

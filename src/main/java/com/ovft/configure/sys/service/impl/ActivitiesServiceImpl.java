@@ -120,6 +120,10 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     @Transactional
     @Override
     public WebResult deleteActivities(Integer activitiesId) {
+        Integer count = activitiesMapper.registCount(activitiesId);
+        if(count > 0) {
+            return new WebResult("400", "该活动已有人报名，不能删除", "");
+        }
         activitiesMapper.deleteActivities(activitiesId);
         return new WebResult("200", "删除成功", "");
     }

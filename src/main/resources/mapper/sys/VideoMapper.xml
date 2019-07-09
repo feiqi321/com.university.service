@@ -97,6 +97,10 @@
         delete from edu_video_item where item_id = #{itemId}
     </delete>
 
+    <delete id="deleteItemByVideoId">
+        delete from edu_video_item where video_id = #{videoId}
+    </delete>
+
     <!--
         我的视频
     -->

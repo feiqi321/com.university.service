@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 志愿活动
  * @author zqx
  * @since 2019-07-04
  */
@@ -50,6 +51,15 @@ public class EduVolunteer implements Serializable {
      */
 	private Date activityDate;
 
+	private Integer isRegist;
+
+	public Integer getIsRegist() {
+		return isRegist;
+	}
+
+	public void setIsRegist(Integer isRegist) {
+		this.isRegist = isRegist;
+	}
 
 	public Integer getVolunteerId() {
 		return volunteerId;
