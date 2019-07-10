@@ -121,10 +121,12 @@ public class FileDownController {
                 row.createCell(0).setCellValue(course.getCourseId());
 
                 List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(Integer.valueOf(course.getCourseTeacher()), pageVo.getSchoolId(), null);
-                AdminVo teacher = adminVos.get(0);
-                row.createCell(1).setCellValue(teacher.getName());
-                row.createCell(2).setCellValue(course.getCourseName());
-                row.createCell(3).setCellValue(course.getPlaceClass());
+                if(adminVos.size() != 0) {
+                    AdminVo teacher = adminVos.get(0);
+                    row.createCell(1).setCellValue(teacher.getName());
+                    row.createCell(2).setCellValue(course.getCourseName());
+                    row.createCell(3).setCellValue(course.getPlaceClass());
+                }
 
                 HSSFCell cell = null;
                 if(course.getStartDate() != null) {

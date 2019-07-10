@@ -7,7 +7,6 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.TeacherService;
-import com.ovft.configure.sys.utils.AgeUtil;
 import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.SecurityUtils;
 import com.ovft.configure.sys.vo.AdminVo;
@@ -331,9 +330,10 @@ public class TeacherServiceImpl implements TeacherService {
         School school = schoolMapper.selectById(Integer.valueOf(courseVo.getSchoolId()));
         courseVo.setSchoolName(school == null ? "" : school.getSchoolName());
         List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(Integer.valueOf(courseVo.getCourseTeacher()), school.getSchoolId(), null);
-        AdminVo admin = adminVos.get(0);
-        courseVo.setTeacherName(admin == null ? "" : admin.getName());
-
+        if(adminVos.size() != 0) {
+            AdminVo admin = adminVos.get(0);
+            courseVo.setTeacherName(admin == null ? "" : admin.getName());
+        }
         return new WebResult("200", "查询成功", courseVo);
     }
 
