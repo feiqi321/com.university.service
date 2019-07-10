@@ -42,7 +42,7 @@ public interface QuestionSearchMapper {
     //删除相关的 投票题目及选项
     public void deleteVoteItembyId(Integer sid);
     //问卷调查列表
-    public List<SearchQuestion> findSearchQuestionAll(@Param("sid")Integer sid,@Param("topId")Integer topId,@Param("downId")Integer downId, @Param("schoolId")Integer schoolId,@Param("tid")Integer tid,@Param("courseId")Integer courseId,@Param("search") String search);
+    public List<SearchQuestion> findSearchQuestionAll(@Param("status")Integer status,@Param("sid")Integer sid,@Param("topId")Integer topId,@Param("downId")Integer downId, @Param("schoolId")Integer schoolId,@Param("tid")Integer tid,@Param("courseId")Integer courseId,@Param("search") String search);
     //问卷调查题目列表
     public List<Question> findQuestionAll(@Param("sid")Integer sid,@Param("tid")Integer tid,@Param("topId")Integer topId,@Param("downId")Integer downId,@Param("search") String search);
     //问卷调查列表包含选项分数的
@@ -62,7 +62,7 @@ public interface QuestionSearchMapper {
     //按综合条件问卷调查列表
     public List<SearchQuestion> findSearchQuestioncomposite(@Param("sid")Integer sid,@Param("topId")Integer topId,@Param("downId")Integer downId, @Param("schoolId")Integer schoolId,@Param("tid")Integer tid,@Param("search") String search);
     //查找对应用户
-    public String findAnswerRecordbyUserId(@Param("uid") Integer userId,@Param("sid") Integer sid,@Param("topId") Integer topId,@Param("downId") Integer downId);
+    public String findAnswerRecordbyUserId(@Param("courseId") Integer courseId,@Param("uid") Integer userId,@Param("sid") Integer sid,@Param("topId") Integer topId,@Param("downId") Integer downId);
     //所有投票选项列表
     public List<VoteItem> findVoteItemAll();
     //我的所有课程

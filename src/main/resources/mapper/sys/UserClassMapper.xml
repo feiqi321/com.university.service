@@ -5,7 +5,7 @@
        <!--学员班级列表-->
       <select id="userClassList" parameterType="com.ovft.configure.sys.bean.UserClass" resultType="com.ovft.configure.sys.bean.UserClass">
           select c.class_id classId,c.class_name className,c.class_no classNo,c.job job,c.specialty specialty,
-          c.course_id courseId, c.remark remark from edu_user_class c
+          c.course_id courseId, c.remark remark ,c.school_id schoolId, c.school_name schoolName from edu_user_class c
           where 1=1
           <if test="classId != null">
               AND class_id = #{classId}
@@ -22,13 +22,36 @@
           <if test="courseId != null">
               AND course_id = #{courseId}
           </if>
+          <if test="schoolId != null">
+              AND schoolId = #{schoolId}
+          </if>
           <if test="job != null and job !=''">
               AND specialty = #{specialty}
           </if>
+          <if test="pageVo.search != null and pageVo.search != ''">
+              AND (u.user_name like CONCAT('%',#{pageVo.search},'%') or u.phone like CONCAT('%',#{pageVo.search},'%'))
+          </if>
+       </select>
+       <!--学员班级列表-->
+      <select id="findClassNoAll" parameterType="com.ovft.configure.sys.vo.UserClassVo" resultType="com.ovft.configure.sys.bean.UserClass">
+          select class_no  classNo from edu_user_class
+          where 1=1
+          <if test="classId != null">
+              AND class_id = #{classId}
+          </if>
+
+          <if test="courseId != null">
+              AND course_id = #{courseId}
+          </if>
+
+          <if test="schoolId != null">
+              AND schoolId = #{schoolId}
+          </if>
+          ORDER BY class_id asc
        </select>
          <!--新增班级记录-->
         <insert id="addUserClass" parameterType="com.ovft.configure.sys.bean.UserClass">
-            insert into edu_user_class values (default,ClassName,ClassNo,job,specialty,courseId,remark,schoolId,schoolName)
+            insert into edu_user_class values (default,#{className},#{classNo},#{job},#{specialty},#{courseId},#{remark},#{schoolId},#{schoolName})
         </insert>
     <!--修改班级记录-->
        <update id="updateUserClass" parameterType="com.ovft.configure.sys.bean.UserClass">
@@ -36,42 +59,36 @@
            <set>
 
                <if test="className != null and className !=''">
-                   AND class_name = #{className}
+                    class_name = #{className},
                </if>
                <if test="classNo != null and classNo !=''">
-                   AND class_no = #{classNo}
+                    class_no = #{classNo},
                </if>
                <if test="job != null and job !=''">
-                   AND job = #{job}
+                    job = #{job},
                </if>
                <if test="specialty != null and specialty !=''">
-                   AND specialty = #{specialty}
+                    specialty = #{specialty},
                </if>
                <if test="courseId != null">
-                   AND course_id = #{courseId}
+                    course_id = #{courseId},
                </if>
                <if test="remark != null and remark!=''">
-                   AND remark = #{remark}
+                   remark = #{remark},
                </if>
                <if test="schoolId != null">
-                   AND school_id = #{schoolId}
+                    schoolId = #{schoolId}
                </if>
-               where 1=1
-               <if test="classId != null">
-                   AND class_id = #{classId}
-               </if>
-               <if test="schoolId != null">
-                   AND school_id = #{schoolId}
-               </if>
-
            </set>
+            where 1=1
+           <if test="courseId != null">
+               AND course_id = #{courseId}
+           </if>
        </update>
        <!--删除班级记录-->
-       <delete id="deleteUserClass" parameterType="int">
-               delete from edu_user_class where 1=1
-           <if test="classId != null">
-               AND class_id = #{classId}
-           </if>
+       <delete id="deleteUserClass" parameterType="java.lang.Integer">
+               delete from edu_user_class where
+               class_id = #{classId}
        </delete>
 
 

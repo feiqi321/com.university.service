@@ -64,6 +64,16 @@ public class PageVo {
 
     private Integer payStatus;      //支付状态
 
+    private Integer status;          //问卷列表的状态（对应edu_search_question表里面的status字段）
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Integer getPayStatus() {
         return payStatus;
     }
