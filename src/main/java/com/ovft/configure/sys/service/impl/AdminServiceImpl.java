@@ -274,6 +274,7 @@ public class AdminServiceImpl implements AdminService {
             //查询该手机号是否已经存在
             if (adminPhone == null) {
                 adminMapper.creatAdmin(admin);
+                adminMapper.createAdminSchool(admin);
             } else {
                 admin.setAdminId(adminPhone.getAdminId());
                 adminMapper.updateByPrimary(admin);
