@@ -26,11 +26,14 @@ public interface EduVolunteerMapper  {
     public void deleteVolunteer(@Param("volunteerId") Integer volunteerId);
 
     //查找已经报名志愿活动
-    public MyVolunteer selectMyVolunteer(@Param("userId") Integer userId, @Param("volunteerId") Integer volunteerId);
+    public List<MyVolunteer> selectMyVolunteer(@Param("userId") Integer userId, @Param("volunteerId") Integer volunteerId);
 
     //志愿活动报名
     public void createMyVolunteer(MyVolunteer myVolunteer);
 
     //我报名的志愿活动列表
     public List<EduVolunteer> myRegistVolunteer(@Param("userId") Integer userId);
+
+    //查找昨天到期的志愿活动
+    public List<EduVolunteer> selectYesterday();
 }

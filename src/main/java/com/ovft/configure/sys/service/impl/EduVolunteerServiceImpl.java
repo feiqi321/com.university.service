@@ -3,13 +3,16 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.EduFlowers;
 import com.ovft.configure.sys.bean.EduVolunteer;
 import com.ovft.configure.sys.bean.MyVolunteer;
 import com.ovft.configure.sys.dao.EduFlowersMapper;
 import com.ovft.configure.sys.dao.EduVolunteerMapper;
+import com.ovft.configure.sys.service.EduFlowersService;
 import com.ovft.configure.sys.service.EduVolunteerService;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +35,8 @@ public class EduVolunteerServiceImpl implements EduVolunteerService {
     private EduVolunteerMapper volunteerMapper;
     @Resource
     private EduFlowersMapper flowersMapper;
+    @Autowired
+    private EduFlowersService flowersService;
 
     //获取志愿活动列表
     //我发布的志愿活动列表
@@ -59,14 +64,13 @@ public class EduVolunteerServiceImpl implements EduVolunteerService {
         if(StringUtils.isBlank(userId)){
             eduVolunteer.setIsRegist(0);
         } else {
-            MyVolunteer myVolunteer = volunteerMapper.selectMyVolunteer(Integer.valueOf(userId), volunteerId);
-            if(myVolunteer == null) {
+            List<MyVolunteer> myVolunteers = volunteerMapper.selectMyVolunteer(Integer.valueOf(userId), volunteerId);
+            if(myVolunteers.size() == 0) {
                 eduVolunteer.setIsRegist(0);
             } else {
                 eduVolunteer.setIsRegist(1);
             }
         }
-
         return new WebResult("200", "查询成功", eduVolunteer);
     }
 
@@ -78,11 +82,14 @@ public class EduVolunteerServiceImpl implements EduVolunteerService {
         if(new Date().after(eduVolunteer.getActivityDate())) {
             return new WebResult("400", "该活动已结束", "");
         }
-        MyVolunteer myVolunteer = volunteerMapper.selectMyVolunteer(Integer.valueOf(userId), volunteerId);
-        if(myVolunteer != null) {
+        List<MyVolunteer> myVolunteers = volunteerMapper.selectMyVolunteer(Integer.valueOf(userId), volunteerId);
+        if(myVolunteers.size() != 0) {
             return new WebResult("400", "您已报名该志愿活动", "");
-        } else {
-            myVolunteer = new MyVolunteer();
+        }
+        if(myVolunteers.size() >= eduVolunteer.getNumber()) {
+            return new WebResult("400", "该活动报名人数已满", "");
+        }else {
+            MyVolunteer myVolunteer = new MyVolunteer();
             myVolunteer.setUserId(userId);
             myVolunteer.setVolunteerId(volunteerId);
             myVolunteer.setRegistDate(new Date());
@@ -136,5 +143,30 @@ public class EduVolunteerServiceImpl implements EduVolunteerService {
         volunteer.setVisits(0);
         volunteerMapper.createVolunteer(volunteer);
         return new WebResult("200", "发布成功", "");
+    }
+
+    //定时任务，志愿活动结束， 红花自动分配给学员
+    @Transactional
+    @Override
+    public void giveFlower() {
+        List<EduVolunteer> eduVolunteers = volunteerMapper.selectYesterday();
+        for (EduVolunteer volunteer : eduVolunteers) {
+            Integer flowers = volunteer.getFlowers();
+            if(flowers > 0) {
+                List<MyVolunteer> myVolunteers = volunteerMapper.selectMyVolunteer(null, volunteer.getVolunteerId());
+                if(myVolunteers.size() == 0) {
+                    continue;
+                }
+                for (MyVolunteer myVolunteer : myVolunteers) {
+                    //为每个参加志愿活动的学员添加小红花
+                    EduFlowers eduFlowers = new EduFlowers(myVolunteer.getUserId(),volunteer.getTitle(), 2, volunteer.getVolunteerId(), flowers, null, new Date());
+                    flowersService.createFlower(eduFlowers);
+                }
+                //减去发布志愿活动学员的小红花
+                flowers = - flowers * myVolunteers.size();
+                EduFlowers eduFlowers = new EduFlowers(volunteer.getUserId(),"发布" + volunteer.getTitle(), 2, volunteer.getVolunteerId(), flowers, null, new Date());
+                flowersService.createFlower(eduFlowers);
+            }
+        }
     }
 }

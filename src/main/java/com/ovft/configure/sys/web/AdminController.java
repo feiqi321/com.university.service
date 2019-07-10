@@ -141,9 +141,8 @@ public class AdminController {
         return adminService.findAdmin(adminId, schoolId);
     }
 
-
     /**
-     * 删除管理员、教师
+     * 删除管理员
      *
      * @param adminId
      * @return

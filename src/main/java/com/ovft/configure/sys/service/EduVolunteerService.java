@@ -19,4 +19,6 @@ public interface EduVolunteerService {
     public WebResult myRegistVolunteer(PageVo pageVo);
 
     public WebResult releaseVolunteer(EduVolunteer volunteer);
+
+    public void giveFlower();
 }

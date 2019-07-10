@@ -132,7 +132,10 @@
 
     <delete id="deleteAdminSchool" parameterType="java.lang.Integer">
         delete from edu_admin_school
-        where admin_id = #{adminId} and school_id = #{schoolId}
+        where admin_id = #{adminId}
+        <if test="schoolId != null">
+            and school_id = #{schoolId}
+        </if>
     </delete>
 
 </mapper>

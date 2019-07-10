@@ -47,7 +47,7 @@
          #{visits}, #{releaseDate}, #{activityDate})
     </insert>
 
-	<update id="updateVisits">
+	<update id="updateVisits" parameterType="com.ovft.configure.sys.bean.EduVolunteer">
 		update edu_volunteer
 		set visits = #{visits}
 		where volunteer_id = #{volunteerId}
@@ -60,7 +60,13 @@
 	<select id="selectMyVolunteer"  resultType="com.ovft.configure.sys.bean.MyVolunteer">
 		select id, user_id as userId, volunteer_id as volunteerId
 		from edu_my_voluneer
-		where volunteer_id = #{volunteerId} AND user_id = #{userId}
+		where 1=1
+		<if test="userId != null">
+			AND user_id = #{userId}
+		</if>
+		<if test="volunteerId != null">
+			AND volunteer_id = #{volunteerId}
+		</if>
 	</select>
 
 	<insert id="createMyVolunteer" parameterType="com.ovft.configure.sys.bean.MyVolunteer" useGeneratedKeys="true"
@@ -75,6 +81,13 @@
 		FROM edu_my_voluneer m
 		LEFT JOIN edu_volunteer v on m.volunteer_id = v.volunteer_id
 		where m.user_id = #{userId}
+	</select>
+
+	<select id="selectYesterday"  resultType="com.ovft.configure.sys.bean.EduVolunteer">
+		SELECT
+		<include refid="Base_Column_List"/>
+		from edu_volunteer
+		where to_days(now()) - to_days(activity_date) = 1
 	</select>
 
 </mapper>

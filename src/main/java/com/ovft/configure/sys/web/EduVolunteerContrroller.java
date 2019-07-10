@@ -76,5 +76,11 @@ public class EduVolunteerContrroller {
         return volunteerService.releaseVolunteer(eduVolunteer);
     }
 
+    @PostMapping("/giveFlower")
+    public WebResult giveFlower() {
+        volunteerService.giveFlower();
+        return null;
+    }
+
 
 }

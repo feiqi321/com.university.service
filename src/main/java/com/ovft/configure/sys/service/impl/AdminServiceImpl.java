@@ -199,27 +199,20 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 删除管理员
-     *
      * @param adminId
      * @return
      */
     @Transactional
     @Override
     public WebResult deleteAdmin(Integer adminId, Integer schoolId) {
-        if(schoolId != null) {
-            //判断要删除的是否为教师，如果是教师，该教师是否为课程引用
-//            List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(adminId, schoolId, 2);
-
-            adminMapper.deleteAdminSchool(adminId, schoolId);
-            List<AdminVo> maps = adminMapper.selectByAdminAndSchool(adminId, null, null);
-            if(maps.size() == 0) {
-                adminMapper.deleteById(adminId);
-            }
-            //删除 用户-角色
-            roleMapper.deleteAdminRole(adminId, null, schoolId);
-            return new WebResult("200", "删除成功", "");
+        //删除 用户-角色
+        roleMapper.deleteAdminRole(adminId, null, null);
+        //删除细单
+        adminMapper.deleteAdminSchool(adminId, schoolId);
+        List<AdminVo> maps = adminMapper.selectByAdminAndSchool(adminId, null, null);
+        if(maps.size() == 1 && maps.get(0).getSchoolId() == null) {
+            adminMapper.deleteById(adminId);
         }
-        adminMapper.deleteById(adminId);
         return new WebResult("200", "删除成功", "");
     }
 
@@ -303,11 +296,15 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public void addAdminSchool(AdminVo admin) {
-        List<AdminVo> maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), admin.getSchoolId(), null);
-        if(maps.size() == 0) {
-            adminMapper.createAdminSchool(admin);
-        } else {
+        if(admin.getRole() != 2) {
             adminMapper.updateAdminSchool(admin);
+        } else {
+            List<AdminVo> maps = adminMapper.selectByAdminAndSchool(admin.getAdminId(), admin.getSchoolId(), null);
+            if(maps.size() == 0) {
+                adminMapper.createAdminSchool(admin);
+            } else {
+                adminMapper.updateAdminSchool(admin);
+            }
         }
     }
 
