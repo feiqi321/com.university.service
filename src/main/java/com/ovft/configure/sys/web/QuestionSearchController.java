@@ -113,7 +113,7 @@ public class QuestionSearchController {
      * @param
      * @return
      */
-    @PostMapping(value = "/user/findAnswerRecord")
+    @PostMapping(value = "/server/findAnswerRecord")
     public WebResult findAnswerRecord(HttpServletRequest request, @RequestBody PageVo pageVo) {
                   return    questionSearchService.findAnswerRecord(pageVo);
     }
@@ -129,13 +129,25 @@ public class QuestionSearchController {
     }
 
     /**
-     * 问卷调查列表及模糊查询（分页）
+     * 前台 问卷调查列表及模糊查询（分页）
      *
      * @param pageVo
      * @return
      */
     @PostMapping(value = "/searchQuestion/findSearchQuestionAll")
     public WebResult findSearchQuestionAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        pageVo.setStatus(1);  //前台只显示status=1状态的（因为到了截止时间的status都被设为了2，在前台不予显示）
+        return questionSearchService.findSearchQuestionAll(pageVo);
+
+    }
+    /**
+     * 问卷调查列表及模糊查询（分页）
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/server/findServerSearchQuestionAll")
+    public WebResult findServerSearchQuestionAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
 
         return questionSearchService.findSearchQuestionAll(pageVo);
 

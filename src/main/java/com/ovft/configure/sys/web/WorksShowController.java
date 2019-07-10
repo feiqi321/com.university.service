@@ -6,6 +6,7 @@ import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.EduArticle;
 import com.ovft.configure.sys.service.EduArticleService;
 import com.ovft.configure.sys.service.WorksShowService;
+import com.ovft.configure.sys.utils.AgeUtil;
 import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,7 @@ public class WorksShowController {
     @PostMapping(value = "/WorksShow/findUserShowAll")
     public WebResult findUserShowAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
             pageVo.setType("7");
-            return worksShowService.findUserShowAll(pageVo);
+        return worksShowService.findUserShowAll(pageVo);
 
 }
     /**

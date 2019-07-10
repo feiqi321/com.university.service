@@ -7,8 +7,8 @@ package com.ovft.configure.sys.bean;
  **/
 public class UserClass {
     private Integer classId;
-    private String ClassName;
-    private String ClassNo;    //编号
+    private String className;
+    private String classNo;    //编号
     private String job;        //职业
     private String specialty;  //所属专业
     private Integer courseId;  //课程id
@@ -16,12 +16,30 @@ public class UserClass {
     private Integer schoolId;
     private String schoolName;
 
-    public Integer getSchoolId() {
-        return schoolId;
+    public void setClassId(Integer classId) {
+        this.classId = classId;
     }
 
-    public String getSchoolName() {
-        return schoolName;
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public void setSchoolId(Integer schoolId) {
@@ -37,11 +55,15 @@ public class UserClass {
     }
 
     public String getClassName() {
-        return ClassName;
+        return className;
     }
 
     public String getClassNo() {
-        return ClassNo;
+        return classNo;
+    }
+
+    public void setClassNo(String classNo) {
+        this.classNo = classNo;
     }
 
     public String getJob() {
@@ -60,40 +82,20 @@ public class UserClass {
         return remark;
     }
 
-    public void setClassId(Integer classId) {
-        this.classId = classId;
+    public Integer getSchoolId() {
+        return schoolId;
     }
 
-    public void setClassName(String className) {
-        ClassName = className;
-    }
-
-    public void setClassNo(String classNo) {
-        ClassNo = classNo;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
-    }
-
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
-
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public String getSchoolName() {
+        return schoolName;
     }
 
     @Override
     public String toString() {
         return "UserClass{" +
                 "classId=" + classId +
-                ", ClassName='" + ClassName + '\'' +
-                ", ClassNo='" + ClassNo + '\'' +
+                ", className='" + className + '\'' +
+                ", classNo=" + classNo +
                 ", job='" + job + '\'' +
                 ", specialty='" + specialty + '\'' +
                 ", courseId=" + courseId +

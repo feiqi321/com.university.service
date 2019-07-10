@@ -214,14 +214,15 @@
     </delete>
 
     <!--后台条件查询问卷调查-->
-    <select id="findSearchQuestionAll" resultType="com.ovft.configure.sys.bean.SearchQuestion">
+    <select id="findSearchQuestionAll"  resultType="com.ovft.configure.sys.bean.SearchQuestion">
         select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime,
         s.updatetime,s.endtime,s.schoolName,
         s.top_image as topImage,s.author,s.tid,s.visits,s.status,s.course_id
         from edu_search_question s
-
         where 1=1
-        AND s.status = 1
+        <if test="status != null ">
+            AND s.status = #{status}
+        </if>
         <if test="sid != null and sid != ''">
             AND s.sid = #{sid}
         </if>
@@ -358,7 +359,7 @@
 
     <!--添加问卷题目结果-->
     <insert id="createAnswerRecord" parameterType="com.ovft.configure.sys.bean.AnswerRecord" >
-       insert  into  edu_answer_record(aid,uid,userName,schoolName,answer,title,advice_info,total_grade,sid,topId,downId,type) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade},#{sid},#{topId},#{downId},#{type})
+       insert  into  edu_answer_record(aid,uid,userName,schoolName,answer,title,advice_info,total_grade,sid,topId,downId,type,courseId,tid) values (default,#{uid},#{userName},#{schoolName},#{answer},#{title},#{adviceInfo},#{totalGrade},#{sid},#{topId},#{downId},#{type},#{courseId},#{tid})
      </insert>
     <!--查询问卷总分结果-->
     <select id="queryAnswerRecordGrade" resultType="java.lang.Integer" >
@@ -435,7 +436,7 @@
     <select id="findMyCourseAlldown" parameterType="com.ovft.configure.sys.vo.PageVo"
             resultType="com.ovft.configure.sys.vo.MyCourseAll">
         select
-        o.id id,c.course_name courseName,o.school_id schoolId,a.name courseTeacher,c.end_date endDate,o.course_id courseId
+        o.id id,c.course_name courseName,o.school_id schoolId,a.name courseTeacher,c.end_date endDate,c.user_id userId,o.course_id courseId
         from
         edu_offline_num o,
         edu_course c,

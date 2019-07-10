@@ -199,22 +199,61 @@ public class TeacherServiceImpl implements TeacherService {
 
 
         Integer courseId = courseVo.getCourseId();
-        //封装班级（以课程分班级）
-        userClass.setClassName(courseVo.getCourseName());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-        String format = formatter.format(new Date());
-        userClassMapper.userClassList();
-//        userClass.setClassNo(format.substring(0, 4)+);
+
+
         String msg = "课程添加成功";
         if (courseId != null) {
             course.setCourseId(courseId);
             teacherMapper.updateCourseByCourseId(course);
             //先删除原有的详细信息
             teacherMapper.deleteClassByCourseId(course.getCourseId());
+
+            //封装班级（以课程分班级）
+            userClass.setClassName(courseVo.getCourseName());
+            userClass.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
+            String schoolName = schoolMapper.findSchoolById(Integer.parseInt(courseVo.getSchoolId()));
+            userClass.setSchoolName(schoolName);
+
+            userClass.setCourseId(course.getCourseId());
+            userClassMapper.updateUserClass(userClass);   //修改班级
+
             msg = "课程修改成功";
         } else {
             teacherMapper.insertCourse(course);
-//            userClassMapper.addUserClass();
+
+            //封装班级（以课程分班级）
+            userClass.setClassName(courseVo.getCourseName());
+            userClass.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
+            String schoolName = schoolMapper.findSchoolById(Integer.parseInt(courseVo.getSchoolId()));
+            userClass.setSchoolName(schoolName);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
+            String format = formatter.format(new Date());
+            List<UserClass> userClasses = userClassMapper.findClassNoAll(userClass);
+            //处理classNo
+            if (userClasses.isEmpty()){     //当班级记录一条都没有事时
+                userClass.setClassNo(format.substring(0,4)+0+0+1);
+            }else{
+                String classNoEnd=userClasses.get(userClasses.size()-1).getClassNo();    //获取最后一条班级记录里面的classNo
+                String s = Integer.valueOf(classNoEnd).toString();  //将classNoEnd转化成字符串
+                String substring = s.substring(4);   //截取年后面的数字
+                int num = Integer.parseInt(substring);
+
+                if (num<10){
+
+                    userClass.setClassNo(format.substring(0,4)+0+0+(num+1));
+                }
+                if (num>=10&&num<100){
+                    userClass.setClassNo(format.substring(0,4)+0+(num+1));
+                }
+                if (num>=100){
+                    userClass.setClassNo(format.substring(0,4)+(num+1));
+                }
+
+            }
+            userClass.setCourseId(course.getCourseId());
+            userClassMapper.addUserClass(userClass);   //生成新的班级
+
+
         }
 
         if (classList != null) {
@@ -364,16 +403,28 @@ public class TeacherServiceImpl implements TeacherService {
 
         if (pageVo.getPageSize() == 0) {
             List<User> users = teacherMapper.selectUserList(pageVo);
+
             for (int i = 0; i < users.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
                 String card=users.get(i).getIdentityCard();
-                int age = TeacherServiceImpl.getAgeByCertId(card);
-                users.get(i).setAge(age);
+                int age;
+                 if (card!=null) {
+                      age = TeacherServiceImpl.getAgeByCertId(card);
+                     users.get(i).setAge(age);
+                 }
             }
                 return new WebResult("200", "查询成功", users);
             } else {
 
                 PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
                 List<User> users2 = teacherMapper.selectUserList(pageVo);
+            for (int i = 0; i < users2.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
+                String card=users2.get(i).getIdentityCard();
+                int age;
+                if (card!=null) {
+                    age = TeacherServiceImpl.getAgeByCertId(card);
+                    users2.get(i).setAge(age);
+                }
+            }
                 PageInfo pageInfo = new PageInfo<>(users2);
                 return new WebResult("200", "查询成功", pageInfo);
 

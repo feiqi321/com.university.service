@@ -185,7 +185,7 @@
         i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
         i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
         i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
-        i.identity_card identityCard,i.volunteer,i.user_item_id userItemId
+        i.identity_card identityCard,i.volunteer
         from  edu_user u
         left join edu_user_item i on u.user_id = i.user_id
         where 1 =1
@@ -227,7 +227,9 @@
         </if>
 
         <if test="pageVo.search != null and pageVo.search != ''">
-            AND u.user_name like CONCAT('%',#{pageVo.search},'%') or u.phone like CONCAT('%',#{pageVo.search},'%'))
+            AND (u.user_name like CONCAT('%',#{pageVo.search},'%') or u.phone like CONCAT('%',#{pageVo.search},'%'))
+
+
         </if>
 
     </select>

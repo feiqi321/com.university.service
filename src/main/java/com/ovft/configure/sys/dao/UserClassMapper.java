@@ -1,6 +1,9 @@
 package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.UserClass;
+import com.ovft.configure.sys.vo.PageVo;
+import com.ovft.configure.sys.vo.UserClassVo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,9 +13,12 @@ import java.util.List;
  * @Author xzy
  * @Version 2.5
  **/
-public interface UserClassMapper {
+@Mapper
+public interface UserClassMapper{
       //班级列表
-      public List<UserClass> userClassList();
+      public List<UserClass> userClassList(UserClassVo userClassVo);
+      //班级所有ClassNo
+      public List<UserClass> findClassNoAll(UserClass userClass);
       //添加班级记录
       public void addUserClass(UserClass userClass);
       //修改班级记录
