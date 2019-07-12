@@ -3,10 +3,13 @@ package com.ovft.configure.sys.web;
 
 import com.jfinal.aop.Before;
 import com.ovft.configure.config.CORSInterceptor;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.Contribute;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.service.UserService;
+import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.PhoneVo;
 import com.ovft.configure.sys.vo.WithdrawVo;
@@ -28,6 +31,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 注册
@@ -87,13 +93,25 @@ public class UserController {
      */
     @PostMapping(value = "/savaInfo")
     public WebResult savaInfo(@RequestBody User user,HttpServletRequest request) {
-         user.setUserId(Integer.parseInt(request.getHeader("userId")));
-          if (user.getSchoolId()==null){
-             user.setSchoolId(0);
-          }else {
+        user.setUserId(Integer.parseInt(request.getHeader("userId")));
+        if (user.getSchoolId()==null){
+            user.setSchoolId(0);
+        }else {
 
-          }
-        return userService.savaInfo(user);
+        }
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+//            Integer id = (Integer) o;
+//            // 如果是pc端登录，更新token缓存失效时间
+//            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            return userService.savaInfo(user);
+        }else {
+            return new WebResult("50012", "请先登录", "");
+        }
+
+
+
     }
 
     /**

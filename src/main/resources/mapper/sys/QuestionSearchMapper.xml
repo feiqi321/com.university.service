@@ -95,7 +95,7 @@
     <insert id="insertBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="true"   keyProperty="qid">
         insert into edu_question
         (qid,sid,topId,downId,question,item1,item1_num,item1_grade,item1_image,item2,item2_num,item2_grade,item2_image,item3,item3_num,item3_grade,item3_image,item4,item4_num,item4_grade,
-        item4_image,item5,item5_num,item5_grade,item5_image,item6,item6_num,item6_grade,item6_image)
+        item4_image,item5,item5_num,item5_grade,item5_image,item6,item6_num,item6_grade,item6_image,status)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
@@ -127,8 +127,8 @@
             #{item.item6},
             #{item.item6Num},
             #{item.item6Grade},
-            #{item.item6Image}
-
+            #{item.item6Image},
+            #{item.status}
             )
         </foreach>
     </insert>
@@ -174,7 +174,8 @@
                 item6=#{item.item6},
                 item6_num=#{item.item6Num},
                 item6_grade=#{item.item6Grade},
-                item6_image= #{item.item6Image}
+                item6_image= #{item.item6Image},
+                status=#{item.status}
         </set>
             where  qid= #{item.qid}
         </foreach>
@@ -304,12 +305,12 @@
     ORDER BY s.visits DESC
     </select>
 
-    <!--进入详情页（无选项分数字段返回）-->
+    <!--进入详情页（无"选项的分数字段"返回,如"q.item_grade"）-->
     <select id="findQuestionAll" resultType="com.ovft.configure.sys.bean.Question">
         select q.qid,q.sid,q.question,q.item1,q.item1_num item1Num,q.item1_image item1Image,q.item2,q.item2_num item2Num
         ,q.item2_image item2Image,q.item3,q.item3_num item3Num,q.item3_image item3Image,q.item4,q.item4_num item4Num,
         q.item4_image item4Image,q.item5,q.item5_num item5Num,q.item5_image item5Image,q.item6,q.item6_num item6Num,
-        q.item6_image item6Image,q.tid,q.topId
+        q.item6_image item6Image,q.tid,q.topId,q.status
         from edu_question q
         where 1=1
         <if test="sid != null and sid != ''">
@@ -432,17 +433,25 @@
         update  edu_search_question set status=#{status} where id=#{sid}
     </update>
 
-    <!--多表查询课程列表（线上的）-->
+    <!--多表查询课程列表（线下的）-->
+    <!--多表查询课程列表（线下的）-->
     <select id="findMyCourseAlldown" parameterType="com.ovft.configure.sys.vo.PageVo"
             resultType="com.ovft.configure.sys.vo.MyCourseAll">
         select
-        o.id id,c.course_name courseName,o.school_id schoolId,a.name courseTeacher,c.end_date endDate,c.user_id userId,o.course_id courseId
+        o.id id,c.course_name courseName,o.school_id schoolId,a.name courseTeacher,c.end_date endDate,o.user_id userId,o.course_id courseId,
+        i.user_name userName,i.sex sex,i.area area,i.address adress,i.political political,i.educational educational,i.position position,i.retired retired,
+        i.job job,i.employer employer,i.identity_card identityCard,u.phone phone,u.mycontext mycontext,o.class_record classRecord
         from
         edu_offline_num o,
         edu_course c,
-        edu_admin a
+        edu_admin a,
+        edu_user_item i,
+        edu_user u
         where
-        o.course_id =c.course_id and c.course_teacher=a.admin_id
+        o.course_id =c.course_id and c.course_teacher=a.admin_id and o.user_id=i.user_id and o.user_id=u.user_id
+        <if test="payStatus!=null">
+            and o.pay_status=#{payStatus}
+        </if>
         <if test="courseId!=null">
             and o.course_id=#{courseId}
         </if>
@@ -458,18 +467,21 @@
 
 
     </select>
-    <!--多表查询课程列表（线下的）-->
+    <!--多表查询课程列表（线上的）-->
     <select id="findMyCourseAlltop" parameterType="com.ovft.configure.sys.vo.PageVo"
             resultType="com.ovft.configure.sys.vo.MyCourseAll">
         select
         p.id id, c.course_name courseName,p.school_id schoolId,a.name courseTeacher,c.end_date endDate,p.course_id,p.user_id
-        userId
+        userId, i.user_name userName,i.sex sex,i.area area,i.address adress,i.political political,i.educational educational,i.position position,i.retired retired,
+        i.job job,i.employer employer,i.identity_card,u.phone phone,u.mycontext mycontext,p.class_record classRecord
         from
         edu_payrecord p,
         edu_course c,
-        edu_admin a
+        edu_admin a,
+        edu_user_item i,
+        edu_user u
         where
-           p.course_id=c.course_id and c.course_teacher=a.admin_id
+        p.course_id=c.course_id and c.course_teacher=a.admin_id and p.user_id=i.user_id and p.user_id=u.user_id
         <if test="payStatus!=null">
             and p.pay_status=#{payStatus}
         </if>

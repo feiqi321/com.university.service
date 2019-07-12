@@ -34,6 +34,16 @@ public class Question {
     private Integer tid;
     private  Integer topId;      //类型为2的时候  即教师评价时   线上报名id              注：用户的课程分为edu_payrecord、edu_offline_num两张表，因为在添加没门课的题目时须进行绑定而设计
     private  Integer downId;      //类型为2的时候  即教师评价时   线上报名id                   *在进入某门课程时会关联这两个id,为避免重复而设计
+    private  Integer status;
+
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getTopId() {
         return topId;

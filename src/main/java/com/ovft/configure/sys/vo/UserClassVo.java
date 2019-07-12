@@ -5,6 +5,8 @@ public class UserClassVo {
 
     private int pageNum;
 
+    private Integer classId;
+
     private String className;
 
     private int classNo;
@@ -18,6 +20,24 @@ public class UserClassVo {
     private  String schoolName;
 
     private String search;
+
+    private String job;
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
+    }
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;

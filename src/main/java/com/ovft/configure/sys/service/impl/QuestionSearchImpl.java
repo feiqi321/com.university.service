@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -215,16 +216,46 @@ public class QuestionSearchImpl implements QuestionSearchService {
         return null;
     }
 
+    /**
+     * 根据身份证号获取年龄
+     * @param certId
+     * @return
+     */
+    public static int getAgeByCertId(String certId) {
+        String birthday = "";
+        if (certId.length() == 18) {
+            birthday = certId.substring(6, 10) + "/"
+                    + certId.substring(10, 12) + "/"
+                    + certId.substring(12, 14);
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date now = new Date();
+        Date birth = new Date();
+        try {
+            birth = sdf.parse(birthday);
+        } catch (ParseException e) {
+        }
+        long intervalMilli = now.getTime() - birth.getTime();
+        int age = (int) (intervalMilli/(24 * 60 * 60 * 1000))/365;
+        System.out.println(age);
+        return age;
+    }
+
     //app端教师评价列表()
     @Override
     public WebResult findMyCourseList(PageVo pageVo) {
 
-        pageVo.setPayStatus(1);
+        pageVo.setPayStatus(5);
         List<MyCourseAll> myCourseAlltop = questionSearchMapper.findMyCourseAlltop(pageVo);
+        pageVo.setPayStatus(1);
         List<MyCourseAll> myCourseAlldown = questionSearchMapper.findMyCourseAlldown(pageVo);
         VateType vateType = questionSearchMapper.findCourseImage(2);
         List<MyCourseAll> list = new ArrayList();
+
         for (int m = 0; m < myCourseAlltop.size(); m++) {
+
+
+
             myCourseAlltop.get(m).setCourseImage(vateType.getImage());
             myCourseAlltop.get(m).setStatu("线上报名");
             Integer schoolId = myCourseAlltop.get(m).getSchoolId();
@@ -257,11 +288,29 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         if (pageVo.getPageSize() == 0) {
 
+            for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
+                String card=list.get(i).getIdentityCard();
+                int age;
+                if (card!=null) {
+                    age = TeacherServiceImpl.getAgeByCertId(card);
+                    list.get(i).setAge(age);
+                }
+            }
+
             return new WebResult("200", "查询成功", list);
         }
 
 
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+
+        for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
+            String card=list.get(i).getIdentityCard();
+            int age;
+            if (card!=null) {
+                age = TeacherServiceImpl.getAgeByCertId(card);
+                list.get(i).setAge(age);
+            }
+        }
 
         PageInfo pageInfo = new PageInfo<>(list);
         return new WebResult("200", "查询成功", pageInfo);

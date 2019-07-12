@@ -48,6 +48,8 @@ public interface TeacherMapper {
     public void deleteVacate(@Param("vacateId") Integer vacateId);
 
     public List<User> selectUserList(@Param("pageVo") PageVo pageVo);
+     //查找游客所有记录
+    public List<User> findVisitors();
 
     public List<User> selectWithdrawList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 

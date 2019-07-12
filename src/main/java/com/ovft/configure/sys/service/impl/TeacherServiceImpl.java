@@ -431,6 +431,22 @@ public class TeacherServiceImpl implements TeacherService {
             }
 
     }
+    /**
+     * 查找所有游客（游客:未报名学校）的记录
+     *
+     * @return
+     */
+    @Override
+    public WebResult findVisitors(PageVo pageVo) {
+        if (pageVo.getPageSize() == 0) {
+            List<User> users = teacherMapper.findVisitors();
+            return new WebResult("200", "查询成功", users);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<User> users = teacherMapper.findVisitors();
+        PageInfo pageInfo = new PageInfo<>(users);
+        return new WebResult("200", "查询成功", pageInfo);
+    }
 
     /**
      * 学员注销申请列表

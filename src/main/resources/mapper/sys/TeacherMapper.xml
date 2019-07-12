@@ -228,11 +228,25 @@
 
         <if test="pageVo.search != null and pageVo.search != ''">
             AND (u.user_name like CONCAT('%',#{pageVo.search},'%') or u.phone like CONCAT('%',#{pageVo.search},'%'))
-
-
         </if>
-
+        order by checkin desc
     </select>
+
+    <!--查找未报名的注册用户-->
+    <select id="findVisitors" resultType="com.ovft.configure.sys.bean.User">
+       select u.user_id userId,i.user_name userName,u.phone,u.image,i.user_item_id userItemId,
+        i.sex,i.school_id schoolId,i.telephone,i.area,i.address,
+        i.political,i.educational,i.position,i.retired,
+        i.job,i.employer,i.emergency_contact1 emergencyContact1,i.emergency_relation1 emergencyRelation1,
+        i.emergency_phone1 emergencyPhone1,i.emergency_contact2 emergencyContact2,
+        i.emergency_relation2 emergencyRelation2,i.emergency_phone2 emergencyPhone2,i.checkin,
+        i.identity_card identityCard,i.volunteer
+        from  edu_user u
+        left join edu_user_item i on u.user_id = i.user_id
+        where
+        i.school_id is null
+    </select>
+
     <!--查询用户注销申请记录-->
     <select id="selectWithdrawList" resultType="com.ovft.configure.sys.vo.WithdrawVo">
         select * from edu_withdraw

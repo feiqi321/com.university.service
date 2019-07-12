@@ -57,6 +57,28 @@ public class TeacherController {
         }
     }
     /**
+     * 查找游客的所有记录
+     * 游客：系统内只注册未报名学校的用户
+     * @return
+     */
+    @PostMapping(value = "/findVisitors")
+    public WebResult findVisitors(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                pageVo.setSchoolId(hget.getSchoolId());
+            }
+            return teacherService.findVisitors(pageVo);
+        }else {
+            return new WebResult("50012", "请先登录", "");
+        }
+    }
+    /**
      * 学员注销申请列表
      * @return
      */
