@@ -47,4 +47,15 @@ public class EduSignServiceImpl implements EduSignService {
             return new WebResult("200", "签到成功", count);
         }
     }
+
+    @Override
+    public WebResult isSign(Integer userId) {
+        EduSign sign = signMapper.selectLastByUserId(userId);
+        if(sign != null) {
+            return new WebResult("200", "查询成功", "1");
+        }else {
+            return new WebResult("200", "查询成功", "0");
+        }
+
+    }
 }
