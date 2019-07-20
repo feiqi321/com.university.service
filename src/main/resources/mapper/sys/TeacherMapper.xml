@@ -74,16 +74,20 @@
         </if>
         order by isenable desc, start_date desc
     </select>
+
     <select id="selectCourseList" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.vo.EduCourseVo">
         select course_id as courseId, course_name as courseName, course_price as coursePrice, course_teacher as courseTeacher,
         place_class as placeClass, start_date as startDate, end_date as endDate,
-        people_number as peopleNumber, school_id as schoolId, isenable,
+        people_number as peopleNumber, school_id as schoolId, isenable,isAddQuestion,
         (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher) as teacherName,
         (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName
         from edu_course
         where 1=1
         <if test="schoolId != null">
             AND school_id = #{schoolId}
+        </if>
+        <if test="isAddQuestion != null ">
+            AND isAddQuestion = #{isAddQuestion}
         </if>
         <if test="isenable != null">
             AND isenable = #{isenable}
@@ -99,7 +103,12 @@
         </if>
         order by isenable desc, start_date desc
     </select>
-
+       <update id="updateisAddQuestionByCourseId" parameterType="java.lang.Integer">
+           update  edu_course set isAddQuestion=#{status} where 1=1
+           <if test="courseId != null">
+               AND course_id = #{courseId}
+           </if>
+       </update>
     <!--添加课程-->
     <insert id="insertCourse" parameterType="com.ovft.configure.sys.bean.EduCourse"
             useGeneratedKeys="true" keyProperty="courseId">

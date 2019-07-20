@@ -19,9 +19,15 @@ public interface QuestionSearchService {
 //     //添加问卷题目选项（SearchQuestion）
 //     public WebResult createQuestionItem(QuestionItem questionItem);
      //删除一篇问卷题目及选项
-     public WebResult deleteSearchQuestion(Integer sid,Integer tid,Integer topId,Integer downId);
+     public WebResult deleteSearchQuestion(Integer sid,Integer tid,Integer courseId);
+     //删除一篇问卷题目及选项
+     public WebResult deleteAnswerRecordOne(AnswerRecord answerRecord);
+     //批量删除问卷题目及选项
+     public WebResult BigDeleteAnswerRecord(AnswerRecord answerRecord);
      //问卷调查列表
      public WebResult findSearchQuestionAll(PageVo pageVo);
+     //问卷调查列表
+     public WebResult findServerSearchQuestionAll(PageVo pageVo);
      //按热门条件问卷调查列表
      public WebResult findSearchQuestionAllbyVisits(PageVo pageVo);
      //按综合条件问卷调查列表

@@ -51,6 +51,40 @@ public class QuestionSearchController {
 
     }
 
+    /**
+     * 删除一条结果记录（SearchQuestion）
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/server/deleteAnswerRecordOne")
+    public WebResult deleteAnswerRecordOne(@RequestBody AnswerRecord answerRecord,HttpServletRequest request) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if (o != null) {
+            Integer id = (Integer) o;
+            return questionSearchService.deleteAnswerRecordOne(answerRecord);
+        } else {
+            return new WebResult("50012", "请先登录", "");
+        }
+    }
+    /**
+     * 批量删除结果记录（SearchQuestion）
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/server/BigDeleteAnswerRecord")
+    public WebResult BigDeleteAnswerRecord(@RequestBody AnswerRecord answerRecord,HttpServletRequest request) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if (o != null) {
+            Integer id = (Integer) o;
+            return questionSearchService.BigDeleteAnswerRecord(answerRecord);
+        } else {
+            return new WebResult("50012", "请先登录", "");
+        }
+    }
 
     /**
      * 删除问卷调查（SearchQuestion）
@@ -70,8 +104,7 @@ public class QuestionSearchController {
             if (hget.getRole() != 0) {
                 searchQuestion.setSchoolId(hget.getSchoolId());
             }
-            return questionSearchService.deleteSearchQuestion(searchQuestion.getSid(),searchQuestion.getTid(),
-                    searchQuestion.getTopId(),searchQuestion.getDownId());
+            return questionSearchService.deleteSearchQuestion(searchQuestion.getSid(),searchQuestion.getTid(),searchQuestion.getCourseId());
         } else {
             return new WebResult("50012", "请先登录", "");
         }
@@ -129,7 +162,7 @@ public class QuestionSearchController {
     }
 
     /**
-     * 前台 问卷调查列表及模糊查询（分页）
+     * 前台 问卷调查列表及模糊查询（分页） 以及进入详情页接口
      *
      * @param pageVo
      * @return
@@ -138,6 +171,18 @@ public class QuestionSearchController {
     public WebResult findSearchQuestionAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
         pageVo.setStatus(1);  //前台只显示status=1状态的（因为到了截止时间的status都被设为了2，在前台不予显示）
         return questionSearchService.findSearchQuestionAll(pageVo);
+
+    }
+    /**
+     * 后台 进入详情页（分页）
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/server/explicitQuestionAll")
+    public WebResult findServerexplicitQuestionAll(HttpServletRequest request, @RequestBody PageVo pageVo) {
+        pageVo.setStatus(1);  //前台只显示status=1状态的（因为到了截止时间的status都被设为了2，在前台不予显示）
+        return questionSearchService.findServerSearchQuestionAll(pageVo);
 
     }
     /**

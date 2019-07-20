@@ -25,6 +25,8 @@ public interface TeacherMapper {
 
     //修改课程信息
     public void updateCourseByCourseId(EduCourse course);
+    //修改课程是否添加
+    public void updateisAddQuestionByCourseId(@Param("courseId")Integer courseId,@Param("status")Integer status);
 
     //根据学校id查找课程列表
     public List<EduCourse> selectCourseListBySchoolId(PageVo pageVo);
