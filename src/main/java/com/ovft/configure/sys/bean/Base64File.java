@@ -7,6 +7,7 @@ package com.ovft.configure.sys.bean;
 public class Base64File {
     private file File;
     private String content;
+    private String filePrefix;
 
     public file getFile() {
         return File;
@@ -22,5 +23,13 @@ public class Base64File {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getFilePrefix() {
+        return filePrefix;
+    }
+
+    public void setFilePrefix(String filePrefix) {
+        this.filePrefix = filePrefix;
     }
 }
