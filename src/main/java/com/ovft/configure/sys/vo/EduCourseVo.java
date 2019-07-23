@@ -25,6 +25,26 @@ public class EduCourseVo extends EduCourse {
 
     private int isAddQuestion;  //是否添加题目 “1”：已添加   “0”：未添加
 
+    private Integer did;    //院系id
+
+    private String  departmentName;   //院系名称
+
+    public Integer getDid() {
+        return did;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDid(Integer did) {
+        this.did = did;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
     //可报名剩余人数
     private Integer nowtotal;
 

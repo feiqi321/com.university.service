@@ -76,11 +76,12 @@
     </select>
 
     <select id="selectCourseList" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.vo.EduCourseVo">
-        select course_id as courseId, course_name as courseName, course_price as coursePrice, course_teacher as courseTeacher,
+        select did,course_id as courseId, course_name as courseName, course_price as coursePrice, course_teacher as courseTeacher,
         place_class as placeClass, start_date as startDate, end_date as endDate,
         people_number as peopleNumber, school_id as schoolId, isenable,isAddQuestion,
         (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher) as teacherName,
-        (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName
+        (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName,
+        (SELECT d_name FROM edu_department where did = edu_course.did) as departmentName
         from edu_course
         where 1=1
         <if test="schoolId != null">
