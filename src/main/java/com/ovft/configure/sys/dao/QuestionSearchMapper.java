@@ -6,6 +6,7 @@ import com.ovft.configure.sys.vo.MyCourseAll;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.constraints.Max;
 import java.util.List;
@@ -87,7 +88,10 @@ public interface QuestionSearchMapper {
     public VateType findCourseImage(Integer vid);
     //通过courseId获取edu_search_question表对应的试卷题目记录
     public List<SearchQuestion> findSearchQuestionByCourseId(Integer courseId);
-
+    //删除对应问卷的一个题目
+    public void deleteQuestionOne(Integer qid);
+    //删除对应问卷的一个题目
+    public void deleteVoteItemOne(Integer id);
 
 
 

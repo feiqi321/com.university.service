@@ -2,6 +2,7 @@ package com.ovft.configure.sys.web;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.UserClass;
+import com.ovft.configure.sys.service.QuestionSearchService;
 import com.ovft.configure.sys.service.UserClassService;
 import com.ovft.configure.sys.vo.MyCourseAll;
 import com.ovft.configure.sys.vo.PageVo;
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 public class UserClassController {
     @Resource
     private UserClassService userClassService;
+    @Resource
+    private QuestionSearchService questionSearchService;
     /**
      * 后台班级列表（分页）
      *
@@ -43,6 +46,8 @@ public class UserClassController {
      */
     @PostMapping(value = "/user/findUserClassAll")
     public WebResult findUserClassAll(HttpServletRequest request, @RequestBody UserClassVo userClassVo) {
+
+
         return userClassService.userClassList(userClassVo);
     }
     /**
@@ -53,6 +58,7 @@ public class UserClassController {
      */
     @PostMapping(value = "/server/user/deleteUserClass")
     public WebResult deleteUserClass(@RequestBody UserClass userClass){
+
         return userClassService.deleteUserClass(userClass.getClassId());
     }
     /**

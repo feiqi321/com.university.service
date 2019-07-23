@@ -1,10 +1,7 @@
 package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.AnswerRecord;
-import com.ovft.configure.sys.bean.Question;
-import com.ovft.configure.sys.bean.QuestionItem;
-import com.ovft.configure.sys.bean.SearchQuestion;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -46,7 +43,10 @@ public interface QuestionSearchService {
     public WebResult findMyCourseList(PageVo pageVo);
     //定时删除相关问卷（即：相关问卷到截止时间就会被删除）
     public void deleteScheduleTask();
-
+    //删除对应问卷的一个题目
+    public WebResult deleteQuestionOne(Question question);
+    //删除对应问卷的一个题目
+    public WebResult deleteVoteItemOne(VoteItem voteItem);
 
 
 }

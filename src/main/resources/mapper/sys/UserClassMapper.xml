@@ -32,7 +32,8 @@
               AND (c.class_name like CONCAT('%',#{search},'%') or c.school_name like CONCAT('%',#{search},'%'))
           </if>
        </select>
-       <!--学员班级列表-->
+
+       <!--学员班级编号列表-->
       <select id="findClassNoAll" parameterType="com.ovft.configure.sys.vo.UserClassVo" resultType="com.ovft.configure.sys.bean.UserClass">
           select class_no  classNo from edu_user_class
           where 1=1
@@ -47,6 +48,7 @@
           <if test="schoolId != null">
               AND schoolId = #{schoolId}
           </if>
+
           ORDER BY class_id asc
        </select>
          <!--新增班级记录-->

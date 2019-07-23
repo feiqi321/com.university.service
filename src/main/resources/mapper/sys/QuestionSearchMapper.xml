@@ -6,8 +6,8 @@
     <insert id="createSearchQuestion" parameterType="com.ovft.configure.sys.bean.SearchQuestion" useGeneratedKeys="true"
             keyProperty="sid">
        insert  into  edu_search_question(sid,schoolId,search_name,content,createtime,updatetime,
-       endtime,schoolName,author,top_image,tid,visits,status,topId,downId,course_id) values (default,#{schoolId},#{searchName},#{content},#{createTime},
-       #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid},#{visits},#{status},#{topId},#{downId},#{courseId})
+       endtime,schoolName,author,top_image,tid,visits,status,topId,downId,course_id,question) values (default,#{schoolId},#{searchName},#{content},#{createTime},
+       #{updateTime},#{endTime},#{schoolName},#{author},#{topImage},#{tid},#{visits},#{status},#{topId},#{downId},#{courseId},#{question})
      </insert>
     <!--修改问卷调查主题浏览量-->
     <update id="updateSearchQuestionVisits" parameterType="int" >
@@ -47,7 +47,10 @@
                 top_image=#{topImage},
             </if>
             <if test="visits != null and visits != ''">
-                visits=#{visits}
+                visits=#{visits},
+            </if>
+            <if test="question != null and question != ''">
+                question=#{question}
             </if>
 
 
@@ -222,7 +225,7 @@
     <select id="findSearchQuestionAll"  resultType="com.ovft.configure.sys.bean.SearchQuestion">
         select s.sid, s.schoolId, s.search_name as searchName,s.content,s.createtime,
         s.updatetime,s.endtime,s.schoolName,
-        s.top_image as topImage,s.author,s.tid,s.visits,s.status,s.course_id
+        s.top_image as topImage,s.author,s.tid,s.visits,s.status,s.course_id,s.question
         from edu_search_question s
         where 1=1
         <if test="status != null ">
@@ -469,7 +472,7 @@
             and o.school_id=#{schoolId}
         </if>
         <if test="search != null and search != ''">
-            AND o.course_name like CONCAT('%',#{search},'%')
+           AND (o.course_name like CONCAT('%',#{search},'%') or i.user_name like CONCAT('%',#{search},'%'))
         </if>
 
 
@@ -502,7 +505,7 @@
             and p.school_id=#{schoolId}
         </if>
         <if test="search != null and search != ''">
-            AND p.course_name like CONCAT('%',#{search},'%')
+            AND (p.course_name like CONCAT('%',#{search},'%') or i.user_name like CONCAT('%',#{search},'%'))
         </if>
     </select>
     <select id="findCourseImage" parameterType="int" resultType="com.ovft.configure.sys.bean.VateType">
@@ -530,6 +533,20 @@
                 id= #{value}
             </if>
         </foreach>
+    </delete>
+    <!--批量删除-->
+    <delete id="deleteQuestionOne" parameterType="java.lang.Integer" >
+
+            delete from edu_question
+            where
+                qid= #{qid}
+    </delete>
+    <!--批量删除-->
+    <delete id="deleteVoteItemOne" parameterType="java.lang.Integer" >
+
+            delete from edu_vote_item
+            where
+                id= #{id}
     </delete>
 
 </mapper>

@@ -8,6 +8,7 @@ import com.ovft.configure.sys.dao.SuggestionsMapper;
 import com.ovft.configure.sys.service.SuggestionsService;
 
 import com.ovft.configure.sys.vo.SuggestionsVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,13 @@ public class SuggestionsServiceImpl implements SuggestionsService {
     @Transactional
     @Override
     public WebResult submitSuggestions(Suggestions suggestions) {
+        if (suggestions.getType()==null){
+
+            return new WebResult("200","请选择反馈问题类型！","");
+        }
+        if (StringUtils.isBlank(suggestions.getContent())){
+            return new WebResult("200","反馈意见不能为空！","");
+        }
         Date date=new Date();
         suggestions.setCreateTime(date);
         suggestionsMapper.submitSuggestions(suggestions);

@@ -154,7 +154,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
                     List<VoteItem>  voteItemList=new ArrayList<>();
                     voteItemList.add(voteItems.get(i));
                     if (voteItems.get(i).getId()==null){
-                        voteItemList.get(i).setSid(searchQuestion.getSid());
+
                         questionSearchMapper.createBigVoteItem(voteItemList);
                     }
                     questionSearchMapper.updateBigVoteItem(voteItemList);
@@ -264,13 +264,12 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         return new WebResult("200", "提交成功", "");
     }
-
-    //教师评价列表
+    //弃用
     @Override
     public WebResult findCourseTopic(PageVo pageVo) {
-
         return null;
     }
+
 
     /**
      * 根据身份证号获取年龄
@@ -844,6 +843,18 @@ public class QuestionSearchImpl implements QuestionSearchService {
             }
 
         }
+    }
+    @Transactional
+    @Override
+    public WebResult deleteQuestionOne(Question question) {
+         questionSearchMapper.deleteQuestionOne(question.getQid());
+        return new WebResult("200", "删除成功", "");
+    }
+    @Transactional
+    @Override
+    public WebResult deleteVoteItemOne(VoteItem voteItem) {
+         questionSearchMapper.deleteVoteItemOne(voteItem.getId());
+        return new WebResult("200", "删除成功", "");
     }
 
 

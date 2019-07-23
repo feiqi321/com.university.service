@@ -1,5 +1,9 @@
 package com.ovft.configure.sys.bean;
 
+import com.ovft.configure.sys.vo.MyCourseAll;
+
+import java.util.List;
+
 /**
  * @ClassName UserClass 班级
  * @Author xzy
@@ -15,6 +19,16 @@ public class UserClass {
     private String remark;      //备注
     private Integer schoolId;
     private String schoolName;
+    private List<MyCourseAll> users;   //班级学员集合
+
+
+    public List<MyCourseAll> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<MyCourseAll> users) {
+        this.users = users;
+    }
 
     public void setClassId(Integer classId) {
         this.classId = classId;

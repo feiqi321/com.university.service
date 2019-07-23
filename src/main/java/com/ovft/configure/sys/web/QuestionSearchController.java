@@ -141,6 +141,28 @@ public class QuestionSearchController {
              return  questionSearchService.submitVoteRecord(answerRecord,answerRecord.getId());
     }
     /**
+     * 编辑时删除指定的题目
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/user/deleteQuestionOne")
+    public WebResult deleteQuestionOne(@RequestBody Question question,HttpServletRequest request) {
+
+             return  questionSearchService.deleteQuestionOne(question);
+    }
+    /**
+     * 编辑时删除指定的投票选项
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/user/deleteVoteItemOne")
+    public WebResult deleteVoteItemOne(@RequestBody VoteItem voteItem,HttpServletRequest request) {
+
+             return  questionSearchService.deleteVoteItemOne(voteItem);
+    }
+    /**
      * 查看所有用户问卷填写结果记录
      *
      * @param

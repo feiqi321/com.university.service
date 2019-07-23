@@ -26,8 +26,15 @@ public class SearchQuestion {
     private  Integer downId;      //类型为2的时候  即教师评价时   线上报名id                   *在进入某门课程时会关联这两个id,为避免重复而设计
     private  int status;
     private   Integer courseId;
+    private  String    question;      //投票时的题干（问题）
 
+    public String getQuestion() {
+        return question;
+    }
 
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 
     public void setStatus(int status) {
         this.status = status;

@@ -40,8 +40,12 @@ public class UserClassVo {
     }
 
     public void setPageSize(int pageSize) {
+        if (pageSize <= 0) {
+            pageSize = 10;
+        }
         this.pageSize = pageSize;
     }
+
 
     public void setPageNum(int pageNum) {
         this.pageNum = pageNum;
@@ -110,6 +114,8 @@ public class UserClassVo {
     public String getSearch() {
         return search;
     }
+
+
 
     @Override
     public String toString() {
