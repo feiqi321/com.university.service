@@ -83,10 +83,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, order_sn, user_id, order_status, create_time, expire_time, payment_time, total_amount, 
-    payment_way, out_trade_no, trade_body, img_url, consignee, school_id, telephone, 
-    address, send_type, tosend_price, remark
-  </sql>
+        id, order_sn, user_id, order_status, create_time, expire_time, payment_time, total_amount,
+        payment_way, out_trade_no, trade_body, img_url, consignee, school_id, telephone,
+        address, send_type, tosend_price, remark
+    </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.OrderExample" resultMap="BaseResultMap">
         select
         <if test="distinct">
@@ -116,9 +116,9 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from edu_order
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+        delete from edu_order
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.OrderExample">
         delete from edu_order
         <if test="_parameter != null">
@@ -419,47 +419,47 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.Order">
-    update edu_order
-    set order_sn = #{orderSn,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER},
-      order_status = #{orderStatus,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      expire_time = #{expireTime,jdbcType=TIMESTAMP},
-      payment_time = #{paymentTime,jdbcType=TIMESTAMP},
-      total_amount = #{totalAmount,jdbcType=BIGINT},
-      payment_way = #{paymentWay,jdbcType=VARCHAR},
-      out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
-      trade_body = #{tradeBody,jdbcType=VARCHAR},
-      img_url = #{imgUrl,jdbcType=VARCHAR},
-      consignee = #{consignee,jdbcType=VARCHAR},
-      school_id = #{schoolId,jdbcType=VARCHAR},
-      telephone = #{telephone,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      send_type = #{sendType,jdbcType=VARCHAR},
-      tosend_price = #{tosendPrice,jdbcType=DECIMAL},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+        update edu_order
+        set order_sn = #{orderSn,jdbcType=VARCHAR},
+        user_id = #{userId,jdbcType=INTEGER},
+        order_status = #{orderStatus,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+        payment_time = #{paymentTime,jdbcType=TIMESTAMP},
+        total_amount = #{totalAmount,jdbcType=BIGINT},
+        payment_way = #{paymentWay,jdbcType=VARCHAR},
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+        trade_body = #{tradeBody,jdbcType=VARCHAR},
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+        consignee = #{consignee,jdbcType=VARCHAR},
+        school_id = #{schoolId,jdbcType=VARCHAR},
+        telephone = #{telephone,jdbcType=VARCHAR},
+        address = #{address,jdbcType=VARCHAR},
+        send_type = #{sendType,jdbcType=VARCHAR},
+        tosend_price = #{tosendPrice,jdbcType=DECIMAL},
+        remark = #{remark,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
 
     <!--1.查找专业及学员分类报名人数-->
     <select id="countPayCourseEmployerNum" parameterType="map" resultType="int">
-    SELECT
-    count(t.user_id)
-    from
-    (
-    select
-    o.user_id,
-    i.course_id,
-    f.payment_status,
-    u.employer
-    from edu_order o
-    LEFT JOIN edu_order_detail i on i.order_id=o.id
-    LEFT JOIN edu_payment_info f on f.order_id = o.id
-    LEFT JOIN edu_user u on  u.user_id=o.user_id
-    ) t
-    WHERE course_id=#{course_id} and payment_status=#{payment_status} and employer=#{employer}
-  </select>
+        SELECT
+        count(t.user_id)
+        from
+        (
+        select
+        o.user_id,
+        i.course_id,
+        f.payment_status,
+        u.employer
+        from edu_order o
+        LEFT JOIN edu_order_detail i on i.order_id=o.id
+        LEFT JOIN edu_payment_info f on f.order_id = o.id
+        LEFT JOIN edu_user u on u.user_id=o.user_id
+        ) t
+        WHERE course_id=#{course_id} and payment_status=#{payment_status} and employer=#{employer}
+    </select>
 
     <!--2.查找专业相关报名人数-->
     <select id="countPayCourseNum" parameterType="map" resultType="int">
@@ -485,15 +485,18 @@
     c.course_name,
     c.place_class,
     c.start_date,
+    c.course_price,
     e3.start_time,
     e3.end_time,
     e1.school_name,
     e2.name,
-    e1.school_id
+    e1.school_id,
+    e4.id
     from edu_course  c
     left join edu_school e1 on c.school_id=e1.school_id
     left join edu_admin e2 on c.course_teacher=e2.admin_id
     left JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+    LEFT JOIN edu_order e4 on c.course_name=e4.trade_body
     where course_id
     in(
     SELECT
@@ -508,8 +511,7 @@
     LEFT JOIN edu_order_detail i on i.order_id=o.id
     LEFT JOIN edu_payment_info f on f.order_id = o.id
     ) t
-
-    WHERE payment_status=1 and user_id=#{user_id} )
+    WHERE payment_status="PAID" and user_id=#{user_id} )
   </select>
 
 

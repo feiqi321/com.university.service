@@ -31,6 +31,7 @@ public interface EduCheckService {
 
     /**
      * 查询当天的打开课程信息
+     *
      * @return
      */
     List<EduCheckVo> queryNowDayRecord();

@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.bean;
 
+import com.ovft.configure.constant.PaymentStatus;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -41,7 +43,7 @@ public class PaymentInfo implements Serializable {
     /**
      * 支付状态，默认值未支付
      */
-    private String paymentStatus;
+    private PaymentStatus paymentStatus;
 
     /**
      * 创建时间，当前时间
@@ -108,11 +110,11 @@ public class PaymentInfo implements Serializable {
         this.subject = subject;
     }
 
-    public String getPaymentStatus() {
+    public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(String paymentStatus) {
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 

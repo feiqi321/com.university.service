@@ -359,6 +359,12 @@ public class EduCourseServiceImpl implements EduCourseService {
         return i;
     }
 
+    @Override
+    public EduCourse queryEndTimeByCourseId(Integer courseId) {
+        EduCourseVo eduCourseVo = eduCourseMapper.queryCourseByCourseId(courseId);
+        return eduCourseVo;
+    }
+
     public EduCourseVo applyCourse(Integer userId, Integer courseId) {
         //1.根据courseId查询订单的信息
         EduCourseVo courseInfo = eduCourseMapper.queryCourseByCourseId(courseId);

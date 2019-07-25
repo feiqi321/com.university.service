@@ -1,5 +1,6 @@
 package com.ovft.configure.config;
 
+import com.ovft.configure.sys.bean.EduPayrecord;
 import com.ovft.configure.sys.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,6 +24,9 @@ public class SaticScheduleTask {
     FileDownService fileDownService;
     @Autowired
     EduVolunteerService volunteerService;
+
+    @Autowired
+    private EduPayrecordService eduPayrecordService;
 
 
     //3.添加定时任务
@@ -60,5 +64,7 @@ public class SaticScheduleTask {
 //            e.getMessage();
 //        }
     }
+
+
 
 }

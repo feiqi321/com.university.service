@@ -243,7 +243,7 @@
     <!--查询购物车相关信息vvtxw-->
     <select id="queryOrderInfoFromCart" parameterType="map" resultType="com.ovft.configure.sys.vo.EduCartVo">
                 select
-                  c.*,
+                     c.*,
                     g.original_img,
                     g.books_name,
                     g.books_author,

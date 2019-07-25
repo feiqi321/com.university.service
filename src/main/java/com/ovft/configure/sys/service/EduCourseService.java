@@ -50,5 +50,6 @@ public interface EduCourseService {
      */
     int updateAllTime(EduCourse eduCourse);
 
-
+    //根据课程id获取结束时间
+    EduCourse queryEndTimeByCourseId(Integer courseId);
 }

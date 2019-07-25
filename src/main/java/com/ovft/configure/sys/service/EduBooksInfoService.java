@@ -32,4 +32,10 @@ public interface EduBooksInfoService {
 
     //根据教材id查询书名
     List<String> queryBookNameById(Integer id);
+
+    //根据booksid删除详情信息
+    int deleteBookInfos(Integer id);
+
+    //根据booksid查询信息
+    EduBooksInfo selectoneByGoodsId(Integer id);
 }

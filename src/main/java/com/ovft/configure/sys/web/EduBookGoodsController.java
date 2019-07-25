@@ -3,12 +3,17 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduBookGoods;
+import com.ovft.configure.sys.bean.EduBooksInfo;
 import com.ovft.configure.sys.service.EduBookGoodsService;
+import com.ovft.configure.sys.service.EduBooksInfoService;
+import com.ovft.configure.sys.vo.EduBookGoodsVo;
 import com.ovft.configure.sys.vo.PageBean;
 import com.ovft.configure.sys.vo.QueryBookVos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * @author vvtxw
@@ -23,6 +28,9 @@ public class EduBookGoodsController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private EduBooksInfoService eduBooksInfoService;
 
 
     /**
@@ -70,6 +78,49 @@ public class EduBookGoodsController {
     }
 
     /**
+     * 添加新教材
+     *
+     * @param eduBookGoodsVo
+     * @return
+     */
+    @PostMapping(value = "server/addbooksInfo")
+    public WebResult addBooksInfo(@RequestBody EduBookGoodsVo eduBookGoodsVo) {
+        EduBookGoods eduBookGoods = new EduBookGoods();
+        eduBookGoods.setCatId(eduBookGoodsVo.getCatId());
+        eduBookGoods.setExtendCatId(eduBookGoodsVo.getExtendCatId());
+        eduBookGoods.setBooksSn(eduBookGoodsVo.getBooksSn());
+        eduBookGoods.setBooksAuthor(eduBookGoodsVo.getBooksAuthor());
+        eduBookGoods.setBooksName(eduBookGoodsVo.getBooksName());
+        eduBookGoods.setStoreCount(eduBookGoodsVo.getStoreCount());
+        eduBookGoods.setShopPrice(eduBookGoodsVo.getShopPrice());
+        eduBookGoods.setOriginalImg(eduBookGoodsVo.getOriginalImg());
+        eduBookGoods.setIsOnSale(eduBookGoodsVo.getIsOnSale());
+        eduBookGoods.setUpdateTime(new Date());
+        eduBookGoods.setSchoolId(eduBookGoodsVo.getSchoolId());
+        eduBookGoods.setSendPrice(eduBookGoodsVo.getSendPrice());
+        Integer res1 = eduBookGoodsService.addBooks(eduBookGoods);
+
+        EduBooksInfo eduBooksInfo = new EduBooksInfo();
+        eduBooksInfo.setBookGoodsId(eduBookGoods.getId());
+        eduBooksInfo.setPublishAddress(eduBookGoodsVo.getPublishAddress());
+        eduBooksInfo.setFormatBook(eduBookGoodsVo.getFormatBook());
+        eduBooksInfo.setEditionBook(eduBookGoodsVo.getEditionBook());
+        eduBooksInfo.setPageSize(eduBookGoodsVo.getPageSize());
+        eduBooksInfo.setRecommendUnit(eduBookGoodsVo.getRecommendUnit());
+        eduBooksInfo.setBookSn(eduBookGoodsVo.getBookSn());
+        eduBooksInfo.setDescribeNote(eduBookGoodsVo.getDescribeNote());
+        eduBooksInfo.setDescribeBook(eduBookGoodsVo.getDescribeBook());
+        eduBooksInfo.setIntroductionAuthor(eduBookGoodsVo.getIntroductionAuthor());
+        eduBooksInfo.setSchoolId(Integer.valueOf(eduBookGoodsVo.getSchoolId()));
+        Integer res2 = eduBooksInfoService.addBookInfo(eduBooksInfo);
+
+        if (res1 > 0 && res2 > 0) {
+            return new WebResult(StatusCode.OK, "添加成功", "");
+        }
+        return new WebResult(StatusCode.OK, "添加失败", "");
+    }
+
+    /**
      * 查询1条信息
      *
      * @param id
@@ -78,7 +129,37 @@ public class EduBookGoodsController {
     @GetMapping(value = "server/showone")
     public WebResult queryById(Integer id) {
         EduBookGoods eduBookGoods = eduBookGoodsService.queryById(id);
-        return new WebResult(StatusCode.OK, "查询成功", eduBookGoods);
+        EduBooksInfo eduBooksInfo = eduBooksInfoService.selectoneByGoodsId(id);
+        EduBookGoodsVo eduBookGoodsVo = new EduBookGoodsVo();
+        eduBookGoodsVo.setId(eduBookGoods.getId());
+        eduBookGoodsVo.setCatId(eduBookGoods.getCatId());
+        eduBookGoodsVo.setExtendCatId(eduBookGoods.getExtendCatId());
+        eduBookGoodsVo.setBooksSn(eduBookGoods.getBooksSn());
+        eduBookGoodsVo.setBooksAuthor(eduBookGoods.getBooksAuthor());
+        eduBookGoodsVo.setBooksName(eduBookGoods.getBooksName());
+        eduBookGoodsVo.setStoreCount(eduBookGoods.getStoreCount());
+        eduBookGoodsVo.setShopPrice(eduBookGoods.getShopPrice());
+        eduBookGoodsVo.setOriginalImg(eduBookGoods.getOriginalImg());
+        eduBookGoodsVo.setIsOnSale(eduBookGoods.getIsOnSale());
+        eduBookGoodsVo.setUpdateTime(new Date());
+        eduBookGoodsVo.setSchoolId(eduBookGoods.getSchoolId());
+        eduBookGoodsVo.setSendPrice(eduBookGoods.getSendPrice());
+
+
+        eduBookGoodsVo.setInfoId(eduBooksInfo.getId());
+        eduBookGoodsVo.setBookGoodsId(eduBooksInfo.getBookGoodsId());
+        eduBookGoodsVo.setPublishAddress(eduBooksInfo.getPublishAddress());
+        eduBookGoodsVo.setFormatBook(eduBooksInfo.getFormatBook());
+        eduBookGoodsVo.setEditionBook(eduBooksInfo.getEditionBook());
+        eduBookGoodsVo.setPageSize(eduBooksInfo.getPageSize());
+        eduBookGoodsVo.setRecommendUnit(eduBooksInfo.getRecommendUnit());
+        eduBookGoodsVo.setBookSn(eduBooksInfo.getBookSn());
+        eduBookGoodsVo.setDescribeNote(eduBooksInfo.getDescribeNote());
+        eduBookGoodsVo.setDescribeBook(eduBooksInfo.getDescribeBook());
+        eduBookGoodsVo.setIntroductionAuthor(eduBooksInfo.getIntroductionAuthor());
+        eduBookGoodsVo.setSchoolId(String.valueOf(eduBooksInfo.getSchoolId()));
+
+        return new WebResult(StatusCode.OK, "查询成功", eduBookGoodsVo);
     }
 
     /**
@@ -99,13 +180,44 @@ public class EduBookGoodsController {
     /**
      * 修改教材
      *
-     * @param eduBookGoods
+     * @param eduBookGoodsVo
      * @return
      */
     @PostMapping(value = "server/updateco")
-    public WebResult updateCodition(@RequestBody EduBookGoods eduBookGoods) {
+    public WebResult updateCodition(@RequestBody EduBookGoodsVo eduBookGoodsVo) {
+        EduBookGoods eduBookGoods = new EduBookGoods();
+        eduBookGoods.setId(eduBookGoodsVo.getId());
+        eduBookGoods.setCatId(eduBookGoodsVo.getCatId());
+        eduBookGoods.setExtendCatId(eduBookGoodsVo.getExtendCatId());
+        eduBookGoods.setBooksSn(eduBookGoodsVo.getBooksSn());
+        eduBookGoods.setBooksAuthor(eduBookGoodsVo.getBooksAuthor());
+        eduBookGoods.setBooksName(eduBookGoodsVo.getBooksName());
+        eduBookGoods.setStoreCount(eduBookGoodsVo.getStoreCount());
+        eduBookGoods.setShopPrice(eduBookGoodsVo.getShopPrice());
+        eduBookGoods.setOriginalImg(eduBookGoodsVo.getOriginalImg());
+        eduBookGoods.setIsOnSale(eduBookGoodsVo.getIsOnSale());
+        eduBookGoods.setUpdateTime(new Date());
+        eduBookGoods.setSchoolId(eduBookGoodsVo.getSchoolId());
+        eduBookGoods.setSendPrice(eduBookGoodsVo.getSendPrice());
+
         int result = eduBookGoodsService.updateBook(eduBookGoods);
-        if (result > 0) {
+
+        EduBooksInfo eduBooksInfo = new EduBooksInfo();
+        eduBooksInfo.setId(eduBookGoodsVo.getInfoId());
+        eduBooksInfo.setBookGoodsId(eduBookGoodsVo.getBookGoodsId());
+        eduBooksInfo.setPublishAddress(eduBookGoodsVo.getPublishAddress());
+        eduBooksInfo.setFormatBook(eduBookGoodsVo.getFormatBook());
+        eduBooksInfo.setEditionBook(eduBookGoodsVo.getEditionBook());
+        eduBooksInfo.setPageSize(eduBookGoodsVo.getPageSize());
+        eduBooksInfo.setRecommendUnit(eduBookGoodsVo.getRecommendUnit());
+        eduBooksInfo.setBookSn(eduBookGoodsVo.getBookSn());
+        eduBooksInfo.setDescribeNote(eduBookGoodsVo.getDescribeNote());
+        eduBooksInfo.setDescribeBook(eduBookGoodsVo.getDescribeBook());
+        eduBooksInfo.setIntroductionAuthor(eduBookGoodsVo.getIntroductionAuthor());
+        eduBooksInfo.setSchoolId(Integer.valueOf(eduBookGoodsVo.getSchoolId()));
+
+        Integer res2 = eduBooksInfoService.updateBookInfo(eduBooksInfo);
+        if (result > 0 && res2 > 0) {
             return new WebResult(StatusCode.OK, "修改设置成功", "");
         }
         return new WebResult(StatusCode.ERROR, "修改设置失败", "");
@@ -119,12 +231,14 @@ public class EduBookGoodsController {
      */
     @PostMapping(value = "server/deleteco")
     public WebResult deleteCodition(@RequestBody EduBookGoods eduBookGoods) {
-        int result = eduBookGoodsService.deleteBook(eduBookGoods);
-        if (result > 0) {
+        int result1 = eduBookGoodsService.deleteBook(eduBookGoods);
+        int result2 = eduBooksInfoService.deleteBookInfos(eduBookGoods.getId());
+        if (result1 > 0 && result2 > 0) {
             return new WebResult(StatusCode.OK, "删除设置成功", "");
         }
         return new WebResult(StatusCode.ERROR, "删除设置失败", "");
     }
+
 
     /**
      * 上架和下架
@@ -140,6 +254,7 @@ public class EduBookGoodsController {
         }
         return new WebResult(StatusCode.ERROR, "修改失败", "");
     }
+
 
     /**
      * 批量上架和下架

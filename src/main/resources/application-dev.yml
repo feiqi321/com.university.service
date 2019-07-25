@@ -20,9 +20,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://120.27.16.130/text_edu?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+    url: jdbc:mysql://47.105.55.14/old_edu?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: root
-    password: 20190425
+    password: YXY20190704
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

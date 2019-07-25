@@ -25,7 +25,6 @@ public class AgeUtil {
             dates = IdNO.substring(6, 8);
             return Integer.parseInt(dates);
         }
-
     }
 
 }

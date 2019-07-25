@@ -46,6 +46,9 @@ public interface OrderService {
     //显示相关订单详情页面
     SubmitOrderVos showOrders(OrderVo orderVo);
 
+    //更改订单的状态
+    Integer updateOrderStatus(Order order);
+
 
 
 

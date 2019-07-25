@@ -51,7 +51,7 @@ public class EduCartController {
 
             long num = eduCartService.countNum(userId, goodsId);
             if (num >= 1) {
-                return new WebResult(StatusCode.OK, "亲，改商品已经加入购物车，请在购物车加数量");
+                return new WebResult(StatusCode.OK, "亲，该商品已经加入购物车，请在购物车加数量");
             }
             eduCartService.addCart(goodsId, goodsNum, userId, schoolId);
             return new WebResult(StatusCode.OK, "亲，我在购物车等你哦！");
@@ -69,7 +69,6 @@ public class EduCartController {
     public WebResult queryAllCart(HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.valueOf(userId1);
-//       Integer userId = 59;
         if (userId != null) {
             PageBean pageBean = eduCartService.showAllCartByUserId(userId);
             return new WebResult(StatusCode.OK, "查询成功", pageBean);
