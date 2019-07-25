@@ -2,13 +2,11 @@ package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.config.MessageCenterException;
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.EduClass;
-import com.ovft.configure.sys.bean.EduCourse;
-import com.ovft.configure.sys.bean.FineCourse;
-import com.ovft.configure.sys.bean.School;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.FileDownService;
 import com.ovft.configure.sys.vo.AdminVo;
+import com.ovft.configure.sys.vo.DepartmentVo;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.vo.PageVo;
 import com.qiniu.common.QiniuException;
@@ -35,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -59,6 +58,11 @@ public class FileDownServiceImpl implements FileDownService {
     public EduClassMapper classMapper;
     @Resource
     private FineCourseMapper fineCourseMapper;
+    @Resource
+    private UserClassMapper userClassMapper;
+    @Resource
+    private DepartmentMapper departmentMapper;
+
 
     @Transactional
     @Override
@@ -288,6 +292,17 @@ public class FileDownServiceImpl implements FileDownService {
                 }
                 course.setEndTime(endTime);
             }
+            //  12-上课结束时间
+            cell = row.getCell(13);
+            if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
+                if(course.getIsenable().equals(1)){
+                    return new WebResult("400", "文件上传失败: 课程启用，第" + (j + 1) + "行 的所属院系不能为空", "");
+                }
+            }else {
+                String department = row.getCell(13).getStringCellValue();
+
+                course.setDepartmentName(department);
+            }
 
             courseList.push(course);
         }
@@ -311,12 +326,75 @@ public class FileDownServiceImpl implements FileDownService {
             }
             Integer courseId = courseVo.getCourseId();
             EduCourse course = courseVo;
+            UserClass userClass=new UserClass();
             if (courseId != null) {
                 teacherMapper.updateCourseByCourseId(course);
                 //先删除原有的详细信息
                 teacherMapper.deleteClassByCourseId(course.getCourseId());
+
+                 //封装班级（以课程分班级）
+                DepartmentVo departmentVo=new DepartmentVo();
+                departmentVo.setDepartmentName(((EduCourseVo) course).getDepartmentName());
+                departmentVo.setSchoolId(Integer.valueOf(course.getSchoolId()));
+                List<Department> departments = departmentMapper.departmentList(departmentVo);
+                      if (departments.isEmpty()){
+                          return new WebResult("400", "文件上传失败: 在系统里该学校不存在所填写的院系", "");
+                      }else {
+                          userClass.setDid(departments.get(0).getDid());
+                          userClass.setSpecialty(((EduCourseVo) course).getDepartmentName());
+                      }
+
+                userClass.setClassName(course.getCourseName()+"班");
+                userClass.setSchoolId(Integer.parseInt(course.getSchoolId()));
+                String findSchoolName = schoolMapper.findSchoolById(Integer.parseInt(course.getSchoolId()));
+                userClass.setSchoolName(findSchoolName);
+
+                userClass.setCourseId(course.getCourseId());
+                userClassMapper.updateUserClass(userClass);   //修改班级
             } else {
                 teacherMapper.insertCourse(course);
+                //封装班级（以课程分班级）
+                DepartmentVo departmentVo=new DepartmentVo();
+                departmentVo.setDepartmentName(((EduCourseVo) course).getDepartmentName());
+                departmentVo.setSchoolId(Integer.valueOf(course.getSchoolId()));
+                List<Department> departments = departmentMapper.departmentList(departmentVo);
+                if (departments.isEmpty()){
+                    return new WebResult("400", "文件上传失败: 在系统里该学校不存在所填写的院系", "");
+                }else {
+                    userClass.setDid(departments.get(0).getDid());
+                    userClass.setSpecialty(((EduCourseVo) course).getDepartmentName());
+                }
+
+                userClass.setClassName(course.getCourseName()+"班");
+                userClass.setSchoolId(Integer.parseInt(course.getSchoolId()));
+                String schoolName3 = schoolMapper.findSchoolById(Integer.parseInt(course.getSchoolId()));
+                userClass.setSchoolName(schoolName3);
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
+                String format = formatter.format(new Date());
+                List<UserClass> userClasses = userClassMapper.findClassNoAll(userClass);
+                //处理classNo
+                if (userClasses.isEmpty()){     //当班级记录一条都没有事时
+                    userClass.setClassNo(format.substring(0,4)+0+0+1);
+                }else{
+                    String classNoEnd=userClasses.get(userClasses.size()-1).getClassNo();    //获取最后一条班级记录里面的classNo
+                    String s = Integer.valueOf(classNoEnd).toString();  //将classNoEnd转化成字符串
+                    String substring = s.substring(4);   //截取年后面的数字
+                    int num = Integer.parseInt(substring);
+
+                    if (num<10){
+
+                        userClass.setClassNo(format.substring(0,4)+0+0+(num+1));
+                    }
+                    if (num>=10&&num<100){
+                        userClass.setClassNo(format.substring(0,4)+0+(num+1));
+                    }
+                    if (num>=100){
+                        userClass.setClassNo(format.substring(0,4)+(num+1));
+                    }
+
+                }
+                userClass.setCourseId(course.getCourseId());
+                userClassMapper.addUserClass(userClass);   //生成新的班级
             }
 
             EduClass eduClass = new EduClass();

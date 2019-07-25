@@ -57,6 +57,7 @@ public class TeacherServiceImpl implements TeacherService {
     private UserClassMapper userClassMapper;
 
 
+
     /**
      * 请假申请列表
      *
@@ -175,6 +176,10 @@ public class TeacherServiceImpl implements TeacherService {
             return new WebResult("400", "请选择学校", "");
         }
 
+        if (courseVo.getDid()==null){
+            return new WebResult("400", "添加失败，您还尚未给该课程添加院系", "");
+        }
+
         List<EduClass> classList = courseVo.getClassList();
         Date startDate = courseVo.getStartDate();
         Date endDate = courseVo.getEndDate();
@@ -208,7 +213,8 @@ public class TeacherServiceImpl implements TeacherService {
             teacherMapper.deleteClassByCourseId(course.getCourseId());
 
             //封装班级（以课程分班级）
-            userClass.setClassName(courseVo.getCourseName());
+            userClass.setDid(courseVo.getDid());
+            userClass.setClassName(courseVo.getCourseName()+"班");
             userClass.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
             String schoolName = schoolMapper.findSchoolById(Integer.parseInt(courseVo.getSchoolId()));
             userClass.setSchoolName(schoolName);
@@ -221,7 +227,8 @@ public class TeacherServiceImpl implements TeacherService {
             teacherMapper.insertCourse(course);
 
             //封装班级（以课程分班级）
-            userClass.setClassName(courseVo.getCourseName());
+            userClass.setDid(courseVo.getDid());
+            userClass.setClassName(courseVo.getCourseName()+"班");
             userClass.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
             String schoolName = schoolMapper.findSchoolById(Integer.parseInt(courseVo.getSchoolId()));
             userClass.setSchoolName(schoolName);

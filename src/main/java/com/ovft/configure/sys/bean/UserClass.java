@@ -19,8 +19,16 @@ public class UserClass {
     private String remark;      //备注
     private Integer schoolId;
     private String schoolName;
+    private Integer did;
     private List<MyCourseAll> users;   //班级学员集合
 
+    public Integer getDid() {
+        return did;
+    }
+
+    public void setDid(Integer did) {
+        this.did = did;
+    }
 
     public List<MyCourseAll> getUsers() {
         return users;

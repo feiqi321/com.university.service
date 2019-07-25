@@ -6,9 +6,18 @@ package com.ovft.configure.sys.bean;
   */
 public class Department {
     private Integer did;
+    private Integer [] dids;
     private String departmentName;
     private Integer schoolId;
     private String schoolName;
+
+    public Integer[] getDids() {
+        return dids;
+    }
+
+    public void setDids(Integer[] dids) {
+        this.dids = dids;
+    }
 
     public String getDepartmentName() {
         return departmentName;

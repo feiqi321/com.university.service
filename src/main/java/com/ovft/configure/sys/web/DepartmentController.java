@@ -49,7 +49,27 @@ public class DepartmentController {
      */
     @PostMapping(value="/server/deleteDepartment")
     public WebResult deleteDepartment(@RequestBody DepartmentVo departmentVo) {
-        return departmentService.departmentList(departmentVo);
+        return departmentService.deleteDepartment(departmentVo);
+    }
+    /**
+     * 批量删除院系
+     *
+     * @param department
+     * @return
+     */
+    @PostMapping(value="/server/bigDeleteDepartment")
+    public WebResult bigDeleteDepartment(@RequestBody Department department) {
+        return departmentService.bigDeleteDepartment(department);
+    }
+    /**
+     * 添加/修改院系
+     *
+     * @param departmentVo
+     * @return
+     */
+    @PostMapping(value="/server/createDepartment")
+    public WebResult createDepartment(@RequestBody DepartmentVo departmentVo) {
+        return departmentService.createDepartment(departmentVo);
     }
 
 }

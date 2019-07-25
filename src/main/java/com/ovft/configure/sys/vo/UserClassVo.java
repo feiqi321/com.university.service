@@ -5,6 +5,8 @@ public class UserClassVo {
 
     private int pageNum;
 
+    private Integer userId;
+
     private Integer classId;
 
     private String className;
@@ -22,6 +24,14 @@ public class UserClassVo {
     private String search;
 
     private String job;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public String getJob() {
         return job;

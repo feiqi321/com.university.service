@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.DepartmentMapper" >
 
-    <!--后台条件查询文章-->
+    <!--院系列表-->
     <select id="departmentList"  resultType="com.ovft.configure.sys.vo.DepartmentVo">
         select  d.did did,d.d_name departmentName,d.school_id schoolId,s.school_name schoolName
         from edu_department d,
@@ -12,6 +12,9 @@
         d.school_id=s.school_id
         <if test="did != null ">
             AND d.did = #{did}
+        </if>
+        <if test="departmentName != null and departmentName !=''">
+            AND d.d_name = #{departmentName}
         </if>
         <if test="schoolId != null">
             AND d.school_id = #{schoolId}
@@ -24,8 +27,28 @@
     </select>
     <!--删除一条记录-->
     <delete id="deleteDepartment" parameterType="java.lang.Integer">
-          delete from edu_department d
-        where d.did= #{did,jdbcType=INTEGER}
+          delete from edu_department
+        where did=#{did}
         </delete>
+
+    <!--批量删除-->
+    <delete id="bigDeleteDepartment" parameterType="java.util.List" >
+        <foreach collection="dids" item="value" index="index" open="" close="" separator=";">
+            delete from edu_department
+            where
+            <if test="value!=null">
+                did= #{value}
+            </if>
+        </foreach>
+    </delete>
+    <!--添加-->
+     <insert id="createDepartment" parameterType="com.ovft.configure.sys.vo.DepartmentVo">
+          insert into edu_department values (default,#{departmentName},#{schoolId})
+     </insert>
+    <!--修改-->
+     <update id="updateDepartment" parameterType="com.ovft.configure.sys.vo.DepartmentVo">
+         update edu_department set d_name=#{departmentName},school_id=#{schoolId} where did=#{did}
+     </update>
+
 
 </mapper>

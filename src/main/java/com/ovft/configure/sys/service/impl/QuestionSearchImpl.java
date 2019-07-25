@@ -250,9 +250,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
         List<AnswerRecordVo> answerValues = answerRecord.getAnswerValues();     //用户所填每题题号加结果记录的集合
         for (int n = 0; n < answerValues.size(); n++) {
             if (n == 0) {
-                answer = answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() + ";";
+                answer = answerValues.get(n).getTitleId() + "-" + answerValues.get(n).getAnswer();
             } else {
-                answer = answer.concat(answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer());
+                answer = answer.concat(answerValues.get(n).getTitleId() + "-" + answerValues.get(n).getAnswer());
             }
         }
 
@@ -685,7 +685,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             return new WebResult("300", "您还未做试卷任何题目，不能提交空试卷！", "");
         }
         //找到对应主题的题目及选项(选项及分数权重的集合)的集合，主要针对教师评价
-        List<Question> questions = questionSearchMapper.findQuestionAllAndGrade(answerRecord.getList().get(0).getSid(), answerRecord.getList().get(0).getTid(), null);
+        List<Question> questions = questionSearchMapper.findQuestionAllAndGrade(answerRecord.getList().get(0).getSid(),null, null);
         //当类型是二,即教师评价的时候需要对答题总分进行统计
         if (answerRecord.getList().get(0).getTid() == 2) {
             Integer total = 0;   //用户答题总分记录
@@ -727,9 +727,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
         List<AnswerRecordVo> answerValues = answerRecord.getAnswerValues();//用户所填每题题号加结果记录的集合
         for (int n = 0; n < answerValues.size(); n++) {
             if (n == 0) {
-                answer = answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() + ";";
+                answer = answerValues.get(n).getTitleId() + "-" + answerValues.get(n).getAnswer() + "; ";
             } else {
-                answer = answer.concat(answerValues.get(n).getTitleId() + "," + answerValues.get(n).getAnswer() + ";");
+                answer = answer.concat(answerValues.get(n).getTitleId() + "-" + answerValues.get(n).getAnswer() + "; ");
             }
         }
 

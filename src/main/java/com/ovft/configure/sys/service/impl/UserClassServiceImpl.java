@@ -131,10 +131,14 @@ public class UserClassServiceImpl implements UserClassService {
     public WebResult userClassList(UserClassVo userClassVo) {
 
         PageVo pageVo=new PageVo();
-
+        if (userClassVo.getUserId()!=null) {
+            pageVo.setUserId(userClassVo.getUserId());
+        }
         if (userClassVo.getPageSize() == 0) {
 
             List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);
+
+
 
 
             List<MyCourseAll> myCourseList = findMyCourseList(pageVo);
@@ -150,7 +154,20 @@ public class UserClassServiceImpl implements UserClassService {
                 }
 
             }
-            return new WebResult("200", "查询成功", userClassList);
+                 if (userClassVo.getUserId()!=null) {
+                     List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
+                     for (int n = 0; n < myCourseList.size(); n++) {
+                         if (userClassList.get(n).getCourseId() == myCourseList.get(n).getCourseId()) {
+
+                             endUserClassList.add(userClassList.get(n));
+                         }
+
+                     }
+                     return new WebResult("200", "查询成功", endUserClassList);
+                 }else {
+
+                     return new WebResult("200", "查询成功", userClassList);
+                 }
 
         } else {
 
@@ -171,9 +188,21 @@ public class UserClassServiceImpl implements UserClassService {
                 }
 
             }
-            PageInfo pageInfo = new PageInfo<>(userClassList);
-            return new WebResult("200", "查询成功", pageInfo);
+            if (userClassVo.getUserId()!=null) {
+                List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
+                for (int n = 0; n < myCourseList.size(); n++) {
+                    if (userClassList.get(n).getCourseId() == myCourseList.get(n).getCourseId()) {
 
+                        endUserClassList.add(userClassList.get(n));
+                    }
+
+                }
+                PageInfo pageInfo = new PageInfo<>(endUserClassList);
+                return new WebResult("200", "查询成功", pageInfo);
+            }else {
+                PageInfo pageInfo = new PageInfo<>(userClassList);
+                return new WebResult("200", "查询成功", pageInfo);
+            }
         }
 
 

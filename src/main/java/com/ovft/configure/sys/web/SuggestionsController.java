@@ -65,10 +65,12 @@ public class SuggestionsController {
             // 如果是pc端登录，更新token缓存失效时间
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
             Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-            if(hget.getRole() != 0) {
-                suggestionsVo.setSchoolId(Integer.valueOf(hget.getSchoolId().toString()));
+            if(hget.getRole() == 0) {
+                return  suggestionsService.SuggestionsList(suggestionsVo);
+            }else {
+                return new WebResult("200", "获取失败，仅限系统超级管理员查看！", "");
             }
-            return  suggestionsService.SuggestionsList(suggestionsVo);
+
         }else {
             return new WebResult("50012", "请先登录", "");
         }
