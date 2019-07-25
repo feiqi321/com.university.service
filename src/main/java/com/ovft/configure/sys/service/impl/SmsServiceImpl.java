@@ -5,7 +5,6 @@ import com.ovft.configure.sys.service.SmsService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.utils.SecurityUtils;
 import com.ovft.configure.sys.utils.Sms253Util;
-import com.ovft.configure.sys.web.AdminController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import java.util.Random;
 @Service
 public class SmsServiceImpl implements SmsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SmsServiceImpl.class);
 
     @Autowired
     private RedisUtil redisUtil;

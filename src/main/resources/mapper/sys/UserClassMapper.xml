@@ -3,9 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ovft.configure.sys.dao.UserClassMapper" >
        <!--学员班级列表-->
-      <select id="userClassList" parameterType="com.ovft.configure.sys.bean.UserClass" resultType="com.ovft.configure.sys.bean.UserClass">
+      <select id="userClassList" parameterType="com.ovft.configure.sys.vo.UserClassVo" resultType="com.ovft.configure.sys.bean.UserClass">
           select c.class_id classId,c.class_name className,c.class_no classNo,c.job job,c.specialty specialty,
-          c.course_id courseId, c.remark remark ,c.school_id schoolId, c.school_name schoolName from edu_user_class c
+          c.course_id courseId, c.remark remark ,c.schoolId schoolId, c.school_name schoolName from edu_user_class c
           where 1=1
           <if test="classId != null">
               AND class_id = #{classId}
@@ -28,8 +28,8 @@
           <if test="job != null and job !=''">
               AND specialty = #{specialty}
           </if>
-          <if test="pageVo.search != null and pageVo.search != ''">
-              AND (u.user_name like CONCAT('%',#{pageVo.search},'%') or u.phone like CONCAT('%',#{pageVo.search},'%'))
+          <if test="search != null and search != ''">
+              AND (c.class_name like CONCAT('%',#{search},'%') or c.school_name like CONCAT('%',#{search},'%'))
           </if>
        </select>
        <!--学员班级列表-->

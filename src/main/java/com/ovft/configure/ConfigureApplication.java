@@ -1,6 +1,7 @@
 package com.ovft.configure;
 
 import com.github.pagehelper.PageHelper;
+import com.ovft.configure.sys.utils.AgeUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,9 +18,11 @@ import java.util.Properties;
 public class ConfigureApplication {
 
     public static void main(String[] args) {
+
+
         SpringApplication.run(ConfigureApplication.class, args);
     }
-    
+
     //配置mybatis的分页插件pageHelper
     @Bean
     public PageHelper pageHelper(){

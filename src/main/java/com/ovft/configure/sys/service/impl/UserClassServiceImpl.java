@@ -5,8 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.bean.UserClass;
+import com.ovft.configure.sys.dao.EduOfflineNumMapper;
+import com.ovft.configure.sys.dao.EduPayrecordMapper;
 import com.ovft.configure.sys.dao.UserClassMapper;
 import com.ovft.configure.sys.service.UserClassService;
+import com.ovft.configure.sys.vo.MyCourseAll;
 import com.ovft.configure.sys.vo.UserClassVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,10 @@ import java.util.List;
 public class UserClassServiceImpl implements UserClassService {
     @Resource
     private UserClassMapper userClassMapper;
+    @Resource
+    private EduOfflineNumMapper eduOfflineNumMapper;
+    @Resource
+    private EduPayrecordMapper eduPayrecordMapper;
 
     @Override
     public WebResult deleteUserClass(Integer classId) {
@@ -54,5 +61,15 @@ public class UserClassServiceImpl implements UserClassService {
         }
 
 
+    }
+    @Transactional
+    @Override
+    public WebResult classdeleteUser(MyCourseAll myCourseAll) {
+           if (myCourseAll.getStatu().equals("线上报名")){
+               eduPayrecordMapper.deleteByPrimaryKey(myCourseAll.getId());
+           }else {
+               eduOfflineNumMapper.deleteByPrimaryKey(myCourseAll.getId());
+           }
+        return new WebResult("200", "删除成功", "");
     }
 }

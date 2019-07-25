@@ -23,8 +23,18 @@ public class EduCourseVo extends EduCourse {
 
     private String name;
 
+    private int isAddQuestion;  //是否添加题目 “1”：已添加   “0”：未添加
+
     //可报名剩余人数
     private Integer nowtotal;
+
+    public int getIsAddQuestion() {
+        return isAddQuestion;
+    }
+
+    public void setIsAddQuestion(int isAddQuestion) {
+        this.isAddQuestion = isAddQuestion;
+    }
 
     public Integer getNowtotal() {
         return nowtotal;

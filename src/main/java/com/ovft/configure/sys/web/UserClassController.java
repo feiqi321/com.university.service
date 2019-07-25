@@ -3,6 +3,7 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.UserClass;
 import com.ovft.configure.sys.service.UserClassService;
+import com.ovft.configure.sys.vo.MyCourseAll;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.UserClassVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +51,19 @@ public class UserClassController {
      * @param userClass
      * @return
      */
-    @PostMapping(value = "/server/user/findUserClassAll")
+    @PostMapping(value = "/server/user/deleteUserClass")
     public WebResult deleteUserClass(@RequestBody UserClass userClass){
         return userClassService.deleteUserClass(userClass.getClassId());
+    }
+    /**
+     * 删除班级里面的某个学员（分页）
+     *
+     * @param myCourseAll
+     * @return
+     */
+    @PostMapping(value = "/server/user/classdeleteUser")
+    public WebResult classdeleteUser(@RequestBody MyCourseAll myCourseAll){
+        return userClassService.classdeleteUser(myCourseAll);
     }
     /**
      * 修改班级（分页）

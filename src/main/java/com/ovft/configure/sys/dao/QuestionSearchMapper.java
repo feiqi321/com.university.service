@@ -31,6 +31,10 @@ public interface QuestionSearchMapper {
     public void updateBigQuestionItem(List<Question> list);
     //批量修改问卷题目及选项记录（SearchQuestion）
     public void updateBigVoteItem(List<VoteItem> list);
+    //批量删除问卷题目及选项
+    public void BigDeleteAnswerRecord(Integer [] aids);
+    //删除一条结果记录
+    public void deleteAnswerRecordOne(AnswerRecord answerRecord);
     //删除一篇问卷主题
     public void deleteSearchQuestion(Integer sid);
     //删除相关的问卷调查题目及选项

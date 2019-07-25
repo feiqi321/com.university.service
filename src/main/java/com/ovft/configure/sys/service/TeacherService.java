@@ -26,6 +26,8 @@ public interface TeacherService {
 
     public WebResult userList(PageVo pageVo);
 
+    public WebResult findVisitors(PageVo pageVo);
+
     public WebResult savaUserInfo(User user);
     //学员报校审核状态修改
     public WebResult updateCheckIn(Integer userId,Integer checkin);

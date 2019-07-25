@@ -66,6 +66,14 @@ public class PageVo {
 
     private Integer status;          //问卷列表的状态（对应edu_search_question表里面的status字段）
 
+    private Integer   isAddQuestion;   //教师评价时是否已添加问卷   1:已添加 0：未添加
+
+
+
+    public void setIsAddQuestion(Integer isAddQuestion) {
+        this.isAddQuestion = isAddQuestion;
+    }
+
     public Integer getStatus() {
         return status;
     }

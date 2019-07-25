@@ -27,6 +27,15 @@ public class AnswerRecord {
       private String type;
       private int tid;
       private Integer courseId;  //教师评价对应的课程id
+      private Integer [] aids;
+
+    public Integer[] getAids() {
+        return aids;
+    }
+
+    public void setAids(Integer[] aids) {
+        this.aids = aids;
+    }
 
     public Integer getCourseId() {
         return courseId;

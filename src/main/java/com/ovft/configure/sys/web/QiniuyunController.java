@@ -72,7 +72,7 @@ public class QiniuyunController {
     @RequestMapping(value = "/uploadAppImage", method = RequestMethod.POST)
     public WebResult upload(@RequestBody Base64File base64File, HttpServletRequest request) {
         MultipartFile file = BASE64DecodedMultipartFile.base64Convert(base64File.getContent());
-        return uploadFile(request, file, "");
+        return uploadFile(request, file, base64File.getFilePrefix());
     }
 
     /**

@@ -61,7 +61,7 @@ public class EduVolunteerServiceImpl implements EduVolunteerService {
         volunteerMapper.updateVisits(eduVolunteer);
 
         //查找是否已经报名该志愿活动
-        if(StringUtils.isBlank(userId)){
+        if(StringUtils.isBlank(userId) || userId.equals("null")){
             eduVolunteer.setIsRegist(0);
         } else {
             List<MyVolunteer> myVolunteers = volunteerMapper.selectMyVolunteer(Integer.valueOf(userId), volunteerId);

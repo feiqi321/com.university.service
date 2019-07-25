@@ -4,19 +4,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
-import com.ovft.configure.sys.dao.EduOfflineOrderMapper;
-import com.ovft.configure.sys.dao.OrderMapper;
-import com.ovft.configure.sys.dao.QuestionSearchMapper;
-import com.ovft.configure.sys.dao.SchoolMapper;
+import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.QuestionSearchService;
 import com.ovft.configure.sys.vo.*;
 import net.sf.saxon.expr.instruct.ForEach;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -28,6 +27,8 @@ public class QuestionSearchImpl implements QuestionSearchService {
     @Resource
     private SchoolMapper schoolMapper;
     @Resource
+    private TeacherMapper teacherMapper;
+    @Resource
     private OrderMapper orderMapper;
     @Resource
     private QuestionSearchMapper questionSearchMapper;
@@ -38,6 +39,15 @@ public class QuestionSearchImpl implements QuestionSearchService {
     @Transactional
     @Override
     public WebResult createSearchQuestion(SearchQuestion searchQuestion) {
+        if (StringUtils.isBlank(searchQuestion.getSearchName())) {
+            return new WebResult("400", "问卷标题不能为空！", "");
+        }
+        if (StringUtils.isBlank(searchQuestion.getTopImage())) {
+            return new WebResult("400", "您还未添加问卷图片！", "");
+        }
+
+
+
         String schoolById = schoolMapper.findSchoolById(searchQuestion.getSchoolId());
         searchQuestion.setSchoolName(schoolById);
         searchQuestion.setStatus(1);
@@ -46,6 +56,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
         searchQuestion.setUpdateTime(new Date());
         if (searchQuestion.getTid() == 1) {   //问卷调查
+            if (searchQuestion.getQuestions().isEmpty()) {
+                return new WebResult("400", "您还未添加问卷题目！", "");
+            }
             if (searchQuestion.getSid() == null) {
                 questionSearchMapper.createSearchQuestion(searchQuestion);
 
@@ -64,11 +77,22 @@ public class QuestionSearchImpl implements QuestionSearchService {
             } else {
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<Question> questions = searchQuestion.getQuestions();
+                for (int i=0;i<questions.size();i++){
+                    List<Question>  questionList=new ArrayList<>();
+                    questionList.add(questions.get(i));
+                    if (questions.get(i).getQid()==null){
+                        questionSearchMapper.insertBigQuestionItem(questionList);
+                    }
+                    questionSearchMapper.updateBigQuestionItem(questions);
+                }
                 questionSearchMapper.updateBigQuestionItem(questions);
                 return new WebResult("200", "修改成功", "");
             }
         }
-        if (searchQuestion.getTid() == 2) {  //类型为教师评价是处理
+        if (searchQuestion.getTid() == 2||searchQuestion.getTid()==0) {  //类型为教师评价是处理
+            if (searchQuestion.getQuestions().isEmpty()) {
+                return new WebResult("400", "您还未添加问卷题目！", "");
+            }
             //通过courseId查询edu_search_question表是否存在相关记录
             List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(searchQuestion.getCourseId());
 
@@ -84,14 +108,23 @@ public class QuestionSearchImpl implements QuestionSearchService {
                     questions.get(i).setSid(searchQuestion.getSid());
 
                 }
-
+                teacherMapper.updateisAddQuestionByCourseId(searchQuestion.getCourseId(),1); //修改课程为已添加问卷题目状态
                 questionSearchMapper.insertBigQuestionItem(questions);
                 return new WebResult("200", "添加成功", "");
 
             } else {
+
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<Question> questions = searchQuestion.getQuestions();
-                questionSearchMapper.updateBigQuestionItem(questions);
+                for (int i=0;i<questions.size();i++){
+                    List<Question>  questionList=new ArrayList<>();
+                    questionList.add(questions.get(i));
+                    if (questions.get(i).getQid()==null){
+                        questionSearchMapper.insertBigQuestionItem(questionList);
+                    }
+                    questionSearchMapper.updateBigQuestionItem(questions);
+                }
+
                 return new WebResult("200", "修改成功", "");
             }
 
@@ -99,6 +132,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
         if (searchQuestion.getTid() == 3) {  //类型为投票时处理
 
+            if (searchQuestion.getVoteItems().isEmpty()) {
+                return new WebResult("400", "您还未投票题目及选项！", "");
+            }
 
             //批量添加问题及选项
             if (searchQuestion.getSid() == null) {
@@ -114,7 +150,15 @@ public class QuestionSearchImpl implements QuestionSearchService {
             } else {
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<VoteItem> voteItems = searchQuestion.getVoteItems();
-                questionSearchMapper.updateBigVoteItem(voteItems);
+                for (int i=0;i<voteItems.size();i++){
+                    List<VoteItem>  voteItemList=new ArrayList<>();
+                    voteItemList.add(voteItems.get(i));
+                    if (voteItems.get(i).getId()==null){
+                        voteItemList.get(i).setSid(searchQuestion.getSid());
+                        questionSearchMapper.createBigVoteItem(voteItemList);
+                    }
+                    questionSearchMapper.updateBigVoteItem(voteItemList);
+                }
                 return new WebResult("200", "修改成功", "");
             }
         }
@@ -124,24 +168,37 @@ public class QuestionSearchImpl implements QuestionSearchService {
     //删除问卷调查（SearchQuestion）
     @Transactional
     @Override
-    public WebResult deleteSearchQuestion(Integer sid, Integer tid, Integer topId, Integer downId) {
+    public WebResult deleteSearchQuestion(Integer sid, Integer tid,Integer courseId) {
         questionSearchMapper.deleteSearchQuestion(sid);
         if (tid == 1) {
             questionSearchMapper.deleteQuestionItem(sid);
         }
         if (tid == 2) {
-            if (topId != null) {
-                questionSearchMapper.deleteQuestionItemByTopid(topId);
+            List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(courseId);
+            if (!searchQuestionByCourseId.isEmpty()){
+                sid= searchQuestionByCourseId.get(0).getSid();
             }
-            if (downId != null) {
-                questionSearchMapper.deleteQuestionItemBydownid(downId);
-            }
-
+            teacherMapper.updateisAddQuestionByCourseId(courseId,0);
+            questionSearchMapper.deleteQuestionItem(sid);
         }
         if (tid == 3) {
             //当类型是投票的时候 删除对应表的相关记录
             questionSearchMapper.deleteVoteItembyId(sid);
         }
+        return new WebResult("200", "删除成功", "");
+    }
+    //删除一条结果记录
+    @Transactional
+    @Override
+    public WebResult deleteAnswerRecordOne(AnswerRecord answerRecord) {
+        questionSearchMapper.deleteAnswerRecordOne(answerRecord);
+        return new WebResult("200", "删除成功", "");
+    }
+    //批量删除用户结果记录
+    @Transactional
+    @Override
+    public WebResult BigDeleteAnswerRecord(AnswerRecord answerRecord) {
+        questionSearchMapper.BigDeleteAnswerRecord(answerRecord.getAids());
         return new WebResult("200", "删除成功", "");
     }
 
@@ -215,16 +272,46 @@ public class QuestionSearchImpl implements QuestionSearchService {
         return null;
     }
 
+    /**
+     * 根据身份证号获取年龄
+     * @param certId
+     * @return
+     */
+    public static int getAgeByCertId(String certId) {
+        String birthday = "";
+        if (certId.length() == 18) {
+            birthday = certId.substring(6, 10) + "/"
+                    + certId.substring(10, 12) + "/"
+                    + certId.substring(12, 14);
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date now = new Date();
+        Date birth = new Date();
+        try {
+            birth = sdf.parse(birthday);
+        } catch (ParseException e) {
+        }
+        long intervalMilli = now.getTime() - birth.getTime();
+        int age = (int) (intervalMilli/(24 * 60 * 60 * 1000))/365;
+        System.out.println(age);
+        return age;
+    }
+
     //app端教师评价列表()
     @Override
     public WebResult findMyCourseList(PageVo pageVo) {
 
-        pageVo.setPayStatus(1);
+        pageVo.setPayStatus(5);
         List<MyCourseAll> myCourseAlltop = questionSearchMapper.findMyCourseAlltop(pageVo);
+        pageVo.setPayStatus(1);
         List<MyCourseAll> myCourseAlldown = questionSearchMapper.findMyCourseAlldown(pageVo);
         VateType vateType = questionSearchMapper.findCourseImage(2);
         List<MyCourseAll> list = new ArrayList();
+
         for (int m = 0; m < myCourseAlltop.size(); m++) {
+
+
+
             myCourseAlltop.get(m).setCourseImage(vateType.getImage());
             myCourseAlltop.get(m).setStatu("线上报名");
             Integer schoolId = myCourseAlltop.get(m).getSchoolId();
@@ -257,11 +344,29 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         if (pageVo.getPageSize() == 0) {
 
+            for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
+                String card=list.get(i).getIdentityCard();
+                int age;
+                if (card!=null) {
+                    age = TeacherServiceImpl.getAgeByCertId(card);
+                    list.get(i).setAge(age);
+                }
+            }
+
             return new WebResult("200", "查询成功", list);
         }
 
 
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+
+        for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
+            String card=list.get(i).getIdentityCard();
+            int age;
+            if (card!=null) {
+                age = TeacherServiceImpl.getAgeByCertId(card);
+                list.get(i).setAge(age);
+            }
+        }
 
         PageInfo pageInfo = new PageInfo<>(list);
         return new WebResult("200", "查询成功", pageInfo);
@@ -296,6 +401,110 @@ public class QuestionSearchImpl implements QuestionSearchService {
                           sid= searchQuestionByCourseId.get(0).getSid();
                     }
                     List<Question> questions = questionSearchMapper.findQuestionAll(sid, null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
+                    if (questions.isEmpty()) {
+                        return new WebResult("300", "此课程暂时还没有添加评价相关内容", "");
+
+                    }
+                    searchQuestionAll2.get(0).setQuestions(questions);   //将选项设置给对应问卷
+                }
+                if (pageVo.getTid() == 3) {//返回对应投票详情
+
+                    List<VoteItem> voteItembySid = questionSearchMapper.findVoteItembySid(pageVo.getSid());
+                    if (voteItembySid.isEmpty()) {
+                        return new WebResult("300", "此投票暂时还没有添加相关选项内容", "");
+
+                    }
+                    searchQuestionAll2.get(0).setVoteItems(voteItembySid);
+                }
+                questionSearchMapper.updateSearchQuestionVisits(searchQuestionAll2.get(0).getVisits() + 1, searchQuestionAll2.get(0).getSid()); //让该篇问卷调查的浏览量+1
+
+                return new WebResult("200", "进入详情页", searchQuestionAll2.get(0));
+            }
+            //问卷调查列表==>>1.
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+            if (searchQuestionAll==null){
+                return new WebResult("200","没有找到对应试题","");
+            }
+//            int size=searchQuestionAll.size();
+
+            return new WebResult("200", "查询成功", searchQuestionAll);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        //进入详情页
+        if (pageVo.getSid() != null || pageVo.getTopId() != null || pageVo.getDownId() != null) {  //进入某篇问卷调查的详情页==>> 2.
+
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), null,pageVo.getCourseId(), pageVo.getSearch());
+            if (pageVo.getTid() == 1) {
+                if (searchQuestionAll.get(0).getQuestions().isEmpty()) {
+                    return new WebResult("300", "此问卷暂时还没有添加相关试题内容", "");
+
+                }
+                List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
+                searchQuestionAll.get(0).setQuestions(questions);
+            }
+            if (pageVo.getTid() == 2) {
+                List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(pageVo.getCourseId());
+                Integer sid=null;
+                if (!searchQuestionByCourseId.isEmpty()){
+                    sid= searchQuestionByCourseId.get(0).getSid();
+                }
+                List<Question> questions = questionSearchMapper.findQuestionAll(sid, null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
+                if (questions.isEmpty()) {
+                    return new WebResult("300", "此课程暂时还没有添加评价相关内容", "");
+
+                }
+                searchQuestionAll.get(0).setQuestions(questions);
+            }
+            if (pageVo.getTid() == 3) {//返回对应投票详情
+                if (searchQuestionAll.get(0).getVoteItems().isEmpty()) {
+                    return new WebResult("300", "此投票暂时还没有添加相关选项内容", "");
+
+                }
+
+                List<VoteItem> voteItembySid = questionSearchMapper.findVoteItembySid(pageVo.getSid());
+                searchQuestionAll.get(0).setVoteItems(voteItembySid);
+            }
+            questionSearchMapper.updateSearchQuestionVisits(searchQuestionAll.get(0).getVisits() + 1, searchQuestionAll.get(0).getSid()); //让该篇问卷调查的浏览量+1
+
+            return new WebResult("200", "进入详情页", searchQuestionAll.get(0));
+        }
+        //问卷调查列表==>> 1.
+        List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+
+        PageInfo pageInfo = new PageInfo<>(searchQuestionAll2);
+        return new WebResult("200", "查询成功", pageInfo);
+    }
+
+
+    //1.问卷调查列表 and 2.进入详情页    (*进入详情也在此方法共用，在传入了)   =============>>后台进入详情页（可反显选项对应分数）
+    @Override
+    public WebResult findServerSearchQuestionAll(PageVo pageVo) {
+
+        if (pageVo.getPageSize() == 0) {
+            //进入详情页
+            if (pageVo.getSid() != null || pageVo.getCourseId()!= null) {     //进入某篇问卷调查的详情页==>> 2.
+
+
+                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+                 if (searchQuestionAll2==null){
+                     return new WebResult("200","没有找到对应试题","");
+                 }
+                if (pageVo.getTid() == 1) {
+
+                    List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
+                    if (questions.isEmpty()) {
+                        return new WebResult("300", "此问卷暂时还没有添加相关试题内容", "");
+
+                    }
+                    searchQuestionAll2.get(0).setQuestions(questions); //将选项设置给对应问卷
+                }
+                if (pageVo.getTid() == 2 || pageVo.getTid() == 0) {
+                    List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(pageVo.getCourseId());
+                    Integer sid=null;
+                    if (!searchQuestionByCourseId.isEmpty()){
+                          sid= searchQuestionByCourseId.get(0).getSid();
+                    }
+                    List<Question> questions = questionSearchMapper.findQuestionAllAndGrade(sid,pageVo.getTid(),pageVo.getSearch());
                     if (questions.isEmpty()) {
                         return new WebResult("300", "此课程暂时还没有添加评价相关内容", "");
 

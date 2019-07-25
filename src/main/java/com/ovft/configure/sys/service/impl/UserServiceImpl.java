@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "验证码错误");
         }
         WebResult result = new WebResult();
+        user.setUserName(user.getPhone());
         userMapper.addUser(user);
         result.setCode("200");
         result.setMsg("注册成功");
@@ -159,7 +160,7 @@ public class UserServiceImpl implements UserService {
         user1.setSchoolName(schoolName);
         String pasword = MD5Utils.md5Password(user.getPassword());
         if (!pasword.equals(finduserbyphone.getPassword())) {
-            return new WebResult("400", "帐号或密码错误");
+            return new WebResult("400", "输入的密码不正确！");
         }
         map.put("user", user1);
 

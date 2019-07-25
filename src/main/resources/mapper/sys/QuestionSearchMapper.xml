@@ -18,7 +18,7 @@
             keyProperty="sid">
         update edu_search_question
         <set>
-            <if test="schoolId != null and schoolId != ''">
+            <if test="schoolId != null">
                 schoolId=#{schoolId},
             </if>
             <if test="searchName != null and searchName != ''">
@@ -52,16 +52,20 @@
 
 
         </set>
-        where
-        <if test="sid != null and sid != ''">
-            sid=#{sid}
+        where 1=1
+        <if test="sid != null">
+           and  sid=#{sid}
         </if>
-        <if test="topId != null and topId != ''">
-            topId=#{topId}
+        <if test="courseId != null">
+           and course_id=#{courseId}
         </if>
-        <if test="downId != null and downId != ''">
-            downId=#{downId}
-        </if>
+
+        <!--<if test="topId != null">-->
+            <!--topId=#{topId}-->
+        <!--</if>-->
+        <!--<if test="downId != null and ">-->
+            <!--downId=#{downId}-->
+        <!--</if>-->
     </update>
     <!--添加问卷题目-->
     <insert id="createQuestion" parameterType="com.ovft.configure.sys.bean.Question">
@@ -95,7 +99,7 @@
     <insert id="insertBigQuestionItem" parameterType="java.util.List" useGeneratedKeys="true"   keyProperty="qid">
         insert into edu_question
         (qid,sid,topId,downId,question,item1,item1_num,item1_grade,item1_image,item2,item2_num,item2_grade,item2_image,item3,item3_num,item3_grade,item3_image,item4,item4_num,item4_grade,
-        item4_image,item5,item5_num,item5_grade,item5_image,item6,item6_num,item6_grade,item6_image)
+        item4_image,item5,item5_num,item5_grade,item5_image,item6,item6_num,item6_grade,item6_image,status)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
@@ -127,8 +131,8 @@
             #{item.item6},
             #{item.item6Num},
             #{item.item6Grade},
-            #{item.item6Image}
-
+            #{item.item6Image},
+            #{item.status}
             )
         </foreach>
     </insert>
@@ -174,7 +178,8 @@
                 item6=#{item.item6},
                 item6_num=#{item.item6Num},
                 item6_grade=#{item.item6Grade},
-                item6_image= #{item.item6Image}
+                item6_image= #{item.item6Image},
+                status=#{item.status}
         </set>
             where  qid= #{item.qid}
         </foreach>
@@ -245,7 +250,7 @@
         <!--AND a.type = #{type}-->
         <!--</if>-->
         <if test="search != null and search != ''">
-            AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+            AND (s.search_name like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%') )
         </if>
 
         ORDER BY s.createtime DESC,s.updatetime DESC
@@ -272,7 +277,7 @@
     <!--AND a.type = #{type}-->
     <!--</if>-->
     <if test="search != null and search != ''">
-        AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+        AND (s.search_name like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
     </if>
 
     ORDER BY s.visits DESC,s.updatetime DESC
@@ -298,18 +303,18 @@
     <!--AND a.type = #{type}-->
     <!--</if>-->
     <if test="search != null and search != ''">
-        AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+        AND (s.search_name like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
     </if>
 
     ORDER BY s.visits DESC
     </select>
 
-    <!--进入详情页（无选项分数字段返回）-->
+    <!--进入详情页（无"选项的分数字段"返回,如"q.item_grade"）-->
     <select id="findQuestionAll" resultType="com.ovft.configure.sys.bean.Question">
         select q.qid,q.sid,q.question,q.item1,q.item1_num item1Num,q.item1_image item1Image,q.item2,q.item2_num item2Num
         ,q.item2_image item2Image,q.item3,q.item3_num item3Num,q.item3_image item3Image,q.item4,q.item4_num item4Num,
         q.item4_image item4Image,q.item5,q.item5_num item5Num,q.item5_image item5Image,q.item6,q.item6_num item6Num,
-        q.item6_image item6Image,q.tid,q.topId
+        q.item6_image item6Image,q.tid,q.topId,q.status
         from edu_question q
         where 1=1
         <if test="sid != null and sid != ''">
@@ -329,30 +334,32 @@
         <!--AND a.type = #{type}-->
         <!--</if>-->
         <if test="search != null and search != ''">
-            AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+            AND (s.search_name like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
         </if>
 
     </select>
-    <!--查询题目及选项分数-->
+    <!--查询题目及选项分数（后台进入详情页接口）-->
     <select id="findQuestionAllAndGrade" resultType="com.ovft.configure.sys.bean.Question">
-        select     q.sid,q.qid,q.question,q.item1,q.item1_num as item1Num,q.item1_grade as  item1Grade,q.item1_image item1Image,q.item2,q.item2_num item2Num,item2_grade item2Grade
-        ,q.item2_image item2Image,q.item3,q.item3_num item3Num,item3_grade item3Grade,q.item3_image item3Image,q.item4,q.item4_num item4Num,item4_grade item4Grade,q.item4_image item4Image,
-        q.item5,q.item5_num item5Num,item5_grade item5Grade,q.item5_image item5Image,q.item6,q.item6_num item6Num,item6_grade item6Grade,q.item6_image item6Image,q.tid
-        from edu_question q
 
+
+        select q.qid,q.sid,q.question,q.item1,q.item1_num item1Num,q.item1_grade item1Grade,q.item1_image item1Image,q.item2,q.item2_num item2Num
+        ,q.item2_grade item2Grade,q.item2_image item2Image,q.item3,q.item3_num item3Num,q.item3_grade item3Grade,q.item3_image item3Image,q.item4,q.item4_num item4Num,
+        q.item4_grade item4Grade,q.item4_image item4Image,q.item5,q.item5_num item5Num,q.item5_grade item5Grade,q.item5_image item5Image,q.item6,q.item6_num item6Num,
+        q.item6_grade item6Grade,q.item6_image item6Image,q.tid,q.topId,q.status
+        from edu_question q
         where 1=1
         <if test="sid != null and sid != ''">
             AND q.sid = #{sid}
         </if>
 
-        <!--<if test="tid != null and tid != ''">-->
-            <!--AND q.tid = #{tid}-->
-        <!--</if>-->
+        <if test="tid != null and tid != ''">
+            AND q.tid = #{tid}
+        </if>
         <!--<if test="type != null and type != ''">-->
         <!--AND a.type = #{type}-->
         <!--</if>-->
         <if test="search != null and search != ''">
-            AND (s.searchName like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
+            AND (s.search_name like CONCAT('%',#{search},'%') or s.author like CONCAT('%',#{search},'%'))
         </if>
 
     </select>
@@ -367,9 +374,10 @@
      </select>
     <!--所有用户答题结果记录-->
     <select id="findAnswerRecord" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.bean.AnswerRecord" >
-       select  aid,uid,userName,schoolName,answer,title,advice_info adviceInfo,total_grade totalGrade,sid  from   edu_answer_record where 1=1
-        <if test="schoolId!=null">
-            and school_id=#{schoolId}
+       select  aid,uid,userName,schoolName,answer,title,advice_info adviceInfo,total_grade totalGrade,sid,tid  from   edu_answer_record where 1=1
+
+        <if test="tid!=null">
+            and tid=#{tid}
         </if>
         <if test="search != null and search != ''">
             AND user_name like CONCAT('%',#{search},'%')
@@ -427,22 +435,30 @@
     <update id="updateVoteItem" parameterType="int">
         update  edu_vote_item set num=#{num} where id=#{id}
     </update>
-    <!--修改投票选项的num的次数-->
+    <!--修改问卷状态（status）-->
     <update id="updateSearchQuestionStatues" parameterType="int">
         update  edu_search_question set status=#{status} where id=#{sid}
     </update>
 
-    <!--多表查询课程列表（线上的）-->
+
+    <!--多表查询课程列表（线下的）-->
     <select id="findMyCourseAlldown" parameterType="com.ovft.configure.sys.vo.PageVo"
             resultType="com.ovft.configure.sys.vo.MyCourseAll">
         select
-        o.id id,c.course_name courseName,o.school_id schoolId,a.name courseTeacher,c.end_date endDate,c.user_id userId,o.course_id courseId
+        o.id id,c.course_name courseName,o.school_id schoolId,a.name courseTeacher,c.end_date endDate,o.user_id userId,o.course_id courseId,
+        i.user_name userName,i.sex sex,i.area area,i.address adress,i.political political,i.educational educational,i.position position,i.retired retired,
+        i.job job,i.employer employer,i.identity_card identityCard,u.phone phone,u.mycontext mycontext,o.class_record classRecord
         from
         edu_offline_num o,
         edu_course c,
-        edu_admin a
+        edu_admin a,
+        edu_user_item i,
+        edu_user u
         where
-        o.course_id =c.course_id and c.course_teacher=a.admin_id
+        o.course_id =c.course_id and c.course_teacher=a.admin_id and o.user_id=i.user_id and o.user_id=u.user_id
+        <if test="payStatus!=null">
+            and o.pay_status=#{payStatus}
+        </if>
         <if test="courseId!=null">
             and o.course_id=#{courseId}
         </if>
@@ -458,18 +474,21 @@
 
 
     </select>
-    <!--多表查询课程列表（线下的）-->
+    <!--多表查询课程列表（线上的）-->
     <select id="findMyCourseAlltop" parameterType="com.ovft.configure.sys.vo.PageVo"
             resultType="com.ovft.configure.sys.vo.MyCourseAll">
         select
         p.id id, c.course_name courseName,p.school_id schoolId,a.name courseTeacher,c.end_date endDate,p.course_id,p.user_id
-        userId
+        userId, i.user_name userName,i.sex sex,i.area area,i.address adress,i.political political,i.educational educational,i.position position,i.retired retired,
+        i.job job,i.employer employer,i.identity_card,u.phone phone,u.mycontext mycontext,p.class_record classRecord
         from
         edu_payrecord p,
         edu_course c,
-        edu_admin a
+        edu_admin a,
+        edu_user_item i,
+        edu_user u
         where
-           p.course_id=c.course_id and c.course_teacher=a.admin_id
+        p.course_id=c.course_id and c.course_teacher=a.admin_id and p.user_id=i.user_id and p.user_id=u.user_id
         <if test="payStatus!=null">
             and p.pay_status=#{payStatus}
         </if>
@@ -494,6 +513,23 @@
           schoolName,author,top_image topImage,tid,visits,status,topId,downId,course_id courseId  from edu_search_question
           where course_id=#{courseId}
     </select>
+    <!--删除一条调研结果记录-->
+    <delete id="deleteAnswerRecordOne" parameterType="com.ovft.configure.sys.bean.AnswerRecord" >
+        delete from edu_answer_record where 1=1
+        <if test="aid!=null">
+            and  aid=#{aid}
+        </if>
+    </delete>
 
+    <!--批量删除-->
+    <delete id="BigDeleteAnswerRecord" parameterType="java.util.List" >
+        <foreach collection="aids" item="value" index="index" open="" close="" separator=";">
+            delete from edu_answer_record
+            where 1=1
+            <if test="value!=null">
+                id= #{value}
+            </if>
+        </foreach>
+    </delete>
 
 </mapper>

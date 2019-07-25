@@ -25,6 +25,8 @@ public interface TeacherMapper {
 
     //修改课程信息
     public void updateCourseByCourseId(EduCourse course);
+    //修改课程是否添加
+    public void updateisAddQuestionByCourseId(@Param("courseId")Integer courseId,@Param("status")Integer status);
 
     //根据学校id查找课程列表
     public List<EduCourse> selectCourseListBySchoolId(PageVo pageVo);
@@ -48,6 +50,8 @@ public interface TeacherMapper {
     public void deleteVacate(@Param("vacateId") Integer vacateId);
 
     public List<User> selectUserList(@Param("pageVo") PageVo pageVo);
+     //查找游客所有记录
+    public List<User> findVisitors();
 
     public List<User> selectWithdrawList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 

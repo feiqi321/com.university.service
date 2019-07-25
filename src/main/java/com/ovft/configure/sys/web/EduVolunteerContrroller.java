@@ -4,10 +4,11 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduVolunteer;
 import com.ovft.configure.sys.service.EduVolunteerService;
 import com.ovft.configure.sys.vo.PageVo;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zqx
@@ -37,7 +38,7 @@ public class EduVolunteerContrroller {
     @GetMapping("/volunteerRegist")
     public WebResult volunteerRegist(HttpServletRequest request, @RequestParam("volunteerId") Integer volunteerId) {
         String userId = request.getHeader("userId");
-        if(StringUtils.isBlank(userId)){
+        if(StringUtils.isBlank(userId) || userId.equals("null")){
             return new WebResult("400", "请先登录", "");
         }
         return volunteerService.volunteerRegist(Integer.valueOf(userId), volunteerId);
@@ -47,7 +48,7 @@ public class EduVolunteerContrroller {
     @PostMapping("/myVolunteerList")
     public WebResult myVolunteerList(HttpServletRequest request, @RequestBody PageVo pageVo) {
         String userId = request.getHeader("userId");
-        if(StringUtils.isBlank(userId)){
+        if(StringUtils.isBlank(userId) || userId.equals("null")){
             return new WebResult("400", "请先登录", "");
         }
         pageVo.setUserId(Integer.valueOf(userId));
@@ -58,7 +59,7 @@ public class EduVolunteerContrroller {
     @PostMapping("/myRegistVolunteer")
     public WebResult myRegistVolunteer(HttpServletRequest request, @RequestBody PageVo pageVo) {
         String userId = request.getHeader("userId");
-        if(StringUtils.isBlank(userId)){
+        if(StringUtils.isBlank(userId) || userId.equals("null")){
             return new WebResult("400", "请先登录", "");
         }
         pageVo.setUserId(Integer.valueOf(userId));
@@ -69,7 +70,7 @@ public class EduVolunteerContrroller {
     @PostMapping("/releaseVolunteer")
     public WebResult releaseVolunteer(HttpServletRequest request,@RequestBody EduVolunteer eduVolunteer) {
         String userId = request.getHeader("userId");
-        if(StringUtils.isBlank(userId)){
+        if(StringUtils.isBlank(userId) || userId.equals("null")){
             return new WebResult("400", "请先登录", "");
         }
         eduVolunteer.setUserId(Integer.valueOf(userId));
