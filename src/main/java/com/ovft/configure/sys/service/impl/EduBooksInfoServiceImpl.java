@@ -78,4 +78,24 @@ public class EduBooksInfoServiceImpl implements EduBooksInfoService {
         }
         return bookNames;
     }
+
+    @Override
+    public int deleteBookInfos(Integer id) {
+        EduBooksInfoExample eduBooksInfoExample = new EduBooksInfoExample();
+        eduBooksInfoExample.createCriteria().andBookGoodsIdEqualTo(id);
+        int i = eduBooksInfoMapper.deleteByExample(eduBooksInfoExample);
+        return i;
+    }
+
+    @Override
+    public EduBooksInfo selectoneByGoodsId(Integer id) {
+        EduBooksInfoExample eduBooksInfoExample = new EduBooksInfoExample();
+        eduBooksInfoExample.createCriteria().andBookGoodsIdEqualTo(id);
+        List<EduBooksInfo> eduBooksInfos = eduBooksInfoMapper.selectByExample(eduBooksInfoExample);
+        for (EduBooksInfo eduBooksInfo : eduBooksInfos) {
+            return eduBooksInfo;
+        }
+        return null;
+
+    }
 }

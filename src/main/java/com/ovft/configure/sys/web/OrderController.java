@@ -3,29 +3,40 @@ package com.ovft.configure.sys.web;
 import com.alibaba.druid.support.spring.stat.annotation.Stat;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.ovft.configure.constant.OrderStatus;
+import com.ovft.configure.constant.PaymentStatus;
 import com.ovft.configure.constant.Status;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.AddressMapper;
+import com.ovft.configure.sys.dao.PaymentInfoMapper;
 import com.ovft.configure.sys.service.*;
 import com.ovft.configure.sys.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author vvtxw
  * @create 2019-04-12 13:38
  */
 
+@EnableScheduling
 @RestController
 @RequestMapping("record")
 public class OrderController {
@@ -49,6 +60,11 @@ public class OrderController {
 
     @Autowired
     private EduPayrecordService eduPayrecordService;
+    @Autowired
+    private EduCourseService eduCourseService;
+    @Resource
+    private PaymentInfoMapper paymentInfoMapper;
+
 
     /**
      * 线上支付记录
@@ -57,35 +73,102 @@ public class OrderController {
      * @return
      */
     @GetMapping(value = "payrecord")
+    @Transactional
     public WebResult queryAllPayOrder(HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         if (userId1.equals("null")) {
             return new WebResult(StatusCode.ERROR, "请先登录再查询", "");
         }
         Integer userId = Integer.parseInt(userId1);
-//        Integer userId = 59;
+
+        //查出订单付款信息
         List<OrderVo> orderVos = orderService.queryAllRecord(userId);
+        List<EduPayrecord> eduPayrecords = eduPayrecordService.queryAllRecordByUserId(userId);
+
+        //更新支付记录
+        checkDeletePayRecord(orderVos, userId);
+
+
         for (OrderVo orderVo : orderVos) {
             //生存支付记录表信息
-            EduPayrecord eduPayrecord = new EduPayrecord();
-            eduPayrecord.setSchoolId(String.valueOf(orderVo.getSchoolId()));
-            eduPayrecord.setSchoolName(orderVo.getSchoolName());
-            eduPayrecord.setCourseName(orderVo.getCourseName());
-            eduPayrecord.setCourseTeacher(orderVo.getCourseTeacher());
-            eduPayrecord.setCourseAddress(orderVo.getAddress());
-            eduPayrecord.setStartTime(orderVo.getStartTime());
-            eduPayrecord.setEndTime(orderVo.getEndTime());
-            SimpleDateFormat sf = new SimpleDateFormat();
-            String startDate = sf.format(orderVo.getStartDate());
-            eduPayrecord.setCourseStarttime(startDate);
-            eduPayrecord.setPayStatus(String.valueOf(orderVo.getPaymentStatus()));
-            eduPayrecord.setUserId(userId);
-            eduPayrecord.setCourseId(orderVo.getCourseId());
-            eduPayrecordService.insertPayRecord(eduPayrecord);
+            if (eduPayrecords.size() == 0) {
+                creatPayRecord(userId, orderVo);
+            }
         }
+        if (orderVos.size() != eduPayrecords.size() && eduPayrecords.size() > 0) {
+            for (EduPayrecord eduPayrecord : eduPayrecords) {
+                eduPayrecordService.deleteAllrecord(eduPayrecord.getId());
+            }
+            for (OrderVo orderVo : orderVos) {
+                //生存支付记录表信息
+                if (eduPayrecords.size() == 0) {
+                    creatPayRecord(userId, orderVo);
+                }
+            }
+        }
+     /*   if (orderVos.size() == eduPayrecords.size() && eduPayrecords.size() > 0) {
+
+        }*/
 
 
         return new WebResult(StatusCode.OK, "已缴费，报名成功", orderVos);
+    }
+
+    @Transactional
+    Integer checkDeletePayRecord(List<OrderVo> orderVos, Integer userId) {
+        //1.获取当天的时间
+        Date nowTime = new Date();
+        SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+        String formatnowTime = fm.format(nowTime);//获取当前日期字符串
+        //2.获取用户对应购买课程id结束时间
+        EduCourse eduCourse = null;
+        for (OrderVo orderVo : orderVos) {
+            eduCourse = eduCourseService.queryEndTimeByCourseId(orderVo.getCourseId());
+            //3.如果当前时间==用户购买课程所有的结束时间 则删除用户对应的购买记录
+            Date endDate = eduCourse.getEndDate();
+            String endDateString = fm.format(endDate);
+            if (formatnowTime.equals(endDateString)) {
+                //4.删除购买的对应的课程记录
+                Integer res = eduPayrecordService.deleterecordByCourseId(orderVo.getCourseId());
+
+                //5.更改支付的状态为已关闭
+                PaymentInfo paymentInfo = new PaymentInfo();
+                paymentInfo.setPaymentStatus(PaymentStatus.ClOSED);
+                paymentInfo.setOrderId(String.valueOf(orderVo.getId()));
+                PaymentInfoExample paymentInfoExample = new PaymentInfoExample();
+                paymentInfoExample.createCriteria().andOrderIdEqualTo(paymentInfo.getOrderId());
+                int res1 = paymentInfoMapper.updateByExampleSelective(paymentInfo, paymentInfoExample);
+
+                //6.更改订单的支付状态为已完成
+                Order order = new Order();
+                order.setOrderStatus(OrderStatus.FINISH);
+                order.setId(orderVo.getId());
+                Integer res2 = orderService.updateOrderStatus(order);
+                if (res > 0 && res1 > 0 && res2 > 0) {
+                    return res;
+                }
+            }
+        }
+        return -1;
+    }
+
+
+    private void creatPayRecord(Integer userId, OrderVo orderVo) {
+        EduPayrecord eduPayrecord = new EduPayrecord();
+        eduPayrecord.setSchoolId(String.valueOf(orderVo.getSchoolId()));
+        eduPayrecord.setSchoolName(orderVo.getSchoolName());
+        eduPayrecord.setCourseName(orderVo.getCourseName());
+        eduPayrecord.setCourseTeacher(orderVo.getCourseTeacher());
+        eduPayrecord.setCourseAddress(orderVo.getAddress());
+        eduPayrecord.setStartTime(orderVo.getStartTime());
+        eduPayrecord.setEndTime(orderVo.getEndTime());
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
+        String startDate = sf.format(orderVo.getStartDate());
+        eduPayrecord.setCourseStarttime(startDate);
+        eduPayrecord.setPayStatus(String.valueOf(OrderStatus.PAY));
+        eduPayrecord.setUserId(userId);
+        eduPayrecord.setCourseId(orderVo.getCourseId());
+        eduPayrecordService.insertPayRecord(eduPayrecord);
     }
 
     /**

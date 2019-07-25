@@ -53,7 +53,7 @@
       )
     values (#{comid,jdbcType=INTEGER}, #{context,jdbcType=VARCHAR}, #{newsid,jdbcType=INTEGER}, 
       #{uid,jdbcType=INTEGER}, #{comtime,jdbcType=TIMESTAMP}, #{isshow,jdbcType=INTEGER},
-       #{newsid,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{start,jdbcType=INTEGER}
+       #{newtype,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{start,jdbcType=INTEGER}
       )
   </insert>
 

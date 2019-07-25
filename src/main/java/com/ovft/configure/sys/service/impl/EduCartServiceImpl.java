@@ -57,7 +57,7 @@ public class EduCartServiceImpl implements EduCartService {
 
     @Override
     public PageBean showAllCartByUserId(Integer userId) {
-        Page<Object> pageAll = PageHelper.startPage(1, 4);
+        Page<Object> pageAll = PageHelper.startPage(1, 100);
         List<Object> eduCarts = eduCartMapper.selectCartByUserId(userId);
 
         BigDecimal accountAllMoney = new BigDecimal(0);

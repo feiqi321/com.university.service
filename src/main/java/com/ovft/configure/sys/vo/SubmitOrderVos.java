@@ -17,6 +17,7 @@ public class SubmitOrderVos {
     private BigDecimal toSendPrice;
     private String remark;
     private BigDecimal totalMoney;
+    private Integer type;
 
 
     /**
@@ -38,6 +39,13 @@ public class SubmitOrderVos {
      */
     private Date paymentTime;
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public String getOrderSn() {
         return orderSn;

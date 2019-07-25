@@ -4,37 +4,37 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.ovft.configure.config.AlipayConfig;
 import com.ovft.configure.constant.OrderStatus;
+import com.ovft.configure.constant.PaymentStatus;
 import com.ovft.configure.constant.Status;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
-import com.ovft.configure.sys.dao.EduClassMapper;
-import com.ovft.configure.sys.dao.EduCourseMapper;
-import com.ovft.configure.sys.dao.OrderDetailMapper;
-import com.ovft.configure.sys.dao.OrderMapper;
+import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.*;
 import com.ovft.configure.sys.utils.OrderIdUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.OrderDetailVo;
 import com.ovft.configure.sys.vo.QueryOffLineVos;
+import com.ovft.configure.sys.vo.SubmitOrderVos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author vvtxw
@@ -56,6 +56,12 @@ public class PaymentInfoController {
     private OrderMapper orderMapper;
     @Resource
     private OrderDetailMapper orderDetailMapper;
+    @Resource
+    private SchoolMapper schoolMapper;
+    @Resource
+    private EduSettlementOrderDetailsMapper eduSettlementOrderDetailsMapper;
+    @Resource
+    private EduCartMapper eduCartMapper;
 
     @Autowired
     private EduOfflineService eduOfflineService;
@@ -79,6 +85,9 @@ public class PaymentInfoController {
     @Autowired
     private EduOfflineNumService eduOfflineNumService;
 
+    @Resource
+    private VideoMapper videoMapper;
+
 
     @GetMapping(value = "showonoroff")
     public WebResult sendToStatus(Integer courseId, HttpServletRequest request) {
@@ -88,18 +97,36 @@ public class PaymentInfoController {
         return new WebResult(StatusCode.OK, "查询成功", status);
     }
 
-
+    /**
+     * 提交支付订单
+     *
+     * @param courseId
+     * @param type
+     * @param request
+     * @param httpServletResponse
+     * @return
+     * @throws IOException
+     */
     @GetMapping(value = "alipay/submit")
     @Transactional
-    public WebResult paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
+    public Object paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String schoolId1 = request.getHeader("schoolId");
         int schoolId = Integer.parseInt(schoolId1);
 
+        //微信支付 1
+        /*if (type == 1) {
+            ResponseEntity<String> stringResponseEntity = wxpayMethod(courseId, request, httpServletResponse);
+            return new WebResult(StatusCode.OK, "支付成功", stringResponseEntity);
+        }*/
+
+
+        //支付宝支付 2
         if (type == 2) {
             ResponseEntity<String> stringResponseEntity = alipayMethod(courseId, request, httpServletResponse);
-            return new WebResult(StatusCode.OK, "支付成功", stringResponseEntity);
+            return stringResponseEntity;
         }
 
+        //线下支付 3
         if (type == 3) {
             int i = offlineRegist(request, courseId);
             List<EduOfflineAddresstime> eduOfflineAddresstimes = eduOfflineAddressService.queryAddressByschoolId(schoolId);
@@ -118,6 +145,133 @@ public class PaymentInfoController {
         return new WebResult(StatusCode.ERROR, "报名失败", "");
     }
 
+    //2.支付宝线上支付
+    private ResponseEntity<String> alipayMethod(Integer courseId, HttpServletRequest request, HttpServletResponse httpServletResponse) {
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
+        String schoolId1 = request.getHeader("schoolId");
+        int schoolId = Integer.parseInt(schoolId1);
+
+        //0.购买之前先判断是否已经重复购买课程 根据courseId和orderstatus判断是否购买相同的课程
+
+
+        //1.根据courseId查询订单的信息
+        EduCourseVo courseInfo = eduCourseMapper.queryCourseByCourseId(courseId);
+
+        //2.生成订单关联
+        Order order = new Order();
+
+        //生成订单的订单号
+        order.setOrderSn(OrderIdUtil.getOrderIdByTime());//订单号
+        order.setUserId(userId);//付款学员
+        order.setCreateTime(new Date());//订单创建时间
+        order.setOrderStatus(OrderStatus.UNPay);//待付款
+        order.setTotalAmount(courseInfo.getCoursePrice());//预付款金钱
+        order.setTradeBody(courseInfo.getCourseName());//订单标题
+        order.setSchoolId(String.valueOf(schoolId));
+        order.setPaymentWay("支付宝");
+        orderMapper.insertSelective(order);
+
+        //3生成订单详情信息
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(order.getId().longValue());//订单id
+        orderDetail.setCourseId(courseId.longValue());//课程id
+        orderDetail.setCourseName(courseInfo.getCourseName());//课程名称
+        orderDetail.setOrderPrice(courseInfo.getCoursePrice());//课程价格
+        orderDetail.setNum(1);//购买数量
+        School school = schoolMapper.selectById(Integer.valueOf(order.getSchoolId()));
+        orderDetail.setSchoolId(schoolId);
+        orderDetail.setSchoolName(school.getSchoolName());
+        orderDetailMapper.insertSelective(orderDetail);
+
+        return getStringResponseEntity(httpServletResponse, order);
+    }
+
+
+    @RequestMapping(value = "/alipay/callback/notify", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public String callbackNotify(@RequestParam Map<String, String> paramMap) {
+        System.out.println(" ----------callbackstart 支付宝开始回调" + paramMap.toString());
+        boolean isCheckPass = false;
+        try {
+            isCheckPass = AlipaySignature.rsaCheckV1(paramMap, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        }
+        if (!isCheckPass) {
+            System.out.println(" ----------验签不通过！！");
+            return "验签不通过！！";
+        }
+        System.out.println(" ----------验签通过！！");
+
+        String trade_status = paramMap.get("trade_status");
+        if ("TRADE_SUCCESS".equals(trade_status)) {
+            String outTradeNo = paramMap.get("out_trade_no");
+            PaymentInfo paymentInfoQuery = new PaymentInfo();
+            paymentInfoQuery.setOutTradeNo(outTradeNo);
+            PaymentInfo paymentInfo = paymentService.getPaymentInfo(paymentInfoQuery);
+            if (paymentInfo == null) {
+                return "error: not exists out_trade_no:" + outTradeNo;
+            }
+            System.out.println("检查是否已处理= " + outTradeNo);
+
+            //
+            if (paymentInfo.getPaymentStatus().equals(PaymentStatus.PAID)) {
+                System.out.println(" 已处理= " + outTradeNo);
+                return "success";
+            } else {
+                System.out.println("未处理，更新状态=" + outTradeNo);
+                PaymentInfo paymentInfo4Upt = new PaymentInfo();
+                paymentInfo4Upt.setPaymentStatus(PaymentStatus.PAID);
+                paymentInfo4Upt.setCallbackTime(new Date());
+                paymentInfo4Upt.setCallbackContent(paramMap.toString());
+                paymentService.updatePaymentInfoByOutTradeNo(outTradeNo, paymentInfo4Upt);
+
+                Order order = orderMapper.selectByPrimaryKey(Integer.valueOf(paymentInfo.getOrderId()));
+                order.setOrderStatus(OrderStatus.PAY);
+                orderMapper.updateByPrimaryKeySelective(order);
+
+                User user = userService.selectById(order.getUserId());
+                OrderDetailExample orderDetailExample = new OrderDetailExample();
+                orderDetailExample.createCriteria().andOrderIdEqualTo(Long.valueOf(order.getId()));
+                List<OrderDetail> orderDetails = orderDetailMapper.selectByExample(orderDetailExample);
+                BigDecimal orderPrice = new BigDecimal("0");
+                BigDecimal SettlementMoney = new BigDecimal("0");
+                BigDecimal feilu = new BigDecimal("0.006");
+                String schoolName = null;
+                for (OrderDetail orderDetail : orderDetails) {
+                    orderPrice = orderDetail.getOrderPrice();
+                    BigDecimal multiply = orderPrice.multiply(feilu);
+                    SettlementMoney = orderPrice.subtract(multiply);
+                    schoolName = orderDetail.getSchoolName();
+                }
+
+
+                //对账系统生成未结算订单表详细表
+                EduSettlementOrderDetails eduSettlementOrderDetails = new EduSettlementOrderDetails();
+                eduSettlementOrderDetails.setOrderNumber(paymentInfo.getOutTradeNo());
+                eduSettlementOrderDetails.setResourceName(paymentInfo.getSubject());
+                eduSettlementOrderDetails.setTradingTime(new Date());
+                eduSettlementOrderDetails.setPaymentType(String.valueOf(2));//支付宝
+                eduSettlementOrderDetails.setSettlementStatus(1);//未结算
+                eduSettlementOrderDetails.setTelephone(user.getPhone());
+                eduSettlementOrderDetails.setSchoolId(Integer.valueOf(order.getSchoolId()));
+                eduSettlementOrderDetails.setSchoolName(schoolName);
+                eduSettlementOrderDetails.setTransactionAmount(orderPrice);
+                eduSettlementOrderDetails.setSettlementAmount(SettlementMoney);
+                eduSettlementOrderDetails.setPayrecordId(paymentInfo.getId());
+                eduSettlementOrderDetails.setOrderId(order.getId());
+                eduSettlementOrderDetailsMapper.insertSelective(eduSettlementOrderDetails);
+                System.out.println("结束...");
+                return "success";
+            }
+        }
+        return "";
+
+    }
+
+    //3.线下支付
     private int offlineRegist(HttpServletRequest request, Integer courseId) {
         //生存线下报名记录
         String userId1 = request.getHeader("userId");
@@ -125,7 +279,6 @@ public class PaymentInfoController {
 
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.parseInt(schoolId1);
-
 
         //查询学员的基本信息
         User user = userService.queryInfo(userId);
@@ -172,14 +325,12 @@ public class PaymentInfoController {
         int res1 = eduOfflineOrderitemService.addItemOrder(eduOfflineOrderitem);
         int res3 = eduOfflineNumService.addOfflineNum(eduOfflineNum);
 
-//        QueryOffLineVos queryOffLineVos = eduOfflineService.queryAllOffInfo(schoolId1, userId);
         List<EduOfflineNum> eduOfflineNums = eduOfflineNumService.queryAllCourse(userId, courseId);
         QueryOffLineVos queryOffLineVos = new QueryOffLineVos();
         queryOffLineVos.setOfflineNums(eduOfflineNums);
         queryOffLineVos.setUserName(user.getUserName());
         queryOffLineVos.setPhone(user.getPhone());
         queryOffLineVos.setSchoolName(eduCourseVo.getSchoolName());
-
 
         Integer res2 = 0;
         //支付信息生存
@@ -190,13 +341,6 @@ public class PaymentInfoController {
         edufflinePayInfo.setUserName(queryOffLineVos.getUserName());
         edufflinePayInfo.setTelephone(queryOffLineVos.getPhone());
         List<EduOfflineNum> orderitems = queryOffLineVos.getOfflineNums();
-
-/*        String s = "";
-//        eduOfflinePayInfo.setListOrder(orderitem.getCouserName() + "：【" + (orderitem.getPayStatus().equals("1") ? "已支付" : "未支付") + "】")
-        for (int i = 0; i < orderitems.size(); i++) {
-            s = s + "<br> 【" + orderitems.get(i).getCourseName() + "】:\t￥" + orderitems.get(i).getCoursePrice() + "元\t\t<color style='color:red'>(" + (orderitems.get(i).getPayStatus().equals("1") ? "已支付" : "未支付") + ") </color>";
-        }
-        edufflinePayInfo.setListOrder(s);*/
 
         BigDecimal accountAllMoney = new BigDecimal(0);
         for (int i = 0; i < orderitems.size(); i++) {
@@ -219,60 +363,177 @@ public class PaymentInfoController {
     }
 
 
-    private ResponseEntity<String> alipayMethod(Integer courseId, HttpServletRequest request, HttpServletResponse httpServletResponse) {
+    /**
+     * 教材购买提交订单
+     *
+     * @param submitOrderVos
+     * @param request
+     * @param httpServletResponse
+     * @return
+     * @throws IOException
+     */
+    @PostMapping(value = "books/alipay/submit")
+    @Transactional
+    public Object paymentAlipayBooks(@RequestBody SubmitOrderVos submitOrderVos, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
+        String schoolId1 = request.getHeader("schoolId");
+        int schoolId = Integer.parseInt(schoolId1);
 
+        //微信支付 1
+        /*if (submitOrderVos.getType() == 1) {
+            ResponseEntity<String> stringResponseEntity = wxpayMethod(courseId, request, httpServletResponse);
+            return new WebResult(StatusCode.OK, "支付成功", stringResponseEntity);
+        }*/
+
+        //支付宝支付 2
+        if (submitOrderVos.getType() == 2) {
+            ResponseEntity<String> stringResponseEntity = alipayMethodBoooks(submitOrderVos, request, httpServletResponse);
+            return stringResponseEntity;
+        }
+        return new WebResult(StatusCode.ERROR, "报名失败", "");
+    }
+
+    //2.支付宝线上支付
+    private ResponseEntity<String> alipayMethodBoooks(SubmitOrderVos submitOrderVos, HttpServletRequest request, HttpServletResponse httpServletResponse) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
-        //1.根据courseId查询订单的信息
-        EduCourseVo courseInfo = eduCourseMapper.queryCourseByCourseId(courseId);
-       /* //2.根据courseId查询开课的具体时间
-        List<EduClass> eduClasses = eduClassMapper.queryCourseTimeByCourseId(courseId);
-        //3.生成报名详情信息
-        courseInfo.setClassList(eduClasses);*/
+        String schoolId = request.getHeader("schoolId");
 
-
-        //4.生成订单关联
         Order order = new Order();
-
-        //生成订单的订单号
-        order.setOrderSn(OrderIdUtil.getOrderIdByTime());
         order.setUserId(userId);
+        order.setOrderSn(OrderIdUtil.getOrderIdByTime());
+        order.setOrderStatus(OrderStatus.UNPay);
         order.setCreateTime(new Date());
-        order.setOrderStatus(OrderStatus.UNREMOVE);//未取消
-        order.setTotalAmount(courseInfo.getCoursePrice());
-        order.setTradeBody(courseInfo.getCourseName());
+        order.setTotalAmount(submitOrderVos.getTotalMoney());
+        order.setConsignee(submitOrderVos.getUserName());
+        order.setTelephone(submitOrderVos.getPhone());
+        order.setAddress(submitOrderVos.getAddress());
+        order.setSendType(submitOrderVos.getSendType());
+        order.setTosendPrice(submitOrderVos.getToSendPrice());
+        order.setSchoolId(schoolId);
+        order.setRemark(submitOrderVos.getRemark());
+        List<OrderDetailVo> orderItemsVo = submitOrderVos.getOrderItemsVo();
+        OrderDetailVo orderDetailVo2 = orderItemsVo.get(0);
+        order.setTradeBody(orderDetailVo2.getBooksName());
+        order.setPaymentWay("支付宝");
+        orderMapper.insertSelective(order);
+        for (OrderDetailVo orderItem : orderItemsVo) {
+            OrderDetail orderDetail = new OrderDetail();
+            //生成订单详情
+            orderDetail.setOrderId(Long.valueOf(order.getId()));
+            orderDetail.setNum(orderItem.getNum());
+            orderDetail.setOrderPrice(orderItem.getShopPrice());
+            orderDetail.setCourseName(orderItem.getBooksName());
+            orderDetail.setImgUrl(orderItem.getOriginalImg());
+            orderDetail.setCourseId(Long.valueOf(orderItem.getGoodsId()));
+            orderDetail.setSchoolId(orderItem.getSchoolId());
+            orderDetail.setSchoolName(orderItem.getSchoolName());
+            orderDetail.setBookAuthor(orderItem.getBooksAuthor());
+
+            orderDetailMapper.insertSelective(orderDetail);
+            order.setImgUrl(orderItem.getOriginalImg());
+            orderMapper.updateByPrimaryKeySelective(order);
+
+            EduCartExample eduCartExample = new EduCartExample();
+            eduCartExample.createCriteria().andUserIdEqualTo(userId).andGoodsIdEqualTo(orderItem.getGoodsId());
+            eduCartMapper.deleteByExample(eduCartExample);
+        }
+
+        return getStringResponseEntity(httpServletResponse, order);
+    }
+
+
+    /**
+     * 视频购买
+     *
+     * @param videoId
+     * @param request
+     * @param httpServletResponse
+     * @return
+     * @throws IOException
+     */
+    @GetMapping(value = "video/alipay/submit")
+    @Transactional
+    public Object paymentAlipayvideo(@RequestParam("videoId") Integer videoId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
+        String schoolId1 = request.getHeader("schoolId");
+        int schoolId = Integer.parseInt(schoolId1);
+
+        //微信支付 1
+        /*if (submitOrderVos.getType() == 1) {
+            ResponseEntity<String> stringResponseEntity = wxpayMethod(courseId, request, httpServletResponse);
+            return new WebResult(StatusCode.OK, "支付成功", stringResponseEntity);
+        }*/
+
+        //支付宝支付 2
+        if (type == 2) {
+            ResponseEntity<String> stringResponseEntity = alipayMethodVideo(videoId, request, httpServletResponse);
+            return stringResponseEntity;
+        }
+        return new WebResult(StatusCode.ERROR, "报名失败", "");
+    }
+
+
+    //2.支付宝线上支付
+    private ResponseEntity<String> alipayMethodVideo(Integer videoId, HttpServletRequest request, HttpServletResponse httpServletResponse) {
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.parseInt(userId1);
+        String schoolId = request.getHeader("schoolId");
+
+        Video video = videoMapper.selectById(videoId);
+
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setOrderSn(OrderIdUtil.getOrderIdByTime());
+        order.setOrderStatus(OrderStatus.UNPay);
+        order.setCreateTime(new Date());
+        BigDecimal actPrice = video.getActPrice();
+        BigDecimal price = video.getPrice();
+        if (price != null) {
+            order.setTotalAmount(price);
+        }
+        if (actPrice != null) {
+            order.setTotalAmount(actPrice);
+        }
+        order.setImgUrl(video.getCover());
+        order.setTradeBody(video.getTitle());
+        order.setSchoolId(schoolId);
+        order.setPaymentWay("支付宝");
         orderMapper.insertSelective(order);
 
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setOrderId(order.getId().longValue());
-        orderDetail.setCourseId(courseId.longValue());
-        orderDetail.setCourseName(courseInfo.getCourseName());
-        orderDetail.setOrderPrice(courseInfo.getCoursePrice());
-        orderDetail.setNum(1);
+        orderDetail.setOrderId(order.getId().longValue());//订单id
+        orderDetail.setCourseId(Long.valueOf(videoId));//课程id
+        orderDetail.setCourseName(video.getTitle());//课程名称
+        if (price != null) {
+            orderDetail.setOrderPrice(price);
+        }
+        if (actPrice != null) {
+            orderDetail.setOrderPrice(actPrice);
+        }
+        orderDetail.setNum(1);//购买数量
+        School school = schoolMapper.selectById(Integer.valueOf(order.getSchoolId()));
+        orderDetail.setSchoolId(video.getSchoolId());
+        orderDetail.setSchoolName(school.getSchoolName());
         orderDetailMapper.insertSelective(orderDetail);
+        return getStringResponseEntity(httpServletResponse, order);
+    }
 
+    private ResponseEntity<String> getStringResponseEntity(HttpServletResponse httpServletResponse, Order order) {
         if (String.valueOf(order.getId()) == null || String.valueOf(order.getId()).length() == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        //获取订单信息
         Order orderInfo = orderService.getOrderInfo(String.valueOf(order.getId()));
         if (orderInfo == null) {
-            //没有对应的订单
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         //保存支付信息
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setOrderId(String.valueOf(order.getId()));
-        // 商户订单号，商户网站订单系统中唯一订单号，必填
         paymentInfo.setOutTradeNo(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + (int) (Math.random() * 90000 + 88888));
-        // 订单名称，必填
         paymentInfo.setSubject(orderInfo.getTradeBody());
-
-        paymentInfo.setPaymentStatus(String.valueOf(OrderStatus.PAY));
-        // 付款金额，必填
+        paymentInfo.setPaymentStatus(PaymentStatus.UNPAID);
         paymentInfo.setTotalAmount(orderInfo.getTotalAmount());
-
         paymentService.savePaymentInfo(paymentInfo);
 
         AlipayClient client = new DefaultAlipayClient(AlipayConfig.URL, AlipayConfig.APPID,
@@ -293,7 +554,6 @@ public class PaymentInfoController {
         model.setProductCode("QUICK_WAP_WAY");
         alipayRequest.setBizModel(model);
 
-
         String form = "";
         try {
             form = client.pageExecute(alipayRequest).getBody();
@@ -301,16 +561,6 @@ public class PaymentInfoController {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
-        //把表单html打印到客户端浏览器
         return ResponseEntity.ok().body(form);
     }
-
-
-    @RequestMapping(value = "/alipay/callback/return", method = RequestMethod.GET)
-    public String callbackReturn(HttpServletRequest request, Model model) throws UnsupportedEncodingException {
-        System.out.println(" callback return to " + AlipayConfig.return_order_url);
-        return "redirect:" + AlipayConfig.return_order_url;
-    }
-
-
 }

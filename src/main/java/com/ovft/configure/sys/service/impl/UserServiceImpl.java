@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
 
         //情况2.根据用户userId查找Item表（用户表2），判断用户是否已报名过学校记录
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
-        if (user1==null){   //*****在用户只注册没有报名的时候
+        if (user1 == null) {   //*****在用户只注册没有报名的时候
             String pasword = MD5Utils.md5Password(user.getPassword());
             if (!pasword.equals(finduserbyphone.getPassword())) {
                 return new WebResult("400", "输入的密码不正确！");
@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
                 return new WebResult("400", "登录失败");
             }
             boolean b = redisUtil.hasKey(token);
-            map.put("token",token) ;
+            map.put("token", token);
 
 //            //单点登录功能 single sign on   SSO     ===>>在用户只注册没有报名的时候
 //            Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("200", "登录成功", map);
         }
 
-          //如果存在，则返回user1
+        //如果存在，则返回user1
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
         user1.setSchoolName(schoolName);
         String pasword = MD5Utils.md5Password(user.getPassword());
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 //        boolean bo = redisUtil.hset(ConstantClassField.USER_INFO, finduserbyphone.getUserId().toString(), finduserbyphone);
 //        boolean b = redisUtil.hasKey(token);
 
-        map.put("token",token) ;
+        map.put("token", token);
 
 //        //单点登录功能 single sign on   SSO
 //        Object hget = redisUtil.hget(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString());
@@ -186,7 +186,6 @@ public class UserServiceImpl implements UserService {
 //            redisUtil.delete(oldToken);
 //        }
 //        redisUtil.hset(ConstantClassField.SINGLE_SIGN_ON_USER, finduserbyphone.getUserId().toString(), token);
-
 
 
         WebResult result = new WebResult("200", "登录成功", map);
@@ -263,14 +262,14 @@ public class UserServiceImpl implements UserService {
         }
         String newPass = phoneVo.getNewPass();
         String nextPass = phoneVo.getNextPass();
-        if(StringUtils.isBlank(phoneVo.getOldPass())) {
+        if (StringUtils.isBlank(phoneVo.getOldPass())) {
             return new WebResult("400", "原密码不能为空");
         }
-        if(StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
+        if (StringUtils.isBlank(newPass) || StringUtils.isBlank(nextPass)) {
             return new WebResult("400", "新密码不能为空");
         }
         String oldPass = MD5Utils.md5Password(phoneVo.getOldPass());
-        if(!findUserByOldPass.getPassword().equals(oldPass)) {
+        if (!findUserByOldPass.getPassword().equals(oldPass)) {
             return new WebResult("400", "原密码错误");
         }
         //密码验证
@@ -282,7 +281,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", "输入的两次密码不一致");
         }
         userMapper.updateByPhone(findUserByOldPass.getPhone(), MD5Utils.md5Password(newPass));
-            return new WebResult("200", "修改成功");
+        return new WebResult("200", "修改成功");
     }
 
     /**
@@ -294,21 +293,21 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult savaInfo(User user) {
-        if (StringUtils.isBlank(user.getIdentityCard())){
-            return  new WebResult("400","身份证号码不能为空");
+        if (StringUtils.isBlank(user.getIdentityCard())) {
+            return new WebResult("400", "身份证号码不能为空");
         }
-        if (StringUtils.isBlank(user.getUserName())){
-            return  new WebResult("400","用户名不能为空");
+        if (StringUtils.isBlank(user.getUserName())) {
+            return new WebResult("400", "用户名不能为空");
         }
-        if (StringUtils.isBlank(user.getIdentityCard())){
-            return  new WebResult("400","身份证号码不能为空");
+        if (StringUtils.isBlank(user.getIdentityCard())) {
+            return new WebResult("400", "身份证号码不能为空");
         }
-        if (StringUtils.isBlank(user.getEmployer())){
-            return  new WebResult("400","学员分类未填");
+        if (StringUtils.isBlank(user.getEmployer())) {
+            return new WebResult("400", "学员分类未填");
         }
-            if (user.getSex()==null){
-            return  new WebResult("400","性别未填*");
-            }
+        if (user.getSex() == null) {
+            return new WebResult("400", "性别未填*");
+        }
         //手机号码格式验证
         WebResult phoneResult = isTure(user);
         if (!phoneResult.getCode().equals("200")) {
@@ -316,7 +315,7 @@ public class UserServiceImpl implements UserService {
         }
         //固定电话的验证
         PhoneTest phoneTest = new PhoneTest();
-        if(!StringUtils.isBlank(user.getTelephone())) {
+        if (!StringUtils.isBlank(user.getTelephone())) {
             Boolean isPhone = phoneTest.isPhone(user.getTelephone());
             if (isPhone == false) {
                 return new WebResult("400", "输入电话格式有误", "");
@@ -324,7 +323,7 @@ public class UserServiceImpl implements UserService {
         }
         //紧急联系人一手机号验证
         String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
-        if (user.getEmergencyPhone1() != null&&user.getEmergencyPhone1() !="") {
+        if (user.getEmergencyPhone1() != null && user.getEmergencyPhone1() != "") {
             if (user.getEmergencyPhone1().length() != 11) {
                 return new WebResult("400", "紧急联系人手机号应为11位", "");
             } else {
@@ -414,20 +413,21 @@ public class UserServiceImpl implements UserService {
         redisUtil.delete(token);
         return new WebResult("200", "退出成功", "");
     }
+
     //查询基本信息接口(通过userId查找)
     @Override
     public WebResult selectInfo(User user) {
         //通过userId查询Item表里面的相关信息
         User findUserInfo = userMapper.queryByItemsId(user.getUserId());
-         if (findUserInfo==null){
-             //如果没有查到Item表里面的相关信息，则返回selectUserById
-             User selectUserById = userMapper.selectById(user.getUserId());
+        if (findUserInfo == null) {
+            //如果没有查到Item表里面的相关信息，则返回selectUserById
+            User selectUserById = userMapper.selectById(user.getUserId());
 
-             return new WebResult("200", "获取成功", selectUserById);
-         }else {
-        String school = schoolMapper.findSchoolById(findUserInfo.getSchoolId());
-        findUserInfo.setSchoolName(school);
-    }
+            return new WebResult("200", "获取成功", selectUserById);
+        } else {
+            String school = schoolMapper.findSchoolById(findUserInfo.getSchoolId());
+            findUserInfo.setSchoolName(school);
+        }
         return new WebResult("200", "获取成功", findUserInfo);
     }
 
@@ -556,20 +556,21 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 添加个性签名
+     *
      * @param user
      */
     @Transactional
     @Override
     public void createMycontext(User user, Integer userId) {
-             user.setUserId(userId);
-          userMapper.createMycontext(user);
+        user.setUserId(userId);
+        userMapper.createMycontext(user);
     }
 
     @Override
     public WebResult myCourse(Integer userId) {
         List<Map<String, Object>> course = vacateMapper.selectUserCourse(userId, null);
         LinkedList<EduCourseVo> courseVos = new LinkedList<>();
-        if(course != null) {
+        if (course != null) {
             for (Map<String, Object> map : course) {
                 Object courseId = map.get("courseId");
                 EduCourseVo courseVo = userMapper.queryCourseByCourseId((Integer) courseId);
@@ -580,8 +581,10 @@ public class UserServiceImpl implements UserService {
         }
         return new WebResult("200", "查询成功", courseVos);
     }
+
     /**
      * 添加用户注销申请
+     *
      * @param withdrawVo
      */
     @Transactional
@@ -590,70 +593,79 @@ public class UserServiceImpl implements UserService {
 
         userMapper.addWithdraw(withdrawVo);
     }
+
     /**
      * 查询用户注销记录信息
+     *
      * @param userId
      */
     @Override
     public WithdrawVo selectWithdrawOne(Integer userId) {
         return userMapper.selectWithdrawOne(userId);
     }
+
     /**
-     *
      * 获取用户注销申请结果状态 "0":通过，"1"：在审核中，"2":拒绝
+     *
      * @param userId
      */
     @Override
     public int selectWithdraw(Integer userId) {
         return userMapper.selectWithdraw(userId);
     }
-     //删除用户报名学校信息
+
+    //删除用户报名学校信息
     @Transactional
     @Override
     public WebResult deleteUserItem(Integer userItemId) {
         userMapper.deleteUserItem(userItemId);
-        return new WebResult("200","删除成功","");
+        return new WebResult("200", "删除成功", "");
     }
 
     //删除一条学员注销申请记录
     @Override
     public void deleteWithdraw(Integer wid) {
-          userMapper.deleteWithdraw(wid);
+        userMapper.deleteWithdraw(wid);
     }
-   //根据checkin和schoolId条件进行学员审核查找
+
+    //根据checkin和schoolId条件进行学员审核查找
     @Override
     public WebResult findUserByCheckinAndSchoolId(User user) {
         List<User> users = userMapper.findUserByCheckinAndSchoolId(user);
-             return new WebResult("200","查找成功",users);
+        return new WebResult("200", "查找成功", users);
     }
-   //根据checkin和schoolId条件进行学员注销审核查找
+
+    //根据checkin和schoolId条件进行学员注销审核查找
     @Override
     public WebResult findWithdrawByCheckinAndSchoolId(WithdrawVo withdrawVo) {
         List<WithdrawVo> withdrawVos = userMapper.findWithdrawByCheckinAndSchoolId(withdrawVo);
-             return new WebResult("200","查找成功",withdrawVos);
+        return new WebResult("200", "查找成功", withdrawVos);
     }
-   //假删学员
+
+    //假删学员
     @Transactional
     @Override
     public WebResult UpdateUserSchoolId(Integer userId) {
-       userMapper.UpdateUserSchoolId(userId);
-        return new WebResult("200","删除成功","");
+        userMapper.UpdateUserSchoolId(userId);
+        return new WebResult("200", "删除成功", "");
 
     }
 
     //通过用户Id查找用户对应字段信息
     @Override
-    public User selectById(Integer userId){
+    public User selectById(Integer userId) {
         return userMapper.selectById(userId);
     }
-      //通过学员id查找报名学校（user_Item）表相关信息
-     public User queryByItemsId(Integer userId){
-      return userMapper.queryByItemsId(userId);
-     }
+
+    //通过学员id查找报名学校（user_Item）表相关信息
+    public User queryByItemsId(Integer userId) {
+        return userMapper.queryByItemsId(userId);
+    }
+
     //通过用户Id和学校Id查找用户信息
     @Override
     public User queryByItemsIdAndSchoolId(Integer userId, Integer schoolId) {
-        return userMapper.queryByItemsIdAndSchoolId(userId,schoolId);
+        return userMapper.queryByItemsIdAndSchoolId(userId, schoolId);
     }
 
     //添加学员投稿
@@ -661,26 +673,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public WebResult addUserContribute(Contribute contribute) {
 
-        if (StringUtils.isBlank(contribute.getTitle())){
-            return new WebResult("400","投稿标题不能为空");
+        if (StringUtils.isBlank(contribute.getTitle())) {
+            return new WebResult("400", "投稿标题不能为空");
         }
-        if (StringUtils.isBlank(contribute.getContent())){
-            return new WebResult("400","投稿正文不能为空");
+        if (StringUtils.isBlank(contribute.getContent())) {
+            return new WebResult("400", "投稿正文不能为空");
         }
-        User user= userMapper.queryByItemsId(contribute.getUserId());
+        User user = userMapper.queryByItemsId(contribute.getUserId());
         String schoolName = schoolMapper.findSchoolById(user.getSchoolId());
-        if (user.getSchoolId()==null) {
-            return new WebResult("400","您还未报名任何学校，不能投稿");
+        if (user.getSchoolId() == null) {
+            return new WebResult("400", "您还未报名任何学校，不能投稿");
         }
 
         contribute.setSchoolId(user.getSchoolId());
         contribute.setUserName(user.getUserName());
         contribute.setSchoolName(schoolName);
         contribute.setCheckin(1);
-           Date date=new Date();
-          contribute.setCreatetime(date);
-       userMapper.addUserContribute(contribute);
-       return new WebResult("200","投稿申请成功");
+        Date date = new Date();
+        contribute.setCreatetime(date);
+        userMapper.addUserContribute(contribute);
+        return new WebResult("200", "投稿申请成功");
     }
 
     //查询投稿记录状态
@@ -693,23 +705,23 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<Contribute> contributes = userMapper.queryUserContribute(pageVo);
         PageInfo pageInfo = new PageInfo<>(contributes);
-        return new WebResult("200","查询成功", pageInfo);
+        return new WebResult("200", "查询成功", pageInfo);
     }
 
     //删除一条用户投稿记录
     @Transactional
     @Override
     public WebResult deleteUserContribute(Contribute contribute) {
-         userMapper.deleteUserContribute(contribute);
-        return new WebResult("200","删除成功","");
+        userMapper.deleteUserContribute(contribute);
+        return new WebResult("200", "删除成功", "");
     }
 
     //投稿审核状态更改
     @Transactional
     @Override
-    public WebResult updateContributeChinkin(Integer checkin, String rejectReason,Integer cid) {
-      userMapper.updateContributeCheckin(checkin,rejectReason,cid);
-      return new WebResult("200","操作成功","");
+    public WebResult updateContributeChinkin(Integer checkin, String rejectReason, Integer cid) {
+        userMapper.updateContributeCheckin(checkin, rejectReason, cid);
+        return new WebResult("200", "操作成功", "");
     }
 
 
@@ -730,22 +742,24 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<Contribute> contributes = userMapper.contributeList(pageVo);
         PageInfo pageInfo = new PageInfo<>(contributes);
-        return new WebResult("200","查询成功", pageInfo);
+        return new WebResult("200", "查询成功", pageInfo);
     }
+
     //学员投稿审核修改
     @Transactional
     @Override
     public WebResult updateContribute(Contribute contribute) {
 
-         userMapper.updateContribute(contribute);
-         return new WebResult("200","修改成功","");
+        userMapper.updateContribute(contribute);
+        return new WebResult("200", "修改成功", "");
     }
+
     //根据学员投稿cid查询
     @Override
     public WebResult findContributeByCid(Integer cid) {
 
         Contribute contributeByCid = userMapper.findContributeByCid(cid);
-        return new WebResult("200","查询成功",contributeByCid);
+        return new WebResult("200", "查询成功", contributeByCid);
     }
 
 
@@ -774,11 +788,11 @@ public class UserServiceImpl implements UserService {
         Integer politicalCount = userMapper.studentsCount(schoolId, null, "党员");
 
         Map<String, Integer> map = new HashMap<>();
-        map.put("studentsCount",studentsCount);
-        map.put("maleCount",maleCount);
-        map.put("femaleCount",femaleCount);
-        map.put("politicalCount",politicalCount);
-        return new WebResult("200","查询成功",map);
+        map.put("studentsCount", studentsCount);
+        map.put("maleCount", maleCount);
+        map.put("femaleCount", femaleCount);
+        map.put("politicalCount", politicalCount);
+        return new WebResult("200", "查询成功", map);
     }
 
 }

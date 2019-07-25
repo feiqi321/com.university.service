@@ -7,6 +7,7 @@ import com.ovft.configure.sys.service.EduSettlementOrderDetailsService;
 import com.ovft.configure.sys.vo.EduSettlementOrderDetailsVo;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,6 +21,7 @@ public class EduSettlementOrderDetailsController {
     @Autowired
     private EduSettlementOrderDetailsService eduSettlementOrderDetailsService;
 
+
     /**
      * 订单明细模糊查询类表      //	结算状态未结算1正在结算2已结算3
      *
@@ -27,7 +29,7 @@ public class EduSettlementOrderDetailsController {
      * @return
      */
     @PostMapping(value = "shows")
-    public WebResult settlementDetailShow(@RequestBody EduSettlementOrderDetailsVo eduSettlementOrderDetailsVo) {
+    public WebResult settlementDetailShow(@RequestBody(required = false) EduSettlementOrderDetailsVo eduSettlementOrderDetailsVo) {
         PageBean pageBean = eduSettlementOrderDetailsService.showSettlementDetail(eduSettlementOrderDetailsVo);
         return new WebResult(StatusCode.OK, "查询成功", pageBean);
     }

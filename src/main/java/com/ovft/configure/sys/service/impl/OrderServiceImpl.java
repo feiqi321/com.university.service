@@ -183,6 +183,12 @@ public class OrderServiceImpl implements OrderService {
         return submitOrderVos;
     }
 
+    @Override
+    public Integer updateOrderStatus(Order order) {
+        int i = orderMapper.updateByPrimaryKeySelective(order);
+        return i;
+    }
+
 
 
     /*

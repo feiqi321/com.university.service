@@ -163,7 +163,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public WebResult createCourse(EduCourseVo courseVo) {
         EduCourse course = new EduCourse();
-        UserClass userClass=new UserClass();
+        UserClass userClass = new UserClass();
         if (StringUtils.isBlank(courseVo.getCourseName())) {
             return new WebResult("400", "课程名称不能为空", "");
         }
@@ -236,23 +236,23 @@ public class TeacherServiceImpl implements TeacherService {
             String format = formatter.format(new Date());
             List<UserClass> userClasses = userClassMapper.findClassNoAll(userClass);
             //处理classNo
-            if (userClasses.isEmpty()){     //当班级记录一条都没有事时
-                userClass.setClassNo(format.substring(0,4)+0+0+1);
-            }else{
-                String classNoEnd=userClasses.get(userClasses.size()-1).getClassNo();    //获取最后一条班级记录里面的classNo
+            if (userClasses.isEmpty()) {     //当班级记录一条都没有事时
+                userClass.setClassNo(format.substring(0, 4) + 0 + 0 + 1);
+            } else {
+                String classNoEnd = userClasses.get(userClasses.size() - 1).getClassNo();    //获取最后一条班级记录里面的classNo
                 String s = Integer.valueOf(classNoEnd).toString();  //将classNoEnd转化成字符串
                 String substring = s.substring(4);   //截取年后面的数字
                 int num = Integer.parseInt(substring);
 
-                if (num<10){
+                if (num < 10) {
 
-                    userClass.setClassNo(format.substring(0,4)+0+0+(num+1));
+                    userClass.setClassNo(format.substring(0, 4) + 0 + 0 + (num + 1));
                 }
-                if (num>=10&&num<100){
-                    userClass.setClassNo(format.substring(0,4)+0+(num+1));
+                if (num >= 10 && num < 100) {
+                    userClass.setClassNo(format.substring(0, 4) + 0 + (num + 1));
                 }
-                if (num>=100){
-                    userClass.setClassNo(format.substring(0,4)+(num+1));
+                if (num >= 100) {
+                    userClass.setClassNo(format.substring(0, 4) + (num + 1));
                 }
 
             }
@@ -337,7 +337,7 @@ public class TeacherServiceImpl implements TeacherService {
         School school = schoolMapper.selectById(Integer.valueOf(courseVo.getSchoolId()));
         courseVo.setSchoolName(school == null ? "" : school.getSchoolName());
         List<AdminVo> adminVos = adminMapper.selectByAdminAndSchool(Integer.valueOf(courseVo.getCourseTeacher()), school.getSchoolId(), null);
-        if(adminVos.size() != 0) {
+        if (adminVos.size() != 0) {
             AdminVo admin = adminVos.get(0);
             courseVo.setTeacherName(admin == null ? "" : admin.getName());
         }
@@ -376,6 +376,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 根据身份证号获取年龄
+     *
      * @param certId
      * @return
      */
@@ -394,7 +395,7 @@ public class TeacherServiceImpl implements TeacherService {
         } catch (ParseException e) {
         }
         long intervalMilli = now.getTime() - birth.getTime();
-        int age = (int) (intervalMilli/(24 * 60 * 60 * 1000))/365;
+        int age = (int) (intervalMilli / (24 * 60 * 60 * 1000)) / 365;
         System.out.println(age);
         return age;
     }
@@ -412,30 +413,30 @@ public class TeacherServiceImpl implements TeacherService {
             List<User> users = teacherMapper.selectUserList(pageVo);
 
             for (int i = 0; i < users.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-                String card=users.get(i).getIdentityCard();
+                String card = users.get(i).getIdentityCard();
                 int age;
-                 if (card!=null) {
-                      age = TeacherServiceImpl.getAgeByCertId(card);
-                     users.get(i).setAge(age);
-                 }
+                if (card != null) {
+                    age = TeacherServiceImpl.getAgeByCertId(card);
+                    users.get(i).setAge(age);
+                }
             }
-                return new WebResult("200", "查询成功", users);
-            } else {
+            return new WebResult("200", "查询成功", users);
+        } else {
 
-                PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
-                List<User> users2 = teacherMapper.selectUserList(pageVo);
+            PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+            List<User> users2 = teacherMapper.selectUserList(pageVo);
             for (int i = 0; i < users2.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-                String card=users2.get(i).getIdentityCard();
+                String card = users2.get(i).getIdentityCard();
                 int age;
-                if (card!=null) {
+                if (card != null) {
                     age = TeacherServiceImpl.getAgeByCertId(card);
                     users2.get(i).setAge(age);
                 }
             }
-                PageInfo pageInfo = new PageInfo<>(users2);
-                return new WebResult("200", "查询成功", pageInfo);
+            PageInfo pageInfo = new PageInfo<>(users2);
+            return new WebResult("200", "查询成功", pageInfo);
 
-            }
+        }
 
     }
     /**
