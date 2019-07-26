@@ -208,9 +208,15 @@ public class VideoServiceImpl implements VideoService {
 
     //我的视频
     @Override
-    public WebResult myLearnList(Integer userId) {
-        List<MyVideo> myVideos = videoMapper.myLearnList(userId);
-        return new WebResult("200", "查询成功", myVideos);
+    public WebResult myLearnList(PageVo pageVo) {
+        if (pageVo.getPageSize() == 0) {
+            List<MyVideo> myVideos = videoMapper.myLearnList(pageVo.getUserId());
+            return new WebResult("200", "查询成功", myVideos);
+        }
+        PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+        List<MyVideo> myVideos = videoMapper.myLearnList(pageVo.getUserId());
+        PageInfo pageInfo = new PageInfo<>(myVideos);
+        return new WebResult("200", "查询成功", pageInfo);
     }
 
     //视频播放

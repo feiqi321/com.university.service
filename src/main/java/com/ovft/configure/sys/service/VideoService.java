@@ -34,7 +34,7 @@ public interface VideoService {
 
     public WebResult myVideoLearn(Integer videoId, Integer userId);
 
-    public WebResult myLearnList(Integer userId);
+    public WebResult myLearnList(PageVo pageVo);
 
     public WebResult videoItem(Integer userId, Integer itemId);
 }

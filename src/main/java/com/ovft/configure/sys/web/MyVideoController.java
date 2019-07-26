@@ -97,13 +97,14 @@ public class MyVideoController {
      *   我的视频
      * @return
      */
-    @GetMapping(value = "/myLearnList")
-    public WebResult myLearnList(HttpServletRequest request) {
+    @PostMapping(value = "/myLearnList")
+    public WebResult myLearnList(HttpServletRequest request, @RequestBody PageVo pageVo) {
         String userId = request.getHeader("userId");
         if(StringUtils.isBlank(userId) || userId.equals("null")) {
             return new WebResult("400", "请登录！", "");
         }
-        return videoService.myLearnList(Integer.valueOf(userId));
+        pageVo.setUserId(Integer.valueOf(userId));
+        return videoService.myLearnList(pageVo);
     }
 
 }
