@@ -2,6 +2,8 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.Department;
 import com.ovft.configure.sys.vo.DepartmentVo;
+import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,4 +20,6 @@ public interface DepartmentMapper {
     public void createDepartment(DepartmentVo departmentVo);
     //修改
     public void updateDepartment(DepartmentVo departmentVo);
+    //查找院系里面对应课程
+    public List<EduCourseVo> findCourseBydid(PageVo PageVo);
 }

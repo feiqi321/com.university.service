@@ -68,7 +68,19 @@ public class PageVo {
 
     private Integer   isAddQuestion;   //教师评价时是否已添加问卷   1:已添加 0：未添加
 
+    private Integer did;
 
+    public Integer getIsAddQuestion() {
+        return isAddQuestion;
+    }
+
+    public Integer getDid() {
+        return did;
+    }
+
+    public void setDid(Integer did) {
+        this.did = did;
+    }
 
     public void setIsAddQuestion(Integer isAddQuestion) {
         this.isAddQuestion = isAddQuestion;

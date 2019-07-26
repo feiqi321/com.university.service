@@ -87,6 +87,9 @@
         <if test="schoolId != null">
             AND school_id = #{schoolId}
         </if>
+        <if test="did != null">
+            AND did = #{did}
+        </if>
         <if test="isAddQuestion != null ">
             AND isAddQuestion = #{isAddQuestion}
         </if>

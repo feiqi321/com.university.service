@@ -66,7 +66,6 @@ public class UserClassServiceImpl implements UserClassService {
         for (int m = 0; m < myCourseAlltop.size(); m++) {
 
 
-
             myCourseAlltop.get(m).setCourseImage(vateType.getImage());
             myCourseAlltop.get(m).setStatu("线上报名");
             Integer schoolId = myCourseAlltop.get(m).getSchoolId();
@@ -100,24 +99,24 @@ public class UserClassServiceImpl implements UserClassService {
         if (pageVo.getPageSize() == 0) {
 
             for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-                String card=list.get(i).getIdentityCard();
+                String card = list.get(i).getIdentityCard();
                 int age;
-                if (card!=null) {
+                if (card != null) {
                     age = TeacherServiceImpl.getAgeByCertId(card);
                     list.get(i).setAge(age);
                 }
             }
 
-            return  list;
+            return list;
         }
 
 
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
 
         for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-            String card=list.get(i).getIdentityCard();
+            String card = list.get(i).getIdentityCard();
             int age;
-            if (card!=null) {
+            if (card != null) {
                 age = TeacherServiceImpl.getAgeByCertId(card);
                 list.get(i).setAge(age);
             }
@@ -130,8 +129,8 @@ public class UserClassServiceImpl implements UserClassService {
     @Override
     public WebResult userClassList(UserClassVo userClassVo) {
 
-        PageVo pageVo=new PageVo();
-        if (userClassVo.getUserId()!=null) {
+        PageVo pageVo = new PageVo();
+        if (userClassVo.getUserId() != null) {
             pageVo.setUserId(userClassVo.getUserId());
         }
         if (userClassVo.getPageSize() == 0) {
@@ -139,13 +138,11 @@ public class UserClassServiceImpl implements UserClassService {
             List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);
 
 
-
-
             List<MyCourseAll> myCourseList = findMyCourseList(pageVo);
-            for (int i=0;i<userClassList.size();i++){    //给userClassList里的元素封装班级人数
-                for (int n=0;n<myCourseList.size();n++){
-                    if (userClassList.get(i).getCourseId()==myCourseList.get(n).getCourseId()){
-                        if(userClassList.get(i).getUsers() == null) {
+            for (int i = 0; i < userClassList.size(); i++) {    //给userClassList里的元素封装班级人数
+                for (int n = 0; n < myCourseList.size(); n++) {
+                    if (userClassList.get(i).getCourseId() == myCourseList.get(n).getCourseId()) {
+                        if (userClassList.get(i).getUsers() == null) {
                             userClassList.get(i).setUsers(new ArrayList<>());
                         }
                         userClassList.get(i).getUsers().add(myCourseList.get(n));
@@ -154,32 +151,32 @@ public class UserClassServiceImpl implements UserClassService {
                 }
 
             }
-                 if (userClassVo.getUserId()!=null) {
-                     List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
-                     for (int n = 0; n < myCourseList.size(); n++) {
-                         if (userClassList.get(n).getCourseId() == myCourseList.get(n).getCourseId()) {
+            if (userClassVo.getUserId() != null) {
+                List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
+                for (int n = 0; n < myCourseList.size(); n++) {
+                    if (userClassList.get(n).getCourseId() == myCourseList.get(n).getCourseId()) {
 
-                             endUserClassList.add(userClassList.get(n));
-                         }
+                        endUserClassList.add(userClassList.get(n));
+                    }
 
-                     }
-                     return new WebResult("200", "查询成功", endUserClassList);
-                 }else {
+                }
+                return new WebResult("200", "查询成功", endUserClassList);
+            } else {
 
-                     return new WebResult("200", "查询成功", userClassList);
-                 }
+                return new WebResult("200", "查询成功", userClassList);
+            }
 
         } else {
 
             PageHelper.startPage(userClassVo.getPageNum(), userClassVo.getPageSize());
             List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);
-            FindUserCourseUtil findUserCourseUtil=new FindUserCourseUtil();
+            FindUserCourseUtil findUserCourseUtil = new FindUserCourseUtil();
 
             List<MyCourseAll> myCourseList = findMyCourseList(pageVo);
-            for (int i=0;i<userClassList.size();i++){    //给userClassList里的元素封装班级人数
-                for (int n=0;n<myCourseList.size();n++){
-                    if (userClassList.get(i).getCourseId()==myCourseList.get(n).getCourseId()){
-                        if(userClassList.get(i).getUsers() == null) {
+            for (int i = 0; i < userClassList.size(); i++) {    //给userClassList里的元素封装班级人数
+                for (int n = 0; n < myCourseList.size(); n++) {
+                    if (userClassList.get(i).getCourseId() == myCourseList.get(n).getCourseId()) {
+                        if (userClassList.get(i).getUsers() == null) {
                             userClassList.get(i).setUsers(new ArrayList<>());
                         }
                         userClassList.get(i).getUsers().add(myCourseList.get(n));
@@ -188,7 +185,7 @@ public class UserClassServiceImpl implements UserClassService {
                 }
 
             }
-            if (userClassVo.getUserId()!=null) {
+            if (userClassVo.getUserId() != null) {
                 List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
                 for (int n = 0; n < myCourseList.size(); n++) {
                     if (userClassList.get(n).getCourseId() == myCourseList.get(n).getCourseId()) {
@@ -199,7 +196,7 @@ public class UserClassServiceImpl implements UserClassService {
                 }
                 PageInfo pageInfo = new PageInfo<>(endUserClassList);
                 return new WebResult("200", "查询成功", pageInfo);
-            }else {
+            } else {
                 PageInfo pageInfo = new PageInfo<>(userClassList);
                 return new WebResult("200", "查询成功", pageInfo);
             }
@@ -207,14 +204,15 @@ public class UserClassServiceImpl implements UserClassService {
 
 
     }
+
     @Transactional
     @Override
     public WebResult classdeleteUser(MyCourseAll myCourseAll) {
-           if (myCourseAll.getStatu().equals("线上报名")){
-               eduPayrecordMapper.deleteByPrimaryKey(myCourseAll.getId());
-           }else {
-               eduOfflineNumMapper.deleteByPrimaryKey(myCourseAll.getId());
-           }
+        if (myCourseAll.getStatu().equals("线上报名")) {
+            eduPayrecordMapper.deleteByPrimaryKey(myCourseAll.getId());
+        } else {
+            eduOfflineNumMapper.deleteByPrimaryKey(myCourseAll.getId());
+        }
         return new WebResult("200", "删除成功", "");
     }
 }

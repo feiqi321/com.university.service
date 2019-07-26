@@ -49,6 +49,37 @@
      <update id="updateDepartment" parameterType="com.ovft.configure.sys.vo.DepartmentVo">
          update edu_department set d_name=#{departmentName},school_id=#{schoolId} where did=#{did}
      </update>
+    <!--进入某院系详情列表-->
+    <select id="findCourseBydid" parameterType="com.ovft.configure.sys.vo.PageVo" resultType="com.ovft.configure.sys.vo.EduCourseVo">
+        select did,course_id as courseId, course_name as courseName, course_price as coursePrice, course_teacher as courseTeacher,
+        place_class as placeClass, start_date as startDate, end_date as endDate,
+        people_number as peopleNumber, school_id as schoolId, isenable,isAddQuestion,
+        (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher) as teacherName,
+        (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName,
+        (SELECT d_name FROM edu_department where did = edu_course.did) as departmentName
+        from edu_course
+        where 1=1
+        <if test="schoolId != null">
+            AND school_id = #{schoolId}
+        </if>
+        <if test="isAddQuestion != null ">
+            AND isAddQuestion = #{isAddQuestion}
+        </if>
+        <if test="isenable != null">
+            AND isenable = #{isenable}
+        </if>
+        <if test="startDate != null">
+            <![CDATA[ and  start_date >= #{startDate}]]>
+        </if>
+        <if test="endDate != null">
+            <![CDATA[ and  start_date <= #{endDate}]]>
+        </if>
+        <if test="search != null and search != ''">
+            AND course_name like CONCAT('%',#{search},'%')
+        </if>
+        order by isenable desc, start_date desc
+    </select>
+
 
 
 </mapper>

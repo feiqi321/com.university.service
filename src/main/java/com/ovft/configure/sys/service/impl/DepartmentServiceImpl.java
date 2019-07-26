@@ -2,16 +2,22 @@ package com.ovft.configure.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ovft.configure.constant.OrderStatus;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Department;
 import com.ovft.configure.sys.dao.DepartmentMapper;
+import com.ovft.configure.sys.dao.EduCourseMapper;
+import com.ovft.configure.sys.dao.TeacherMapper;
 import com.ovft.configure.sys.service.DepartmentService;
 import com.ovft.configure.sys.vo.DepartmentVo;
+import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +26,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Resource
     private DepartmentMapper departmentMapper;
-
+    @Resource
+    private TeacherMapper   teacherMapper;
+    @Resource
+    public EduCourseMapper eduCourseMapper;
     /**
      * 院系列表
      *
@@ -71,4 +80,6 @@ public class DepartmentServiceImpl implements DepartmentService {
             return  new WebResult("200","修改成功","");
         }
     }
+
+
 }

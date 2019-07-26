@@ -3,7 +3,9 @@ package com.ovft.configure.sys.web;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.Department;
 import com.ovft.configure.sys.service.DepartmentService;
+import com.ovft.configure.sys.service.TeacherService;
 import com.ovft.configure.sys.vo.DepartmentVo;
+import com.ovft.configure.sys.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class DepartmentController {
        @Autowired
        private DepartmentService departmentService;
+       @Autowired
+       private TeacherService teacherService;
+
+
+    /**
+     * 进入某院系详情列表
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value="/findCourseList")
+    public WebResult findCourseList(@RequestBody PageVo pageVo) {
+        return teacherService.courseList(pageVo);
+    }
+    /**
+     * 进入某院系详情列表
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value="/server/findCourseList")
+    public WebResult findServerCourseBydid(@RequestBody PageVo pageVo) {
+        return teacherService.courseList(pageVo);
+    }
+
     /**
      * 院系列表
      *

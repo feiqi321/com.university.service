@@ -11,4 +11,5 @@ public interface DepartmentService {
     public WebResult bigDeleteDepartment(Department department);
     public WebResult createDepartment(DepartmentVo departmentVo);
 
+
 }
