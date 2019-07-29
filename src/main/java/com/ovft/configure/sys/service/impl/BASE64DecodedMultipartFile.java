@@ -1,11 +1,11 @@
 package com.ovft.configure.sys.service.impl;
 
-import com.ovft.configure.sys.bean.Base64File;
-import com.ovft.configure.sys.bean.file;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.web.multipart.MultipartFile;
-import sun.misc.BASE64Decoder;
 
 import java.io.*;
+
+//import sun.misc.BASE64Decoder;
 
 /**
  * @author vvtxw
@@ -74,11 +74,11 @@ public class BASE64DecodedMultipartFile implements MultipartFile {
 
         String[] baseStrs = base64.split(",");
 
-        BASE64Decoder decoder = new BASE64Decoder();
+//        BASE64Decoder decoder = new BASE64Decoder();
         byte[] b = new byte[0];
         try {
-            b = decoder.decodeBuffer(baseStrs[1]);
-        } catch (IOException e) {
+            b = Base64.decodeBase64(baseStrs[1]);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         for (int i = 0; i < b.length; ++i) {

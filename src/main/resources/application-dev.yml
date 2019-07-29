@@ -1,5 +1,5 @@
 server:
-  port: 8850
+  port: 8830
 
 logging:
   level:
