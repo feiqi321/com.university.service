@@ -1,5 +1,7 @@
 package com.ovft.configure.sys.utils;
 
+import com.ovft.configure.config.AlipayConfig;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
