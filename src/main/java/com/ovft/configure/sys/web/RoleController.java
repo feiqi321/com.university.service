@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @ClassName ActivitiesController  活动
+ * @ClassName 角色权限
  * @Author zqx
  * @Version 1.0
  **/

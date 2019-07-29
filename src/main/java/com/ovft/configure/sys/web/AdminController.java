@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName AdminController
+ * 后台登录、管理员
+ * 由于前期设计问题，把教师也设计在了admin中
  * @Author zqx
  * @Date 2019/4/10 15:45
  * @Version 1.0

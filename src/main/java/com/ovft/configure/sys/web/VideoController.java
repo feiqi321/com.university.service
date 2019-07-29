@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @ClassName VideoController 视频教学
+ * @ClassName VideoController 视频教学后台控制类
  * @Author zqx
  * @Version 1.0
  **/
