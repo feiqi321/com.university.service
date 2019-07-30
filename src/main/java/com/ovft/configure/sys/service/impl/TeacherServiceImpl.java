@@ -200,7 +200,7 @@ public class TeacherServiceImpl implements TeacherService {
         course.setPeopleNumber(courseVo.getPeopleNumber());
         course.setSchoolId(courseVo.getSchoolId());
         course.setIsenable(courseVo.getIsenable());
-
+        course.setDid(courseVo.getDid());
 
         Integer courseId = courseVo.getCourseId();
 
@@ -213,6 +213,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherMapper.deleteClassByCourseId(course.getCourseId());
 
             //封装班级（以课程分班级）
+
             userClass.setDid(courseVo.getDid());
             userClass.setClassName(courseVo.getCourseName()+"班");
             userClass.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));

@@ -4,7 +4,7 @@
 <mapper namespace="com.ovft.configure.sys.dao.UserClassMapper" >
        <!--学员班级列表-->
       <select id="userClassList" parameterType="com.ovft.configure.sys.vo.UserClassVo" resultType="com.ovft.configure.sys.bean.UserClass">
-          select c.class_id classId,c.class_name className,c.class_no classNo,c.job job,c.specialty specialty,
+          select c.class_id classId,(SELECT course_name FROM edu_course where course_id= c.course_id)  className,c.class_no classNo,c.job job,(SELECT d_name FROM edu_department where did = c.did) as  specialty,
           c.course_id courseId, c.remark remark ,c.schoolId schoolId, c.school_name schoolName from edu_user_class c
           where 1=1
           <if test="classId != null">
@@ -53,7 +53,7 @@
        </select>
          <!--新增班级记录-->
         <insert id="addUserClass" parameterType="com.ovft.configure.sys.bean.UserClass">
-            insert into edu_user_class values (default,#{className},#{classNo},#{job},#{specialty},#{courseId},#{remark},#{schoolId},#{schoolName})
+            insert into edu_user_class values (default,#{className},#{classNo},#{job},#{specialty},#{courseId},#{remark},#{schoolId},#{schoolName},#{did})
         </insert>
     <!--修改班级记录-->
        <update id="updateUserClass" parameterType="com.ovft.configure.sys.bean.UserClass">
@@ -80,6 +80,9 @@
                </if>
                <if test="schoolId != null">
                     schoolId = #{schoolId}
+               </if>
+               <if test="did != null">
+                    did = #{did}
                </if>
            </set>
             where 1=1

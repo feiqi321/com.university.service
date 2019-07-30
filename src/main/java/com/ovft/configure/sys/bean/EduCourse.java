@@ -45,6 +45,16 @@ public class EduCourse implements Serializable {
 
     private String schoolId;
 
+    private Integer did;
+
+    public Integer getDid() {
+        return did;
+    }
+
+    public void setDid(Integer did) {
+        this.did = did;
+    }
+
     /**
      *  是否启用  -1-下架, 0-未启用, 1-启用
      */
