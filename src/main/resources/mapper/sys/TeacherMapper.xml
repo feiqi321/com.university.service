@@ -24,7 +24,7 @@
 
     <sql id="Base_Column_List">
         course_id, course_name, course_price, course_teacher, place_class, start_date, end_date,
-        people_number, school_id, isenable
+        people_number, school_id, isenable,did,(SELECT d_name FROM edu_department where did = edu_course.did) as departmentName
       </sql>
     <resultMap id="BaseResultMap" type="com.ovft.configure.sys.bean.EduCourse">
         <id column="course_id" jdbcType="INTEGER" property="courseId"/>
