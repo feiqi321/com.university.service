@@ -22,7 +22,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://47.105.55.14/old_edu?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: root
-    password: YXY20190704
+    password:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
