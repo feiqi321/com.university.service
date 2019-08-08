@@ -158,7 +158,7 @@ public class WorksShowController {
     @PostMapping(value = "/server/WorksShow/updateUserShowById")
     public WebResult updateUserShowById(@RequestBody EduArticle eduArticle) {
         //后台修改学员展示作品
-
+             eduArticle.setType("7");
         return eduArticleService.adminAddNotice(eduArticle,1);
     }
     /**
@@ -170,6 +170,7 @@ public class WorksShowController {
     @PostMapping(value = "/server/WorksShow/updateTeacherShowById")
     public WebResult updateTeacherShowById(@RequestBody EduArticle eduArticle) {
         //后台修改教师风采作品
+        eduArticle.setType("8");
         return eduArticleService.adminAddNotice(eduArticle,1);
     }
     /**

@@ -75,6 +75,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 return new WebResult("200", "添加成功", "");
 
             } else {
+                if (searchQuestion.getQuestions().isEmpty()) {
+                    return new WebResult("400", "您还未添加问卷题目！", "");
+                }
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<Question> questions = searchQuestion.getQuestions();
                 for (int i=0;i<questions.size();i++){
@@ -113,7 +116,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 return new WebResult("200", "添加成功", "");
 
             } else {
-
+                if (searchQuestion.getQuestions().isEmpty()) {
+                    return new WebResult("400", "您还未添加问卷题目！", "");
+                }
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<Question> questions = searchQuestion.getQuestions();
                 for (int i=0;i<questions.size();i++){
@@ -148,6 +153,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 questionSearchMapper.createBigVoteItem(searchQuestion.getVoteItems()); //批量添加投票题目及选项
                 return new WebResult("200", "添加成功", "");
             } else {
+                if (searchQuestion.getQuestions().isEmpty()) {
+                    return new WebResult("400", "您还未添加问卷题目！", "");
+                }
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<VoteItem> voteItems = searchQuestion.getVoteItems();
                 for (int i=0;i<voteItems.size();i++){

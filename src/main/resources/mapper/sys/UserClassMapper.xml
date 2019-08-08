@@ -79,7 +79,7 @@
                    remark = #{remark},
                </if>
                <if test="schoolId != null">
-                    schoolId = #{schoolId}
+                    schoolId = #{schoolId},
                </if>
                <if test="did != null">
                     did = #{did}
