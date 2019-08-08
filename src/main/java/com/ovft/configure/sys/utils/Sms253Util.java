@@ -36,7 +36,7 @@ public class Sms253Util {
         try {
 
             // 短信内容
-            String msg = "【老年大学】您的验证码为" + securityCode + "请在5分钟内输入。感谢您的支持，祝您生活愉快！";
+            String msg = "【咱爸咱妈大学】您的验证码为" + securityCode + "请在5分钟内输入。感谢您的支持，祝您生活愉快！";
 
             //状态报告
             String report= "true";
