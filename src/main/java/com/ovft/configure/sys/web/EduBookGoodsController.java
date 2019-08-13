@@ -9,10 +9,12 @@ import com.ovft.configure.sys.service.EduBooksInfoService;
 import com.ovft.configure.sys.vo.EduBookGoodsVo;
 import com.ovft.configure.sys.vo.PageBean;
 import com.ovft.configure.sys.vo.QueryBookVos;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -85,6 +87,12 @@ public class EduBookGoodsController {
      */
     @PostMapping(value = "server/addbooksInfo")
     public WebResult addBooksInfo(@RequestBody EduBookGoodsVo eduBookGoodsVo) {
+       if ( eduBookGoodsVo.getShopPrice()==null || eduBookGoodsVo.getShopPrice().compareTo(BigDecimal.ZERO)<0) {
+            return new WebResult("400", "价格不能为负数", "");
+        }
+       if (StringUtils.isBlank(eduBookGoodsVo.getSchoolId())){
+           return new WebResult(StatusCode.ERROR, "您还没有选择学校名称", "");
+       }
         EduBookGoods eduBookGoods = new EduBookGoods();
         eduBookGoods.setCatId(eduBookGoodsVo.getCatId());
         eduBookGoods.setExtendCatId(eduBookGoodsVo.getExtendCatId());
@@ -97,6 +105,7 @@ public class EduBookGoodsController {
         eduBookGoods.setIsOnSale(eduBookGoodsVo.getIsOnSale());
         eduBookGoods.setUpdateTime(new Date());
         eduBookGoods.setSchoolId(eduBookGoodsVo.getSchoolId());
+
         eduBookGoods.setSendPrice(eduBookGoodsVo.getSendPrice());
         Integer res1 = eduBookGoodsService.addBooks(eduBookGoods);
 
@@ -217,6 +226,8 @@ public class EduBookGoodsController {
         eduBooksInfo.setSchoolId(Integer.valueOf(eduBookGoodsVo.getSchoolId()));
 
         Integer res2 = eduBooksInfoService.updateBookInfo(eduBooksInfo);
+
+
         if (result > 0 && res2 > 0) {
             return new WebResult(StatusCode.OK, "修改设置成功", "");
         }

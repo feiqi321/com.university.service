@@ -4,7 +4,7 @@
 <mapper namespace="com.ovft.configure.sys.dao.AddressMapper" >
 
     <sql id="Base_Column_List">
-        address_id as addressId, user_id as userId, consignee_name as consigneeName, phone, area, address, postal_code as postalCode, isdefault
+        address_id as addressId, user_id as userId, consignee_name as consigneeName, phone, area, address, postal_code as postalCode, isdefault ,change_status as changeStatus
     </sql>
 
     <select id="selectByAddressId"  resultType="com.ovft.configure.sys.bean.Address">
@@ -14,6 +14,16 @@
         where address_id = #{addressId}
     </select>
 
+    <!--&lt;!&ndash;查询选择的状态 如果是0 没被选择  如果是1  被选择&ndash;&gt;-->
+
+    <!--<select id="selectByChangeStatuas" resultMap="com.ovft.configure.sys.bean.Address">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from edu_address-->
+        <!--where change_status = #{changeStatus}-->
+    <!--</select>-->
+
+
     <select id="selectByUserId"  resultType="com.ovft.configure.sys.bean.Address">
         select
         <include refid="Base_Column_List"/>
@@ -22,17 +32,24 @@
         order by isdefault desc
     </select>
 
-    <select id="selectByUserIdMap"  resultType="java.util.Map">
-        select address_id as id, consignee_name as name, phone as tel, concat(area,address) as address, isdefault
+    <select id="selectByUserIdMap"  resultType="com.ovft.configure.sys.bean.Address">
+        select address_id as addressId,user_id userId, consignee_name as consigneeName, phone as phone, concat(area,address) as address, isdefault,change_status as changeStatus
         from edu_address
         where user_id = #{userId}
         order by isdefault desc
     </select>
 
+    <!--<select id="selectByUserIdMap"  resultType="java.util.Map">-->
+        <!--select address_id as id, consignee_name as name, phone as tel, concat(area,address) as address, isdefault,change_status as changeStatus-->
+        <!--from edu_address-->
+        <!--where user_id = #{userId}-->
+        <!--order by isdefault desc-->
+    <!--</select>-->
+
     <insert id="createAddress" parameterType="com.ovft.configure.sys.bean.Address" useGeneratedKeys="true"
             keyProperty="addressId">
-         insert into edu_address(user_id, consignee_name, phone, area, address, postal_code, isdefault)
-         values (#{userId}, #{consigneeName}, #{phone}, #{area}, #{address}, #{postalCode}, #{isdefault})
+         insert into edu_address(user_id, consignee_name, phone, area, address, postal_code, isdefault,change_status)
+         values (#{userId}, #{consigneeName}, #{phone}, #{area}, #{address}, #{postalCode}, #{isdefault},0)
     </insert>
 
     <update id="updateAddress" parameterType="com.ovft.configure.sys.bean.Address">
@@ -59,10 +76,22 @@
             <if test="isdefault != null">
                 isdefault = #{isdefault},
             </if>
+
         </set>
         where address_id = #{addressId}
     </update>
 
+    <!--当点开页面准备选择需要的地址时,把所有的change_status设置为0 条件是根据用户的id-->
+    <update id="updateChangeStatusAll" parameterType="com.ovft.configure.sys.bean.Address" >
+        UPDATE  edu_address SET change_status=0 WHERE user_id=#{userId}
+    </update>
+
+    <!--确定需要选择的地址时 把change_status设置为1 肯定是根据主键-->
+    <update id="updateChangeStatusOne" parameterType="com.ovft.configure.sys.bean.Address" >
+        UPDATE  edu_address SET change_status=1 WHERE address_id = #{addressId}
+    </update>
+
+    
     <delete id="deleteAddress">
         delete from edu_address where address_id = #{addressId}
     </delete>

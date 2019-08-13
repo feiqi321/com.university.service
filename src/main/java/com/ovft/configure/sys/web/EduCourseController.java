@@ -175,6 +175,7 @@ public class EduCourseController {
         course.setIsenable(ConstantClassField.ISONLINE);
         course.setStartDate(eduCourse.getStartDate());
         course.setEndDate(eduCourse.getEndDate());
+        course.setDid(eduCourse.getDid());
         int i = eduCourseService.updateAllTime(course);
         if (i > 0) {
             return new WebResult(StatusCode.OK, "全部设置成功");

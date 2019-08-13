@@ -53,6 +53,7 @@ public class AddressController {
      */
     @GetMapping(value = "/addressList")
     public WebResult addressList(HttpServletRequest request) {
+
         return addressService.addressList(Integer.parseInt(request.getHeader("userId")));
     }
 
@@ -65,6 +66,16 @@ public class AddressController {
     @GetMapping(value = "/deleteAddress")
     public WebResult deleteAddress(@RequestParam(value = "addressId") Integer addressId) {
         return addressService.deleteAddress(addressId);
+    }
+    /**
+     * 切换收货地址
+     *
+     * @param address
+     * @return
+     */
+    @PostMapping(value = "/changeAddress")
+    public WebResult changeAddress(@RequestBody Address address) {
+             return    addressService.changeAddress(address);
     }
 
 }

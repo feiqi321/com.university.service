@@ -81,9 +81,9 @@ public class EduCourseServiceImpl implements EduCourseService {
 
         //0.可以报名的人数
         //查询专业接受报名的人数
-        int acceptNum = eduCourseMapper.queryAcceptNum(courseId);
+        Integer acceptNum = eduCourseMapper.queryAcceptNum(courseId);
 
-        if (acceptNum == 0) {
+        if (acceptNum == null) {
             map.put("本专业未设置可报名的人数，请管理员设置报名人数限制", "");
         }
         //查询用户所对应的专业显示已经购买人数
@@ -159,7 +159,6 @@ public class EduCourseServiceImpl implements EduCourseService {
                 return map;
             }
 
-
             //2.限制可报名年龄
             User user = userMapper.queryByItemsIdAndSchoolId(userId, schoolId);
             if (user == null) {
@@ -174,8 +173,9 @@ public class EduCourseServiceImpl implements EduCourseService {
                 map.put("请在学员中心的基本信息填写必要信息：学员类别，再来报名！", "");
                 return map;
             }
+
             //通过省份证获取年龄
-            int age = AgeUtil.IdNOToAge(identity);
+            int age = AgeUtil.getAgeByCertId(identity);
             if (startAge > age || age > endAge) {
                 map.put("请在在允许的年龄阶段报名：" + startAge + "至" + endAge + "方可报名", "");
                 return map;
@@ -192,6 +192,8 @@ public class EduCourseServiceImpl implements EduCourseService {
             param.put("courseId", courseId);
             param.put("schoolId", schoolId);
             Integer courseNum = eduRegistMapper.queryCourseNum(param);
+
+
 
             if (allCourse >= courseNum) {
                 map.put("为了您的身体健康，本课程只允许报" + courseNum + "门，您报名课程已经超过", "");
@@ -342,8 +344,9 @@ public class EduCourseServiceImpl implements EduCourseService {
 
     @Override
     public int updateAllTime(EduCourse eduCourse) {
-        //先查询出所有学校的课程
-        List<EduCourse> eduCourses = eduCourseMapper.listCourseCategoryByShoolId(eduCourse);
+        //先查询出所有学校院系的课程
+        List<EduCourse> eduCourses = eduCourseMapper.updateByCourseId(eduCourse);
+
         EduCourse updateCourse = new EduCourse();
         updateCourse.setStartDate(eduCourse.getStartDate());
         updateCourse.setEndDate(eduCourse.getEndDate());

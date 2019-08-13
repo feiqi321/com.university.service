@@ -307,6 +307,21 @@
         select * from edu_course where school_id =#{schoolId} and isenable=#{isenable}
     </select>
 
+    <!--根据院系id修改 by wd-->
+    <select id="updateByCourseId" parameterType="com.ovft.configure.sys.bean.EduCourse"
+            resultType="com.ovft.configure.sys.bean.EduCourse">
+        select * from edu_course where 1=1
+        <if test="did!=null">
+            and did =#{did}
+        </if>
+        <if test="isenable!=null">
+            and isenable=#{isenable}
+        </if>
+        <if test="schoolId!=null">
+            and school_id=#{schoolId}
+        </if>
+    </select>
+
 
     <!--2.查找专业相关报名信息-->
     <select id="queryCourseByCourseId" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCourseVo">
@@ -329,7 +344,7 @@
     </select>
 
     <!--3.查询每个科目可以报名的人数-->
-    <select id="queryAcceptNum" parameterType="int" resultType="int">
+    <select id="queryAcceptNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         select
         people_number
         from edu_course

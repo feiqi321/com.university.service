@@ -37,6 +37,12 @@ public class Address implements Serializable {
      */
     private Integer isdefault;
 
+    /*
+    * 如果是0 ,没被选择 ,如果是1被选择
+    * */
+    private Integer changeStatus;
+
+
     public Integer getAddressId() {
         return addressId;
     }
@@ -99,5 +105,13 @@ public class Address implements Serializable {
 
     public void setIsdefault(Integer isdefault) {
         this.isdefault = isdefault;
+    }
+
+    public Integer getChangestatus() {
+        return changeStatus;
+    }
+
+    public void setChangestatus(Integer changestatus) {
+        this.changeStatus = changestatus;
     }
 }

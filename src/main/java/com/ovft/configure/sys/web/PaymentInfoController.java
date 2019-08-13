@@ -376,6 +376,7 @@ public class PaymentInfoController {
     @Transactional
     public Object paymentAlipayBooks(@RequestBody SubmitOrderVos submitOrderVos, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String schoolId1 = request.getHeader("schoolId");
+
         int schoolId = Integer.parseInt(schoolId1);
 
         //微信支付 1

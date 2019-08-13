@@ -62,7 +62,7 @@ public interface EduCourseMapper {
      * @param courseId
      * @return
      */
-    int queryAcceptNum(Integer courseId);
+    Integer queryAcceptNum(Integer courseId);
 
     /**
      * 查询课程表相关信息
@@ -83,5 +83,8 @@ public interface EduCourseMapper {
 
     //查询课程相关信息
     EduCourseVo queryCourseInfo(Integer courseId);
+
+    // <!--根据院系id修改 by wd-->
+    public List<EduCourse> updateByCourseId(EduCourse eduCourse);
 
 }
