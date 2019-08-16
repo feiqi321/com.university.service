@@ -31,4 +31,6 @@ public interface ActivitiesMapper {
 
     //活动报名列表
     public List<Map<String, Object>> registList(@Param("activitiesId") Integer activitiesId);
+
+
 }

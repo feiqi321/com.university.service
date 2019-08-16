@@ -32,7 +32,6 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order record);
 
-
     /**
      * 按支付状态统计总人数
      *
@@ -67,8 +66,5 @@ public interface OrderMapper {
 
     //查询订单的数量
     int countOrderNum(Integer orderId);
-
-
-
 
 }

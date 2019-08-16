@@ -38,9 +38,13 @@ public class EduBooksInfoController {
     @GetMapping(value = "showBookInfo")
     public WebResult queryBookById(Integer id, HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
+        /*if (userId1 == null || userId1 == "") {
+            return new WebResult(StatusCode.ERROR, "请先登录，然后浏览");
+        }*/
         if (userId1.equals("null")) {
             return new WebResult(StatusCode.ERROR, "请先登录，然后浏览");
         }
+
         Integer userId = Integer.valueOf(userId1);
 
 /*       String shcoolId1 = request.getHeader("shcoolId");
@@ -145,6 +149,5 @@ public class EduBooksInfoController {
         List<String> strings = eduBooksInfoService.queryBookNameById(schoolId);
         return new WebResult(StatusCode.OK, "查询成功", strings);
     }
-
 
 }

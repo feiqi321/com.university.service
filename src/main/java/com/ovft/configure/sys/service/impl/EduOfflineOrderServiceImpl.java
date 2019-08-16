@@ -115,6 +115,7 @@ public class EduOfflineOrderServiceImpl implements EduOfflineOrderService {
             eduOfflinePayInfoExample.createCriteria().andUserIdEqualTo(eduOfflineOrder.getUserId());
             eduOfflinePayInfoMapper.deleteByExample(eduOfflinePayInfoExample);
         }
+        //还要删除支付成功的记录
 
         if (res > 0 && res1 > 0 && res2 > 0) {
             return 1;

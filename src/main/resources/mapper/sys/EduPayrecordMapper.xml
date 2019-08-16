@@ -331,7 +331,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <!--3.查找线上报名门数-->
+    <!--3.查找线上报名门数5代表已付状态-->
     <select id="queryCourseNum" parameterType="Integer" resultType="Integer">
     select
     count(course_id)
@@ -339,6 +339,6 @@
     edu_payrecord
     where
     user_id =#{user_id}
-    and pay_status=1
+    and pay_status=5
   </select>
 </mapper>

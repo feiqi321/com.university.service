@@ -159,6 +159,7 @@ public class EduCourseServiceImpl implements EduCourseService {
                 return map;
             }
 
+
             //2.限制可报名年龄
             User user = userMapper.queryByItemsIdAndSchoolId(userId, schoolId);
             if (user == null) {

@@ -350,4 +350,22 @@ public class OrderController {
         }
         return new WebResult(StatusCode.ERROR, "删除失败");
     }
+
+    /**
+     * 完成订单
+     * 订单的状态 1待付款,2已经取消，3.待收货,4已完成
+     *
+     * @param order
+     * @return
+     */
+    @PostMapping(value = "sureorder")
+    public WebResult sureOder(@RequestBody OrderVo order) {
+        int result = orderService.sureOder(order);
+        if (result > 0) {
+            return new WebResult(StatusCode.OK, "已完成成功");
+        }
+        return new WebResult(StatusCode.ERROR, "已完成失败");
+    }
+
+
 }
