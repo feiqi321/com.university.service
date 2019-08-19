@@ -328,15 +328,16 @@ public class FileDownServiceImpl implements FileDownService {
             EduCourse course = courseVo;
             UserClass userClass=new UserClass();
             if (courseId != null) {
-                teacherMapper.updateCourseByCourseId(course);
-                //先删除原有的详细信息
-                teacherMapper.deleteClassByCourseId(course.getCourseId());
-
-                 //封装班级（以课程分班级）
+                //封装班级（以课程分班级）
                 DepartmentVo departmentVo=new DepartmentVo();
                 departmentVo.setDepartmentName(((EduCourseVo) course).getDepartmentName());
                 departmentVo.setSchoolId(Integer.valueOf(course.getSchoolId()));
                 List<Department> departments = departmentMapper.departmentList(departmentVo);
+                course.setDid(departments.get(0).getDid());
+                teacherMapper.updateCourseByCourseId(course);
+                //先删除原有的详细信息
+                teacherMapper.deleteClassByCourseId(course.getCourseId());
+
                       if (departments.isEmpty()){
                           return new WebResult("400", "文件上传失败: 在系统里该学校不存在所填写的院系", "");
                       }else {
@@ -352,12 +353,13 @@ public class FileDownServiceImpl implements FileDownService {
                 userClass.setCourseId(course.getCourseId());
                 userClassMapper.updateUserClass(userClass);   //修改班级
             } else {
-                teacherMapper.insertCourse(course);
                 //封装班级（以课程分班级）
                 DepartmentVo departmentVo=new DepartmentVo();
                 departmentVo.setDepartmentName(((EduCourseVo) course).getDepartmentName());
                 departmentVo.setSchoolId(Integer.valueOf(course.getSchoolId()));
                 List<Department> departments = departmentMapper.departmentList(departmentVo);
+                course.setDid(departments.get(0).getDid());
+                teacherMapper.insertCourse(course);
                 if (departments.isEmpty()){
                     return new WebResult("400", "文件上传失败: 在系统里该学校不存在所填写的院系", "");
                 }else {

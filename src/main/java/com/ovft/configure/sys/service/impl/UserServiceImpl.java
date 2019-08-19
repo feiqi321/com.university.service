@@ -115,9 +115,9 @@ public class UserServiceImpl implements UserService {
             return new WebResult("400", phoneResult.getMsg());
         }
 
-        if (StringUtils.isBlank(user.getPassword())) {
-            return new WebResult("400", "密码不能为空");
-        }
+//        if (StringUtils.isBlank(user.getPassword())) {
+//            return new WebResult("400", "密码不能为空");
+//        }
         //通过手机号码查找用户是否注册
         User finduserbyphone = userMapper.findUserByPhone(user);
         HashMap<String, Object> map = new HashMap();
@@ -129,9 +129,9 @@ public class UserServiceImpl implements UserService {
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
         if (user1 == null) {   //*****在用户只注册没有报名的时候
             String pasword = MD5Utils.md5Password(user.getPassword());
-            if (!pasword.equals(finduserbyphone.getPassword())) {
-                return new WebResult("400", "输入的密码不正确！");
-            }
+//            if (!pasword.equals(finduserbyphone.getPassword())) {
+//                return new WebResult("400", "输入的密码不正确！");
+//            }
             //如果不存在，则返回finduserbyphone
             map.put("user", finduserbyphone);
             //添加token
@@ -159,9 +159,9 @@ public class UserServiceImpl implements UserService {
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
         user1.setSchoolName(schoolName);
         String pasword = MD5Utils.md5Password(user.getPassword());
-        if (!pasword.equals(finduserbyphone.getPassword())) {
-            return new WebResult("400", "输入的密码不正确！");
-        }
+//        if (!pasword.equals(finduserbyphone.getPassword())) {
+//            return new WebResult("400", "输入的密码不正确！");
+//        }
         map.put("user", user1);
 
         //添加token

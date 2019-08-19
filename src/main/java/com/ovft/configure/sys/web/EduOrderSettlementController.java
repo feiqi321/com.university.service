@@ -1,18 +1,18 @@
 package com.ovft.configure.sys.web;
 
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.EduOrderSettlement;
-import com.ovft.configure.sys.bean.EduOrderSettlementVo;
-import com.ovft.configure.sys.bean.EduSettlementShow;
-import com.ovft.configure.sys.bean.EduSettlementShowExample;
+import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.EduSettlementShowMapper;
 import com.ovft.configure.sys.service.EduOrderSettlementService;
+import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -27,6 +27,8 @@ public class EduOrderSettlementController {
     private EduOrderSettlementService eduOrderSettlementService;
     @Resource
     private EduSettlementShowMapper eduSettlementShowMapper;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 订单结算      //	结算状态未结算1正在结算2已结算3
@@ -55,7 +57,18 @@ public class EduOrderSettlementController {
      * @return
      */
     @PostMapping(value = "already")
-    public WebResult updateAlreadySettlementStatus(@RequestBody EduOrderSettlement eduOrderSettlement) {
+    public WebResult updateAlreadySettlementStatus(HttpServletRequest request, @RequestBody EduOrderSettlement eduOrderSettlement) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                return new WebResult("400", "暂无该权限", "");
+            }
+        }else {
+            return new WebResult("50012", "请重新登录", "");
+        }
         Integer res = eduOrderSettlementService.updateAlreadySettlementStatus(eduOrderSettlement);
         if (res > 0) {
             return new WebResult(StatusCode.OK, "结算成功", "");
@@ -73,7 +86,18 @@ public class EduOrderSettlementController {
      * @return
      */
     @PostMapping(value = "batchalready")
-    public WebResult batchUpdateAlreadySettlementStatus(@RequestBody EduOrderSettlementVo eduOrderSettlementVo) {
+    public WebResult batchUpdateAlreadySettlementStatus(HttpServletRequest request, @RequestBody EduOrderSettlementVo eduOrderSettlementVo) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                return new WebResult("400", "暂无该权限", "");
+            }
+        }else {
+            return new WebResult("50012", "请重新登录", "");
+        }
         Integer res = eduOrderSettlementService.batchUpdateAlreadySettlementStatus(eduOrderSettlementVo);
         if (res > 0) {
             return new WebResult(StatusCode.OK, "批量结算成功", "");

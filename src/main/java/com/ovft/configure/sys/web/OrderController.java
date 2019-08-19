@@ -255,6 +255,10 @@ public class OrderController {
         Integer userId = Integer.parseInt(userId1);
 
         String schoolId1 = request.getHeader("schoolId");
+        //判断报名的学校不能为空
+        if (schoolId1.equals("null")) {
+            return new WebResult(StatusCode.ERROR, "您尚未报名学校，请填写基本信息报名学校", "");
+        }
         Integer schoolId = Integer.valueOf(schoolId1);
         Page<Object> pageAll = PageHelper.startPage(1, 2);
         //查询购物车是否有此教材

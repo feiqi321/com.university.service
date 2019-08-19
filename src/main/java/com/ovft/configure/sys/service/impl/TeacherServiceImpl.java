@@ -137,9 +137,12 @@ public class TeacherServiceImpl implements TeacherService {
         if (startDate.after(endDate)) {
             return new WebResult("400", "‘" + courseVo.getCourseName() + "’的结束日期不能早于开课日期", "");
         }
-        if (courseVo.getPeopleNumber() == null || courseVo.getPeopleNumber().compareTo(0) <= 0) {
+
+        if (courseVo.getPeopleNumber() == null || courseVo.getPeopleNumber().compareTo(0) <= 0 ) {
             return new WebResult("400", "请添加课程‘" + courseVo.getCourseName() + "’的人数", "");
         }
+
+
         //判断“HH:mm”
         Pattern p = Pattern.compile("([0-1]?[0-9]|2[0-3]):([0-5][0-9])");
         for (EduClass eduClass : classList) {
@@ -177,6 +180,7 @@ public class TeacherServiceImpl implements TeacherService {
             return new WebResult("400", "请添加课程教师", "");
         }
 
+
         if (StringUtils.isBlank(courseVo.getSchoolId())) {
             return new WebResult("400", "请选择学校", "");
         }
@@ -184,6 +188,9 @@ public class TeacherServiceImpl implements TeacherService {
         if (courseVo.getDid()==null){
             return new WebResult("400", "添加失败，您还尚未给该课程添加院系", "");
         }
+
+        //校验报名人数不能为小数
+       // if(course.getPeopleNumber().)
 
         List<EduClass> classList = courseVo.getClassList();
         Date startDate = courseVo.getStartDate();

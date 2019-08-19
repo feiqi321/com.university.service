@@ -66,6 +66,7 @@ public class AddressServiceImpl implements AddressService {
             return new WebResult("200", "添加成功", "");
         } else {
             addressMapper.updateAddress(address);
+            changeAddress(address);
             return new WebResult("200", "修改成功", "");
         }
     }
@@ -78,7 +79,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public WebResult addressList(Integer userId) {
-        List<Map<String, Object>> addressList = addressMapper.selectByUserIdMap(userId);
+        List<Address> addressList = addressMapper.selectByUserIdMap(userId);
         return new WebResult("200", "查询成功", addressList);
     }
 
@@ -88,4 +89,14 @@ public class AddressServiceImpl implements AddressService {
         addressMapper.deleteAddress(addressId);
         return new WebResult("200", "删除成功", "");
     }
+
+    @Override
+    public WebResult changeAddress(Address address) {
+        addressMapper.updateChangeStatusAll(address.getUserId());    //改变所有记录状态为0    ==> 0:未被选中   1:被选中
+
+        addressMapper.updateChangeStatusOne(address.getAddressId());   //改变指定记录状态为1
+        return new WebResult("200", "切换成功", "");
+    }
+
+
 }

@@ -144,7 +144,7 @@
             employer=#{employer},job=#{job},emergency_contact1=#{emergencyContact1},
             emergency_relation1=#{emergencyRelation1},emergency_phone1=#{emergencyPhone1},
             emergency_contact2=#{emergencyContact2},emergency_relation2=#{emergencyRelation2},
-            emergency_phone2=#{emergencyPhone2},volunteer=#{volunteer},identity_card=#{identityCard},
+            emergency_phone2=#{emergencyPhone2},checkin=#{checkin},volunteer=#{volunteer},identity_card=#{identityCard},
             <if test="schoolJob!=null">
                 school_job=#{schoolJob},
             </if>

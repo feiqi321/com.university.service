@@ -55,6 +55,7 @@ public class AdminController {
 
     /**
      * 根据手机号获取学校列表
+     *
      * @param phone
      * @return
      */
@@ -100,16 +101,16 @@ public class AdminController {
     public WebResult adminList(HttpServletRequest request, @RequestBody PageVo pageVo) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
-        if(o != null) {
+        if (o != null) {
             Integer id = (Integer) o;
             // 如果是pc端登录，更新token缓存失效时间
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
-            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-            if(hget.getRole() != 0) {
+            Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if (hget.getRole() != 0) {
                 pageVo.setSchoolId(hget.getSchoolId());
             }
             return adminService.adminList(pageVo);
-        }else {
+        } else {
             return new WebResult("50012", "请重新登录", "");
         }
     }
@@ -124,9 +125,12 @@ public class AdminController {
     public WebResult createAdminRole(HttpServletRequest request, @RequestBody AdminVo adminVo) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
+        if (o == null) {
+            return new WebResult("400", "Token无效，请先登录");
+        }
         Integer id = (Integer) o;
-        Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-        if(hget.getRole() != 0) {
+        Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+        if (hget.getRole() != 0) {
             adminVo.setSchoolId(hget.getSchoolId());
         }
         return adminService.createAdminRole(adminVo);
@@ -153,6 +157,7 @@ public class AdminController {
     public WebResult deleteAdmin(@RequestParam(value = "adminId") Integer adminId, Integer schoolId) {
         return adminService.deleteAdmin(adminId, schoolId);
     }
+
     /**
      * 学员投稿审核列表
      *
@@ -160,20 +165,20 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/contributeList")
-    public WebResult contributeList(HttpServletRequest request, @RequestBody PageVo pageVo){
+    public WebResult contributeList(HttpServletRequest request, @RequestBody PageVo pageVo) {
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
-        if(o != null) {
+        if (o != null) {
             Integer id = (Integer) o;
             // 如果是pc端登录，更新token缓存失效时间
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
-            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-            if(hget.getRole() != 0) {
+            Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if (hget.getRole() != 0) {
                 pageVo.setSchoolId(hget.getSchoolId());
             }
 
             return userService.contributeList(pageVo);
-        }else {
+        } else {
             return new WebResult("50012", "请重新登录", "");
         }
 
@@ -192,63 +197,63 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/auditContribute")
-    public WebResult auditContribute(HttpServletRequest request,@RequestBody Contribute contribute){
-        Integer  checkin=contribute.getCheckin();
-        Integer  cid=contribute.getCid();
+    public WebResult auditContribute(HttpServletRequest request, @RequestBody Contribute contribute) {
+        Integer checkin = contribute.getCheckin();
+        Integer cid = contribute.getCid();
         //0的话,向article表里面添加记录，改变Contribute的checkin状态
-        if (checkin==0){
-              userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
-              EduArticle eduArticle=new EduArticle();
-              eduArticle.setCid(cid);
-              eduArticle.setUserid(contribute.getUserId().toString());
-              eduArticle.setTitle(contribute.getTitle());
-              eduArticle.setContent(contribute.getContent());
-              eduArticle.setImage(contribute.getImage());
-              eduArticle.setCreatetime(contribute.getCreatetime());
-              eduArticle.setAudio(contribute.getAudio());
-              eduArticle.setVedio(contribute.getVedio());
-              eduArticle.setAuthor(contribute.getUserName());
-              eduArticle.setIspublic("1");
-              eduArticle.setIstop("0");
-              eduArticle.setState(contribute.getCheckin().toString());
-              eduArticle.setVisits(0);
-              eduArticle.setThumbup(0);
-              eduArticle.setComment(0);
-              eduArticle.setCollect("0");
-              eduArticle.setType(contribute.getType().toString());
-              eduArticle.setSchoolId(contribute.getSchoolId());
+        if (checkin == 0) {
+            userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
+            EduArticle eduArticle = new EduArticle();
+            eduArticle.setCid(cid);
+            eduArticle.setUserid(contribute.getUserId().toString());
+            eduArticle.setTitle(contribute.getTitle());
+            eduArticle.setContent(contribute.getContent());
+            eduArticle.setImage(contribute.getImage());
+            eduArticle.setCreatetime(contribute.getCreatetime());
+            eduArticle.setAudio(contribute.getAudio());
+            eduArticle.setVedio(contribute.getVedio());
+            eduArticle.setAuthor(contribute.getUserName());
+            eduArticle.setIspublic("1");
+            eduArticle.setIstop("0");
+            eduArticle.setState(contribute.getCheckin().toString());
+            eduArticle.setVisits(0);
+            eduArticle.setThumbup(0);
+            eduArticle.setComment(0);
+            eduArticle.setCollect("0");
+            eduArticle.setType(contribute.getType().toString());
+            eduArticle.setSchoolId(contribute.getSchoolId());
 
-              eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
+            eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
 
-              return new WebResult("200","审核通过","");
+            return new WebResult("200", "审核通过", "");
 
 
         }
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
-        if(o != null) {
+        if (o != null) {
             Integer id = (Integer) o;
             // 如果是pc端登录，更新token缓存失效时间
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
-            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-            if(hget.getRole() == 0) {
-               EduArticle noticeByCid = eduArticleService.findNoticeByCid(contribute.getCid());
-                if (noticeByCid!=null){
+            Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if (hget.getRole() == 0) {
+                EduArticle noticeByCid = eduArticleService.findNoticeByCid(contribute.getCid());
+                if (noticeByCid != null) {
                     eduArticleService.deleteNoticeByCid(contribute.getCid());
                     userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
-                }else {
+                } else {
                     userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
                 }
-                return new WebResult("200","拒绝成功","");
-            }else{
-                userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
+                return new WebResult("200", "拒绝成功", "");
+            } else {
+                userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
 //        userService.deleteWithdraw(wid);
 //        return new WebResult("200", "拒绝成功", "");
-                return new WebResult("200","拒绝成功","");
+                return new WebResult("200", "拒绝成功", "");
 
             }
 
-        }else {
+        } else {
             return new WebResult("50012", "请先登录", "");
         }
 
@@ -258,6 +263,7 @@ public class AdminController {
 ////        return new WebResult("200", "拒绝成功", "");
 //        return new WebResult("200","拒绝成功","");
     }
+
     /**
      * 学员投稿修改
      *
@@ -265,14 +271,14 @@ public class AdminController {
      * @return
      */
     @PostMapping(value = "/updateUserContribute")
-    public WebResult updateUserContribute(HttpServletRequest request,@RequestBody Contribute contribute){
-        Integer checkin= contribute.getCheckin();
-        Integer cid= contribute.getCid();
-        if (checkin==0){
+    public WebResult updateUserContribute(HttpServletRequest request, @RequestBody Contribute contribute) {
+        Integer checkin = contribute.getCheckin();
+        Integer cid = contribute.getCid();
+        if (checkin == 0) {
             //查找该投稿内容是否已被通过发布
 
             EduArticle notice = eduArticleService.findNoticeByCid(cid);
-            if (notice==null) {
+            if (notice == null) {
                 userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
                 EduArticle eduArticle = new EduArticle();
                 eduArticle.setCid(cid);
@@ -297,38 +303,38 @@ public class AdminController {
                 eduArticleService.adminAddNotice(eduArticle, 1);//向article表里面添加记录
 
                 return new WebResult("200", "审核通过", "");
-            }else{
+            } else {
 
             }
 
         }
-        if (contribute.getCheckin()==2){
+        if (contribute.getCheckin() == 2) {
             String token = request.getHeader("token");
             Object o = redisUtil.get(token);
-            if(o != null) {
+            if (o != null) {
                 Integer id = (Integer) o;
                 // 如果是pc端登录，更新token缓存失效时间
                 redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
-                Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-                if(hget.getRole() == 0) {
+                Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+                if (hget.getRole() == 0) {
                     EduArticle noticeByCid = eduArticleService.findNoticeByCid(contribute.getCid());
-                    if (noticeByCid!=null){
+                    if (noticeByCid != null) {
                         eduArticleService.deleteNoticeByCid(contribute.getCid());
                         userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
-                        return new WebResult("200","拒绝成功","");
-                    }else {
+                        return new WebResult("200", "拒绝成功", "");
+                    } else {
                         userService.updateContributeChinkin(checkin, contribute.getRejectReason(), cid);
                     }
-                }else{
+                } else {
                     //userService.updateContributeChinkin(checkin,contribute.getRejectReason(),cid);
 //        userService.deleteWithdraw(wid);
 //        return new WebResult("200", "拒绝成功", "");
-                    return new WebResult("200","抱歉！您没有此权限，请联系超级管理员进行操作","");
+                    return new WebResult("200", "抱歉！您没有此权限，请联系超级管理员进行操作", "");
 
                 }
 
 
-            }  else {
+            } else {
                 return new WebResult("50012", "请先登录", "");
             }
         }

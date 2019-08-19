@@ -84,12 +84,11 @@ public class EduCourseController {
 
 
         String schoolId1 = request.getHeader("schoolId");
-        Integer schoolId = Integer.parseInt(schoolId1);
-
         //判断报名的学校不能为空
         if (schoolId1.equals("null")) {
-            return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");
+            return new WebResult(StatusCode.ERROR, "您尚未报名学校，请填写基本信息报名学校", "");
         }
+        Integer schoolId = Integer.parseInt(schoolId1);
         User user = userService.queryUserInfo(userId);
         if (user == null) {
             return new WebResult(StatusCode.ERROR, "请到学员中心完善好自己的报名学校，方可报名！", "");
@@ -155,6 +154,7 @@ public class EduCourseController {
         course.setIsenable(ConstantClassField.ISONLINE);
         course.setStartDate(eduCourse.getStartDate());
         course.setEndDate(eduCourse.getEndDate());
+        course.setDid(eduCourse.getDid());
         int i = eduCourseService.updateAllTime(course);
         if (i > 0) {
             return new WebResult(StatusCode.OK, "全部设置成功");
