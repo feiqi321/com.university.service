@@ -70,8 +70,8 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    check_id, user_id, check_start_time, check_end_time, is_check, school_id
-  </sql>
+        check_id, user_id, check_start_time, check_end_time, is_check, school_id
+    </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.EduCheckExample" resultMap="BaseResultMap">
         select
         <if test="distinct">
@@ -101,9 +101,9 @@
         where check_id = #{checkId,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from edu_check
-    where check_id = #{checkId,jdbcType=INTEGER}
-  </delete>
+        delete from edu_check
+        where check_id = #{checkId,jdbcType=INTEGER}
+    </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.EduCheckExample">
         delete from edu_check
         <if test="_parameter != null">
@@ -111,13 +111,13 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.ovft.configure.sys.bean.EduCheck">
-    insert into edu_check (check_id, user_id, check_start_time, 
-      check_end_time, is_check, school_id
-      )
-    values (#{checkId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{checkStartTime,jdbcType=TIMESTAMP}, 
-      #{checkEndTime,jdbcType=TIMESTAMP}, #{isCheck,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
-      )
-  </insert>
+        insert into edu_check (check_id, user_id, check_start_time,
+        check_end_time, is_check, school_id
+        )
+        values (#{checkId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{checkStartTime,jdbcType=TIMESTAMP},
+        #{checkEndTime,jdbcType=TIMESTAMP}, #{isCheck,jdbcType=INTEGER}, #{schoolId,jdbcType=VARCHAR}
+        )
+    </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.EduCheck">
         insert into edu_check
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -227,78 +227,77 @@
         where check_id = #{checkId,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduCheck">
-    update edu_check
-    set user_id = #{userId,jdbcType=INTEGER},
-      check_start_time = #{checkStartTime,jdbcType=TIMESTAMP},
-      check_end_time = #{checkEndTime,jdbcType=TIMESTAMP},
-      is_check = #{isCheck,jdbcType=INTEGER},
-      school_id = #{schoolId,jdbcType=VARCHAR}
-    where check_id = #{checkId,jdbcType=INTEGER}
-  </update>
+        update edu_check
+        set user_id = #{userId,jdbcType=INTEGER},
+        check_start_time = #{checkStartTime,jdbcType=TIMESTAMP},
+        check_end_time = #{checkEndTime,jdbcType=TIMESTAMP},
+        is_check = #{isCheck,jdbcType=INTEGER},
+        school_id = #{schoolId,jdbcType=VARCHAR}
+        where check_id = #{checkId,jdbcType=INTEGER}
+    </update>
 
     <!--查询打卡记录的相关信息-->
     <select id="queryAllPunchRecord" parameterType="int" resultType="com.ovft.configure.sys.vo.EduCheckVo">
-	   select
-				c.*,
-	          e.check_start_time,
-			  e.is_check,
-				e.user_id
-	from (
-	select
-              c.course_name,
-              c.place_class,
-              c.start_date,
-              e3.start_time,
-              e3.end_time,
-			  e1.school_name,
-			  e1.school_id
-	    from edu_course  c
-             left join edu_school e1 on c.school_id=e1.school_id
-             left join edu_admin e2 on c.course_teacher=e2.admin_id
-             inner JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
-    where course_id in(
-		SELECT
-               t.course_id
-	from
-  (
-            select
-                    o.user_id,
-                    i.course_id,
-                    f.payment_status
-          from edu_order o
-                LEFT JOIN edu_order_item i on i.order_id=o.id
-                LEFT JOIN edu_payment_info f on f.order_id = o.id
-  ) t
-  WHERE  payment_status=1 and user_id=#{user_id}
+        select
+        c.*,
+        e.check_start_time,
+        e.is_check,
+        e.user_id
+        from (
+        select
+        c.course_name,
+        c.place_class,
+        c.start_date,
+        e3.start_time,
+        e3.end_time,
+        e1.school_name,
+        e1.school_id
+        from edu_course c
+        left join edu_school e1 on c.school_id=e1.school_id
+        left join edu_admin e2 on c.course_teacher=e2.admin_id
+        inner JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+        where course_id in(
+        SELECT
+        t.course_id
+        from
+        (
+        select
+        o.user_id,
+        i.course_id,
+        f.payment_status
+        from edu_order o
+        LEFT JOIN edu_order_detail i on i.order_id=o.id
+        LEFT JOIN edu_payment_info f on f.order_id = o.id
+        ) t
+        WHERE payment_status="PAID" and user_id=#{user_id}
+        )
 
-		)
+        ) c
+        left JOIN edu_check e on e.school_id =c.school_id
 
-	) c
-	left JOIN edu_check e on  e.school_id =c.school_id
-
-	where
-			 user_id =#{user_id}
-  </select>
+        where
+        user_id =#{user_id}
+    </select>
 
     <!--查询当日的打卡课程相关信息-->
     <select id="queryNowDayRecord" parameterType="String" resultType="com.ovft.configure.sys.vo.EduCheckVo">
-	   select
-            q.*
-            from
-            (
-            select
-                c.course_name,
-                c.place_class,
-                c.start_date,
-                s.start_time,
-                s.end_time,
-                order_id
-                from
-                    edu_course  c
-                    INNER JOIN edu_class_schedule s on c.course_id = s.course_ids
-                    INNER JOIN edu_order_item  i on i.course_id = c.course_id
-                ) q
-                LEFT JOIN edu_payment_info f on f.order_id=q.order_id
-            where payment_status=1 and start_date=#{start_date}
-  </select>
+        select
+        q.*
+        from
+        (
+        select
+        c.course_name,
+        c.place_class,
+        c.start_date,
+        s.start_time,
+        s.end_time,
+        order_id
+        from
+        edu_course c
+        INNER JOIN edu_class_schedule s on c.course_id = s.course_ids
+        INNER JOIN edu_order_detail i on i.course_id = c.course_id
+        ) q
+        LEFT JOIN edu_payment_info f on f.order_id=q.order_id
+        where payment_status="PAID" and start_date=#{start_date}
+    </select>
 </mapper>

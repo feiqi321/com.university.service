@@ -45,14 +45,12 @@ public class EduCheckController {
      */
     @GetMapping(value = "dosign")
     public WebResult doSign(HttpServletRequest request, @RequestParam(value = "x", required = true) Double x, @RequestParam(value = "y", required = true) Double y) {
-//        Integer userId = (Integer) request.getAttribute("userId");
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
 
         if (userId == null) {
             return new WebResult(StatusCode.ERROR, "userId不能为空", "");
         }
-//        userId = 1;
         //1.查询已付款的订单课程是否存在
         //2.如果订单商品存在，就进行打卡
         List<OrderVo> orderVos = orderService.queryAllRecord(userId);
@@ -84,7 +82,6 @@ public class EduCheckController {
      */
     @PostMapping(value = "record")
     public WebResult queryAllPunchRecord(HttpServletRequest request) {
-//        Integer userId = (Integer) request.getAttribute("userId");
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
         if (userId == null) {
@@ -212,7 +209,6 @@ public class EduCheckController {
         eduCheck.setIsCheck(OrderStatus.ISCHECK);
         eduCheckService.doSign(eduCheck);
         return eduCheck;
-
     }
 
 }

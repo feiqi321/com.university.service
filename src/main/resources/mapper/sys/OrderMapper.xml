@@ -21,6 +21,8 @@
         <result column="send_type" jdbcType="VARCHAR" property="sendType"/>
         <result column="tosend_price" jdbcType="DECIMAL" property="tosendPrice"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="resource_status" jdbcType="VARCHAR" property="resourceStatus"/>
+        <result column="resource_type" jdbcType="VARCHAR" property="resourceType"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -83,10 +85,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        id, order_sn, user_id, order_status, create_time, expire_time, payment_time, total_amount,
-        payment_way, out_trade_no, trade_body, img_url, consignee, school_id, telephone,
-        address, send_type, tosend_price, remark
-    </sql>
+    id, order_sn, user_id, order_status, create_time, expire_time, payment_time, total_amount, 
+    payment_way, out_trade_no, trade_body, img_url, consignee, school_id, telephone, 
+    address, send_type, tosend_price, remark, resource_status, resource_type
+  </sql>
     <select id="selectByExample" parameterType="com.ovft.configure.sys.bean.OrderExample" resultMap="BaseResultMap">
         select
         <if test="distinct">
@@ -116,9 +118,9 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-        delete from edu_order
-        where id = #{id,jdbcType=INTEGER}
-    </delete>
+    delete from edu_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
     <delete id="deleteByExample" parameterType="com.ovft.configure.sys.bean.OrderExample">
         delete from edu_order
         <if test="_parameter != null">
@@ -134,15 +136,15 @@
         total_amount, payment_way, out_trade_no,
         trade_body, img_url, consignee,
         school_id, telephone, address,
-        send_type, tosend_price, remark
-        )
+        send_type, tosend_price, remark,
+        resource_status, resource_type)
         values (#{orderSn,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{orderStatus,jdbcType=INTEGER},
         #{createTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP},
         #{totalAmount,jdbcType=BIGINT}, #{paymentWay,jdbcType=VARCHAR}, #{outTradeNo,jdbcType=VARCHAR},
         #{tradeBody,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{consignee,jdbcType=VARCHAR},
         #{schoolId,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
-        #{sendType,jdbcType=VARCHAR}, #{tosendPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}
-        )
+        #{sendType,jdbcType=VARCHAR}, #{tosendPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR},
+        #{resourceStatus,jdbcType=VARCHAR}, #{resourceType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.ovft.configure.sys.bean.Order">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -204,6 +206,12 @@
             <if test="remark != null">
                 remark,
             </if>
+            <if test="resourceStatus != null">
+                resource_status,
+            </if>
+            <if test="resourceType != null">
+                resource_type,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderSn != null">
@@ -259,6 +267,12 @@
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceStatus != null">
+                #{resourceStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceType != null">
+                #{resourceType,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -328,6 +342,12 @@
             <if test="record.remark != null">
                 remark = #{record.remark,jdbcType=VARCHAR},
             </if>
+            <if test="record.resourceStatus != null">
+                resource_status = #{record.resourceStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.resourceType != null">
+                resource_type = #{record.resourceType,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -353,7 +373,9 @@
         address = #{record.address,jdbcType=VARCHAR},
         send_type = #{record.sendType,jdbcType=VARCHAR},
         tosend_price = #{record.tosendPrice,jdbcType=DECIMAL},
-        remark = #{record.remark,jdbcType=VARCHAR}
+        remark = #{record.remark,jdbcType=VARCHAR},
+        resource_status = #{record.resourceStatus,jdbcType=VARCHAR},
+        resource_type = #{record.resourceType,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -415,32 +437,39 @@
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
+            <if test="resourceStatus != null">
+                resource_status = #{resourceStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceType != null">
+                resource_type = #{resourceType,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.Order">
-        update edu_order
-        set order_sn = #{orderSn,jdbcType=VARCHAR},
-        user_id = #{userId,jdbcType=INTEGER},
-        order_status = #{orderStatus,jdbcType=INTEGER},
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-        expire_time = #{expireTime,jdbcType=TIMESTAMP},
-        payment_time = #{paymentTime,jdbcType=TIMESTAMP},
-        total_amount = #{totalAmount,jdbcType=BIGINT},
-        payment_way = #{paymentWay,jdbcType=VARCHAR},
-        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
-        trade_body = #{tradeBody,jdbcType=VARCHAR},
-        img_url = #{imgUrl,jdbcType=VARCHAR},
-        consignee = #{consignee,jdbcType=VARCHAR},
-        school_id = #{schoolId,jdbcType=VARCHAR},
-        telephone = #{telephone,jdbcType=VARCHAR},
-        address = #{address,jdbcType=VARCHAR},
-        send_type = #{sendType,jdbcType=VARCHAR},
-        tosend_price = #{tosendPrice,jdbcType=DECIMAL},
-        remark = #{remark,jdbcType=VARCHAR}
-        where id = #{id,jdbcType=INTEGER}
-    </update>
-
+    update edu_order
+    set order_sn = #{orderSn,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      payment_time = #{paymentTime,jdbcType=TIMESTAMP},
+      total_amount = #{totalAmount,jdbcType=BIGINT},
+      payment_way = #{paymentWay,jdbcType=VARCHAR},
+      out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      trade_body = #{tradeBody,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      consignee = #{consignee,jdbcType=VARCHAR},
+      school_id = #{schoolId,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      send_type = #{sendType,jdbcType=VARCHAR},
+      tosend_price = #{tosendPrice,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      resource_status = #{resourceStatus,jdbcType=VARCHAR},
+      resource_type = #{resourceType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 
     <!--1.查找专业及学员分类报名人数-->
     <select id="countPayCourseEmployerNum" parameterType="map" resultType="int">
@@ -514,18 +543,21 @@
     WHERE payment_status="PAID" and user_id=#{user_id} )
   </select>
 
-
     <!--4.查找订单的详细信息-->
     <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
         SELECT
-        o.*
-        from edu_order o
+        o.*,
+        i.course_id
+        from edu_order o LEFT JOIN edu_order_detail i on o.id=i.order_id
         <where>
             <if test="userId != null and userId!=''">
                 and user_Id=#{userId}
             </if>
             <if test="orderStatus != null and orderStatus!=''">
                 and order_status=#{orderStatus}
+            </if>
+            <if test="resourceType != null and resourceType!=''">
+                and resource_type=#{resourceType}
             </if>
         </where>
     </select>
@@ -545,6 +577,7 @@
                 and order_status=#{orderStatus}
             </if>
         </where>
+
     </select>
 
     <!--    &lt;!&ndash;5.查找总订单信息&ndash;&gt;
@@ -571,6 +604,5 @@
         edu_order_detail
         where order_id=#{orderId}
     </select>
-
 
 </mapper>

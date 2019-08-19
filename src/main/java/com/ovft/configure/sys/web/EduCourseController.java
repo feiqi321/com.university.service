@@ -29,7 +29,6 @@ public class EduCourseController {
 
     @Autowired
     private EduCourseService eduCourseService;
-
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -65,26 +64,6 @@ public class EduCourseController {
             redisTemplate.opsForValue().set("course" + schoolId, eduCourseVo);
         }
         return new WebResult(StatusCode.OK, "查找成功", courseVos);
-    }
-
-    /**
-     * 展示课程详情  ---未使用
-     *
-     * @param courseId
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "showInfo")
-    public WebResult queryAllInfo(@RequestParam(value = "courseId") Integer courseId, HttpServletRequest request) {
-        if (courseId == null) {
-            return new WebResult(StatusCode.ERROR, "课程id不能为空", "");
-        }
-        EduCourseVo eduCourseVos = (EduCourseVo) redisTemplate.opsForValue().get("course" + courseId);
-        if (eduCourseVos == null) {
-            eduCourseVos = eduCourseService.queryCourseByCategory(courseId);
-            redisTemplate.opsForValue().set("course" + courseId, eduCourseVos);
-        }
-        return new WebResult(StatusCode.OK, "查询成功", eduCourseVos);
     }
 
 

@@ -159,7 +159,7 @@ public class EduSettlementOrderDetailsServiceImpl implements EduSettlementOrderD
         //结算中订单id关联订单详细id
         eduOrderSettlement.setSettlementShowId(eduSettlementShow.getId());
 
-        if (b) {
+            if (b) {
             eduOrderSettlementMapper.insertSelective(eduOrderSettlement);
         } else {
             eduOrderSettlementMapper.updateByPrimaryKeySelective(eduOrderSettlement);

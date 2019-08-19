@@ -122,6 +122,7 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         map.put("orderStatus", orderStatus);
+        map.put("resourceType", 1);
 
         List<OrderVo> orderVoList = orderMapper.showOrder(map);
 
@@ -189,41 +190,10 @@ public class OrderServiceImpl implements OrderService {
         return i;
     }
 
-
-
-    /*
-     */
-/**
- * 根据用户id查询已付款的订单
- * @param userId
- * @return
- *//*
-
     @Override
-    public List<OrderVo> queryAllOrder(int userId) {
-        return orderMapper.queryAllOrder(userId);
-    }
-*/
-
-    /*    *//**
-     * 根据用户id查询开课的具体时间点
-     * @param userId
-     * @return
-     *//*
-    public List<OrderVo> queryStartDateTimeByCouserId(int userId) {
-        return orderMapper.queryAllOrder(userId);
+    public int sureOder(OrderVo order) {
+        return orderMapper.updateByPrimaryKeySelective(order);
     }
 
-
-    *//**
-     * 查询courseId
-     * @param userId
-     * @param status
-     * @return
-     *//*
-    @Override
-    public int queryForCourseId(int userId, int status) {
-        return orderMapper.queryCourseNumById(userId,status);
-    }*/
 
 }

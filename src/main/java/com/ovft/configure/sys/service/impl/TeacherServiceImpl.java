@@ -81,6 +81,8 @@ public class TeacherServiceImpl implements TeacherService {
      *
      * @param vacateId
      * @param isCheck
+     *
+     *
      * @return
      */
     @Override
@@ -106,6 +108,9 @@ public class TeacherServiceImpl implements TeacherService {
         pageVo.setSchoolId(Integer.valueOf(courseVo.getSchoolId()));
         pageVo.setIsenable(courseVo.getIsenable());
         pageVo.setSearch(courseVo.getCourseName());
+
+
+
         List<EduCourse> eqName = teacherMapper.selectCourseListBySchoolId(pageVo);
         for (EduCourse eduCourse : eqName) {
             if (eduCourse.getCourseName().equals(courseVo.getCourseName())) {

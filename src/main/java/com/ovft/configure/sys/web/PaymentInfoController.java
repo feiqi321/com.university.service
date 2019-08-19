@@ -98,6 +98,7 @@ public class PaymentInfoController {
     }
 
     /**
+     * 网上报名
      * 提交支付订单
      *
      * @param courseId
@@ -226,10 +227,13 @@ public class PaymentInfoController {
                 paymentInfo4Upt.setPaymentStatus(PaymentStatus.PAID);
                 paymentInfo4Upt.setCallbackTime(new Date());
                 paymentInfo4Upt.setCallbackContent(paramMap.toString());
+                paymentInfo4Upt.setCreateTime(new Date());
                 paymentService.updatePaymentInfoByOutTradeNo(outTradeNo, paymentInfo4Upt);
 
                 Order order = orderMapper.selectByPrimaryKey(Integer.valueOf(paymentInfo.getOrderId()));
-                order.setOrderStatus(OrderStatus.PAY);
+                order.setOrderStatus(OrderStatus.RECIVE);
+                order.setResourceStatus("PAID");
+                order.setPaymentTime(paymentInfo4Upt.getCreateTime());
                 orderMapper.updateByPrimaryKeySelective(order);
 
                 User user = userService.selectById(order.getUserId());
@@ -238,7 +242,7 @@ public class PaymentInfoController {
                 List<OrderDetail> orderDetails = orderDetailMapper.selectByExample(orderDetailExample);
                 BigDecimal orderPrice = new BigDecimal("0");
                 BigDecimal SettlementMoney = new BigDecimal("0");
-                BigDecimal feilu = new BigDecimal("0.006");
+                BigDecimal feilu = new BigDecimal("0.006");//费率
                 String schoolName = null;
                 for (OrderDetail orderDetail : orderDetails) {
                     orderPrice = orderDetail.getOrderPrice();
@@ -246,7 +250,6 @@ public class PaymentInfoController {
                     SettlementMoney = orderPrice.subtract(multiply);
                     schoolName = orderDetail.getSchoolName();
                 }
-
 
                 //对账系统生成未结算订单表详细表
                 EduSettlementOrderDetails eduSettlementOrderDetails = new EduSettlementOrderDetails();
@@ -401,7 +404,7 @@ public class PaymentInfoController {
         Order order = new Order();
         order.setUserId(userId);
         order.setOrderSn(OrderIdUtil.getOrderIdByTime());
-        order.setOrderStatus(OrderStatus.UNPay);
+        order.setOrderStatus(OrderStatus.UNPay);//代付款
         order.setCreateTime(new Date());
         order.setTotalAmount(submitOrderVos.getTotalMoney());
         order.setConsignee(submitOrderVos.getUserName());
@@ -415,6 +418,9 @@ public class PaymentInfoController {
         OrderDetailVo orderDetailVo2 = orderItemsVo.get(0);
         order.setTradeBody(orderDetailVo2.getBooksName());
         order.setPaymentWay("支付宝");
+
+        order.setResourceType("1");//教材
+        order.setResourceStatus("UNPAID");//未支付
         orderMapper.insertSelective(order);
         for (OrderDetailVo orderItem : orderItemsVo) {
             OrderDetail orderDetail = new OrderDetail();

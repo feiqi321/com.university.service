@@ -24,7 +24,7 @@ public class Order implements Serializable {
     private Integer userId;
 
     /**
-     * 订单的状态 0未取消，1表已取消
+     * 订单的支付状态5.已付款
      */
     private Integer orderStatus;
 
@@ -73,6 +73,10 @@ public class Order implements Serializable {
      */
     private String consignee;
 
+    /**
+     * 学校id
+     */
+    private String schoolId;
 
     /**
      * 电话
@@ -99,15 +103,15 @@ public class Order implements Serializable {
      */
     private String remark;
 
-    private String schoolId;
+    /**
+     * 资源的类型1待付款,2已经取消，3.待收货,4已完成
+     */
+    private String resourceStatus;
 
-    public String getSchoolId() {
-        return schoolId;
-    }
-
-    public void setSchoolId(String schoolId) {
-        this.schoolId = schoolId;
-    }
+    /**
+     * 资源的状态:1.表示教材购买 2.其他
+     */
+    private String resourceType;
 
     private static final long serialVersionUID = 1L;
 
@@ -215,6 +219,14 @@ public class Order implements Serializable {
         this.consignee = consignee;
     }
 
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId;
+    }
+
     public String getTelephone() {
         return telephone;
     }
@@ -255,6 +267,22 @@ public class Order implements Serializable {
         this.remark = remark;
     }
 
+    public String getResourceStatus() {
+        return resourceStatus;
+    }
+
+    public void setResourceStatus(String resourceStatus) {
+        this.resourceStatus = resourceStatus;
+    }
+
+    public String getResourceType() {
+        return resourceType;
+    }
+
+    public void setResourceType(String resourceType) {
+        this.resourceType = resourceType;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -280,11 +308,14 @@ public class Order implements Serializable {
                 && (this.getTradeBody() == null ? other.getTradeBody() == null : this.getTradeBody().equals(other.getTradeBody()))
                 && (this.getImgUrl() == null ? other.getImgUrl() == null : this.getImgUrl().equals(other.getImgUrl()))
                 && (this.getConsignee() == null ? other.getConsignee() == null : this.getConsignee().equals(other.getConsignee()))
+                && (this.getSchoolId() == null ? other.getSchoolId() == null : this.getSchoolId().equals(other.getSchoolId()))
                 && (this.getTelephone() == null ? other.getTelephone() == null : this.getTelephone().equals(other.getTelephone()))
                 && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
                 && (this.getSendType() == null ? other.getSendType() == null : this.getSendType().equals(other.getSendType()))
                 && (this.getTosendPrice() == null ? other.getTosendPrice() == null : this.getTosendPrice().equals(other.getTosendPrice()))
-                && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()));
+                && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()))
+                && (this.getResourceStatus() == null ? other.getResourceStatus() == null : this.getResourceStatus().equals(other.getResourceStatus()))
+                && (this.getResourceType() == null ? other.getResourceType() == null : this.getResourceType().equals(other.getResourceType()));
     }
 
     @Override
@@ -304,11 +335,14 @@ public class Order implements Serializable {
         result = prime * result + ((getTradeBody() == null) ? 0 : getTradeBody().hashCode());
         result = prime * result + ((getImgUrl() == null) ? 0 : getImgUrl().hashCode());
         result = prime * result + ((getConsignee() == null) ? 0 : getConsignee().hashCode());
+        result = prime * result + ((getSchoolId() == null) ? 0 : getSchoolId().hashCode());
         result = prime * result + ((getTelephone() == null) ? 0 : getTelephone().hashCode());
         result = prime * result + ((getAddress() == null) ? 0 : getAddress().hashCode());
         result = prime * result + ((getSendType() == null) ? 0 : getSendType().hashCode());
         result = prime * result + ((getTosendPrice() == null) ? 0 : getTosendPrice().hashCode());
         result = prime * result + ((getRemark() == null) ? 0 : getRemark().hashCode());
+        result = prime * result + ((getResourceStatus() == null) ? 0 : getResourceStatus().hashCode());
+        result = prime * result + ((getResourceType() == null) ? 0 : getResourceType().hashCode());
         return result;
     }
 
@@ -331,11 +365,14 @@ public class Order implements Serializable {
         sb.append(", tradeBody=").append(tradeBody);
         sb.append(", imgUrl=").append(imgUrl);
         sb.append(", consignee=").append(consignee);
+        sb.append(", schoolId=").append(schoolId);
         sb.append(", telephone=").append(telephone);
         sb.append(", address=").append(address);
         sb.append(", sendType=").append(sendType);
         sb.append(", tosendPrice=").append(tosendPrice);
         sb.append(", remark=").append(remark);
+        sb.append(", resourceStatus=").append(resourceStatus);
+        sb.append(", resourceType=").append(resourceType);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -174,7 +174,7 @@ public class EduCourseServiceImpl implements EduCourseService {
                 map.put("请在学员中心的基本信息填写必要信息：学员类别，再来报名！", "");
                 return map;
             }
-            //通过省份证获取年龄
+            //通过身份证证获取年龄
             int age = AgeUtil.IdNOToAge(identity);
             if (startAge > age || age > endAge) {
                 map.put("请在在允许的年龄阶段报名：" + startAge + "至" + endAge + "方可报名", "");
@@ -230,82 +230,6 @@ public class EduCourseServiceImpl implements EduCourseService {
                 }
             }
 
-
-
-
-
-
-
-
-
-          /*
-            //如果传入的学员类别不为空，方可报名
-            if (eduRegist.getRegistCategoryOne() != null && eduRegist.getRegistCategoryOne().equals(user.getEmployer())) {
-                if (nowtotal > 0) {
-                    EduCourseVo courseInfo = applyCourse(userId, courseId);
-                    nowtotal--;
-                    map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
-                    return map;
-                }
-
-            }*//* else {
-                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
-                return map;
-            }*//*
-            if (eduRegist.getRegistCategoryTwo() != null && eduRegist.getRegistCategoryTwo().equals(user.getEmployer())) {
-                if (nowtotal > 0) {
-                    EduCourseVo courseInfo = applyCourse(userId, courseId);
-                    nowtotal--;
-                    map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
-                    return map;
-                }
-            }*//* else {
-                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
-            }*//*
-            if (eduRegist.getRegistCategoryThree() != null && eduRegist.getRegistCategoryThree().equals(user.getEmployer())) {
-                if (nowtotal > 0) {
-                    EduCourseVo courseInfo = applyCourse(userId, courseId);
-                    nowtotal--;
-                    map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
-                    return map;
-                }
-            } *//*else {
-                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
-                return map;
-            }*//*
-            if (eduRegist.getRegistCategoryFour() != null && eduRegist.getRegistCategoryFour().equals(user.getEmployer())) {
-                if (nowtotal > 0) {
-                    EduCourseVo courseInfo = applyCourse(userId, courseId);
-                    nowtotal--;
-                    map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
-                    return map;
-                }
-            } *//*else {
-                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
-                return map;
-            }*//*
-            if (eduRegist.getRegistCategoryFive() != null && eduRegist.getRegistCategoryFive().equals(user.getEmployer())) {
-                if (nowtotal > 0) {
-                    EduCourseVo courseInfo = applyCourse(userId, courseId);
-                    nowtotal--;
-                    map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
-                    return map;
-                }
-            } *//*else {
-                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
-                return map;
-            }*//*
-            if (eduRegist.getRegistCategorySix() != null && eduRegist.getRegistCategorySix().equals(user.getEmployer())) {
-                if (nowtotal > 0) {
-                    EduCourseVo courseInfo = applyCourse(userId, courseId);
-                    nowtotal--;
-                    map.put("报名还剩" + nowtotal + "个名额，请赶紧抢购", courseInfo);
-                    return map;
-                }
-            } else {
-                map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
-                return map;
-            }*/
 
         } catch (Exception e) {
             map.put("后台设置出现问题，请检查设置", "");
