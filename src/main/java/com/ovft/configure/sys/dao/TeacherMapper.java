@@ -26,7 +26,7 @@ public interface TeacherMapper {
     //修改课程信息
     public void updateCourseByCourseId(EduCourse course);
     //修改课程是否添加
-    public void updateisAddQuestionByCourseId(@Param("courseId")Integer courseId,@Param("status")Integer status);
+    public void updateisAddQuestionByCourseId(@Param("courseId") Integer courseId, @Param("status") Integer status);
 
     //根据学校id查找课程列表
     public List<EduCourse> selectCourseListBySchoolId(PageVo pageVo);
@@ -55,12 +55,12 @@ public interface TeacherMapper {
 
     public List<User> selectWithdrawList(@Param("schoolId") Integer schoolId, @Param("search") String search);
 
-    public void updateCheckIn(@Param("userId") Integer userId,@Param("checkin") Integer checkin);
+    public void updateCheckIn(@Param("userId") Integer userId, @Param("checkin") Integer checkin);
 
-    public void updateWithdrawCheckIn(@Param("wid") Integer wid,@Param("checkin") Integer checkin);
+    public void updateWithdrawCheckIn(@Param("wid") Integer wid, @Param("checkin") Integer checkin);
 
     public List<EduCourse> shelvesCourse(Date date);
 
     //学员一键审核通过
-    public void bigAuditUser(@Param("userIds")int [] userIds);
+    public void bigAuditUser(@Param("userIds") int[] userIds);
 }

@@ -1,6 +1,7 @@
 package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.config.MessageCenterException;
+import com.ovft.configure.constant.Status;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
@@ -62,6 +63,10 @@ public class FileDownServiceImpl implements FileDownService {
     private UserClassMapper userClassMapper;
     @Resource
     private DepartmentMapper departmentMapper;
+    @Resource
+    private EduRegistMapper eduRegistMapper;
+
+
 
 
     @Transactional
@@ -397,6 +402,46 @@ public class FileDownServiceImpl implements FileDownService {
                 }
                 userClass.setCourseId(course.getCourseId());
                 userClassMapper.addUserClass(userClass);   //生成新的班级
+            }
+            //同步生成课程报名条件表（edu_regist）记录
+            if (course.getIsenable()==1) {
+
+                //同步生成课程报名条件表（edu_regist）记录
+                EduRegistExample eduRegistExample = new EduRegistExample();
+                eduRegistExample.createCriteria().andSchoolIdEqualTo(Integer.parseInt(course.getSchoolId())).andCourseIdEqualTo(Status.ALLCOURSE);
+                List<EduRegist> regist = eduRegistMapper.selectByExample(eduRegistExample);
+                if (regist.isEmpty()) {  //没有条件模版时
+
+                    EduRegist eduRegist = new EduRegist();
+                    eduRegist.setCourseId(course.getCourseId());
+                    eduRegist.setCourseName(course.getCourseName());
+                    eduRegist.setSchoolId(Integer.parseInt(course.getSchoolId()));
+                    eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+                    eduRegistMapper.insertSelective(eduRegist);
+                }else{    //有条件模版时
+                    EduRegist newEduRegist = new EduRegist();
+                    newEduRegist.setCourseId(course.getCourseId());
+                    newEduRegist.setCourseName(course.getCourseName());
+                    newEduRegist.setSchoolId(Integer.parseInt(course.getSchoolId()));
+                    newEduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+                    newEduRegist.setUpateTime(new Date());
+                    newEduRegist.setRegiststartTime(regist.get(0).getRegiststartTime());
+                    newEduRegist.setRegistendTime(regist.get(0).getRegistendTime());
+                    newEduRegist.setStartAge(regist.get(0).getStartAge());
+                    newEduRegist.setEndAge(regist.get(0).getEndAge());
+                    newEduRegist.setRegistCategoryOne(regist.get(0).getRegistCategoryOne());
+                    newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
+                    newEduRegist.setRegistCategoryThree(regist.get(0).getRegistCategoryThree());
+                    newEduRegist.setRegistCategoryFour(regist.get(0).getRegistCategoryFour());
+                    newEduRegist.setRegistCategoryFive(regist.get(0).getRegistCategoryFive());
+                    newEduRegist.setRegistCategorySix(regist.get(0).getRegistCategorySix());
+                    newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
+                    newEduRegist.setSchoolName(regist.get(0).getSchoolName());
+                    newEduRegist.setCourseNum(regist.get(0).getCourseNum());
+                    eduRegistMapper.insertSelective(newEduRegist);
+
+
+                }
             }
 
             EduClass eduClass = new EduClass();

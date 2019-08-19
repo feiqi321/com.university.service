@@ -2,11 +2,11 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.bean.EduRegistExample;
+import com.ovft.configure.sys.vo.CoditionVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
 
 public interface EduRegistMapper {
     long countByExample(EduRegistExample example);
@@ -30,6 +30,8 @@ public interface EduRegistMapper {
     int updateByPrimaryKeySelective(EduRegist record);
 
     int updateByPrimaryKey(EduRegist record);
+    //编辑课程时同步报名条件表课程名
+    void updateByCourseId(EduRegist record);
 
     //通过课程id查询条件信息
     EduRegist selectByCourseId(Integer CouserId);
@@ -42,4 +44,7 @@ public interface EduRegistMapper {
 
     //查询限制的课程门数
     Integer queryCourseNum(Map<String, Object> map);
+
+    //查询全部
+    public List<EduRegist> CourseCoditionAll(CoditionVo coditionVo);
 }

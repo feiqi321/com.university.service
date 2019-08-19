@@ -95,6 +95,11 @@
                delete from edu_user_class where
                class_id = #{classId}
        </delete>
+       <!--删除班级记录-->
+       <delete id="deleteUserClassByCourseId" parameterType="java.lang.Integer">
+               delete from edu_user_class where
+               course_id = #{courseId}
+       </delete>
 
 
 

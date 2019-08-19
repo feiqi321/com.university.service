@@ -301,25 +301,33 @@
   </update>
 
 
+    <!--&lt;!&ndash;1.查找专业类别&ndash;&gt;-->
+    <!--<select id="listCourseCategoryByShoolId" parameterType="com.ovft.configure.sys.bean.EduCourse"-->
+            <!--resultType="com.ovft.configure.sys.bean.EduCourse">-->
+        <!--select * from edu_course where school_id =#{schoolId} and isenable=#{isenable}-->
+    <!--</select>-->
+
     <!--1.查找专业类别-->
     <select id="listCourseCategoryByShoolId" parameterType="com.ovft.configure.sys.bean.EduCourse"
-            resultType="com.ovft.configure.sys.bean.EduCourse">
-        select * from edu_course where school_id =#{schoolId} and isenable=#{isenable}
-    </select>
-
-    <!--根据院系id修改 by wd-->
-    <select id="updateByCourseId" parameterType="com.ovft.configure.sys.bean.EduCourse"
-            resultType="com.ovft.configure.sys.bean.EduCourse">
-        select * from edu_course where 1=1
-        <if test="did!=null">
-            and did =#{did}
-        </if>
-        <if test="isenable!=null">
-            and isenable=#{isenable}
-        </if>
-        <if test="schoolId!=null">
-            and school_id=#{schoolId}
-        </if>
+    resultType="com.ovft.configure.sys.bean.EduCourse">
+    select did,course_id as courseId, course_name as courseName, course_price as coursePrice, course_teacher as courseTeacher,
+    place_class as placeClass, start_date as startDate, end_date as endDate,
+    people_number as peopleNumber, school_id as schoolId, isenable,isAddQuestion,
+    (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher) as teacherName,
+    (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName,
+    (SELECT d_name FROM edu_department where did = edu_course.did) as departmentName
+    from edu_course
+    where 1=1
+    <if test="schoolId != null">
+    AND school_id = #{schoolId}
+    </if>
+    <if test="did != null">
+    AND did = #{did}
+    </if>
+    <if test="isenable != null">
+    AND isenable = #{isenable}
+    </if>
+    order by isenable desc, start_date desc
     </select>
 
 
@@ -344,7 +352,7 @@
     </select>
 
     <!--3.查询每个科目可以报名的人数-->
-    <select id="queryAcceptNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    <select id="queryAcceptNum" parameterType="int" resultType="int">
         select
         people_number
         from edu_course

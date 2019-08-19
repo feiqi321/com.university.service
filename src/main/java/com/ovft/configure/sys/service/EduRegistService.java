@@ -1,6 +1,9 @@
 package com.ovft.configure.sys.service;
 
+import com.github.pagehelper.PageInfo;
+import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduRegist;
+import com.ovft.configure.sys.vo.CoditionVo;
 import com.ovft.configure.sys.vo.PageBean;
 
 /**
@@ -12,9 +15,11 @@ public interface EduRegistService {
     public int addRegistCondition(EduRegist eduRegist);
 
     //分页全查询
-    public PageBean queryAllCodition(Integer size, Integer page);
+    public PageInfo queryAllCodition(Integer size, Integer page);
+    //分页全查询
+    public WebResult queryAllCodition2(CoditionVo coditionVo);
 
-    public PageBean queryAllCoditionBySchoold(Integer size, Integer page, Integer schoolId);
+    public PageInfo queryAllCoditionBySchoold(Integer size, Integer page, Integer schoolId);
 
     //修改条件
     int updateCodition(EduRegist eduRegist);
@@ -36,4 +41,7 @@ public interface EduRegistService {
 
     //查询状态
     Integer queryOffRegist(int schoolId, Integer courseId);
+
+    //查询全部
+    public WebResult CourseCoditionAll(CoditionVo coditionVo);
 }

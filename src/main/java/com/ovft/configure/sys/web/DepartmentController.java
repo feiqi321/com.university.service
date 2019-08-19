@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
  * 学校院系controller
  * Author xzy
  */
-   @RestController
-
+@RestController
 public class DepartmentController {
-       @Autowired
-       private DepartmentService departmentService;
-       @Autowired
-       private TeacherService teacherService;
+    @Autowired
+    private DepartmentService departmentService;
+    @Autowired
+    private TeacherService teacherService;
 
 
     /**
@@ -32,17 +31,18 @@ public class DepartmentController {
      * @param pageVo
      * @return
      */
-    @PostMapping(value="/findCourseList")
+    @PostMapping(value = "/findCourseList")
     public WebResult findCourseList(@RequestBody PageVo pageVo) {
         return teacherService.courseList(pageVo);
     }
+
     /**
      * 进入某院系详情列表
      *
      * @param pageVo
      * @return
      */
-    @PostMapping(value="/server/findCourseList")
+    @PostMapping(value = "/server/findCourseList")
     public WebResult findServerCourseBydid(@RequestBody PageVo pageVo) {
         return teacherService.courseList(pageVo);
     }
@@ -53,17 +53,18 @@ public class DepartmentController {
      * @param departmentVo
      * @return
      */
-    @PostMapping(value="/departmentList")
+    @PostMapping(value = "/departmentList")
     public WebResult departmentList(@RequestBody DepartmentVo departmentVo) {
         return departmentService.departmentList(departmentVo);
     }
+
     /**
      * 后台院系列表
      *
      * @param departmentVo
      * @return
      */
-    @PostMapping(value="/server/departmentserverList")
+    @PostMapping(value = "/server/departmentserverList")
     public WebResult departmentserverList(@RequestBody DepartmentVo departmentVo) {
         return departmentService.departmentList(departmentVo);
     }
@@ -74,27 +75,29 @@ public class DepartmentController {
      * @param departmentVo
      * @return
      */
-    @PostMapping(value="/server/deleteDepartment")
+    @PostMapping(value = "/server/deleteDepartment")
     public WebResult deleteDepartment(@RequestBody DepartmentVo departmentVo) {
         return departmentService.deleteDepartment(departmentVo);
     }
+
     /**
      * 批量删除院系
      *
      * @param department
      * @return
      */
-    @PostMapping(value="/server/bigDeleteDepartment")
+    @PostMapping(value = "/server/bigDeleteDepartment")
     public WebResult bigDeleteDepartment(@RequestBody Department department) {
         return departmentService.bigDeleteDepartment(department);
     }
+
     /**
      * 添加/修改院系
      *
      * @param departmentVo
      * @return
      */
-    @PostMapping(value="/server/createDepartment")
+    @PostMapping(value = "/server/createDepartment")
     public WebResult createDepartment(@RequestBody DepartmentVo departmentVo) {
         return departmentService.createDepartment(departmentVo);
     }

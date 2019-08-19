@@ -422,6 +422,69 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
+    <update id="updateByCourseId" parameterType="com.ovft.configure.sys.bean.EduRegist">
+        update edu_regist
+        <set>
+            <if test="courseName != null">
+                course_name = #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="registstartTime != null">
+                registstart_time = #{registstartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="registendTime != null">
+                registend_time = #{registendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startAge != null">
+                start_age = #{startAge,jdbcType=INTEGER},
+            </if>
+            <if test="endAge != null">
+                end_age = #{endAge,jdbcType=INTEGER},
+            </if>
+            <if test="registCategoryOne != null">
+                regist_category_one = #{registCategoryOne,jdbcType=VARCHAR},
+            </if>
+            <if test="registCategoryTwo != null">
+                regist_category_two = #{registCategoryTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="registCategoryThree != null">
+                regist_category_three = #{registCategoryThree,jdbcType=VARCHAR},
+            </if>
+            <if test="registCategoryFour != null">
+                regist_category_four = #{registCategoryFour,jdbcType=VARCHAR},
+            </if>
+            <if test="registCategoryFive != null">
+                regist_category_five = #{registCategoryFive,jdbcType=VARCHAR},
+            </if>
+            <if test="registCategorySix != null">
+                regist_category_six = #{registCategorySix,jdbcType=VARCHAR},
+            </if>
+            <if test="upateTime != null">
+                upate_time = #{upateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolName != null">
+                school_name = #{schoolName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseName != null">
+                course_name = #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="registPriority != null">
+                regist_priority = #{registPriority,jdbcType=VARCHAR},
+            </if>
+            <if test="offlineRegist != null">
+                offline_regist = #{offlineRegist,jdbcType=VARCHAR},
+            </if>
+            <if test="courseNum != null">
+                course_num = #{courseNum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </update>
     <update id="updateByPrimaryKey" parameterType="com.ovft.configure.sys.bean.EduRegist">
     update edu_regist
     set registstart_time = #{registstartTime,jdbcType=TIMESTAMP},
@@ -496,6 +559,19 @@
     where school_id = #{schoolId}
     and course_id=#{courseId}
   </select>
+    <!--查询全部-->
+    <select id="CourseCoditionAll" parameterType="com.ovft.configure.sys.vo.CoditionVo"
+            resultType="com.ovft.configure.sys.bean.EduRegist">
+        select
+        *
+        from edu_regist
+        WHERE 1=1
+        <if test="courseId!=null">
+            And course_id=#{courseId}
+        </if>
+        <if test="schoolId!=null">
+            And school_id=#{schoolId}
+        </if>
 
-
+    </select>
 </mapper>

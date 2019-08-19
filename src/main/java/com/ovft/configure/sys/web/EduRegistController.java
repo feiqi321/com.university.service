@@ -1,13 +1,20 @@
 package com.ovft.configure.sys.web;
 
+import com.github.pagehelper.PageInfo;
+import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.Admin;
 import com.ovft.configure.sys.bean.EduRegist;
 import com.ovft.configure.sys.service.EduRegistService;
+import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.vo.CoditionVo;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
@@ -19,8 +26,10 @@ import java.util.Date;
 @RequestMapping("regist")
 public class EduRegistController {
 
-    @Autowired
+    @Resource
     private EduRegistService eduRegistService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 报名条件设置
@@ -49,6 +58,46 @@ public class EduRegistController {
         return new WebResult(StatusCode.ERROR, "条件设置失败", "");
     }
 
+    /**
+     * 查询全部
+     * @param coditionVo
+     * @return
+     */
+    @PostMapping(value = "/CourseCoditionAll")
+    public WebResult CourseCoditionAll(HttpServletRequest request, @RequestBody CoditionVo coditionVo) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if(o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget =(Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if(hget.getRole() != 0) {
+                coditionVo.setSchoolId(hget.getSchoolId());
+            }
+            return  eduRegistService.CourseCoditionAll(coditionVo);
+        }else {
+            return new WebResult("50012", "请先登录", "");
+        }
+    }
+
+
+//    /**
+//     * 查询条件
+//     *
+//     * @param page
+//     * @param size
+//     * @return
+//     */
+//    @PostMapping(value = "show")
+//    public WebResult queryAllCourseCodition(@RequestBody CoditionVo coditionVo) {
+//        if (!coditionVo.getSchoolId().equals("")) {
+//            PageBean pageBean=eduRegistService.queryAllCoditionBySchoold(coditionVo.getPageSize(), coditionVo.getPageNum(), Integer.parseInt(coditionVo.getSchoolId()));
+//            return new WebResult(StatusCode.OK, "查询成功", pageBean);
+//        }
+//           return eduRegistService.queryAllCodition2(coditionVo);
+//
+//    }
 
     /**
      * 查询条件
@@ -57,14 +106,15 @@ public class EduRegistController {
      * @param size
      * @return
      */
-    @GetMapping(value = "show")
-    public WebResult queryAllCourseCodition(@RequestParam("pageNum") Integer page, @RequestParam("pageSize") Integer size, String schoolId) {
-        if (!schoolId.equals("")) {
-            PageBean pageBean = eduRegistService.queryAllCoditionBySchoold(size, page, Integer.parseInt(schoolId));
+    @PostMapping(value = "show")
+    public WebResult queryAllCourseCodition(@RequestBody CoditionVo coditionVo) {
+
+        if (coditionVo.getSchoolId()!=null) {
+            PageInfo pageBean=eduRegistService.queryAllCoditionBySchoold(coditionVo.getPageSize(), coditionVo.getPageNum(), coditionVo.getSchoolId());
             return new WebResult(StatusCode.OK, "查询成功", pageBean);
         }
-        PageBean pageBean = eduRegistService.queryAllCodition(size, page);
-        return new WebResult(StatusCode.OK, "查询成功", pageBean);
+        PageInfo pageInfo= eduRegistService.queryAllCodition(coditionVo.getPageSize(), coditionVo.getPageNum());
+        return new WebResult(StatusCode.OK, "查询成功", pageInfo);
     }
 
     /**

@@ -9,11 +9,25 @@ public class EduRegistExample {
 
     protected boolean distinct;
 
+    private Integer courseId;
+
     protected List<Criteria> oredCriteria;
 
     private Integer limit;
 
     private Integer offset;
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public void setOredCriteria(List<Criteria> oredCriteria) {
+        this.oredCriteria = oredCriteria;
+    }
 
     public EduRegistExample() {
         oredCriteria = new ArrayList<Criteria>();
