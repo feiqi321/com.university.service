@@ -175,7 +175,7 @@ public class EduCourseServiceImpl implements EduCourseService {
                 return map;
             }
             //通过身份证证获取年龄
-            int age = AgeUtil.IdNOToAge(identity);
+            int age = AgeUtil.getAgeByCertId(identity);
             if (startAge > age || age > endAge) {
                 map.put("请在在允许的年龄阶段报名：" + startAge + "至" + endAge + "方可报名", "");
                 return map;

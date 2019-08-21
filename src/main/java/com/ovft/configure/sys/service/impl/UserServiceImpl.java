@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
         //情况2.根据用户userId查找Item表（用户表2），判断用户是否已报名过学校记录
         User user1 = userMapper.queryByItemsId2(finduserbyphone.getUserId());
         if (user1 == null) {   //*****在用户只注册没有报名的时候
-            String pasword = MD5Utils.md5Password(user.getPassword());
+        //  String pasword = MD5Utils.md5Password(user.getPassword());
 //            if (!pasword.equals(finduserbyphone.getPassword())) {
 //                return new WebResult("400", "输入的密码不正确！");
 //            }
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
         //如果存在，则返回user1
         String schoolName = schoolMapper.findSchoolById(user1.getSchoolId());
         user1.setSchoolName(schoolName);
-        String pasword = MD5Utils.md5Password(user.getPassword());
+  //      String pasword = MD5Utils.md5Password(user.getPassword());
 //        if (!pasword.equals(finduserbyphone.getPassword())) {
 //            return new WebResult("400", "输入的密码不正确！");
 //        }

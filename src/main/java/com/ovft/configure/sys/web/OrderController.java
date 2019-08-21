@@ -85,13 +85,14 @@ public class OrderController {
         List<OrderVo> orderVos = orderService.queryAllRecord(userId);
         List<EduPayrecord> eduPayrecords = eduPayrecordService.queryAllRecordByUserId(userId);
 
+
         //更新支付记录
         checkDeletePayRecord(orderVos, userId);
 
 
         for (OrderVo orderVo : orderVos) {
             //生存支付记录表信息
-            if (eduPayrecords.size() == 0) {
+            if (eduPayrecords.size() == 0&&orderVo.getOrderStatus()==5) {
                 creatPayRecord(userId, orderVo);
             }
         }
@@ -101,7 +102,7 @@ public class OrderController {
             }
             for (OrderVo orderVo : orderVos) {
                 //生存支付记录表信息
-                if (eduPayrecords.size() == 0) {
+                if (eduPayrecords.size() == 0&&orderVo.getOrderStatus()==5) {
                     creatPayRecord(userId, orderVo);
                 }
             }
@@ -110,7 +111,12 @@ public class OrderController {
 
         }*/
 
-
+        for (int i=0;i<orderVos.size();i++) {
+            //生存支付记录表信息
+            if (orderVos.get(i).getOrderStatus()!=5) {
+                orderVos.remove(orderVos.get(i));
+            }
+        }
         return new WebResult(StatusCode.OK, "已缴费，报名成功", orderVos);
     }
 

@@ -520,7 +520,8 @@
     e1.school_name,
     e2.name,
     e1.school_id,
-    e4.id
+    e4.id,
+    e4.order_status
     from edu_course  c
     left join edu_school e1 on c.school_id=e1.school_id
     left join edu_admin e2 on c.course_teacher=e2.admin_id

@@ -351,6 +351,21 @@
         where course_id =#{course_id}
     </select>
 
+    <!--根据院系id修改 by wd-->
+    <select id="updateByCourseId" parameterType="com.ovft.configure.sys.bean.EduCourse"
+            resultType="com.ovft.configure.sys.bean.EduCourse">
+        select * from edu_course where 1=1
+        <if test="did!=null">
+            and did =#{did}
+        </if>
+        <if test="isenable!=null">
+            and isenable=#{isenable}
+        </if>
+        <if test="schoolId!=null">
+            and school_id=#{schoolId}
+        </if>
+    </select>
+
     <!--3.查询每个科目可以报名的人数-->
     <select id="queryAcceptNum" parameterType="int" resultType="int">
         select
