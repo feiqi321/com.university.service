@@ -17,6 +17,15 @@ public class EduSettlementOrderDetailsVo extends EduSettlementOrderDetails {
 
     private Integer[] ids;
 
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public Integer[] getIds() {
         return ids;
@@ -57,4 +66,6 @@ public class EduSettlementOrderDetailsVo extends EduSettlementOrderDetails {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
+
+
 }

@@ -384,7 +384,10 @@
     <select id="showSettlementDetail" parameterType="map"
             resultType="com.ovft.configure.sys.vo.EduSettlementOrderDetailsVo">
         select
-        <include refid="Base_Column_List"/>
+        id, order_settlement_id, order_number, trading_time, resource_name, payment_type,
+        settlement_status, telephone, school_id, school_name, transaction_amount, settlement_amount,
+        payrecord_id, order_id, video_id,(SELECT user_name FROM edu_user where
+        phone=edu_settlement_order_details.telephone) as userName
         from
         edu_settlement_order_details
         <where>

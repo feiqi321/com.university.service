@@ -102,8 +102,8 @@ public class EduRegistController {
     /**
      * 查询条件
      *
-     * @param page
-     * @param size
+     * @param
+     * @param
      * @return
      */
     @PostMapping(value = "show")
@@ -116,6 +116,7 @@ public class EduRegistController {
         PageInfo pageInfo= eduRegistService.queryAllCodition(coditionVo.getPageSize(), coditionVo.getPageNum());
         return new WebResult(StatusCode.OK, "查询成功", pageInfo);
     }
+
 
     /**
      * 查询特殊条件

@@ -110,4 +110,9 @@ public class EduCartServiceImpl implements EduCartService {
         List<EduCart> eduCarts = eduCartMapper.selectByExample(eduCartExample);
         return eduCarts;
     }
+
+    @Override
+    public void deleteCartById(Integer id) {
+        eduCartMapper.deleteByPrimaryKey(id);
+    }
 }

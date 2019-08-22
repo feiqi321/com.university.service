@@ -7,10 +7,7 @@ import com.ovft.configure.sys.service.EduBookGoodsService;
 import com.ovft.configure.sys.service.EduCartService;
 import com.ovft.configure.sys.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -75,5 +72,20 @@ public class EduCartController {
         }
         return new WebResult(StatusCode.ERROR, "您还没有登录，请登录");
     }
+
+    //删除购物车 by wd
+    @PostMapping(value = "deleteCartById")
+    public WebResult deleteCartById(HttpServletRequest request,@RequestBody EduCart eduCart ) {
+
+        String userId1 = request.getHeader("userId");
+        Integer userId = Integer.valueOf(userId1);
+        if (userId != null) {
+            eduCartService.deleteCartById(eduCart.getId());
+            return new WebResult(StatusCode.OK, "删除成功","");
+        }
+        return new WebResult(StatusCode.ERROR, "您还没有登录，请登录");
+    }
+
+
 
 }

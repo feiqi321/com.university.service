@@ -44,4 +44,6 @@ public interface EduRegistService {
 
     //查询全部
     public WebResult CourseCoditionAll(CoditionVo coditionVo);
+
+
 }

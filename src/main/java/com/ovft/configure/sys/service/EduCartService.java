@@ -31,4 +31,7 @@ public interface EduCartService {
 
     //查询购物车是否有此教材
     List<EduCart> queryCartByUserIdAndGoodSId(Integer userId, Integer goodsId);
+
+    //删除购物车 by wd
+    void deleteCartById(Integer id);
 }

@@ -47,4 +47,6 @@ public interface EduRegistMapper {
 
     //查询全部
     public List<EduRegist> CourseCoditionAll(CoditionVo coditionVo);
+
+
 }

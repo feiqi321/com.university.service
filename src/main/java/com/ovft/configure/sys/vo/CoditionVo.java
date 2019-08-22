@@ -6,6 +6,7 @@ public class CoditionVo {
     private Integer schoolId;
     private Integer courseId;
 
+
     public int getPageSize() {
         return pageSize;
     }
@@ -47,4 +48,6 @@ public class CoditionVo {
                 ", courseId=" + courseId +
                 '}';
     }
+
+
 }
