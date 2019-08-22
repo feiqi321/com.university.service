@@ -63,6 +63,9 @@ public class AddressServiceImpl implements AddressService {
 
         if (address.getAddressId() == null) {
             addressMapper.createAddress(address);
+            //添加并使用地址
+            addressMapper.updateChangeStatusAll(address.getUserId());    //改变所有记录状态为0    ==> 0:未被选中   1:被选中
+            addressMapper.updateChangeStatusOne(address.getAddressId());   //改变指定记录状态为1
             return new WebResult("200", "添加成功", "");
         } else {
             addressMapper.updateAddress(address);
