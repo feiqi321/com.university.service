@@ -50,9 +50,7 @@ public class UserClassVo {
     }
 
     public void setPageSize(int pageSize) {
-        if (pageSize <= 0) {
-            pageSize = 10;
-        }
+
         this.pageSize = pageSize;
     }
 

@@ -47,6 +47,7 @@ public class UserClassController {
     @PostMapping(value = "/user/findUserClassAll")
     public WebResult findUserClassAll(HttpServletRequest request, @RequestBody UserClassVo userClassVo) {
         userClassVo.setUserId(Integer.valueOf(request.getHeader("userId")));
+        userClassVo.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
         return userClassService.userClassList(userClassVo);
     }
     /**

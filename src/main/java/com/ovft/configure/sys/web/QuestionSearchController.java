@@ -293,6 +293,18 @@ public class QuestionSearchController {
         return questionSearchService.findMyCourseList(pageVo);
 
     }
+    /**
+     * 进入某班级详情列表（分页）
+     *
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/searchQuestion/findMyClassCourseList")
+    public WebResult findMyClassCourseList(HttpServletRequest request, @RequestBody PageVo pageVo) {
+
+        return questionSearchService.findMyCourseList(pageVo);
+
+    }
 
 
 

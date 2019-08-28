@@ -29,6 +29,36 @@ public class EduCourseVo extends EduCourse {
 
     private String  departmentName;   //院系名称
 
+    private  String registStartTime;     //报名开始时间
+
+    private  String regitEndTime;       //报名结束时间
+
+    private String  offlineRegist;       //线下报名 1开启  2 隐藏
+
+    public String getOfflineRegist() {
+        return offlineRegist;
+    }
+
+    public void setOfflineRegist(String offlineRegist) {
+        this.offlineRegist = offlineRegist;
+    }
+
+    public String getRegistStartTime() {
+        return registStartTime;
+    }
+
+    public void setRegistStartTime(String registStartTime) {
+        this.registStartTime = registStartTime;
+    }
+
+    public String getRegitEndTime() {
+        return regitEndTime;
+    }
+
+    public void setRegitEndTime(String regitEndTime) {
+        this.regitEndTime = regitEndTime;
+    }
+
     public Integer getDid() {
         return did;
     }

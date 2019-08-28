@@ -109,11 +109,30 @@ public class Order implements Serializable {
     private String resourceStatus;
 
     /**
+     * 回调返回路径
+     */
+    private String returnurl;
+
+    /**
      * 资源的状态:1.表示教材购买 2.其他
      */
     private String resourceType;
 
+
+
     private static final long serialVersionUID = 1L;
+
+    public String getReturnurl() {
+        return returnurl;
+    }
+
+    public void setReturnurl(String returnurl) {
+        this.returnurl = returnurl;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Integer getId() {
         return id;
@@ -346,35 +365,64 @@ public class Order implements Serializable {
         return result;
     }
 
+//    @Override
+//    public String toString() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append(getClass().getSimpleName());
+//        sb.append(" [");
+//        sb.append("Hash = ").append(hashCode());
+//        sb.append(", id=").append(id);
+//        sb.append(", orderSn=").append(orderSn);
+//        sb.append(", userId=").append(userId);
+//        sb.append(", orderStatus=").append(orderStatus);
+//        sb.append(", createTime=").append(createTime);
+//        sb.append(", expireTime=").append(expireTime);
+//        sb.append(", paymentTime=").append(paymentTime);
+//        sb.append(", totalAmount=").append(totalAmount);
+//        sb.append(", paymentWay=").append(paymentWay);
+//        sb.append(", outTradeNo=").append(outTradeNo);
+//        sb.append(", tradeBody=").append(tradeBody);
+//        sb.append(", imgUrl=").append(imgUrl);
+//        sb.append(", consignee=").append(consignee);
+//        sb.append(", schoolId=").append(schoolId);
+//        sb.append(", telephone=").append(telephone);
+//        sb.append(", address=").append(address);
+//        sb.append(", sendType=").append(sendType);
+//        sb.append(", tosendPrice=").append(tosendPrice);
+//        sb.append(", remark=").append(remark);
+//        sb.append(", resourceStatus=").append(resourceStatus);
+//        sb.append(", resourceType=").append(resourceType);
+//        sb.append(", serialVersionUID=").append(serialVersionUID);
+//        sb.append("]");
+//        return sb.toString();
+//    }
+
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", orderSn=").append(orderSn);
-        sb.append(", userId=").append(userId);
-        sb.append(", orderStatus=").append(orderStatus);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", expireTime=").append(expireTime);
-        sb.append(", paymentTime=").append(paymentTime);
-        sb.append(", totalAmount=").append(totalAmount);
-        sb.append(", paymentWay=").append(paymentWay);
-        sb.append(", outTradeNo=").append(outTradeNo);
-        sb.append(", tradeBody=").append(tradeBody);
-        sb.append(", imgUrl=").append(imgUrl);
-        sb.append(", consignee=").append(consignee);
-        sb.append(", schoolId=").append(schoolId);
-        sb.append(", telephone=").append(telephone);
-        sb.append(", address=").append(address);
-        sb.append(", sendType=").append(sendType);
-        sb.append(", tosendPrice=").append(tosendPrice);
-        sb.append(", remark=").append(remark);
-        sb.append(", resourceStatus=").append(resourceStatus);
-        sb.append(", resourceType=").append(resourceType);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return "Order{" +
+                "id=" + id +
+                ", orderSn='" + orderSn + '\'' +
+                ", userId=" + userId +
+                ", orderStatus=" + orderStatus +
+                ", createTime=" + createTime +
+                ", expireTime=" + expireTime +
+                ", paymentTime=" + paymentTime +
+                ", totalAmount=" + totalAmount +
+                ", paymentWay='" + paymentWay + '\'' +
+                ", outTradeNo='" + outTradeNo + '\'' +
+                ", tradeBody='" + tradeBody + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", consignee='" + consignee + '\'' +
+                ", schoolId='" + schoolId + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", address='" + address + '\'' +
+                ", sendType='" + sendType + '\'' +
+                ", tosendPrice=" + tosendPrice +
+                ", remark='" + remark + '\'' +
+                ", resourceStatus='" + resourceStatus + '\'' +
+                ", returnurl='" + returnurl + '\'' +
+                ", resourceType='" + resourceType + '\'' +
+                '}';
     }
 }

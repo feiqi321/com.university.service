@@ -63,4 +63,7 @@ public interface TeacherMapper {
 
     //学员一键审核通过
     public void bigAuditUser(@Param("userIds") int[] userIds);
+
+    //<!--删除课程的的同时删除班级-->
+    public void deleteClassByKeCheng(@Param("courseId") Integer courseId);
 }

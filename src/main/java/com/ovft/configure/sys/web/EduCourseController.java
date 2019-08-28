@@ -4,14 +4,19 @@ import com.ovft.configure.constant.ConstantClassField;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduCourse;
+import com.ovft.configure.sys.bean.EduOfflineOrder;
 import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.dao.OrderMapper;
 import com.ovft.configure.sys.service.EduCourseService;
+import com.ovft.configure.sys.service.EduOfflineOrderService;
 import com.ovft.configure.sys.service.UserService;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,6 +38,10 @@ public class EduCourseController {
     private RedisTemplate redisTemplate;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EduOfflineOrderService eduOfflineOrderService;
+    @Resource
+    private OrderMapper orderMapper;
 
     /**
      * 按学校的id来查找专业类别信息
@@ -84,6 +93,21 @@ public class EduCourseController {
 
 
         String schoolId1 = request.getHeader("schoolId");
+
+
+
+
+
+        //查询学员的基本信息
+        User user2 = userService.queryInfo(userId);
+
+        //查询是否有订单，如果已经下单了，返回信息
+        List<EduOfflineOrder> oldOrder = eduOfflineOrderService.queryOffRecord(user2.getUserId(), courseId);
+        List<OrderVo> orderVos = orderMapper.queryAllRecordByCourseId(user2.getUserId(),courseId);
+        if (oldOrder.size() > 0||orderVos.size()>0) {
+            return new WebResult("600", "您已经报名该课程，不要重复报名");
+        }
+
         //判断报名的学校不能为空
         if (schoolId1.equals("null")) {
             return new WebResult(StatusCode.ERROR, "您尚未报名学校，请填写基本信息报名学校", "");

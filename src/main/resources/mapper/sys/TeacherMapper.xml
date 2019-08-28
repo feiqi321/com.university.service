@@ -81,7 +81,10 @@
         people_number as peopleNumber, school_id as schoolId, isenable,isAddQuestion,
         (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher) as teacherName,
         (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName,
-        (SELECT d_name FROM edu_department where did = edu_course.did) as departmentName
+        (SELECT d_name FROM edu_department where did = edu_course.did) as departmentName,
+        (SELECT registstart_time FROM edu_regist where course_id = edu_course.course_id) as registStartTime,
+        (SELECT registend_time FROM edu_regist where course_id = edu_course.course_id) as regitEndTime,
+        (SELECT offline_regist FROM edu_regist where course_id = edu_course.course_id) as offlineRegist
         from edu_course
         where 1=1
         <if test="schoolId != null">
@@ -182,6 +185,16 @@
 
     <delete id="deleteClassByCourseId">
         delete from edu_class_schedule where course_ids = #{courseId}
+    </delete>
+
+    <!--删除课程的的同时删除班级-->
+    <delete id="deleteClassByKeCheng">
+        delete from edu_user_class where
+        1=1
+        <if test="courseId != null">
+            AND course_id = #{courseId,jdbcType=INTEGER}
+        </if>
+
     </delete>
 
     <delete id="deleteCourseById" parameterType="java.lang.Integer">

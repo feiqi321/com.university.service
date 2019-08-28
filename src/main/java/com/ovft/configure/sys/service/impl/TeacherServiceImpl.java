@@ -60,7 +60,6 @@ public class TeacherServiceImpl implements TeacherService {
     private UserClassMapper userClassMapper;
 
 
-
     /**
      * 请假申请列表
      *
@@ -179,7 +178,7 @@ public class TeacherServiceImpl implements TeacherService {
             return new WebResult("400", "请选择学校", "");
         }
 
-        if (courseVo.getDid()==null){
+        if (courseVo.getDid() == null) {
             return new WebResult("400", "添加失败，您还尚未给该课程添加院系", "");
         }
 
@@ -218,7 +217,7 @@ public class TeacherServiceImpl implements TeacherService {
             //封装班级（以课程分班级）
 
             userClass.setDid(courseVo.getDid());
-            userClass.setClassName(courseVo.getCourseName()+"班");
+            userClass.setClassName(courseVo.getCourseName() + "班");
             userClass.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
             String schoolName = schoolMapper.findSchoolById(Integer.parseInt(courseVo.getSchoolId()));
             userClass.setSchoolName(schoolName);
@@ -227,17 +226,17 @@ public class TeacherServiceImpl implements TeacherService {
             userClassMapper.updateUserClass(userClass);   //修改班级
             //同步更新课程条件设置表
             EduRegist eduRegist = new EduRegist();
-                    eduRegist.setCourseId(courseVo.getCourseId());
-                    eduRegist.setCourseName(courseVo.getCourseName());
-                    eduRegist.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
-              eduRegistMapper.updateByCourseId(eduRegist);
+            eduRegist.setCourseId(courseVo.getCourseId());
+            eduRegist.setCourseName(courseVo.getCourseName());
+            eduRegist.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
+            eduRegistMapper.updateByCourseId(eduRegist);
             msg = "课程修改成功";
         } else {
             teacherMapper.insertCourse(course);
 
             //封装班级（以课程分班级）
             userClass.setDid(courseVo.getDid());
-            userClass.setClassName(courseVo.getCourseName()+"班");
+            userClass.setClassName(courseVo.getCourseName() + "班");
             userClass.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
             String schoolName = schoolMapper.findSchoolById(Integer.parseInt(courseVo.getSchoolId()));
             userClass.setSchoolName(schoolName);
@@ -254,11 +253,13 @@ public class TeacherServiceImpl implements TeacherService {
                 int num = Integer.parseInt(substring);
 
                 if (num < 10) {
-
+                   if (num==9){
+                       userClass.setClassNo(format.substring(0, 4)+0+(num + 1));
+                   }
                     userClass.setClassNo(format.substring(0, 4) + 0 + 0 + (num + 1));
                 }
                 if (num >= 10 && num < 100) {
-                    userClass.setClassNo(format.substring(0, 4) + 0 + (num + 1));
+                    userClass.setClassNo(format.substring(0, 4) +0+ (num + 1));
                 }
                 if (num >= 100) {
                     userClass.setClassNo(format.substring(0, 4) + (num + 1));
@@ -267,42 +268,42 @@ public class TeacherServiceImpl implements TeacherService {
             }
             userClass.setCourseId(course.getCourseId());
             userClassMapper.addUserClass(userClass);   //生成新的班级
-              if (courseVo.getIsenable()==1) {//同步生成课程报名条件表（edu_regist）记录
-                  EduRegistExample eduRegistExample = new EduRegistExample();
-                  eduRegistExample.createCriteria().andSchoolIdEqualTo(Integer.parseInt(courseVo.getSchoolId())).andCourseIdEqualTo(Status.ALLCOURSE);
-                  List<EduRegist> regist = eduRegistMapper.selectByExample(eduRegistExample);
-                  if (regist.isEmpty()) {  //没有条件模版时
+            if (courseVo.getIsenable() == 1) {//同步生成课程报名条件表（edu_regist）记录
+                EduRegistExample eduRegistExample = new EduRegistExample();
+                eduRegistExample.createCriteria().andSchoolIdEqualTo(Integer.parseInt(courseVo.getSchoolId())).andCourseIdEqualTo(Status.ALLCOURSE);
+                List<EduRegist> regist = eduRegistMapper.selectByExample(eduRegistExample);
+                if (regist.isEmpty()) {  //没有条件模版时
 
-                      EduRegist eduRegist = new EduRegist();
-                      eduRegist.setCourseId(course.getCourseId());
-                      eduRegist.setCourseName(courseVo.getCourseName());
-                      eduRegist.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
-                      eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
-                      eduRegistMapper.insertSelective(eduRegist);
-                  }else{    //有条件模版时
-                      EduRegist newEduRegist = new EduRegist();
-                      newEduRegist.setCourseId(course.getCourseId());
-                      newEduRegist.setCourseName(courseVo.getCourseName());
-                      newEduRegist.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
-                      newEduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
-                      newEduRegist.setUpateTime(new Date());
-                      newEduRegist.setRegiststartTime(regist.get(0).getRegiststartTime());
-                      newEduRegist.setRegistendTime(regist.get(0).getRegistendTime());
-                      newEduRegist.setStartAge(regist.get(0).getStartAge());
-                      newEduRegist.setEndAge(regist.get(0).getEndAge());
-                      newEduRegist.setRegistCategoryOne(regist.get(0).getRegistCategoryOne());
-                      newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
-                      newEduRegist.setRegistCategoryThree(regist.get(0).getRegistCategoryThree());
-                      newEduRegist.setRegistCategoryFour(regist.get(0).getRegistCategoryFour());
-                      newEduRegist.setRegistCategoryFive(regist.get(0).getRegistCategoryFive());
-                      newEduRegist.setRegistCategorySix(regist.get(0).getRegistCategorySix());
-                      newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
-                      newEduRegist.setSchoolName(regist.get(0).getSchoolName());
-                      newEduRegist.setCourseNum(regist.get(0).getCourseNum());
-                      eduRegistMapper.insertSelective(newEduRegist);
+                    EduRegist eduRegist = new EduRegist();
+                    eduRegist.setCourseId(course.getCourseId());
+                    eduRegist.setCourseName(courseVo.getCourseName());
+                    eduRegist.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
+                    eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+                    eduRegistMapper.insertSelective(eduRegist);
+                } else {    //有条件模版时
+                    EduRegist newEduRegist = new EduRegist();
+                    newEduRegist.setCourseId(course.getCourseId());
+                    newEduRegist.setCourseName(courseVo.getCourseName());
+                    newEduRegist.setSchoolId(Integer.parseInt(courseVo.getSchoolId()));
+                    newEduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+                    newEduRegist.setUpateTime(new Date());
+                    newEduRegist.setRegiststartTime(regist.get(0).getRegiststartTime());
+                    newEduRegist.setRegistendTime(regist.get(0).getRegistendTime());
+                    newEduRegist.setStartAge(regist.get(0).getStartAge());
+                    newEduRegist.setEndAge(regist.get(0).getEndAge());
+                    newEduRegist.setRegistCategoryOne(regist.get(0).getRegistCategoryOne());
+                    newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
+                    newEduRegist.setRegistCategoryThree(regist.get(0).getRegistCategoryThree());
+                    newEduRegist.setRegistCategoryFour(regist.get(0).getRegistCategoryFour());
+                    newEduRegist.setRegistCategoryFive(regist.get(0).getRegistCategoryFive());
+                    newEduRegist.setRegistCategorySix(regist.get(0).getRegistCategorySix());
+                    newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
+                    newEduRegist.setSchoolName(regist.get(0).getSchoolName());
+                    newEduRegist.setCourseNum(regist.get(0).getCourseNum());
+                    eduRegistMapper.insertSelective(newEduRegist);
 
-                  }
-              }
+                }
+            }
 
         }
 
@@ -327,6 +328,37 @@ public class TeacherServiceImpl implements TeacherService {
     public WebResult courseList(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
             List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
+
+            courseList.forEach(courseVo -> {
+                Integer courseId = courseVo.getCourseId();
+                //0.可以报名的人数
+                if (courseVo.getPeopleNumber() == null) {
+                    courseVo.setNowtotal(0);
+                } else {
+                    //查询专业接受报名的人数
+                    int acceptNum = eduCourseMapper.queryAcceptNum(courseId);
+                    if (acceptNum == 0) {
+                        courseVo.setNowtotal(acceptNum);
+                    } else {
+                        //查询用户所对应的专业显示已经购买人数
+                        Map<String, Object> param = new HashMap<>();
+                        param.put("course_id", courseId);
+                        param.put("payment_status", "PAID");
+
+                        int olineNum = orderMapper.countPayCourseNum(param);
+
+                        //查询用户所对应的专业线下的总人数
+                        Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
+
+                        //得到最终报名人数
+                        Integer payNum = olineNum + offNum;
+                        //可报名剩余人数
+                        int nowtotal = acceptNum - payNum;
+                        courseVo.setNowtotal(nowtotal >= 0 ? nowtotal : 0);
+                    }
+                }
+            });
+
             return new WebResult("200", "查询成功", courseList);
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
@@ -345,7 +377,7 @@ public class TeacherServiceImpl implements TeacherService {
                     //查询用户所对应的专业显示已经购买人数
                     Map<String, Object> param = new HashMap<>();
                     param.put("course_id", courseId);
-                    param.put("payment_status", OrderStatus.PAY);
+                    param.put("payment_status", "PAID");
 
                     int olineNum = orderMapper.countPayCourseNum(param);
 
@@ -405,6 +437,9 @@ public class TeacherServiceImpl implements TeacherService {
             teacherMapper.deleteCourseById(courseId);
             //同步删除班级表相关记录
             userClassMapper.deleteUserClassByCourseId(courseId);
+
+            //<!--删除课程的的同时删除班级 by wd-->
+            teacherMapper.deleteClassByKeCheng(courseId);
 
             //同步删除条件设置表相关记录
             EduRegistExample eduRegistExample = new EduRegistExample();
@@ -490,6 +525,7 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
     }
+
     /**
      * 查找所有游客（游客:未报名学校）的记录
      *
@@ -562,45 +598,45 @@ public class TeacherServiceImpl implements TeacherService {
                 }
             }
             teacherMapper.updateCourseByCourseId(course);
-            if (course.getIsenable()==1) {
+            if (course.getIsenable() == 1) {
 
-                    //同步生成课程报名条件表（edu_regist）记录
-                    EduRegistExample eduRegistExample = new EduRegistExample();
-                    eduRegistExample.createCriteria().andSchoolIdEqualTo(Integer.parseInt(course.getSchoolId())).andCourseIdEqualTo(Status.ALLCOURSE);
-                    List<EduRegist> regist = eduRegistMapper.selectByExample(eduRegistExample);
-                    if (regist.isEmpty()) {  //没有条件模版时
+                //同步生成课程报名条件表（edu_regist）记录
+                EduRegistExample eduRegistExample = new EduRegistExample();
+                eduRegistExample.createCriteria().andSchoolIdEqualTo(Integer.parseInt(course.getSchoolId())).andCourseIdEqualTo(Status.ALLCOURSE);
+                List<EduRegist> regist = eduRegistMapper.selectByExample(eduRegistExample);
+                if (regist.isEmpty()) {  //没有条件模版时
 
-                        EduRegist eduRegist = new EduRegist();
-                        eduRegist.setCourseId(course.getCourseId());
-                        eduRegist.setCourseName(course.getCourseName());
-                        eduRegist.setSchoolId(Integer.parseInt(course.getSchoolId()));
-                        eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
-                        eduRegistMapper.insertSelective(eduRegist);
-                    }else{    //有条件模版时
-                        EduRegist newEduRegist = new EduRegist();
-                        newEduRegist.setCourseId(course.getCourseId());
-                        newEduRegist.setCourseName(course.getCourseName());
-                        newEduRegist.setSchoolId(Integer.parseInt(course.getSchoolId()));
-                        newEduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
-                        newEduRegist.setUpateTime(new Date());
-                        newEduRegist.setRegiststartTime(regist.get(0).getRegiststartTime());
-                        newEduRegist.setRegistendTime(regist.get(0).getRegistendTime());
-                        newEduRegist.setStartAge(regist.get(0).getStartAge());
-                        newEduRegist.setEndAge(regist.get(0).getEndAge());
-                        newEduRegist.setRegistCategoryOne(regist.get(0).getRegistCategoryOne());
-                        newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
-                        newEduRegist.setRegistCategoryThree(regist.get(0).getRegistCategoryThree());
-                        newEduRegist.setRegistCategoryFour(regist.get(0).getRegistCategoryFour());
-                        newEduRegist.setRegistCategoryFive(regist.get(0).getRegistCategoryFive());
-                        newEduRegist.setRegistCategorySix(regist.get(0).getRegistCategorySix());
-                        newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
-                        newEduRegist.setSchoolName(regist.get(0).getSchoolName());
-                        newEduRegist.setCourseNum(regist.get(0).getCourseNum());
-                        eduRegistMapper.insertSelective(newEduRegist);
+                    EduRegist eduRegist = new EduRegist();
+                    eduRegist.setCourseId(course.getCourseId());
+                    eduRegist.setCourseName(course.getCourseName());
+                    eduRegist.setSchoolId(Integer.parseInt(course.getSchoolId()));
+                    eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+                    eduRegistMapper.insertSelective(eduRegist);
+                } else {    //有条件模版时
+                    EduRegist newEduRegist = new EduRegist();
+                    newEduRegist.setCourseId(course.getCourseId());
+                    newEduRegist.setCourseName(course.getCourseName());
+                    newEduRegist.setSchoolId(Integer.parseInt(course.getSchoolId()));
+                    newEduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+                    newEduRegist.setUpateTime(new Date());
+                    newEduRegist.setRegiststartTime(regist.get(0).getRegiststartTime());
+                    newEduRegist.setRegistendTime(regist.get(0).getRegistendTime());
+                    newEduRegist.setStartAge(regist.get(0).getStartAge());
+                    newEduRegist.setEndAge(regist.get(0).getEndAge());
+                    newEduRegist.setRegistCategoryOne(regist.get(0).getRegistCategoryOne());
+                    newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
+                    newEduRegist.setRegistCategoryThree(regist.get(0).getRegistCategoryThree());
+                    newEduRegist.setRegistCategoryFour(regist.get(0).getRegistCategoryFour());
+                    newEduRegist.setRegistCategoryFive(regist.get(0).getRegistCategoryFive());
+                    newEduRegist.setRegistCategorySix(regist.get(0).getRegistCategorySix());
+                    newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
+                    newEduRegist.setSchoolName(regist.get(0).getSchoolName());
+                    newEduRegist.setCourseNum(regist.get(0).getCourseNum());
+                    eduRegistMapper.insertSelective(newEduRegist);
 
 
                 }
-            }else{
+            } else {
                 //同步删除条件设置表相关记录
                 EduRegistExample eduRegistExample = new EduRegistExample();
                 eduRegistExample.createCriteria().andCourseIdEqualTo(course.getCourseId());

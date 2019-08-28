@@ -10,6 +10,7 @@ import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.AddressMapper;
+import com.ovft.configure.sys.dao.OrderMapper;
 import com.ovft.configure.sys.dao.PaymentInfoMapper;
 import com.ovft.configure.sys.service.*;
 import com.ovft.configure.sys.vo.*;
@@ -65,6 +66,9 @@ public class OrderController {
     @Resource
     private PaymentInfoMapper paymentInfoMapper;
 
+    @Resource
+    private OrderMapper orderMapper;
+
 
     /**
      * 线上支付记录
@@ -82,7 +86,8 @@ public class OrderController {
         Integer userId = Integer.parseInt(userId1);
 
         //查出订单付款信息
-        List<OrderVo> orderVos = orderService.queryAllRecord(userId);
+//        List<OrderVo> orderVos = orderService.queryAllRecord(userId);
+        List<OrderVo> orderVos = orderMapper.queryAllRecord(userId);
         List<EduPayrecord> eduPayrecords = eduPayrecordService.queryAllRecordByUserId(userId);
 
 
@@ -96,28 +101,34 @@ public class OrderController {
                 creatPayRecord(userId, orderVo);
             }
         }
-        if (orderVos.size() != eduPayrecords.size() && eduPayrecords.size() > 0) {
-            for (EduPayrecord eduPayrecord : eduPayrecords) {
-                eduPayrecordService.deleteAllrecord(eduPayrecord.getId());
-            }
-            for (OrderVo orderVo : orderVos) {
-                //生存支付记录表信息
-                if (eduPayrecords.size() == 0&&orderVo.getOrderStatus()==5) {
-                    creatPayRecord(userId, orderVo);
-                }
-            }
-        }
+//        if (orderVos.size() != eduPayrecords.size() && eduPayrecords.size() > 0) {
+//            for (EduPayrecord eduPayrecord : eduPayrecords) {
+//                eduPayrecord.setIsDelete(1);
+//                eduPayrecordService.updateIsDeleteStaues(eduPayrecord);
+//            }
+//            for (OrderVo orderVo : orderVos) {
+//                //生存支付记录表信息
+//                if (eduPayrecords.size() == 0&&orderVo.getOrderStatus()==5) {
+//                    creatPayRecord(userId, orderVo);
+//                }
+//            }
+//        }
      /*   if (orderVos.size() == eduPayrecords.size() && eduPayrecords.size() > 0) {
 
         }*/
 
+        List<OrderVo>  orderVos2=new LinkedList();
+
         for (int i=0;i<orderVos.size();i++) {
             //生存支付记录表信息
-            if (orderVos.get(i).getOrderStatus()!=5) {
-                orderVos.remove(orderVos.get(i));
+            if (orderVos.get(i).getOrderStatus()==5) {
+                orderVos2.add(orderVos.get(i));
             }
         }
-        return new WebResult(StatusCode.OK, "已缴费，报名成功", orderVos);
+//           EduPayrecord eduPayrecords2=new EduPayrecord();
+//        eduPayrecords2.setUserId(userId);
+//        List<EduPayrecord> eduPayrecords3 = eduPayrecordService.selectByUserIdAndIsdelete(eduPayrecords2);
+        return new WebResult(StatusCode.OK, "已缴费，报名成功", orderVos2);
     }
 
     @Transactional
@@ -134,8 +145,11 @@ public class OrderController {
             Date endDate = eduCourse.getEndDate();
             String endDateString = fm.format(endDate);
             if (formatnowTime.equals(endDateString)) {
-                //4.删除购买的对应的课程记录
-                Integer res = eduPayrecordService.deleterecordByCourseId(orderVo.getCourseId());
+                //4.假删除购买的对应的课程记录
+                EduPayrecord eduPayrecord=new EduPayrecord();
+                eduPayrecord.setIsDelete(1);
+                eduPayrecord.setCourseId(orderVo.getCourseId());
+                Integer res = eduPayrecordService.updateIsDeleteStaues(eduPayrecord);
 
                 //5.更改支付的状态为已关闭
                 PaymentInfo paymentInfo = new PaymentInfo();
@@ -174,6 +188,7 @@ public class OrderController {
         eduPayrecord.setPayStatus(String.valueOf(OrderStatus.PAY));
         eduPayrecord.setUserId(userId);
         eduPayrecord.setCourseId(orderVo.getCourseId());
+        eduPayrecord.setIsDelete(2);
         eduPayrecordService.insertPayRecord(eduPayrecord);
     }
 

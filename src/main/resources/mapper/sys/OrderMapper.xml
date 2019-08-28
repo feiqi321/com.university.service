@@ -508,7 +508,7 @@
   </select>
 
     <!--3.查找报名记录信息-->
-    <select id="queryAllRecord" resultType="com.ovft.configure.sys.vo.OrderVo">
+    <select id="queryAllRecord" parameterType="java.lang.Integer" resultType="com.ovft.configure.sys.vo.OrderVo">
 	   select
 		 c.course_id,
     c.course_name,
@@ -522,6 +522,7 @@
     e1.school_id,
     e4.id,
     e4.order_status
+
     from edu_course  c
     left join edu_school e1 on c.school_id=e1.school_id
     left join edu_admin e2 on c.course_teacher=e2.admin_id
@@ -541,8 +542,84 @@
     LEFT JOIN edu_order_detail i on i.order_id=o.id
     LEFT JOIN edu_payment_info f on f.order_id = o.id
     ) t
-    WHERE payment_status="PAID" and user_id=#{user_id} )
+    WHERE payment_status="PAID" and user_id=#{userId})  and user_id=#{userId}
   </select>
+    <!--3_1.查找报名记录信息(by CourseId)-->
+    <select id="queryAllRecordByCourseId" resultType="com.ovft.configure.sys.vo.OrderVo">
+	   select
+		 c.course_id,
+    c.course_name,
+    c.place_class,
+    c.start_date,
+    c.course_price,
+    e3.start_time,
+    e3.end_time,
+    e1.school_name,
+    e2.name,
+    e1.school_id,
+    e4.id,
+    e4.order_status
+
+    from edu_course  c
+    left join edu_school e1 on c.school_id=e1.school_id
+    left join edu_admin e2 on c.course_teacher=e2.admin_id
+    left JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+    LEFT JOIN edu_order e4 on c.course_name=e4.trade_body
+    where course_id
+    in(
+    SELECT
+    t.course_id
+    from
+    (
+    select
+    o.user_id,
+    i.course_id,
+    f.payment_status
+    from edu_order o
+    LEFT JOIN edu_order_detail i on i.order_id=o.id
+    LEFT JOIN edu_payment_info f on f.order_id = o.id
+    ) t
+    WHERE payment_status="PAID" and user_id=#{userId} and course_id=#{courseId})
+  </select>
+
+    <!--3.查找报名记录信息-->
+    <select id="queryAllRecord2" resultType="com.ovft.configure.sys.vo.OrderVo">
+	   select
+		 c.course_id,
+    c.course_name,
+    c.place_class,
+    c.start_date,
+    c.course_price,
+    e3.start_time,
+    e3.end_time,
+    e1.school_name,
+    e2.name,
+    e1.school_id,
+    e4.id,
+    e4.order_status
+
+    from edu_course  c
+    left join edu_school e1 on c.school_id=e1.school_id
+    left join edu_admin e2 on c.course_teacher=e2.admin_id
+    left JOIN edu_class_schedule e3 on c.course_id=e3.course_ids
+    LEFT JOIN edu_order e4 on c.course_name=e4.trade_body
+    where course_id
+    in(
+    SELECT
+    t.course_id
+    from
+    (
+    select
+    o.user_id,
+    i.course_id,
+    f.payment_status
+    from edu_order o
+    LEFT JOIN edu_order_detail i on i.order_id=o.id
+    LEFT JOIN edu_payment_info f on f.order_id = o.id
+    ) t
+    WHERE payment_status="PAID" and user_id=#{userId} )
+  </select>
+
 
     <!--4.查找订单的详细信息-->
     <select id="showOrder" parameterType="map" resultType="com.ovft.configure.sys.vo.OrderVo">
@@ -567,6 +644,7 @@
         SELECT
         o.*,
         i.course_name,
+        i.course_id,
         i.num
         from edu_order o
         LEFT JOIN edu_order_detail i on i.order_id=o.id

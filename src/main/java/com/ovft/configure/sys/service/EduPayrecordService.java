@@ -21,4 +21,8 @@ public interface EduPayrecordService {
 
     //根据课程id删除记录
     Integer deleterecordByCourseId(Integer courseId);
+    //假删报名记录
+    public int updateIsDeleteStaues(EduPayrecord eduPayrecord);
+
+    List<EduPayrecord> selectByUserIdAndIsdelete(EduPayrecord eduPayrecord);
 }

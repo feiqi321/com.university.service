@@ -31,7 +31,6 @@ public class EduRegistServiceImpl implements EduRegistService {
 
     @Resource
     private EduRegistMapper eduRegistMapper;
-
     @Resource
     private EduCourseMapper eduCourseMapper;
     @Resource

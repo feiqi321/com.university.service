@@ -36,6 +36,12 @@ public class EduSettlementOrderDetailsServiceImpl implements EduSettlementOrderD
 
     @Override
     public PageBean showSettlementDetail(EduSettlementOrderDetailsVo eduSettlementOrderDetailsVo) {
+        if (eduSettlementOrderDetailsVo.getPageSize() == 0) {
+            List<EduSettlementOrderDetailsVo> list = eduSettlementOrderDetailsMapper.showSettlementDetail(eduSettlementOrderDetailsVo);
+            PageBean pageBean=new PageBean();
+            pageBean.setResults(list);
+            return pageBean;
+        }
         Page<Object> pageAll = PageHelper.startPage(eduSettlementOrderDetailsVo.getPageNum(), eduSettlementOrderDetailsVo.getPageSize());
         List<EduSettlementOrderDetailsVo> list = eduSettlementOrderDetailsMapper.showSettlementDetail(eduSettlementOrderDetailsVo);
         long total = pageAll.getTotal();

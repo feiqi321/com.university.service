@@ -29,7 +29,12 @@ public interface EduPayrecordMapper {
     int updateByPrimaryKeySelective(EduPayrecord record);
 
     int updateByPrimaryKey(EduPayrecord record);
+    //更新支付记录状态
+    int updateByPrimaryKey2(EduPayrecord record);
 
     //查询线上的报名门数
     Integer queryCourseNum(Integer userId);
+
+    public int updateIsDeleteStaues(EduPayrecord eduPayrecord);
+     List<EduPayrecord> selectByUserIdAndIsdelete(EduPayrecord eduPayrecord);
 }

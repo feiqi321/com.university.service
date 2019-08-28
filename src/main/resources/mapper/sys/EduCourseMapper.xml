@@ -426,4 +426,7 @@
                 where course_id =#{courseId}
     </select>
 
+    <delete id="deleteByDid" parameterType="java.lang.Integer">
+        delete from edu_course where did=#{did}
+    </delete>
 </mapper>

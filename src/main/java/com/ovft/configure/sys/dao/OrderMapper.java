@@ -1,5 +1,6 @@
 package com.ovft.configure.sys.dao;
 
+import com.ovft.configure.sys.bean.EduPayrecord;
 import com.ovft.configure.sys.bean.Order;
 import com.ovft.configure.sys.bean.OrderExample;
 
@@ -57,6 +58,8 @@ public interface OrderMapper {
      */
     public List<OrderVo> queryAllRecord(Integer userId);
 
+    public List<OrderVo> queryAllRecordByCourseId(@Param("userId") Integer userId,@Param("courseId")Integer CourseId);
+
     //显示详细的相关订单
     List<OrderVo> showOrders(Map<String, Object> map);
 
@@ -66,5 +69,7 @@ public interface OrderMapper {
 
     //查询订单的数量
     int countOrderNum(Integer orderId);
+
+
 
 }

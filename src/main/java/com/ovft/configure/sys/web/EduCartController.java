@@ -6,6 +6,7 @@ import com.ovft.configure.sys.bean.EduCart;
 import com.ovft.configure.sys.service.EduBookGoodsService;
 import com.ovft.configure.sys.service.EduCartService;
 import com.ovft.configure.sys.vo.PageBean;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,9 @@ public class EduCartController {
     public WebResult addCart(@RequestParam(required = true) Integer goodsId, @RequestParam(required = true) Integer goodsNum, HttpServletRequest request) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.valueOf(userId1);
-
+              if (request.getHeader("schoolId").equals("null")||request.getHeader("schoolId")==""||request.getHeader("schoolId")==null){
+                  return new WebResult(StatusCode.ERROR, "您还未报名学校，请先报名学校");
+              }
         String schoolId1 = request.getHeader("schoolId");
         Integer schoolId = Integer.valueOf(schoolId1);
         if (userId != null) {

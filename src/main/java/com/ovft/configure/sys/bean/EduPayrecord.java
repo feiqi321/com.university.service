@@ -66,6 +66,32 @@ public class EduPayrecord implements Serializable {
      */
     private Integer courseId;
 
+    /**
+     * 是否被删除
+     */
+    private Integer isDelete;
+
+    /**
+     * 订单id
+     */
+    private Integer orderId;
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -228,6 +254,8 @@ public class EduPayrecord implements Serializable {
         sb.append(", userId=").append(userId);
         sb.append(", courseId=").append(courseId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append(", isDelete=").append(isDelete);
+        sb.append(", orderId=").append(orderId);
         sb.append("]");
         return sb.toString();
     }

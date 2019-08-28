@@ -87,4 +87,7 @@ public interface EduCourseMapper {
     // <!--根据院系id修改 by wd-->
     public List<EduCourse> updateByCourseId(EduCourse eduCourse);
 
+    // <!--根据院系id删除 by wd-->
+    public void deleteByDid(@Param("did") Integer did);
+
 }

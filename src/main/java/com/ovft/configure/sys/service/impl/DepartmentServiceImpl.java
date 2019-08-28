@@ -52,6 +52,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public WebResult deleteDepartment(DepartmentVo departmentVo) {
          departmentMapper.deleteDepartment(departmentVo.getDid());
+        //删除课程通过院系did
+        eduCourseMapper.deleteByDid(departmentVo.getDid());
         return new WebResult("200", "删除成功", "");
     }
     //批量删除院系
