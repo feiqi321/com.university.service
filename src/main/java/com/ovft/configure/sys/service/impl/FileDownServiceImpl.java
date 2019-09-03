@@ -417,6 +417,7 @@ public class FileDownServiceImpl implements FileDownService {
                     eduRegist.setCourseName(course.getCourseName());
                     eduRegist.setSchoolId(Integer.parseInt(course.getSchoolId()));
                     eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+                    eduRegist.setOfflineRegist("2");
                     eduRegistMapper.insertSelective(eduRegist);
                 }else{    //有条件模版时
                     EduRegist newEduRegist = new EduRegist();
@@ -438,6 +439,7 @@ public class FileDownServiceImpl implements FileDownService {
                     newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
                     newEduRegist.setSchoolName(regist.get(0).getSchoolName());
                     newEduRegist.setCourseNum(regist.get(0).getCourseNum());
+                    newEduRegist.setOfflineRegist("2");
                     eduRegistMapper.insertSelective(newEduRegist);
 
 

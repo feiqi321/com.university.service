@@ -552,7 +552,7 @@
   </select>
 
     <!--查找限制报名门数-->
-    <select id="queryCourseNum" parameterType="map" resultType="Integer">
+    <select id="queryCourseNum" parameterType="map" resultType="int">
     select
     course_num
     from edu_regist

@@ -343,11 +343,11 @@ public class UserController {
      * @return
      */
     @GetMapping(value = "/studentsCount")
-    public WebResult studentsCount(HttpServletRequest request){
-        String schoolIdStr = request.getHeader("schoolId");
-        if(StringUtils.isBlank(schoolIdStr)){
-            return new WebResult("400", "请选择学校", "");
-        }
-        return userService.studentsCount(Integer.parseInt(schoolIdStr));
+    public WebResult studentsCount(HttpServletRequest request,@Param("schoolId") Integer schoolId){
+//        String schoolIdStr = request.getHeader("schoolId");
+//        if(StringUtils.isBlank(schoolIdStr)){
+//            return new WebResult("400", "请选择学校", "");
+//        }
+        return userService.studentsCount(schoolId);
     }
 }

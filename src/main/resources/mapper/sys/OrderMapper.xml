@@ -493,7 +493,7 @@
     <!--2.查找专业相关报名人数-->
     <select id="countPayCourseNum" parameterType="map" resultType="int">
     SELECT
-    count(t.user_id)
+    count(*)
     from
     (
     select

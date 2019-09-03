@@ -7,7 +7,19 @@ public class DepartmentVo extends Department {
 
     private int pageNum;
 
+    private Integer schoolId;
+
     private String search;
+
+    @Override
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    @Override
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
 
     public String getSearch() {
         return search;

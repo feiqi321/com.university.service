@@ -155,8 +155,8 @@ public class EduCourseController {
      * @return
      */
     @GetMapping(value = "timetable")
-    public WebResult queryAllTimeRecord(@RequestParam(value = "week") String week, HttpServletRequest request) {
-        String schoolId = request.getHeader("schoolId");
+    public WebResult queryAllTimeRecord(@RequestParam(value = "week") String week, HttpServletRequest request,@RequestParam(value = "schoolId") String schoolId) {
+
         //判断报名的学校不能为空
         if (schoolId.equals("null")) {
             return new WebResult(StatusCode.ERROR, "报名的学校不能为空，请填写基本信息里的报名学校", "");

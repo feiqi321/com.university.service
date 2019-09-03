@@ -54,10 +54,14 @@ public class TeacherServiceImpl implements TeacherService {
     public EduCourseMapper eduCourseMapper;
     @Resource
     public EduOfflineOrderMapper eduOfflineOrderMapper;
+
     @Resource
     OrderMapper orderMapper;
     @Resource
     private UserClassMapper userClassMapper;
+    @Resource
+    private  EduClassMapper eduClassMapper;
+
 
 
     /**
@@ -300,6 +304,7 @@ public class TeacherServiceImpl implements TeacherService {
                     newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
                     newEduRegist.setSchoolName(regist.get(0).getSchoolName());
                     newEduRegist.setCourseNum(regist.get(0).getCourseNum());
+                    newEduRegist.setOfflineRegist("2");
                     eduRegistMapper.insertSelective(newEduRegist);
 
                 }
@@ -330,7 +335,17 @@ public class TeacherServiceImpl implements TeacherService {
             List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
 
             courseList.forEach(courseVo -> {
+
+
                 Integer courseId = courseVo.getCourseId();
+
+                List<EduClass> eduClasses = eduClassMapper.queryCourseTimeByCourseId(courseId);
+                //封装课程的上课时间相关
+                 courseVo.setStartDate(eduClasses.get(0).getStartDate());
+                 courseVo.setEndDate(eduClasses.get(0).getEndDate());
+                 courseVo.setWeek(eduClasses.get(0).getWeek());
+                 courseVo.setStartTime(eduClasses.get(0).getStartTime());
+                 courseVo.setEndTime(eduClasses.get(0).getEndTime());
                 //0.可以报名的人数
                 if (courseVo.getPeopleNumber() == null) {
                     courseVo.setNowtotal(0);
@@ -365,6 +380,14 @@ public class TeacherServiceImpl implements TeacherService {
         List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
         courseList.forEach(courseVo -> {
             Integer courseId = courseVo.getCourseId();
+
+            List<EduClass> eduClasses = eduClassMapper.queryCourseTimeByCourseId(courseId);
+            //封装课程的上课时间相关
+            courseVo.setStartDate(eduClasses.get(0).getStartDate());
+            courseVo.setEndDate(eduClasses.get(0).getEndDate());
+            courseVo.setWeek(eduClasses.get(0).getWeek());
+            courseVo.setStartTime(eduClasses.get(0).getStartTime());
+            courseVo.setEndTime(eduClasses.get(0).getEndTime());
             //0.可以报名的人数
             if (courseVo.getPeopleNumber() == null) {
                 courseVo.setNowtotal(0);
@@ -632,6 +655,7 @@ public class TeacherServiceImpl implements TeacherService {
                     newEduRegist.setRegistCategoryTwo(regist.get(0).getRegistCategoryTwo());
                     newEduRegist.setSchoolName(regist.get(0).getSchoolName());
                     newEduRegist.setCourseNum(regist.get(0).getCourseNum());
+                    newEduRegist.setOfflineRegist("2");
                     eduRegistMapper.insertSelective(newEduRegist);
 
 
