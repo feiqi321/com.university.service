@@ -120,6 +120,19 @@ public class SchoolController {
             return new WebResult("50012", "请先登录", "");
         }
     }
+    /**
+     * 前台学校列表
+     *
+     * @param request
+     * @param pageVo
+     * @return
+     */
+    @PostMapping(value = "/school/apiSchoolList")
+    public WebResult apiSchoolList(HttpServletRequest request, @RequestBody PageVo pageVo) {
+
+            return schoolService.schoolList(pageVo);
+
+    }
 
     /**
      * 删除学校
@@ -137,8 +150,8 @@ public class SchoolController {
      * @return
      */
     @GetMapping(value = "/school/findSlideshowAll")
-    public WebResult findSlideshowAll(HttpServletRequest request) {
-        School school = schoolService.findSlideshowAll(Integer.parseInt(request.getHeader("schoolId")));
+    public WebResult findSlideshowAll(HttpServletRequest request,@RequestParam("schoolId")Integer schoolId ) {
+        School school = schoolService.findSlideshowAll(schoolId);
         String slideshow = school.getSlideshow();
         if (slideshow==null){
             return  new WebResult("400","获取轮播图资源为空", "");

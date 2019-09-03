@@ -486,7 +486,7 @@
         select
         p.id id, c.course_name courseName,p.school_id schoolId,a.name courseTeacher,c.end_date endDate,p.course_id,p.user_id
         userId, i.user_name userName,i.sex sex,i.area area,i.address adress,i.political political,i.educational educational,i.position position,i.retired retired,
-        i.job job,i.employer employer,i.identity_card,u.phone phone,u.mycontext mycontext,p.class_record classRecord
+        i.job job,i.employer employer,i.identity_card,u.phone phone,u.mycontext mycontext,p.class_record classRecord,c.start_date CoursestartTime
         from
         edu_payrecord p,
         edu_course c,

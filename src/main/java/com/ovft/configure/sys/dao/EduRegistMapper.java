@@ -43,7 +43,7 @@ public interface EduRegistMapper {
     List<String> selectNameBySchoolId(Integer schoolId);
 
     //查询限制的课程门数
-    Integer queryCourseNum(Map<String, Object> map);
+    int queryCourseNum(Map<String, Object> map);
 
     //查询全部
     public List<EduRegist> CourseCoditionAll(CoditionVo coditionVo);

@@ -62,17 +62,17 @@ public class UserClassServiceImpl implements UserClassService {
         List<MyCourseAll> myCourseAlldown = questionSearchMapper.findMyCourseAlldown(pageVo);
         VateType vateType = questionSearchMapper.findCourseImage(2);
         List<MyCourseAll> list = new ArrayList();
-
+        String schoolName = schoolMapper.findSchoolById(pageVo.getSchoolId());
         for (int m = 0; m < myCourseAlltop.size(); m++) {
 
 
             myCourseAlltop.get(m).setCourseImage(vateType.getImage());
             myCourseAlltop.get(m).setStatu("线上报名");
             Integer schoolId = myCourseAlltop.get(m).getSchoolId();
-            String schoolName = schoolMapper.findSchoolById(schoolId);
+
             myCourseAlltop.get(m).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(myCourseAlltop.get(m).getEndDate());
+            String format = formatter.format(myCourseAlltop.get(m).getCoursestartTime());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
                 myCourseAlltop.get(m).setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
@@ -84,10 +84,10 @@ public class UserClassServiceImpl implements UserClassService {
             myCourseAlldown.get(n).setCourseImage(vateType.getImage());
             myCourseAlldown.get(n).setStatu("线下报名");
             Integer schoolId = myCourseAlldown.get(n).getSchoolId();
-            String schoolName = schoolMapper.findSchoolById(schoolId);
+
             myCourseAlldown.get(n).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(myCourseAlldown.get(n).getEndDate());
+            String format = formatter.format(myCourseAlldown.get(n).getCoursestartTime());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
                 myCourseAlldown.get(n).setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
@@ -141,6 +141,8 @@ public class UserClassServiceImpl implements UserClassService {
             List<MyCourseAll> myCourseList = findMyCourseList(pageVo);
 
             if (userClassVo.getUserId() != null) {
+                PageVo pageVo2=new PageVo();
+
                 List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
                 for (int n = 0; n < myCourseList.size(); n++) {
                             for (int m=0;m<userClassList.size();m++) {
@@ -149,6 +151,13 @@ public class UserClassServiceImpl implements UserClassService {
                                     endUserClassList.add(userClassList.get(m));
                                 }
                             }
+
+                }
+                for (int q=0;q<endUserClassList.size();q++){    //通过课程Id查找相应班级的上课人数,然后封装 endUserClassList.get(q)
+                    pageVo2.setSchoolId(pageVo.getSchoolId());
+                      pageVo2.setCourseId(endUserClassList.get(q).getCourseId());
+                    List<MyCourseAll> myCourseList2=findMyCourseList(pageVo2);
+                    endUserClassList.get(q).setNum(myCourseList2.size());
 
                 }
                 return new WebResult("200", "查询成功", endUserClassList);
@@ -166,11 +175,21 @@ public class UserClassServiceImpl implements UserClassService {
             List<MyCourseAll> myCourseList = findMyCourseList(pageVo);
 
             if (userClassVo.getUserId() != null) {
+                PageVo pageVo2=new PageVo();
+                List<UserClass> userClassList2 = userClassMapper.userClassList(userClassVo);
                 List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
                 for (int n = 0; n < myCourseList.size(); n++) {
-                    if (userClassList.get(n).getCourseId() == myCourseList.get(n).getCourseId()) {
-                        endUserClassList.add(userClassList.get(n));
-                    }
+                        for (int m=0;m<userClassList2.size();m++) {
+                            if (userClassList2.get(m).getCourseId() == myCourseList.get(n).getCourseId()) {
+                                endUserClassList.add(userClassList2.get(m));
+                            }
+                        }
+                }
+                for (int q=0;q<endUserClassList.size();q++){    //通过课程Id查找相应班级的上课人数,然后封装 endUserClassList.get(q)
+                    pageVo2.setSchoolId(pageVo.getSchoolId());
+                    pageVo2.setCourseId(endUserClassList.get(q).getCourseId());
+                    List<MyCourseAll> myCourseList2=findMyCourseList(pageVo2);
+                    endUserClassList.get(q).setNum(myCourseList2.size());
 
                 }
                 PageInfo pageInfo = new PageInfo<>(endUserClassList);

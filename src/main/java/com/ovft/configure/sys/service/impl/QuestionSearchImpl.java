@@ -314,7 +314,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         List<MyCourseAll> myCourseAlldown = questionSearchMapper.findMyCourseAlldown(pageVo);
         VateType vateType = questionSearchMapper.findCourseImage(2);
         List<MyCourseAll> list = new ArrayList();
-
+        String schoolName = schoolMapper.findSchoolById(pageVo.getSchoolId());
         for (int m = 0; m < myCourseAlltop.size(); m++) {
 
 
@@ -322,10 +322,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
             myCourseAlltop.get(m).setCourseImage(vateType.getImage());
             myCourseAlltop.get(m).setStatu("线上报名");
             Integer schoolId = myCourseAlltop.get(m).getSchoolId();
-            String schoolName = schoolMapper.findSchoolById(schoolId);
             myCourseAlltop.get(m).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(myCourseAlltop.get(m).getEndDate());
+            String format = formatter.format(myCourseAlltop.get(m).getCoursestartTime());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
                 myCourseAlltop.get(m).setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
@@ -337,10 +336,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
             myCourseAlldown.get(n).setCourseImage(vateType.getImage());
             myCourseAlldown.get(n).setStatu("线下报名");
             Integer schoolId = myCourseAlldown.get(n).getSchoolId();
-            String schoolName = schoolMapper.findSchoolById(schoolId);
             myCourseAlldown.get(n).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(myCourseAlldown.get(n).getEndDate());
+            String format = formatter.format(myCourseAlldown.get(n).getCoursestartTime());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
                 myCourseAlldown.get(n).setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
@@ -366,16 +364,61 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
 
-        for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-            String card=list.get(i).getIdentityCard();
+        pageVo.setPayStatus(5);
+        List<MyCourseAll> myCourseAlltop2 = questionSearchMapper.findMyCourseAlltop(pageVo);
+        pageVo.setPayStatus(1);
+        List<MyCourseAll> myCourseAlldown2 = questionSearchMapper.findMyCourseAlldown(pageVo);
+        VateType vateType2 = questionSearchMapper.findCourseImage(2);
+        List<MyCourseAll> list2 = new ArrayList();
+
+        for (int m = 0; m < myCourseAlltop2.size(); m++) {
+
+
+
+            myCourseAlltop2.get(m).setCourseImage(vateType.getImage());
+            myCourseAlltop2.get(m).setStatu("线上报名");
+            Integer schoolId = myCourseAlltop2.get(m).getSchoolId();
+
+            myCourseAlltop2.get(m).setSchoolName(schoolName);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
+            String format = formatter.format(myCourseAlltop2.get(m).getCoursestartTime());
+            if (Integer.parseInt(format.substring(5, 7)) > 6) {
+                myCourseAlltop2.get(m).setCourseyear(format.substring(0, 4) + "下半年度");
+            } else {
+                myCourseAlltop2.get(m).setCourseyear(format.substring(0, 4) + "上半年度");
+            }
+            list2.add(myCourseAlltop2.get(m));
+        }
+        for (int n = 0; n < myCourseAlldown2.size(); n++) {
+            myCourseAlldown2.get(n).setCourseImage(vateType.getImage());
+            myCourseAlldown2.get(n).setStatu("线下报名");
+            Integer schoolId = myCourseAlldown2.get(n).getSchoolId();
+
+            myCourseAlldown2.get(n).setSchoolName(schoolName);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
+            String format = formatter.format(myCourseAlldown2.get(n).getCoursestartTime());
+            if (Integer.parseInt(format.substring(5, 7)) > 6) {
+                myCourseAlldown2.get(n).setCourseyear(format.substring(0, 4) + "下半年度");
+            } else {
+                myCourseAlldown2.get(n).setCourseyear(format.substring(0, 4) + "上半年度");
+            }
+            list2.add(myCourseAlldown2.get(n));
+        }
+
+
+
+        for (int i = 0; i < list2.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
+            String card=list2.get(i).getIdentityCard();
             int age;
             if (card!=null) {
                 age = TeacherServiceImpl.getAgeByCertId(card);
-                list.get(i).setAge(age);
+                list2.get(i).setAge(age);
             }
         }
-
-        PageInfo pageInfo = new PageInfo<>(list);
+        PageInfo pageInfo3 = new PageInfo<>(myCourseAlltop2);
+        PageInfo pageInfo2 = new PageInfo<>(myCourseAlldown2);
+        PageInfo pageInfo = new PageInfo<>(list2);
+           pageInfo.setTotal(pageInfo3.getTotal()+pageInfo2.getTotal());
         return new WebResult("200", "查询成功", pageInfo);
     }
 

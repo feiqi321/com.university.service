@@ -21,6 +21,15 @@ public class UserClass {
     private String schoolName;
     private Integer did;
     private List<MyCourseAll> users;   //班级学员集合
+    private Integer num;       //上课人数
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
 
     public Integer getDid() {
         return did;

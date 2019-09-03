@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -48,7 +49,6 @@ public class EduCourseServiceImpl implements EduCourseService {
 
     @Resource
     private EduOfflineOrderMapper eduOfflineOrderMapper;
-
     @Resource
     private EduPayrecordMapper eduPayrecordMapper;
 
@@ -79,7 +79,7 @@ public class EduCourseServiceImpl implements EduCourseService {
         Integer schoolId = Integer.parseInt(schoolId1);
 //        Integer schoolId = 11;
 
-        //0.可以报名的人数
+
         //查询专业接受报名的人数
         int acceptNum = eduCourseMapper.queryAcceptNum(courseId);
 
@@ -88,14 +88,15 @@ public class EduCourseServiceImpl implements EduCourseService {
         }
         //查询用户所对应的专业显示已经购买人数
         param.put("course_id", courseId);
-        param.put("payment_status", OrderStatus.PAY);
+//        param.put("payment_status", OrderStatus.PAY);   //原来的
+        param.put("payment_status", "PAID");
         int olineNum = orderMapper.countPayCourseNum(param);
-
+            System.out.println(olineNum);
         //查询用户所对应的专业线下的总人数
-        Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
+        int offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
 
         //得到最终报名人数
-        Integer payNum = olineNum + offNum;
+        int payNum = olineNum + offNum;
 
         if (payNum >= acceptNum) {
             map.put("人数已满，请下期再报名", "");
@@ -135,7 +136,9 @@ public class EduCourseServiceImpl implements EduCourseService {
             }*/
             //TODO decideApply
         } catch (Exception e) {
-            map.put("后台设置错误，请重新设置", "");
+//            map.put("后台设置错误，请重新设置", "");
+            System.out.println(e);
+
         }
 
         //单个课程的设置条件
@@ -191,10 +194,10 @@ public class EduCourseServiceImpl implements EduCourseService {
             Map<String, Object> param = new HashMap<>();
             param.put("courseId", courseId);
             param.put("schoolId", schoolId);
-            Integer courseNum = eduRegistMapper.queryCourseNum(param);
+            int courseNum = eduRegistMapper.queryCourseNum(param);
 
             if (allCourse >= courseNum) {
-                map.put("为了您的身体健康，本课程只允许报" + courseNum + "门，您报名课程已经超过", "");
+                map.put("为了您的身体健康，本课程只允许总共报" + courseNum + "门，您报名课程总数已经超出", "");
                 return map;
             }
 
@@ -232,8 +235,9 @@ public class EduCourseServiceImpl implements EduCourseService {
 
 
         } catch (Exception e) {
-            map.put("后台设置出现问题，请检查设置", "");
-            return map;
+//            map.put("后台设置出现问题，请检查设置", "");
+//            return map;
+            System.out.println(e);
         }
         map.put("该课程目前不允许您的人员类别报名，请等候发放权限", "");
         return map;

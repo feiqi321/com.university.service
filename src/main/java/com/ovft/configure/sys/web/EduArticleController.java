@@ -38,9 +38,9 @@ public class EduArticleController {
      */
     @PostMapping(value = "/article/notice")
     public WebResult queryAllNotice(HttpServletRequest request, @RequestBody PageVo pageVo) {
-        String schoolId = request.getHeader("schoolId");
-        if(!StringUtils.isBlank(schoolId) && !schoolId.equals("null")) {
-            pageVo.setSchoolId(Integer.valueOf(schoolId));
+
+        if(pageVo.getSchoolId()!=null) {
+            pageVo.setSchoolId(Integer.valueOf(pageVo.getSchoolId()));
         }
         return eduArticleService.queryAllNotice(pageVo);
     }

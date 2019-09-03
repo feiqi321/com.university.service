@@ -40,7 +40,7 @@ public class FindUserCourseUtil {
             String schoolName = schoolMapper.findSchoolById(schoolId);
             myCourseAlltop.get(m).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(myCourseAlltop.get(m).getEndDate());
+            String format = formatter.format(myCourseAlltop.get(m).getCoursestartTime());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
                 myCourseAlltop.get(m).setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
@@ -55,7 +55,7 @@ public class FindUserCourseUtil {
             String schoolName = schoolMapper.findSchoolById(schoolId);
             myCourseAlldown.get(n).setSchoolName(schoolName);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(myCourseAlldown.get(n).getEndDate());
+            String format = formatter.format(myCourseAlldown.get(n).getCoursestartTime());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
                 myCourseAlldown.get(n).setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
@@ -80,6 +80,7 @@ public class FindUserCourseUtil {
 
 
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
+
 
         for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
             String card=list.get(i).getIdentityCard();

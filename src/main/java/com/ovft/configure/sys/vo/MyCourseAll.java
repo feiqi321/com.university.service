@@ -19,9 +19,14 @@ public class MyCourseAll  {
      */
     private String courseName;
     /**
+     * 开始时间
+     */
+    private Date CoursestartTime;
+    /**
      * 结束时间
      */
     private Date endDate;
+
     /**
      * 老师名称
      */
@@ -122,6 +127,22 @@ public class MyCourseAll  {
 
     //班级学员备注
     private String classRecord;
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getCoursestartTime() {
+        return CoursestartTime;
+    }
+
+    public void setCoursestartTime(Date coursestartTime) {
+        CoursestartTime = coursestartTime;
+    }
 
     public String getClassRecord() {
         return classRecord;
@@ -311,9 +332,7 @@ public class MyCourseAll  {
         return courseName;
     }
 
-    public Date getEndDate() {
-        return endDate;
-    }
+
 
     public String getCourseTeacher() {
         return courseTeacher;
@@ -327,9 +346,7 @@ public class MyCourseAll  {
         this.courseName = courseName;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+
 
     public void setCourseTeacher(String courseTeacher) {
         this.courseTeacher = courseTeacher;

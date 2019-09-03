@@ -206,7 +206,6 @@ public class TeacherController {
     @PostMapping(value = "/bigAuditUser")
     public WebResult bigAuditUser(@RequestBody UserVo userVo){
 
-
         return teacherService.bigAuditUser(userVo.getUserIds());
     }
     /**

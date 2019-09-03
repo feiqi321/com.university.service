@@ -46,6 +46,10 @@ public class UserClassController {
      */
     @PostMapping(value = "/user/findUserClassAll")
     public WebResult findUserClassAll(HttpServletRequest request, @RequestBody UserClassVo userClassVo) {
+        if (request.getHeader("schoolId").equals("null")||request.getHeader("schoolId")=="") {
+                    return new WebResult("600","您还未填报学校，请先报名学校");
+        }
+
         userClassVo.setUserId(Integer.valueOf(request.getHeader("userId")));
         userClassVo.setSchoolId(Integer.parseInt(request.getHeader("schoolId")));
         return userClassService.userClassList(userClassVo);
