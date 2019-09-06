@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ovft.configure.sys.dao.EduVersionMapper">
+
+	<!--增加版本-->
+	<insert id="insertVersion" parameterType="com.ovft.configure.sys.bean.EduVersion" useGeneratedKeys="true"
+			keyProperty="id">
+        insert into edu_version(publish_time,version_name,update_content,version_code,version_url,publish_status,apply_to)
+         values (#{publishTime},#{versionName},#{updateContent},#{versionCode},#{versionUrl},#{publishStatus},#{applyTo})
+    </insert>
+    
+    <!--查询版本-->
+    <select id="selectVersion" parameterType="java.lang.Integer"  resultType="com.ovft.configure.sys.bean.EduVersion">
+        SELECT * from
+        edu_version
+        WHERE id=#{id}
+    </select>
+    
+
+</mapper>
