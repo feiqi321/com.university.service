@@ -47,6 +47,8 @@ public interface QuestionSearchService {
     public WebResult deleteQuestionOne(Question question);
     //删除对应问卷的一个题目
     public WebResult deleteVoteItemOne(VoteItem voteItem);
+     //
+    public WebResult findMyClassUsers(PageVo pageVo);
 
 
 }

@@ -26,6 +26,8 @@ public interface UserMapper {
 
     //通过电话号码查找用户2
     public User findUserByPhone2(@Param("phone") String phone);
+    //通过身份证查找用户
+    public List<User> findUserByIdentityCard(@Param("identityCard") String identityCard);
 
     //通过密码查找用户
     public User findUserByPassword(@Param("user") User user);

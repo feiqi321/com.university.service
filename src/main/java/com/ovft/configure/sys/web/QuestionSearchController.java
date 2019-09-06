@@ -301,8 +301,10 @@ public class QuestionSearchController {
      */
     @PostMapping(value = "/searchQuestion/findMyClassCourseList")
     public WebResult findMyClassCourseList(HttpServletRequest request, @RequestBody PageVo pageVo) {
-
-        return questionSearchService.findMyCourseList(pageVo);
+        if (request.getHeader("userId")!=null&&request.getHeader("userId")!="") {
+            return questionSearchService.findMyClassUsers(pageVo);   //*暂时处理app前端正常显示班级成员问题*
+        }
+        return questionSearchService.findMyCourseList(pageVo);   //后台班级成员列表
 
     }
 

@@ -17,6 +17,11 @@
             resultType="com.ovft.configure.sys.bean.User">
             select * from  edu_user where phone=#{phone};
          </select>
+    <!--通过身份证查找用户-->
+    <select id="findUserByIdentityCard" parameterType="com.ovft.configure.sys.bean.User"
+            resultType="com.ovft.configure.sys.bean.User">
+            select * from  edu_user_item where identity_card=#{identityCard};
+         </select>
     <!--通过密码查找用户（不常用）-->
     <select id="findUserByPassword" parameterType="com.ovft.configure.sys.bean.User"
             resultType="com.ovft.configure.sys.bean.User">

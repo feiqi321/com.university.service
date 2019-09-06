@@ -727,7 +727,7 @@ public class TeacherServiceImpl implements TeacherService {
         if (user.getSex() == null) {
             return new WebResult("400", "性别不能为空");
         }
-        user.setCheckin(1);
+
         //验证手机号是否被注册
         /**
          * 学员添加修改
@@ -754,6 +754,12 @@ public class TeacherServiceImpl implements TeacherService {
             //未注册的情况
             //1. finduserbyphone == null && userId == null  新注册的学员
             //初始密码为000000
+            //保证身份证唯一
+            List<User> userByIdentityCard = userMapper.findUserByIdentityCard(user.getIdentityCard());
+            if (!userByIdentityCard.isEmpty()){     //保证身份证唯一
+                return new WebResult("600", "保存失败：该用户信息已注册！", "");
+            }
+            user.setCheckin(1);
             String password = "000000";
             user.setPassword(MD5Utils.md5Password(password));
             userMapper.addUser(user);
@@ -771,11 +777,19 @@ public class TeacherServiceImpl implements TeacherService {
         //通过userId来寻找edu_Item
         User findUser = userMapper.queryByItemsId3(user.getUserId());
         if (findUser == null) {
+            //保证身份证唯一
+            List<User> userByIdentityCard = userMapper.findUserByIdentityCard(user.getIdentityCard());
+            if (!userByIdentityCard.isEmpty()){     //保证身份证唯一
+                return new WebResult("600", "保存失败：该用户信息已注册！", "");
+            }
+
             user.setCheckin(1);
             userMapper.saveInfoItems(user);
             return new WebResult("200", "保存成功", "");
         } else {
-
+//            if (!findUser.getIdentityCard().equals(user.getIdentityCard())){  //不能让用户二次修改身份证号码
+//                return new WebResult("600", "身份证不能修改，如若填错，请注销或联系学校管理员", "");
+//            }
             Integer schoolId = findUser.getSchoolId();
             Integer schoolId1 = user.getSchoolId();
             if (findUser.getSchoolId() != null && user.getSchoolId().compareTo(findUser.getSchoolId()) != 0) {
