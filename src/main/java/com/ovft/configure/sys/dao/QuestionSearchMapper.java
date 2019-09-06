@@ -93,6 +93,10 @@ public interface QuestionSearchMapper {
     //删除对应问卷的一个题目
     public void deleteVoteItemOne(Integer id);
 
+    //换课 通过id编辑课程id,课程名字
+     void updateCourseById (EduPayrecord  eduPayrecord);
+
+
 
 
 

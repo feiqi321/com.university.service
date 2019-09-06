@@ -34,6 +34,8 @@ public class QuestionSearchImpl implements QuestionSearchService {
     private QuestionSearchMapper questionSearchMapper;
     @Resource
     private EduOfflineOrderMapper eduOfflineOrderMapper;
+    @Resource
+    private EduCourseMapper eduCourseMapper;
 
     //添加问卷调查（SearchQuestion）
     @Transactional
@@ -906,6 +908,18 @@ public class QuestionSearchImpl implements QuestionSearchService {
     public WebResult deleteVoteItemOne(VoteItem voteItem) {
          questionSearchMapper.deleteVoteItemOne(voteItem.getId());
         return new WebResult("200", "删除成功", "");
+    }
+
+    // 换课
+    @Transactional
+    @Override
+    public WebResult updateCourseById(EduPayrecord  eduPayrecord) {
+
+        EduCourse eduCourse = eduCourseMapper.selectByPrimaryKey(eduPayrecord.getCourseId());
+        eduPayrecord.setCourseName(eduCourse.getCourseName());
+        questionSearchMapper.updateCourseById(eduPayrecord);
+
+        return new  WebResult("200", "更新成功", "");
     }
 
 

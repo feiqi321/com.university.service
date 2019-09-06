@@ -306,8 +306,27 @@ public class QuestionSearchController {
 
     }
 
+    //换课
+    @PostMapping(value = "/service/searchQuestion/updateCourseById")
+    public WebResult updateCourseById(HttpServletRequest request, @RequestBody EduPayrecord  eduPayrecord){
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if (o != null) {
+            Integer id2 = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id2.toString());
+            return questionSearchService.updateCourseById(eduPayrecord);
+        } else {
+            return new WebResult("50012", "请先登录", "");
+        }
+    }
+    }
 
 
 
 
-}
+
+
+
+

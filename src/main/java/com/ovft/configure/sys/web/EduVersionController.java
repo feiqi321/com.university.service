@@ -46,6 +46,7 @@ public class EduVersionController {
         EduVersion eduVersion = eduVersionService.selectVersion(id);
        /* if (eduVersion.getVersionCode().equals(2.5)){随便写的 为什么不能判断相等
             return new WebResult(StatusCode.OK, "您当前已经是最新版本", "");
+            测试pull
         }*/
         return new WebResult(StatusCode.OK, "查看版本成功", eduVersion);
 

@@ -552,4 +552,9 @@
                 id= #{id}
     </delete>
 
+    <!--换课 通过id编辑课程id,课程名字-->
+    <update id="updateCourseById" parameterType="com.ovft.configure.sys.bean.EduPayrecord">
+        UPDATE edu_payrecord set course_name=#{courseName},course_id=#{courseId} WHERE id=#{id}
+    </update>
+
 </mapper>

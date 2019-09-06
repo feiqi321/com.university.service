@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ovft.configure.sys.dao.EduLivePayMapper">
+
+    <!--  //增加现场报名班级报名记录-->
+    <insert id="addLivePay" parameterType="com.ovft.configure.sys.bean.EduLivePay" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into edu_livepay(phone,identity_card,address,job,user_name,course_id,course_name,course_teacher,
+        school_name,pay_date,pay_code,school_id,employer,money)
+        values (#{phone},#{identityCard},#{address},#{job},#{userName},#{courseId},#{courseName},#{courseTeacher},
+        #{schoolName},#{payDate},#{payCode},#{schoolId},#{employer},#{money})
+    </insert>
+
+    <!--查询现场报名记录-->
+    <select id="selectLivePay" parameterType="com.ovft.configure.sys.vo.LivePayVo"  resultType="com.ovft.configure.sys.bean.EduLivePay">
+        select
+          l.id,
+          l.phone,
+          l.identity_card,
+          l.address,
+          l.job,
+          l.user_name,
+          l.course_id,
+          l.course_name,
+          l.course_teacher,
+          l.school_name,
+          l.pay_date,
+          l.pay_code,
+          l.school_id,
+          l.employer,
+          l.money
+        from edu_livepay l
+        WHERE  1=1
+        <if test="phone != null">
+            AND phone = #{phone}
+        </if>
+        <if test="identityCard != null">
+            AND identity_card = #{identityCard}
+        </if>
+        <if test="address != null">
+            AND address = #{address}
+        </if>
+        <if test="courseId != null">
+            AND course_id = #{courseId}
+        </if>
+        <if test="courseName != null">
+            AND course_name = #{courseName}
+        </if>
+        <if test="schoolId != null">
+            AND school_id = #{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
+
+    <!--通过手机号和课程查询一条记录-->
+    <select id="selectByPhoneAndCourseName" parameterType="com.ovft.configure.sys.vo.LivePayVo" resultType="com.ovft.configure.sys.bean.EduLivePay">
+        select
+        l.id,
+        l.phone,
+        l.identity_card,
+        l.address,
+        l.job,
+        l.user_name,
+        l.course_id,
+        l.course_name,
+        l.course_teacher,
+        l.school_name,
+        l.pay_date,
+        l.pay_code,
+        l.school_id,
+        l.employer,
+        l.money
+        from edu_livepay l
+        WHERE  1=1
+        <if test="phone != null">
+            AND phone = #{phone}
+        </if>
+        <if test="courseName != null">
+            AND course_name = #{courseName}
+        </if>
+    </select>
+
+    <!--修改现场报名记录-->
+    <update id="updateLivePayById" parameterType="com.ovft.configure.sys.bean.EduLivePay">
+        UPDATE edu_livepay
+        <set>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="identityCard != null">
+                identity_card = #{identityCard},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="job != null">
+                job = #{job},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <if test="courseName != null">
+                course_name = #{courseName},
+            </if>
+            <if test="courseTeacher != null">
+                course_teacher = #{courseTeacher},
+            </if>
+            <if test="schoolName != null">
+                school_name = #{schoolName},
+            </if>
+            <if test="payDate != null">
+                pay_date = #{payDate},
+            </if>
+            <if test="payCode != null">
+                pay_code = #{payCode},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId},
+            </if>
+            <if test="employer != null">
+                employer = #{employer},
+            </if>
+            <if test="money != null">
+                money = #{money}
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <!--删除某条记录-->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from edu_livepay
+          WHERE id=#{id}
+    </delete>
+
+    <!--增加时 通过手机号查出基本信息-->
+    <select id="selectByPhone" parameterType="java.lang.String" resultType="com.ovft.configure.sys.bean.User">
+        select
+        u.user_name,
+        u.phone,
+        i.address,
+        i.employer,
+        i.job,
+        i.identity_card
+        from edu_user u
+        left join edu_user_item i on u.user_id=i.user_id
+        WHERE phone=#{phone}
+    </select>
+
+    <!--增加时,通过课程名称查询关于课程有用的信息-->
+    <select id="selectByCourseName" parameterType="java.lang.String" resultType="com.ovft.configure.sys.bean.EduLivePay">
+        select
+        c.course_id,
+        c.start_date as payDate,
+        s.school_name,
+        c.course_name,
+        a.name  as courseTeacher
+        from edu_course c
+        left JOIN edu_school s ON c.school_id=s.school_id
+        left JOIN edu_admin a on c.course_teacher=a.admin_id
+        WHERE 1=1
+        <if test="search != null and search != ''">
+            AND course_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
+
+
+
+</mapper>

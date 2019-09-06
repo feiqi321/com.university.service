@@ -3,6 +3,7 @@ package com.ovft.configure.sys.service;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.vo.PageVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +48,9 @@ public interface QuestionSearchService {
     public WebResult deleteQuestionOne(Question question);
     //删除对应问卷的一个题目
     public WebResult deleteVoteItemOne(VoteItem voteItem);
+
+    // <!--换课 通过id编辑课程id,课程名字-->
+    WebResult updateCourseById(EduPayrecord  eduPayrecord);
 
 
 }

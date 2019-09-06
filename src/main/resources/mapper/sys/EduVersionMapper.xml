@@ -12,8 +12,15 @@
     
     <!--查询版本-->
     <select id="selectVersion" parameterType="java.lang.Integer"  resultType="com.ovft.configure.sys.bean.EduVersion">
-        SELECT * from
-        edu_version
+        SELECT
+        v.publish_time,
+        v.version_name,
+        v.update_content,
+        v.version_code,
+        v.version_url,
+        v.publish_status,
+        v.apply_to
+        from  edu_version V
         WHERE id=#{id}
     </select>
     
