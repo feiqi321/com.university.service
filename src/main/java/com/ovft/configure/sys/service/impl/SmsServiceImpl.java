@@ -1,6 +1,8 @@
 package com.ovft.configure.sys.service.impl;
 
 import com.ovft.configure.http.result.WebResult;
+import com.ovft.configure.sys.bean.User;
+import com.ovft.configure.sys.dao.UserMapper;
 import com.ovft.configure.sys.service.SmsService;
 import com.ovft.configure.sys.utils.RedisUtil;
 import com.ovft.configure.sys.utils.SecurityUtils;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Random;
 
@@ -26,10 +29,17 @@ public class SmsServiceImpl implements SmsService {
 
     @Autowired
     private RedisUtil redisUtil;
-
+    @Resource
+    private UserMapper userMapper;
     @Override
     public WebResult sendSms(Map<String, String> phoneMap) {
         String phone = phoneMap.get("phone");
+
+        //验证手机号是否被注册
+        User finduserbyphone = userMapper.findUserByPhone2(phone);
+        if (finduserbyphone != null) {
+            return new WebResult("600", "该用户已注册");
+        }
         //手机号格式验证
         if (!SecurityUtils.securityPhone(phone)) {
             return new WebResult("400", "请输入正确手机号", "");

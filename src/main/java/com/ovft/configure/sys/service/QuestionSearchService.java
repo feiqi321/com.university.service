@@ -48,6 +48,8 @@ public interface QuestionSearchService {
     public WebResult deleteQuestionOne(Question question);
     //删除对应问卷的一个题目
     public WebResult deleteVoteItemOne(VoteItem voteItem);
+     //
+    public WebResult findMyClassUsers(PageVo pageVo);
 
     // <!--换课 通过id编辑课程id,课程名字-->
     WebResult updateCourseById(EduPayrecord  eduPayrecord);

@@ -115,7 +115,7 @@ public class EduCourseController {
         Integer schoolId = Integer.parseInt(schoolId1);
         User user = userService.queryUserInfo(userId);
         if (user == null) {
-            return new WebResult(StatusCode.ERROR, "请到学员中心完善好自己的报名学校，方可报名！", "");
+            return new WebResult(StatusCode.ERROR, "请先在我要上学里面填报自己的学校，方可报名！", "");
         }
 
         //判断是否是通过正式学员，没有通过则不能报名

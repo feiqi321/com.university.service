@@ -298,6 +298,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public WebResult savaInfo(User user) {
+
+
+
         if (StringUtils.isBlank(user.getIdentityCard())) {
             return new WebResult("400", "身份证号码不能为空");
         }
@@ -318,6 +321,7 @@ public class UserServiceImpl implements UserService {
         if (!phoneResult.getCode().equals("200")) {
             return new WebResult("400", phoneResult.getMsg(), "");
         }
+
         //固定电话的验证
         PhoneTest phoneTest = new PhoneTest();
         if (!StringUtils.isBlank(user.getTelephone())) {
@@ -364,13 +368,33 @@ public class UserServiceImpl implements UserService {
         //保存或修改模块
         User findUser = userMapper.queryByItemsId3(user.getUserId());
 
+
+
         if (findUser == null) {
+            //保证身份证唯一
+            List<User> userByIdentityCard = userMapper.findUserByIdentityCard(user.getIdentityCard());
+            if (!userByIdentityCard.isEmpty()){     //保证身份证唯一
+                return new WebResult("600", "保存失败：该用户信息已注册！", "");
+            }
             user.setCheckin(1);
             userMapper.saveInfoItems(user);
             userMapper.updateEduUserUsername(user);//使edu_user表里面与edu_user_Item表的user_name字段保持一致
             return new WebResult("200", "保存成功", "");
         } else {
-            user.setCheckin(1);
+
+            if (!findUser.getUserName().equals(user.getUserName())){  //不能让用户二次修改用户姓名
+                return new WebResult("600", "用户姓名不能修改，如若填错，请注销或联系学校管理员", "");
+            }
+
+            if (!findUser.getIdentityCard().equals(user.getIdentityCard())){  //不能让用户二次修改身份证号码
+                return new WebResult("600", "身份证不能修改，如若填错，请注销或联系学校管理员", "");
+            }
+            //当findUser不等于空时；分两种情况：1.已经报名了学校，修改资料    2.该学员注销对应的学校已通过，schoolId被设置为null了（被对应学校假删）,即再次报名学校的时候。
+            if (findUser.getSchoolId()==null) {   //当为第二种情况的时候，则需要对应学校的审核
+                user.setCheckin(1);       //设置为待审核状态
+            }else {
+                user.setCheckin(0);
+            }
             userMapper.updateInfoItems(user);
             userMapper.updateEduUserUsername(user);//使edu_user表里面与edu_user_Item表的user_name字段保持一致
 
