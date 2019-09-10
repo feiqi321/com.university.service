@@ -36,6 +36,11 @@ public class QuestionSearchImpl implements QuestionSearchService {
     private EduOfflineOrderMapper eduOfflineOrderMapper;
     @Resource
     private EduCourseMapper eduCourseMapper;
+    @Resource
+    private EduPayrecordMapper eduPayrecordMapper;
+    @Resource
+    private UserMapper userMapper;
+
 
     //添加问卷调查（SearchQuestion）
     @Transactional
@@ -47,7 +52,6 @@ public class QuestionSearchImpl implements QuestionSearchService {
         if (StringUtils.isBlank(searchQuestion.getTopImage())) {
             return new WebResult("400", "您还未添加问卷图片！", "");
         }
-
 
 
         String schoolById = schoolMapper.findSchoolById(searchQuestion.getSchoolId());
@@ -82,10 +86,10 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 }
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<Question> questions = searchQuestion.getQuestions();
-                for (int i=0;i<questions.size();i++){
-                    List<Question>  questionList=new ArrayList<>();
+                for (int i = 0; i < questions.size(); i++) {
+                    List<Question> questionList = new ArrayList<>();
                     questionList.add(questions.get(i));
-                    if (questions.get(i).getQid()==null){
+                    if (questions.get(i).getQid() == null) {
                         questionSearchMapper.insertBigQuestionItem(questionList);
                     }
                     questionSearchMapper.updateBigQuestionItem(questions);
@@ -94,15 +98,15 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 return new WebResult("200", "修改成功", "");
             }
         }
-        if (searchQuestion.getTid() == 2||searchQuestion.getTid()==0) {  //类型为教师评价是处理
+        if (searchQuestion.getTid() == 2 || searchQuestion.getTid() == 0) {  //类型为教师评价是处理
             if (searchQuestion.getQuestions().isEmpty()) {
                 return new WebResult("400", "您还未添加问卷题目！", "");
             }
             //通过courseId查询edu_search_question表是否存在相关记录
             List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(searchQuestion.getCourseId());
 
-            if (searchQuestion.getSid() == null&&searchQuestionByCourseId.isEmpty()) {
-                 searchQuestion.setTid(0);
+            if (searchQuestion.getSid() == null && searchQuestionByCourseId.isEmpty()) {
+                searchQuestion.setTid(0);
                 questionSearchMapper.createSearchQuestion(searchQuestion);
 
                 //批量添加问题及选项
@@ -113,7 +117,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
                     questions.get(i).setSid(searchQuestion.getSid());
 
                 }
-                teacherMapper.updateisAddQuestionByCourseId(searchQuestion.getCourseId(),1); //修改课程为已添加问卷题目状态
+                teacherMapper.updateisAddQuestionByCourseId(searchQuestion.getCourseId(), 1); //修改课程为已添加问卷题目状态
                 questionSearchMapper.insertBigQuestionItem(questions);
                 return new WebResult("200", "添加成功", "");
 
@@ -123,10 +127,10 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 }
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<Question> questions = searchQuestion.getQuestions();
-                for (int i=0;i<questions.size();i++){
-                    List<Question>  questionList=new ArrayList<>();
+                for (int i = 0; i < questions.size(); i++) {
+                    List<Question> questionList = new ArrayList<>();
                     questionList.add(questions.get(i));
-                    if (questions.get(i).getQid()==null){
+                    if (questions.get(i).getQid() == null) {
                         questionSearchMapper.insertBigQuestionItem(questionList);
                     }
                     questionSearchMapper.updateBigQuestionItem(questions);
@@ -160,10 +164,10 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 }
                 questionSearchMapper.updateSearchQuestion(searchQuestion);
                 List<VoteItem> voteItems = searchQuestion.getVoteItems();
-                for (int i=0;i<voteItems.size();i++){
-                    List<VoteItem>  voteItemList=new ArrayList<>();
+                for (int i = 0; i < voteItems.size(); i++) {
+                    List<VoteItem> voteItemList = new ArrayList<>();
                     voteItemList.add(voteItems.get(i));
-                    if (voteItems.get(i).getId()==null){
+                    if (voteItems.get(i).getId() == null) {
 
                         questionSearchMapper.createBigVoteItem(voteItemList);
                     }
@@ -178,17 +182,17 @@ public class QuestionSearchImpl implements QuestionSearchService {
     //删除问卷调查（SearchQuestion）
     @Transactional
     @Override
-    public WebResult deleteSearchQuestion(Integer sid, Integer tid,Integer courseId) {
+    public WebResult deleteSearchQuestion(Integer sid, Integer tid, Integer courseId) {
         questionSearchMapper.deleteSearchQuestion(sid);
         if (tid == 1) {
             questionSearchMapper.deleteQuestionItem(sid);
         }
         if (tid == 2) {
             List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(courseId);
-            if (!searchQuestionByCourseId.isEmpty()){
-                sid= searchQuestionByCourseId.get(0).getSid();
+            if (!searchQuestionByCourseId.isEmpty()) {
+                sid = searchQuestionByCourseId.get(0).getSid();
             }
-            teacherMapper.updateisAddQuestionByCourseId(courseId,0);
+            teacherMapper.updateisAddQuestionByCourseId(courseId, 0);
             questionSearchMapper.deleteQuestionItem(sid);
         }
         if (tid == 3) {
@@ -197,6 +201,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
         return new WebResult("200", "删除成功", "");
     }
+
     //删除一条结果记录
     @Transactional
     @Override
@@ -204,6 +209,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         questionSearchMapper.deleteAnswerRecordOne(answerRecord);
         return new WebResult("200", "删除成功", "");
     }
+
     //批量删除用户结果记录
     @Transactional
     @Override
@@ -236,7 +242,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<VoteItem> voteItemAll = questionSearchMapper.findVoteItemAll();
-        List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+        List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
         searchQuestionAll2.get(0).setVoteItems(voteItemAll);
         PageInfo pageInfo = new PageInfo<>(voteItemAll);
         return new WebResult("200", "查询成功", pageInfo);
@@ -246,7 +252,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
     @Transactional
     @Override
     public WebResult submitVoteRecord(AnswerRecord answerRecord, Integer id) {
-        String userName = questionSearchMapper.findAnswerRecordbyUserId(answerRecord.getCourseId(),answerRecord.getUid(), answerRecord.getList().get(0).getSid(), answerRecord.getTopId(), answerRecord.getDownId());
+        String userName = questionSearchMapper.findAnswerRecordbyUserId(answerRecord.getCourseId(), answerRecord.getUid(), answerRecord.getList().get(0).getSid(), answerRecord.getTopId(), answerRecord.getDownId());
         if (userName != null) {
             return new WebResult("300", "您已提交过此内容,无需重复操作！", "");
         }
@@ -274,6 +280,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         return new WebResult("200", "提交成功", "");
     }
+
     //弃用
     @Override
     public WebResult findCourseTopic(PageVo pageVo) {
@@ -283,6 +290,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
     /**
      * 根据身份证号获取年龄
+     *
      * @param certId
      * @return
      */
@@ -301,7 +309,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         } catch (ParseException e) {
         }
         long intervalMilli = now.getTime() - birth.getTime();
-        int age = (int) (intervalMilli/(24 * 60 * 60 * 1000))/365;
+        int age = (int) (intervalMilli / (24 * 60 * 60 * 1000)) / 365;
         System.out.println(age);
         return age;
     }
@@ -321,7 +329,6 @@ public class QuestionSearchImpl implements QuestionSearchService {
             List<MyCourseAll> myCourseAlldown = questionSearchMapper.findMyCourseAlldown(pageVo);
             List<MyCourseAll> list = new ArrayList();
             for (int m = 0; m < myCourseAlltop.size(); m++) {
-
 
 
                 myCourseAlltop.get(m).setCourseImage(vateType.getImage());
@@ -353,9 +360,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
             }
 
             for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-                String card=list.get(i).getIdentityCard();
+                String card = list.get(i).getIdentityCard();
                 int age;
-                if (card!=null) {
+                if (card != null) {
                     age = TeacherServiceImpl.getAgeByCertId(card);
                     list.get(i).setAge(age);
                 }
@@ -375,7 +382,6 @@ public class QuestionSearchImpl implements QuestionSearchService {
         List<MyCourseAll> list2 = new ArrayList();
 
         for (int m = 0; m < myCourseAlltop2.size(); m++) {
-
 
 
             myCourseAlltop2.get(m).setCourseImage(vateType.getImage());
@@ -409,11 +415,10 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
 
 
-
         for (int i = 0; i < list2.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-            String card=list2.get(i).getIdentityCard();
+            String card = list2.get(i).getIdentityCard();
             int age;
-            if (card!=null) {
+            if (card != null) {
                 age = TeacherServiceImpl.getAgeByCertId(card);
                 list2.get(i).setAge(age);
             }
@@ -421,7 +426,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         PageInfo pageInfo3 = new PageInfo<>(myCourseAlltop2);
         PageInfo pageInfo2 = new PageInfo<>(myCourseAlldown2);
         PageInfo pageInfo = new PageInfo<>(list2);
-           pageInfo.setTotal(pageInfo3.getTotal()+pageInfo2.getTotal());
+        pageInfo.setTotal(pageInfo3.getTotal() + pageInfo2.getTotal());
         return new WebResult("200", "查询成功", pageInfo);
     }
 
@@ -438,7 +443,6 @@ public class QuestionSearchImpl implements QuestionSearchService {
         String schoolName = schoolMapper.findSchoolById(pageVo.getSchoolId());
 
         for (int m = 0; m < myCourseAlltop.size(); m++) {
-
 
 
             myCourseAlltop.get(m).setCourseImage(vateType.getImage());
@@ -473,9 +477,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
         if (pageVo.getPageSize() == 0) {
 
             for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-                String card=list.get(i).getIdentityCard();
+                String card = list.get(i).getIdentityCard();
                 int age;
-                if (card!=null) {
+                if (card != null) {
                     age = TeacherServiceImpl.getAgeByCertId(card);
                     list.get(i).setAge(age);
                 }
@@ -488,9 +492,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
 
         for (int i = 0; i < list.size(); i++) {      //通过身份证计算出每个学员的年龄并返回
-            String card=list.get(i).getIdentityCard();
+            String card = list.get(i).getIdentityCard();
             int age;
-            if (card!=null) {
+            if (card != null) {
                 age = TeacherServiceImpl.getAgeByCertId(card);
                 list.get(i).setAge(age);
             }
@@ -506,13 +510,13 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         if (pageVo.getPageSize() == 0) {
             //进入详情页
-            if (pageVo.getSid() != null || pageVo.getCourseId()!= null) {     //进入某篇问卷调查的详情页==>> 2.
+            if (pageVo.getSid() != null || pageVo.getCourseId() != null) {     //进入某篇问卷调查的详情页==>> 2.
 
 
-                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
-                 if (searchQuestionAll2==null){
-                     return new WebResult("200","没有找到对应试题","");
-                 }
+                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
+                if (searchQuestionAll2 == null) {
+                    return new WebResult("200", "没有找到对应试题", "");
+                }
                 if (pageVo.getTid() == 1) {
 
                     List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
@@ -524,9 +528,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 }
                 if (pageVo.getTid() == 2 || pageVo.getTid() == 0) {
                     List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(pageVo.getCourseId());
-                    Integer sid=null;
-                    if (!searchQuestionByCourseId.isEmpty()){
-                          sid= searchQuestionByCourseId.get(0).getSid();
+                    Integer sid = null;
+                    if (!searchQuestionByCourseId.isEmpty()) {
+                        sid = searchQuestionByCourseId.get(0).getSid();
                     }
                     List<Question> questions = questionSearchMapper.findQuestionAll(sid, null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
                     if (questions.isEmpty()) {
@@ -549,9 +553,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 return new WebResult("200", "进入详情页", searchQuestionAll2.get(0));
             }
             //问卷调查列表==>>1.
-            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
-            if (searchQuestionAll==null){
-                return new WebResult("200","没有找到对应试题","");
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
+            if (searchQuestionAll == null) {
+                return new WebResult("200", "没有找到对应试题", "");
             }
 //            int size=searchQuestionAll.size();
 
@@ -561,7 +565,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         //进入详情页
         if (pageVo.getSid() != null || pageVo.getTopId() != null || pageVo.getDownId() != null) {  //进入某篇问卷调查的详情页==>> 2.
 
-            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), null,pageVo.getCourseId(), pageVo.getSearch());
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), null, pageVo.getCourseId(), pageVo.getSearch());
             if (pageVo.getTid() == 1) {
                 if (searchQuestionAll.get(0).getQuestions().isEmpty()) {
                     return new WebResult("300", "此问卷暂时还没有添加相关试题内容", "");
@@ -572,9 +576,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
             }
             if (pageVo.getTid() == 2) {
                 List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(pageVo.getCourseId());
-                Integer sid=null;
-                if (!searchQuestionByCourseId.isEmpty()){
-                    sid= searchQuestionByCourseId.get(0).getSid();
+                Integer sid = null;
+                if (!searchQuestionByCourseId.isEmpty()) {
+                    sid = searchQuestionByCourseId.get(0).getSid();
                 }
                 List<Question> questions = questionSearchMapper.findQuestionAll(sid, null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
                 if (questions.isEmpty()) {
@@ -597,7 +601,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             return new WebResult("200", "进入详情页", searchQuestionAll.get(0));
         }
         //问卷调查列表==>> 1.
-        List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+        List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
 
         PageInfo pageInfo = new PageInfo<>(searchQuestionAll2);
         return new WebResult("200", "查询成功", pageInfo);
@@ -610,13 +614,13 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         if (pageVo.getPageSize() == 0) {
             //进入详情页
-            if (pageVo.getSid() != null || pageVo.getCourseId()!= null) {     //进入某篇问卷调查的详情页==>> 2.
+            if (pageVo.getSid() != null || pageVo.getCourseId() != null) {     //进入某篇问卷调查的详情页==>> 2.
 
 
-                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
-                 if (searchQuestionAll2==null){
-                     return new WebResult("200","没有找到对应试题","");
-                 }
+                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
+                if (searchQuestionAll2 == null) {
+                    return new WebResult("200", "没有找到对应试题", "");
+                }
                 if (pageVo.getTid() == 1) {
 
                     List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
@@ -628,11 +632,11 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 }
                 if (pageVo.getTid() == 2 || pageVo.getTid() == 0) {
                     List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(pageVo.getCourseId());
-                    Integer sid=null;
-                    if (!searchQuestionByCourseId.isEmpty()){
-                          sid= searchQuestionByCourseId.get(0).getSid();
+                    Integer sid = null;
+                    if (!searchQuestionByCourseId.isEmpty()) {
+                        sid = searchQuestionByCourseId.get(0).getSid();
                     }
-                    List<Question> questions = questionSearchMapper.findQuestionAllAndGrade(sid,pageVo.getTid(),pageVo.getSearch());
+                    List<Question> questions = questionSearchMapper.findQuestionAllAndGrade(sid, pageVo.getTid(), pageVo.getSearch());
                     if (questions.isEmpty()) {
                         return new WebResult("300", "此课程暂时还没有添加评价相关内容", "");
 
@@ -653,9 +657,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 return new WebResult("200", "进入详情页", searchQuestionAll2.get(0));
             }
             //问卷调查列表==>>1.
-            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
-            if (searchQuestionAll==null){
-                return new WebResult("200","没有找到对应试题","");
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
+            if (searchQuestionAll == null) {
+                return new WebResult("200", "没有找到对应试题", "");
             }
 //            int size=searchQuestionAll.size();
 
@@ -665,7 +669,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         //进入详情页
         if (pageVo.getSid() != null || pageVo.getTopId() != null || pageVo.getDownId() != null) {  //进入某篇问卷调查的详情页==>> 2.
 
-            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), null,pageVo.getCourseId(), pageVo.getSearch());
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), null, pageVo.getCourseId(), pageVo.getSearch());
             if (pageVo.getTid() == 1) {
                 if (searchQuestionAll.get(0).getQuestions().isEmpty()) {
                     return new WebResult("300", "此问卷暂时还没有添加相关试题内容", "");
@@ -676,9 +680,9 @@ public class QuestionSearchImpl implements QuestionSearchService {
             }
             if (pageVo.getTid() == 2) {
                 List<SearchQuestion> searchQuestionByCourseId = questionSearchMapper.findSearchQuestionByCourseId(pageVo.getCourseId());
-                Integer sid=null;
-                if (!searchQuestionByCourseId.isEmpty()){
-                    sid= searchQuestionByCourseId.get(0).getSid();
+                Integer sid = null;
+                if (!searchQuestionByCourseId.isEmpty()) {
+                    sid = searchQuestionByCourseId.get(0).getSid();
                 }
                 List<Question> questions = questionSearchMapper.findQuestionAll(sid, null, pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
                 if (questions.isEmpty()) {
@@ -701,7 +705,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             return new WebResult("200", "进入详情页", searchQuestionAll.get(0));
         }
         //问卷调查列表==>> 1.
-        List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+        List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
 
         PageInfo pageInfo = new PageInfo<>(searchQuestionAll2);
         return new WebResult("200", "查询成功", pageInfo);
@@ -714,7 +718,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             //进入详情页
             if (pageVo.getSid() != null) {     //进入某篇问卷调查的详情页==>> 2.
                 List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
-                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
 
                 searchQuestionAll2.get(0).setQuestions(questions);
                 questionSearchMapper.updateSearchQuestionVisits(searchQuestionAll2.get(0).getVisits() + 1, searchQuestionAll2.get(0).getSid()); //让该篇问卷调查的浏览量+1
@@ -736,7 +740,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         //进入详情页
         if (pageVo.getSid() != null) {  //进入某篇问卷调查的详情页==>> 2.
             List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
-            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
             searchQuestionAll.get(0).setQuestions(questions);
             questionSearchMapper.updateSearchQuestionVisits(searchQuestionAll.get(0).getVisits() + 1, searchQuestionAll.get(0).getSid()); //让该篇问卷调查的浏览量+1
             return new WebResult("200", "进入详情页", searchQuestionAll.get(0));
@@ -761,7 +765,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             //进入详情页
             if (pageVo.getSid() != null) {     //进入某篇问卷调查的详情页==>> 2.
                 List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
-                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+                List<SearchQuestion> searchQuestionAll2 = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
                 searchQuestionAll2.get(0).setQuestions(questions);
                 questionSearchMapper.updateSearchQuestionVisits(searchQuestionAll2.get(0).getVisits() + 1, searchQuestionAll2.get(0).getSid()); //让该篇问卷调查的浏览量+1
                 return new WebResult("200", "进入详情页", searchQuestionAll2.get(0));
@@ -782,7 +786,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         //进入详情页
         if (pageVo.getSid() != null) {  //进入某篇问卷调查的详情页==>> 2.
             List<Question> questions = questionSearchMapper.findQuestionAll(pageVo.getSid(), pageVo.getTid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSearch());
-            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(),pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(),pageVo.getCourseId(), pageVo.getSearch());
+            List<SearchQuestion> searchQuestionAll = questionSearchMapper.findSearchQuestionAll(pageVo.getStatus(), pageVo.getSid(), pageVo.getTopId(), pageVo.getDownId(), pageVo.getSchoolId(), pageVo.getTid(), pageVo.getCourseId(), pageVo.getSearch());
             searchQuestionAll.get(0).setQuestions(questions);
             questionSearchMapper.updateSearchQuestionVisits(searchQuestionAll.get(0).getVisits() + 1, searchQuestionAll.get(0).getSid()); //让该篇问卷调查的浏览量+1
             return new WebResult("200", "进入详情页", searchQuestionAll.get(0));
@@ -805,7 +809,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
     @Override
     public WebResult createAnswerRecord(AnswerRecord answerRecord) {
 
-        String userName = questionSearchMapper.findAnswerRecordbyUserId(answerRecord.getCourseId(),answerRecord.getUid(), answerRecord.getList().get(0).getSid(), answerRecord.getTopId(), answerRecord.getDownId());
+        String userName = questionSearchMapper.findAnswerRecordbyUserId(answerRecord.getCourseId(), answerRecord.getUid(), answerRecord.getList().get(0).getSid(), answerRecord.getTopId(), answerRecord.getDownId());
         if (userName != null) {
             return new WebResult("300", "您已提交过此内容,无需重复操作！", "");
         }
@@ -814,7 +818,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             return new WebResult("300", "您还未做试卷任何题目，不能提交空试卷！", "");
         }
         //找到对应主题的题目及选项(选项及分数权重的集合)的集合，主要针对教师评价
-        List<Question> questions = questionSearchMapper.findQuestionAllAndGrade(answerRecord.getList().get(0).getSid(),null, null);
+        List<Question> questions = questionSearchMapper.findQuestionAllAndGrade(answerRecord.getList().get(0).getSid(), null, null);
         //当类型是二,即教师评价的时候需要对答题总分进行统计
         if (answerRecord.getList().get(0).getTid() == 2) {
             Integer total = 0;   //用户答题总分记录
@@ -929,7 +933,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
     }
 
 
-//    @Override
+    //    @Override
 //    public WebResult createQuestion(Question question) {
 //        return null;
 //    }
@@ -942,11 +946,11 @@ public class QuestionSearchImpl implements QuestionSearchService {
 //         questionSearchMapper.createQuestionItem(questionItem);
 //        return new WebResult("200", "添加成功", "");
 //    }
-     //处理截止时间过了的问卷
+    //处理截止时间过了的问卷
     @Transactional
     @Override
     public void deleteScheduleTask() {
-        List<SearchQuestion> searchQuestions = questionSearchMapper.findSearchQuestionAll(null,null, null, null, null, null,null, null);
+        List<SearchQuestion> searchQuestions = questionSearchMapper.findSearchQuestionAll(null, null, null, null, null, null, null, null);
         Date now = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         for (SearchQuestion searchQuestion : searchQuestions) {
@@ -973,30 +977,67 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
         }
     }
+
     @Transactional
     @Override
     public WebResult deleteQuestionOne(Question question) {
-         questionSearchMapper.deleteQuestionOne(question.getQid());
+        questionSearchMapper.deleteQuestionOne(question.getQid());
         return new WebResult("200", "删除成功", "");
     }
+
     @Transactional
     @Override
     public WebResult deleteVoteItemOne(VoteItem voteItem) {
-         questionSearchMapper.deleteVoteItemOne(voteItem.getId());
+        questionSearchMapper.deleteVoteItemOne(voteItem.getId());
         return new WebResult("200", "删除成功", "");
     }
 
     // 换课
     @Transactional
     @Override
-    public WebResult updateCourseById(EduPayrecord  eduPayrecord) {
+    public WebResult updateCourseById(EduPayrecord eduPayrecord) {
+        User user = userMapper.queryByItemsId(eduPayrecord.getUserId());
 
-        EduCourse eduCourse = eduCourseMapper.selectByPrimaryKey(eduPayrecord.getCourseId());
-        eduPayrecord.setCourseName(eduCourse.getCourseName());
-        questionSearchMapper.updateCourseById(eduPayrecord);
+        //查询专业接受报名的人数
+        int acceptNum = eduCourseMapper.queryAcceptNum(eduPayrecord.getCourseId());
+        if (acceptNum == 0) {
+            return new WebResult("200", "换课失败：该课程尚未设置计划招生人数", "");
+        } else {
+            //查询用户所对应的专业显示已经购买人数
+            Map<String, Object> param = new HashMap<>();
+            param.put("course_id", eduPayrecord.getCourseId());
+            param.put("payment_status", "PAID");
 
-        return new  WebResult("200", "更新成功", "");
+            int olineNum = orderMapper.countPayCourseNum(param);
+
+            //查询用户所对应的专业线下的总人数
+            Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(eduPayrecord.getCourseId());
+
+            //得到最终报名人数
+            Integer payNum = olineNum + offNum;
+            //可报名剩余人数
+            int nowtotal = acceptNum - payNum;
+            if (nowtotal<=0){
+                return new WebResult("200", "换课失败：该课程人数已满", "");
+            }
+        }
+
+        eduPayrecord.setIsDelete(2);
+        List<EduPayrecord> eduPayrecords = eduPayrecordMapper.selectByUserIdAndIsdelete(eduPayrecord);
+             List<EduPayrecord>  newList=new LinkedList<>();
+        for (int i = 0; i < eduPayrecords.size(); i++) {    //判断排重
+               if (eduPayrecords.get(i).getCourseId()==eduPayrecord.getCourseId()){
+               newList.add(eduPayrecords.get(i));
+               }
+        }
+          if (newList.isEmpty()) {
+              EduCourse eduCourse = eduCourseMapper.selectByPrimaryKey(eduPayrecord.getCourseId());
+              eduPayrecord.setCourseName(eduCourse.getCourseName());
+              questionSearchMapper.updateCourseById(eduPayrecord);
+              return new WebResult("200", "更新成功", "");
+          }else{
+              return new WebResult("400", "报名重复,您已经报名过该班级", "");
+          }
     }
-
 
 }

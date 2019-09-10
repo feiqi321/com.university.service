@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovft.configure.sys.dao.UserInfoMapper" >
+     <insert id="createPersonnelClass" parameterType="com.ovft.configure.sys.bean.PersonnelClassification" >
+         insert into edu_personnel_classification(pid,p_name,schoolId) values (default ,#{pName},#{schoolId})
+     </insert>
+    <select id="selectPersonnelClass" parameterType="com.ovft.configure.sys.vo.PersonnelClassificationVo" resultType="com.ovft.configure.sys.bean.PersonnelClassification" >
+         select pid,p_name,schoolId from edu_personnel_classification
+    </select>
+    <update id="updatePersonnelClass" parameterType="com.ovft.configure.sys.bean.PersonnelClassification" >
+            update edu_personnel_classification set p_name=#{pName},schoolId=#{schoolId}  where pid=#{pid}
+    </update>
+    <delete id="deletePersonnelClass" parameterType="com.ovft.configure.sys.bean.PersonnelClassification">
+             delete from edu_personnel_classification where pid=#{pid}
+    </delete>
+
+</mapper>

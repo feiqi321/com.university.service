@@ -71,6 +71,12 @@ public class EduLivePayServiceImpl implements EduLivePayService {
            eduLivePayMapper.addLivePay(livePayVo);
            return new WebResult(StatusCode.OK, "添加现场报名记录成功", "");
        }else {
+//           //通过电话号码查询报名的所有课程
+//           List<EduLivePay> eduLivePays = eduLivePayMapper.selectByPhoneAndCourseName(livePayVo);
+//           if (!eduLivePays.isEmpty()){//如果查出数据说明报名重复不能添加进去
+//               return new WebResult("400", "报名重复,您已经报名过该班级", "");
+//           }
+
            eduLivePayMapper.updateLivePayById(livePayVo);
            return new WebResult(StatusCode.OK, "修改报名记录成功", "");
        }

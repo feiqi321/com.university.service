@@ -81,6 +81,8 @@
         <if test="courseName != null">
             AND course_name = #{courseName}
         </if>
+
+
     </select>
 
     <!--修改现场报名记录-->
