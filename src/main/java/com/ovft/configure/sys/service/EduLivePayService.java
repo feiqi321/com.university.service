@@ -25,11 +25,11 @@ public interface EduLivePayService {
     //删除
     WebResult deleteById(Integer id);
 
-    //通过手机号查询一些需要的信息
-    WebResult selectByPhone(String phone);
+    //通过手机号和学校id查询一些需要的信息
+    WebResult selectByPhone(LivePayVo livePayVo);
 
     //通过模糊查询课程名字 查询一些需要的信息
-    WebResult selectByCourseName(@Param("search") String search);
+    WebResult selectByCourseName(LivePayVo livePayVo);
 
  /*   //<!--通过手机号和课程查询一条记录-->
     WebResult selectByPhoneAndCourseName(LivePayVo livePayVo);*/

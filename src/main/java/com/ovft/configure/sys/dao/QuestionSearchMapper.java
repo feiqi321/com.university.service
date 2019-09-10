@@ -2,6 +2,7 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
+import com.ovft.configure.sys.vo.LivePayVo;
 import com.ovft.configure.sys.vo.MyCourseAll;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -95,6 +96,19 @@ public interface QuestionSearchMapper {
 
     //换课 通过id编辑课程id,课程名字
      void updateCourseById (EduPayrecord  eduPayrecord);
+
+    //删除某条记录,删除之前增加到另外一张表,这张表新建的
+    public void deleteById(@Param("id")Integer id);
+
+    //删除前增加到另一张表
+    void insertClassOut(EduLivePay eduLivePay);
+
+     //  <!--查询人员信息 和金额 通过userid和订单id -->
+    List<EduLivePay> selectPeopleAndMoney(EduPayrecord eduPayrecord);
+
+    //查看退课记录,通过组合实体类里面的信息
+    List<LivePayVo> selectClassOut(LivePayVo livePayVo);
+
 
 
 

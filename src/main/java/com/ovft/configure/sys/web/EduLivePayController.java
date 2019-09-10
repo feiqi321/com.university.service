@@ -103,6 +103,8 @@ public class EduLivePayController {
     //保存之前,通过phone查询user的信息,要全部显示
     @GetMapping(value = "/selectByPhone")
     public WebResult selectByPhone(HttpServletRequest request, @RequestParam("phone") String phone) {
+        LivePayVo livePayVo=new LivePayVo();
+        livePayVo.setPhone(phone);
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
         if (o != null) {
@@ -110,7 +112,10 @@ public class EduLivePayController {
             // 如果是pc端登录，更新token缓存失效时间
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
             Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-            return eduLivePayService.selectByPhone(phone);
+            if (hget.getRole() != 0) {
+                livePayVo.setSchoolId(hget.getSchoolId());
+            }
+            return eduLivePayService.selectByPhone(livePayVo);
         } else {
             return new WebResult("50012", "请先登录", "");
         }
@@ -118,8 +123,9 @@ public class EduLivePayController {
     }
 
     //保存之前,通过课程名字模糊查询课程的信息
-    @GetMapping(value = "/selectByCourseName")
-    public WebResult selectByCourseName(HttpServletRequest request, @RequestParam("search") String search) {
+    @PostMapping(value = "/selectByCourseName")
+    public WebResult selectByCourseName(HttpServletRequest request, @RequestBody LivePayVo livePayVo) {
+
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
         if (o != null) {
@@ -127,7 +133,10 @@ public class EduLivePayController {
             // 如果是pc端登录，更新token缓存失效时间
             redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
             Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
-            return eduLivePayService.selectByCourseName(search);
+            if (hget.getRole() != 0) {
+                livePayVo.setSchoolId(hget.getSchoolId());
+            }
+            return eduLivePayService.selectByCourseName(livePayVo);
         } else {
             return new WebResult("50012", "请先登录", "");
         }

@@ -29,11 +29,11 @@ public interface EduLivePayMapper {
     //删除某条记录根据id
     public void deleteById(@Param("id")Integer id);
 
-    //通过手机号查询一些需要的信息
-    User selectByPhone(@Param("phone") String phone);
+    //通过手机号和学校id查询一些需要的信息
+    User selectByPhone(LivePayVo livePayVo);
 
     //通过模糊查询课程名字 查询一些需要的信息
-    List<EduLivePay> selectByCourseName(@Param("search") String search);
+    List<EduLivePay> selectByCourseName(LivePayVo livePayVo);
 
     //<!--通过手机号和课程查询一条记录-->
     List<EduLivePay> selectByPhoneAndCourseName(LivePayVo livePayVo);

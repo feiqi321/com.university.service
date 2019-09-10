@@ -2,6 +2,7 @@ package com.ovft.configure.sys.service;
 
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
+import com.ovft.configure.sys.vo.LivePayVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,6 +54,15 @@ public interface QuestionSearchService {
 
     // <!--换课 通过id编辑课程id,课程名字-->
     WebResult updateCourseById(EduPayrecord  eduPayrecord);
+
+    //删除某条要退课的记录
+    WebResult deleteById(EduPayrecord  eduPayrecord);
+
+    //查看退课记录
+    WebResult selectClassOut(LivePayVo livePayVo);
+
+
+
 
 
 }

@@ -139,10 +139,10 @@
           WHERE id=#{id}
     </delete>
 
-    <!--增加时 通过手机号查出基本信息-->
-    <select id="selectByPhone" parameterType="java.lang.String" resultType="com.ovft.configure.sys.bean.User">
+    <!--增加时 通过手机号和学校id查出基本信息-->
+    <select id="selectByPhone" parameterType="com.ovft.configure.sys.vo.LivePayVo" resultType="com.ovft.configure.sys.bean.User">
         select
-        u.user_name,
+        u.user_name ,
         u.phone,
         i.address,
         i.employer,
@@ -150,23 +150,35 @@
         i.identity_card
         from edu_user u
         left join edu_user_item i on u.user_id=i.user_id
-        WHERE phone=#{phone}
+        WHERE 1=1
+        <if test="phone != null">
+            AND phone = #{phone}
+        </if>
+
+        <if test="schoolId != null">
+            AND i.school_id = #{schoolId}
+        </if>
+
     </select>
 
     <!--增加时,通过课程名称查询关于课程有用的信息-->
-    <select id="selectByCourseName" parameterType="java.lang.String" resultType="com.ovft.configure.sys.bean.EduLivePay">
+    <select id="selectByCourseName" parameterType="com.ovft.configure.sys.vo.LivePayVo" resultType="com.ovft.configure.sys.bean.EduLivePay">
         select
         c.course_id,
         c.start_date as payDate,
         s.school_name,
         c.course_name,
-        a.name  as courseTeacher
+        a.name  as courseTeacher,
+        s.school_id
         from edu_course c
         left JOIN edu_school s ON c.school_id=s.school_id
         left JOIN edu_admin a on c.course_teacher=a.admin_id
         WHERE 1=1
         <if test="search != null and search != ''">
             AND course_name like CONCAT('%',#{search},'%')
+        </if>
+        <if test="schoolId != null">
+            AND s.school_id = #{schoolId}
         </if>
     </select>
 

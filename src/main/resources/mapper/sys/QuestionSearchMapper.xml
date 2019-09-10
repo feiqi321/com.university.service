@@ -486,7 +486,8 @@
         select
         p.id id, c.course_name courseName,p.school_id schoolId,a.name courseTeacher,c.end_date endDate,p.course_id,p.user_id
         userId, i.user_name userName,i.sex sex,i.area area,i.address adress,i.political political,i.educational educational,i.position position,i.retired retired,
-        i.job job,i.employer employer,i.identity_card,u.phone phone,u.mycontext mycontext,p.class_record classRecord,c.start_date CoursestartTime
+        i.job job,i.employer employer,i.identity_card,u.phone phone,u.mycontext mycontext,p.class_record classRecord,c.start_date CoursestartTime,p.user_id userId,
+        p.order_id orderId
         from
         edu_payrecord p,
         edu_course c,
@@ -556,5 +557,88 @@
     <update id="updateCourseById" parameterType="com.ovft.configure.sys.bean.EduPayrecord">
         UPDATE edu_payrecord set course_name=#{courseName},course_id=#{courseId} WHERE id=#{id}
     </update>
+
+
+    <!--删除某条记录,删除之前增加到另外一张表,这张表新建的-->
+    <delete id="deleteById" parameterType="com.ovft.configure.sys.bean.EduPayrecord">
+        delete from edu_payrecord
+        WHERE id=#{id}
+    </delete>
+
+    <!--  //增加退课的到另外一张表-->
+    <insert id="insertClassOut" parameterType="com.ovft.configure.sys.bean.EduLivePay" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into edu_class_out(phone,identity_card,address,job,user_name,course_id,course_name,course_teacher,
+        school_name,pay_date,pay_code,school_id,employer,money)
+        values (#{phone},#{identityCard},#{address},#{job},#{userName},#{courseId},#{courseName},#{courseTeacher},
+        #{schoolName},#{payDate},#{payCode},#{schoolId},#{employer},#{money})
+    </insert>
+
+    <!--查询人员信息和金额 通过userid和订单id -->
+  <select id="selectPeopleAndMoney" parameterType="com.ovft.configure.sys.bean.EduPayrecord" resultType="com.ovft.configure.sys.bean.EduLivePay">
+      SELECT
+      u.phone,
+      i.identity_card,
+      i.address,
+      u.user_name,
+      i.employer,
+      p.school_id,
+      o.total_amount money
+      from edu_payrecord p
+      left JOIN edu_user u on p.user_id=u.user_id
+      left join edu_user_item i on p.user_id=i.user_id
+      left JOIN edu_order o on p.order_id=o.id
+      WHERE  1=1
+      <if test="userId != null">
+          AND p.user_id = #{userId}
+      </if>
+      <if test="orderId != null">
+          AND p.order_id = #{orderId}
+      </if>
+  </select>
+
+    <!--查询退课记录-->
+    <select id="selectClassOut" parameterType="com.ovft.configure.sys.vo.LivePayVo"  resultType="com.ovft.configure.sys.bean.EduLivePay">
+        select
+        l.id,
+        l.phone,
+        l.identity_card,
+        l.address,
+        l.job,
+        l.user_name,
+        l.course_id,
+        l.course_name,
+        l.course_teacher,
+        l.school_name,
+        l.pay_date,
+        l.pay_code,
+        l.school_id,
+        l.employer,
+        l.money
+        from edu_class_out l
+        WHERE  1=1
+        <if test="phone != null">
+            AND phone = #{phone}
+        </if>
+        <if test="identityCard != null">
+            AND identity_card = #{identityCard}
+        </if>
+        <if test="address != null">
+            AND address = #{address}
+        </if>
+        <if test="courseId != null">
+            AND course_id = #{courseId}
+        </if>
+        <if test="courseName != null">
+            AND course_name = #{courseName}
+        </if>
+        <if test="schoolId != null">
+            AND school_id = #{schoolId}
+        </if>
+        <if test="search != null and search != ''">
+            AND user_name like CONCAT('%',#{search},'%')
+        </if>
+    </select>
+
 
 </mapper>

@@ -5,6 +5,7 @@ import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.service.QuestionSearchService;
 import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.vo.LivePayVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
@@ -309,7 +310,7 @@ public class QuestionSearchController {
     }
 
     //换课
-    @PostMapping(value = "/service/searchQuestion/updateCourseById")
+    @PostMapping(value = "/server/searchQuestion/updateCourseById")
     public WebResult updateCourseById(HttpServletRequest request, @RequestBody EduPayrecord  eduPayrecord){
         String token = request.getHeader("token");
         Object o = redisUtil.get(token);
@@ -323,6 +324,51 @@ public class QuestionSearchController {
             return new WebResult("50012", "请先登录", "");
         }
     }
+
+
+    //删除记录前保存到另一张表
+    @PostMapping(value = "/server/searchQuestion/deleteById")
+    public WebResult deleteById(HttpServletRequest request, @RequestBody EduPayrecord  eduPayrecord) {
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if (o != null) {
+            Integer id2 = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id2.toString());
+
+
+            questionSearchService.deleteById(eduPayrecord);
+
+            return new WebResult("200", "删除成功", "");
+        } else {
+            return new WebResult("50012", "请先登录", "");
+        }
+
+    }
+
+    //查询退课记录
+    //查询
+    @PostMapping(value = "/server/searchQuestion/selectClassOut")
+    public WebResult selectClassOut(HttpServletRequest request, @RequestBody LivePayVo livePayVo) {
+        //request表示对用户的缓存,livePayVo表示查询的条件
+        String token = request.getHeader("token");
+        Object o = redisUtil.get(token);
+        if (o != null) {
+            Integer id = (Integer) o;
+            // 如果是pc端登录，更新token缓存失效时间
+            redisUtil.expire(token, ConstantClassField.PC_CACHE_EXPIRATION_TIME);
+            Admin hget = (Admin) redisUtil.hget(ConstantClassField.ADMIN_INFO, id.toString());
+            if (hget.getRole() != 0) {
+                livePayVo.setSchoolId(hget.getSchoolId());
+            }
+            return questionSearchService.selectClassOut(livePayVo);
+        } else {
+            return new WebResult("50012", "请先登录", "");
+        }
+    }
+
+
     }
 
 

@@ -990,12 +990,53 @@ public class QuestionSearchImpl implements QuestionSearchService {
     @Transactional
     @Override
     public WebResult updateCourseById(EduPayrecord  eduPayrecord) {
-
         EduCourse eduCourse = eduCourseMapper.selectByPrimaryKey(eduPayrecord.getCourseId());
         eduPayrecord.setCourseName(eduCourse.getCourseName());
         questionSearchMapper.updateCourseById(eduPayrecord);
-
         return new  WebResult("200", "更新成功", "");
+    }
+     //删除这条记录之前,先增加到另一张表
+    @Transactional
+    @Override
+    public WebResult deleteById(EduPayrecord  eduPayrecord) {
+
+        List<EduLivePay> eduLivePays = questionSearchMapper.selectPeopleAndMoney(eduPayrecord);//查出来后取第一个元素设置进去
+
+        //创建一个新的对象,接收到另一张表的数据
+        EduLivePay eduLivePay = new EduLivePay();
+        eduLivePay.setPhone(eduLivePays.get(0).getPhone());//电话号码要查
+        eduLivePay.setIdentityCard(eduLivePays.get(0).getIdentityCard());//身份证要查
+        eduLivePay.setAddress(eduLivePays.get(0).getAddress());//地址要查
+        eduLivePay.setJob(eduLivePays.get(0).getJob());//职务要查
+        eduLivePay.setUserName(eduLivePays.get(0).getUserName());//用户姓名要查
+        eduLivePay.setCourseName(eduPayrecord.getCourseName());
+        eduLivePay.setCourseId(eduPayrecord.getCourseId());
+        eduLivePay.setCourseTeacher(eduPayrecord.getCourseTeacher());
+        eduLivePay.setSchoolName(eduPayrecord.getSchoolName());
+
+        eduLivePay.setPayCode(3);//线上报名退课
+        eduLivePay.setSchoolId(Integer.valueOf(eduPayrecord.getSchoolId()));
+        eduLivePay.setEmployer(eduLivePays.get(0).getEmployer());//人员分类 要查
+        eduLivePay.setMoney(eduLivePays.get(0).getMoney());//金额要查
+
+       questionSearchMapper.insertClassOut(eduLivePay);
+
+        questionSearchMapper.deleteById(eduPayrecord.getId());
+        return new WebResult("200", "删除成功", "") ;
+    }
+
+    @Override
+    public WebResult selectClassOut(LivePayVo livePayVo) {
+        //不分页显示
+        if(livePayVo.getPageSize()==0){
+            List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
+            return new WebResult("200", "查询成功", livePayVos);
+        }
+        //分页显示
+        PageHelper.startPage(livePayVo.getPageNum(),livePayVo.getPageSize());
+        List<LivePayVo> livePayVosPage =questionSearchMapper.selectClassOut(livePayVo);
+        PageInfo  pageInfo=new PageInfo(livePayVosPage);
+        return new WebResult("200", "查询成功", pageInfo);
     }
 
 
