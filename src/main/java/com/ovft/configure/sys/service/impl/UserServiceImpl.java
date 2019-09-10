@@ -382,7 +382,7 @@ public class UserServiceImpl implements UserService {
             return new WebResult("200", "保存成功", "");
         } else {
 
-            if (!findUser.getUserName().equals(user.getUserName())){  //不能让用户二次修改用户姓名
+            if (!findUser.getUserName().equals(user.getUserName())&&findUser.getSchoolId()!=null){  //不能让用户二次修改用户姓名
                 return new WebResult("600", "用户姓名不能修改，如若填错，请注销或联系学校管理员", "");
             }
 

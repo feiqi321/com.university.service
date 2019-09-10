@@ -7,7 +7,6 @@ import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.ovft.configure.config.AlipayConfig;
-import com.ovft.configure.config.AlipayConfigUrl;
 import com.ovft.configure.constant.OrderStatus;
 import com.ovft.configure.constant.PaymentStatus;
 import com.ovft.configure.constant.Status;

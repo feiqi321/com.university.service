@@ -35,11 +35,11 @@ public class SmsServiceImpl implements SmsService {
     public WebResult sendSms(Map<String, String> phoneMap) {
         String phone = phoneMap.get("phone");
 
-        //验证手机号是否被注册
-        User finduserbyphone = userMapper.findUserByPhone2(phone);
-        if (finduserbyphone != null) {
-            return new WebResult("600", "该用户已注册");
-        }
+//        //验证手机号是否被注册
+//        User finduserbyphone = userMapper.findUserByPhone2(phone);
+//        if (finduserbyphone != null) {
+//            return new WebResult("600", "该用户已注册");
+//        }
         //手机号格式验证
         if (!SecurityUtils.securityPhone(phone)) {
             return new WebResult("400", "请输入正确手机号", "");

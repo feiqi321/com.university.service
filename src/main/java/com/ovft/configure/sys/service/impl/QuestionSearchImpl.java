@@ -36,6 +36,11 @@ public class QuestionSearchImpl implements QuestionSearchService {
     private EduOfflineOrderMapper eduOfflineOrderMapper;
     @Resource
     private EduCourseMapper eduCourseMapper;
+    @Resource
+    private EduPayrecordMapper eduPayrecordMapper;
+    @Resource
+    private UserMapper userMapper;
+
 
     //添加问卷调查（SearchQuestion）
     @Transactional
@@ -989,11 +994,49 @@ public class QuestionSearchImpl implements QuestionSearchService {
     // 换课
     @Transactional
     @Override
-    public WebResult updateCourseById(EduPayrecord  eduPayrecord) {
-        EduCourse eduCourse = eduCourseMapper.selectByPrimaryKey(eduPayrecord.getCourseId());
-        eduPayrecord.setCourseName(eduCourse.getCourseName());
-        questionSearchMapper.updateCourseById(eduPayrecord);
-        return new  WebResult("200", "更新成功", "");
+    public WebResult updateCourseById(EduPayrecord eduPayrecord) {
+        User user = userMapper.queryByItemsId(eduPayrecord.getUserId());
+
+        //查询专业接受报名的人数
+        int acceptNum = eduCourseMapper.queryAcceptNum(eduPayrecord.getCourseId());
+        if (acceptNum == 0) {
+            return new WebResult("200", "换课失败：该课程尚未设置计划招生人数", "");
+        } else {
+            //查询用户所对应的专业显示已经购买人数
+            Map<String, Object> param = new HashMap<>();
+            param.put("course_id", eduPayrecord.getCourseId());
+            param.put("payment_status", "PAID");
+
+            int olineNum = orderMapper.countPayCourseNum(param);
+
+            //查询用户所对应的专业线下的总人数
+            Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(eduPayrecord.getCourseId());
+
+            //得到最终报名人数
+            Integer payNum = olineNum + offNum;
+            //可报名剩余人数
+            int nowtotal = acceptNum - payNum;
+            if (nowtotal<=0){
+                return new WebResult("200", "换课失败：该课程人数已满", "");
+            }
+        }
+
+        eduPayrecord.setIsDelete(2);
+        List<EduPayrecord> eduPayrecords = eduPayrecordMapper.selectByUserIdAndIsdelete(eduPayrecord);
+             List<EduPayrecord>  newList=new LinkedList<>();
+        for (int i = 0; i < eduPayrecords.size(); i++) {    //判断排重
+               if (eduPayrecords.get(i).getCourseId()==eduPayrecord.getCourseId()){
+               newList.add(eduPayrecords.get(i));
+               }
+        }
+          if (newList.isEmpty()) {
+              EduCourse eduCourse = eduCourseMapper.selectByPrimaryKey(eduPayrecord.getCourseId());
+              eduPayrecord.setCourseName(eduCourse.getCourseName());
+              questionSearchMapper.updateCourseById(eduPayrecord);
+              return new WebResult("200", "更新成功", "");
+          }else{
+              return new WebResult("400", "报名重复,您已经报名过该班级", "");
+          }
     }
      //删除这条记录之前,先增加到另一张表
     @Transactional
