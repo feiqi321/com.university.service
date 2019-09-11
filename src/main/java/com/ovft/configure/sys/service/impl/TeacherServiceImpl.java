@@ -12,6 +12,7 @@ import com.ovft.configure.sys.utils.MD5Utils;
 import com.ovft.configure.sys.utils.SecurityUtils;
 import com.ovft.configure.sys.vo.AdminVo;
 import com.ovft.configure.sys.vo.EduCourseVo;
+import com.ovft.configure.sys.vo.LivePayVo;
 import com.ovft.configure.sys.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -54,13 +55,17 @@ public class TeacherServiceImpl implements TeacherService {
     public EduCourseMapper eduCourseMapper;
     @Resource
     public EduOfflineOrderMapper eduOfflineOrderMapper;
-
     @Resource
     OrderMapper orderMapper;
     @Resource
     private UserClassMapper userClassMapper;
     @Resource
     private  EduClassMapper eduClassMapper;
+    @Resource
+    private  QuestionSearchMapper questionSearchMapper;
+
+
+
 
 
 
@@ -79,6 +84,7 @@ public class TeacherServiceImpl implements TeacherService {
         PageHelper.startPage(pageVo.getPageNum(), pageVo.getPageSize());
         List<Map<String, Object>> maps = teacherMapper.seleceVacateList(pageVo.getSchoolId());
         PageInfo pageInfo = new PageInfo<>(maps);
+
         return new WebResult("200", "查询成功", pageInfo);
     }
 
@@ -333,7 +339,7 @@ public class TeacherServiceImpl implements TeacherService {
     public WebResult courseList(PageVo pageVo) {
         if (pageVo.getPageSize() == 0) {
             List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
-
+            LivePayVo livePayVo=new LivePayVo();
             courseList.forEach(courseVo -> {
 
 
@@ -361,7 +367,9 @@ public class TeacherServiceImpl implements TeacherService {
                         param.put("payment_status", "PAID");
 
                         int olineNum = orderMapper.countPayCourseNum(param);
-
+                        livePayVo.setCourseId(courseVo.getCourseId());   //查找当前课程的退课数量
+                        List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
+                        olineNum=olineNum-livePayVos.size();      //当前报的数量-退课的数量
                         //查询用户所对应的专业线下的总人数
                         Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
 
@@ -380,7 +388,7 @@ public class TeacherServiceImpl implements TeacherService {
         List<EduCourseVo> courseList = teacherMapper.selectCourseList(pageVo);
         courseList.forEach(courseVo -> {
             Integer courseId = courseVo.getCourseId();
-
+            LivePayVo livePayVo=new LivePayVo();
             List<EduClass> eduClasses = eduClassMapper.queryCourseTimeByCourseId(courseId);
             //封装课程的上课时间相关
             courseVo.setStartDate(eduClasses.get(0).getStartDate());
@@ -403,7 +411,9 @@ public class TeacherServiceImpl implements TeacherService {
                     param.put("payment_status", "PAID");
 
                     int olineNum = orderMapper.countPayCourseNum(param);
-
+                    livePayVo.setCourseId(courseVo.getCourseId());   //查找当前课程的退课数量
+                    List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
+                    olineNum=olineNum-livePayVos.size();      //当前报的数量-退课的数量
                     //查询用户所对应的专业线下的总人数
                     Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
 
