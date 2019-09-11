@@ -37,8 +37,8 @@ public interface EduLivePayMapper {
 
     //<!--通过手机号和课程查询一条记录-->
     List<EduLivePay> selectByPhoneAndCourseName(LivePayVo livePayVo);
-    //<!--通过手机号查询记录-->
-    List<EduLivePay> selectByPhone(LivePayVo livePayVo);
+   /* //<!--通过手机号查询记录-->
+    List<EduLivePay> selectByPhone(LivePayVo livePayVo);*/
 
 
 }
