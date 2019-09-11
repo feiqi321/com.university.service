@@ -88,13 +88,13 @@ public class PaymentInfoController {
     private VideoMapper videoMapper;
 
     @Resource
-    private  TeacherMapper teacherMapper;
+    private TeacherMapper teacherMapper;
 
     @Resource
     private EduPayrecordService eduPayrecordService;
 
     @Resource
-    private  EduPayrecordMapper eduPayrecordMapper;
+    private EduPayrecordMapper eduPayrecordMapper;
 
 
     @GetMapping(value = "showonoroff")
@@ -133,15 +133,15 @@ public class PaymentInfoController {
         //支付宝支付 2
         if (type == 2) {
 
-             //校验用户是否已报名
-            String userId=request.getHeader("userId");
+            //校验用户是否已报名
+            String userId = request.getHeader("userId");
             //查询学员的基本信息
             User user2 = userService.queryInfo(Integer.parseInt(userId));
 
             //查询是否有订单，如果已经下单了，返回信息
             List<EduOfflineOrder> oldOrder = eduOfflineOrderService.queryOffRecord(user2.getUserId(), courseId);
-            List<OrderVo> orderVos = orderMapper.queryAllRecordByCourseId(user2.getUserId(),courseId);
-            if (oldOrder.size() > 0||orderVos.size()>0) {
+            List<OrderVo> orderVos = orderMapper.queryAllRecordByCourseId(user2.getUserId(), courseId);
+            if (oldOrder.size() > 0 || orderVos.size() > 0) {
                 return new WebResult("600", "您已经报名该课程，不要重复报名");
             }
 
@@ -153,6 +153,9 @@ public class PaymentInfoController {
 
         //线下支付 3
         if (type == 3) {
+            if (type == 3) {
+                return new WebResult("600", "此功能暂时关闭", "");
+            }
             int i = offlineRegist(request, courseId);
             List<EduOfflineAddresstime> eduOfflineAddresstimes = eduOfflineAddressService.queryAddressByschoolId(schoolId);
             for (EduOfflineAddresstime eduOfflineAddresstime : eduOfflineAddresstimes) {
@@ -227,10 +230,10 @@ public class PaymentInfoController {
         orderDetail.setSchoolId(schoolId);
         orderDetail.setSchoolName(school.getSchoolName());
         orderDetailMapper.insertSelective(orderDetail);
-         System.out.println("=============>>"+request.getRemoteAddr());
-         System.out.println("=============>>"+request.getRemotePort());
-         order.setReturnurl(request.getHeader("referer"));
-        System.out.println("=============>>"+order.getReturnurl());
+        System.out.println("=============>>" + request.getRemoteAddr());
+        System.out.println("=============>>" + request.getRemotePort());
+        order.setReturnurl(request.getHeader("referer"));
+        System.out.println("=============>>" + order.getReturnurl());
         return getStringResponseEntity(httpServletResponse, order);
     }
 
@@ -294,7 +297,7 @@ public class PaymentInfoController {
 //                teacherMapper.updateCourseByCourseId();
 
                 //更新线上支付记录状态
-                EduPayrecord eduPayrecord=new EduPayrecord();
+                EduPayrecord eduPayrecord = new EduPayrecord();
                 eduPayrecord.setPayStatus(String.valueOf(OrderStatus.PAY));
                 eduPayrecord.setOrderId(Integer.valueOf(paymentInfo.getOrderId()));
 
@@ -350,8 +353,8 @@ public class PaymentInfoController {
 
         //查询是否有订单，如果已经下单了，返回信息
         List<EduOfflineOrder> oldOrder = eduOfflineOrderService.queryOffRecord(user.getUserId(), courseId);
-        List<OrderVo> orderVos = orderMapper.queryAllRecordByCourseId(user.getUserId(),courseId);
-        if (oldOrder.size() > 0||orderVos.size()>0) {
+        List<OrderVo> orderVos = orderMapper.queryAllRecordByCourseId(user.getUserId(), courseId);
+        if (oldOrder.size() > 0 || orderVos.size() > 0) {
             return -2;
         }
         //生成eduOfflineOrder
@@ -443,7 +446,7 @@ public class PaymentInfoController {
 //
 //        int schoolId = Integer.parseInt(schoolId1);
 
-        if (StringUtils.isBlank(submitOrderVos.getAddress())){
+        if (StringUtils.isBlank(submitOrderVos.getAddress())) {
             return new WebResult(StatusCode.ERROR, "您尚未选择地址，请先填写地址", "");
 
         }
@@ -453,8 +456,6 @@ public class PaymentInfoController {
             ResponseEntity<String> stringResponseEntity = wxpayMethod(courseId, request, httpServletResponse);
             return new WebResult(StatusCode.OK, "支付成功", stringResponseEntity);
         }*/
-
-
 
 
         //支付宝支付 2

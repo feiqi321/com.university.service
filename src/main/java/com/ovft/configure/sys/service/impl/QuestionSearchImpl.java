@@ -1024,7 +1024,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         }
 
         eduPayrecord.setIsDelete(2);
-        List<EduPayrecord> eduPayrecords = eduPayrecordMapper.selectByUserIdAndIsdelete(eduPayrecord);
+        List<EduPayrecord> eduPayrecords = eduPayrecordMapper.selectByUserIdAndIsdelete2(eduPayrecord);
              List<EduPayrecord>  newList=new LinkedList<>();
         for (int i = 0; i < eduPayrecords.size(); i++) {    //判断排重
                if (eduPayrecords.get(i).getCourseId().equals(eduPayrecord.getCourseId())){
