@@ -1067,7 +1067,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
        questionSearchMapper.insertClassOut(eduLivePay);
 
         questionSearchMapper.deleteById(eduPayrecord.getId());
-        return new WebResult("200", "删除成功", "") ;
+        return new WebResult("200", "退课成功", "") ;
     }
 
     @Override
