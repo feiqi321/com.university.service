@@ -1017,7 +1017,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             //可报名剩余人数
             int nowtotal = acceptNum - payNum;
             if (nowtotal<=0){
-                return new WebResult("200", "换课失败：该课程人数已满", "");
+                return new WebResult("600", "换课失败：该课程人数已满", "");
             }
         }
 
@@ -1025,7 +1025,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         List<EduPayrecord> eduPayrecords = eduPayrecordMapper.selectByUserIdAndIsdelete(eduPayrecord);
              List<EduPayrecord>  newList=new LinkedList<>();
         for (int i = 0; i < eduPayrecords.size(); i++) {    //判断排重
-               if (eduPayrecords.get(i).getCourseId()==eduPayrecord.getCourseId()){
+               if (eduPayrecords.get(i).getCourseId().equals(eduPayrecord.getCourseId())){
                newList.add(eduPayrecords.get(i));
                }
         }

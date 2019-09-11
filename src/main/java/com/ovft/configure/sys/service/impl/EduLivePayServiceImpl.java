@@ -58,8 +58,8 @@ public class EduLivePayServiceImpl implements EduLivePayService {
         if (StringUtils.isBlank(livePayVo.getCourseName())) {
             return new WebResult("400", "课程名称不能为空", "");
         }
-        if (livePayVo.getMoney()==null){
-            return new WebResult("400", "缴费金额不能为空", "");
+        if (livePayVo.getMoney()==null||livePayVo.getMoney().intValue()<0){
+            return new WebResult("400", "缴费金额不能为空或者为负数", "");
         }
         livePayVo.setPayDate(new Date());//保存前设置时间
        if (livePayVo.getId()==null){
