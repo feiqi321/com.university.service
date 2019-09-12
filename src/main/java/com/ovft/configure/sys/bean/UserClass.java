@@ -22,6 +22,24 @@ public class UserClass {
     private Integer did;
     private List<MyCourseAll> users;   //班级学员集合
     private Integer num;       //上课人数
+    private Integer peopleNumber;    //招生计划人数
+    private Integer nowNumber;
+
+    public Integer getNowNumber() {
+        return nowNumber;
+    }
+
+    public void setNowNumber(Integer nowNumber) {
+        this.nowNumber = nowNumber;
+    }
+
+    public Integer getPeopleNumber() {
+        return peopleNumber;
+    }
+
+    public void setPeopleNumber(Integer peopleNumber) {
+        this.peopleNumber = peopleNumber;
+    }
 
     public Integer getNum() {
         return num;

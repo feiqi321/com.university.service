@@ -366,7 +366,7 @@
         </if>
     </select>
 
-    <!--3.查询每个科目可以报名的人数-->
+    <!--3.查询每个科目报名的人数-->
     <select id="queryAcceptNum" parameterType="int" resultType="int">
         select
         people_number

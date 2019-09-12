@@ -9,6 +9,7 @@ import com.ovft.configure.sys.bean.VateType;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.UserClassService;
 import com.ovft.configure.sys.utils.FindUserCourseUtil;
+import com.ovft.configure.sys.vo.LivePayVo;
 import com.ovft.configure.sys.vo.MyCourseAll;
 import com.ovft.configure.sys.vo.PageVo;
 import com.ovft.configure.sys.vo.UserClassVo;
@@ -18,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName UserClassServiceImpl 学员班级
@@ -39,6 +38,12 @@ public class UserClassServiceImpl implements UserClassService {
     private SchoolMapper schoolMapper;
     @Resource
     private QuestionSearchMapper questionSearchMapper;
+    @Resource
+    private EduCourseMapper eduCourseMapper;
+    @Resource
+    private OrderMapper    orderMapper;
+    @Resource
+    private  EduLivePayMapper eduLivePayMapper;
 
     @Override
     public WebResult deleteUserClass(Integer classId) {
@@ -136,7 +141,25 @@ public class UserClassServiceImpl implements UserClassService {
         if (userClassVo.getPageSize() == 0) {
 
             List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);
+            for (int m = 0; m <userClassList.size() ; m++) {
+                //给每个班级设置封装计划人数
+                userClassList.get(m).setPeopleNumber(eduCourseMapper.queryAcceptNum(userClassList.get(m).getCourseId()));
+                //查询用户所对应的专业显示已经购买人数
+                Map<String, Object> param = new HashMap<>();
+                param.put("course_id", userClassList.get(m).getCourseId());
+                param.put("payment_status", "PAID");    //查询线上报名成功的记录数
+                int olineNum = orderMapper.countPayCourseNum(param);
+                //查询现场报名相关成员记录
+                LivePayVo livePayVo=new LivePayVo();
+                livePayVo.setCourseId(userClassList.get(m).getCourseId());
+                List<LivePayVo> livePayVos = eduLivePayMapper.selectLivePay(livePayVo);
+                LivePayVo livePayVo2=new LivePayVo();
+                livePayVo2.setCourseId(userClassList.get(m).getCourseId());   //查找当前课程的退课数量
+                List<LivePayVo> livePayVos2 = questionSearchMapper.selectClassOut(livePayVo2);
+                 int NowNumber= olineNum+livePayVos.size()-livePayVos2.size(); //   线上报名+现场报名的-退课的人数
+                userClassList.get(m).setNowNumber(NowNumber);      //给每个班级封装实际人数
 
+            }
 
             List<MyCourseAll> myCourseList = findMyCourseList(pageVo);
 
@@ -170,6 +193,17 @@ public class UserClassServiceImpl implements UserClassService {
 
             PageHelper.startPage(userClassVo.getPageNum(), userClassVo.getPageSize());
             List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);
+            for (int m = 0; m <userClassList.size() ; m++) {
+                //给每个班级设置封装计划人数
+              userClassList.get(m).setPeopleNumber(eduCourseMapper.queryAcceptNum(userClassList.get(m).getCourseId()));
+                //查询用户所对应的专业显示已经购买人数
+                Map<String, Object> param = new HashMap<>();
+                param.put("course_id", userClassList.get(m).getCourseId());
+                param.put("payment_status", "PAID");
+                int olineNum = orderMapper.countPayCourseNum(param);
+                userClassList.get(m).setNowNumber(olineNum);      //给每个班级封装实际人数
+
+            }
             FindUserCourseUtil findUserCourseUtil = new FindUserCourseUtil();
 
             List<MyCourseAll> myCourseList = findMyCourseList(pageVo);
