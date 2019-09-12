@@ -36,5 +36,8 @@ public interface EduPayrecordMapper {
     Integer queryCourseNum(Integer userId);
 
     public int updateIsDeleteStaues(EduPayrecord eduPayrecord);
-     List<EduPayrecord> selectByUserIdAndIsdelete(EduPayrecord eduPayrecord);
+
+    List<EduPayrecord> selectByUserIdAndIsdelete(EduPayrecord eduPayrecord);
+
+    List<EduPayrecord> selectByUserIdAndIsdelete2(EduPayrecord eduPayrecord);
 }

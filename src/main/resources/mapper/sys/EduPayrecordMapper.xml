@@ -399,4 +399,10 @@
         from edu_payrecord
         where user_id = #{userId,jdbcType=INTEGER}  and is_delete=2
     </select>
+    <select id="selectByUserIdAndIsdelete2" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from edu_payrecord
+        where user_id = #{userId,jdbcType=INTEGER}  and is_delete=2 AND pay_status=5
+    </select>
 </mapper>

@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduLivePay;
+import com.ovft.configure.sys.bean.EduPayrecord;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.dao.EduLivePayMapper;
 import com.ovft.configure.sys.service.EduLivePayService;
@@ -63,15 +64,21 @@ public class EduLivePayServiceImpl implements EduLivePayService {
         }
         livePayVo.setPayDate(new Date());//保存前设置时间
        if (livePayVo.getId()==null){
+           //通过手机号和课程名查现场报名的
            List<EduLivePay> eduLivePays = eduLivePayMapper.selectByPhoneAndCourseName(livePayVo);
-           if (!eduLivePays.isEmpty()){//如果查出数据说明报名重复不能添加进去
+           //通过手机号和课程查网上报名的
+           List<EduPayrecord> eduPayrecords = eduLivePayMapper.selectByPhoneAndCourseNameOnLine(livePayVo);
+           if (!eduLivePays.isEmpty() || ! eduPayrecords.isEmpty()) {
+               //如果查出数据说明报名重复不能添加进去
                return new WebResult("400", "报名重复,您已经报名过该班级", "");
            }
            eduLivePayMapper.addLivePay(livePayVo);
            return new WebResult(StatusCode.OK, "添加现场报名记录成功", "");
        }else {
           List<EduLivePay> eduLivePays = eduLivePayMapper.selectByPhoneAndCourseName(livePayVo);
-           if (!eduLivePays.isEmpty()){//如果查出数据说明报名重复不能修改进去
+           //通过手机号和课程查网上报名的
+           List<EduPayrecord> eduPayrecords = eduLivePayMapper.selectByPhoneAndCourseNameOnLine(livePayVo);
+           if (!eduLivePays.isEmpty() || ! eduPayrecords.isEmpty()){//如果查出数据说明报名重复不能修改进去
                return new WebResult("400", "修改重复,他/她已经报名过该班级.如果想修改金额时,请先换个班级在修改金额", "");
            }
            eduLivePayMapper.updateLivePayById(livePayVo);
