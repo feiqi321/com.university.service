@@ -326,7 +326,7 @@ public class QuestionSearchController {
     }
 
 
-    //删除记录前保存到另一张表
+    //退课，删除记录前保存到另一张表
     @PostMapping(value = "/server/searchQuestion/deleteById")
     public WebResult deleteById(HttpServletRequest request, @RequestBody EduPayrecord  eduPayrecord) {
         String token = request.getHeader("token");

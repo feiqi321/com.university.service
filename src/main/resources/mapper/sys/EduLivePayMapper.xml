@@ -81,8 +81,22 @@
         <if test="courseName != null">
             AND course_name = #{courseName}
         </if>
-
-
+    </select>
+  <!-- 通过手机号和课程查网上报名的-->
+    <select id="selectByPhoneAndCourseNameOnLine" parameterType="com.ovft.configure.sys.vo.LivePayVo" resultType="com.ovft.configure.sys.bean.EduPayrecord">
+        SELECT
+        e.user_id,
+        e.course_name,
+        e.course_teacher
+        from edu_payrecord e
+        LEFT JOIN edu_user u on e.user_id=u.user_id
+        WHERE 1=1
+        <if test="phone != null">
+            AND phone = #{phone}
+        </if>
+        <if test="courseName != null">
+            AND course_name = #{courseName}
+        </if>
     </select>
 
     <!--修改现场报名记录-->

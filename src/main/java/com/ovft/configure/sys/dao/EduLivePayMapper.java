@@ -2,6 +2,7 @@ package com.ovft.configure.sys.dao;
 
 import com.ovft.configure.sys.bean.EduLivePay;
 
+import com.ovft.configure.sys.bean.EduPayrecord;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.vo.LivePayVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -37,8 +38,7 @@ public interface EduLivePayMapper {
 
     //<!--通过手机号和课程查询一条记录-->
     List<EduLivePay> selectByPhoneAndCourseName(LivePayVo livePayVo);
-   /* //<!--通过手机号查询记录-->
-    List<EduLivePay> selectByPhone(LivePayVo livePayVo);*/
 
-
+    //<!--通过手机号和课程查询一条网上报名记录-->
+    List<EduPayrecord> selectByPhoneAndCourseNameOnLine(LivePayVo livePayVo);
 }
