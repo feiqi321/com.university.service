@@ -153,7 +153,7 @@ public class EduCourseServiceImpl implements EduCourseService {
             Date now = new Date();
             long nowTime = now.getTime();//当前时间戳
             Date startTime = eduRegist.getRegiststartTime();
-            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String startTime1 = date.format(startTime);//获取当天日期字符串
             Date endTime = eduRegist.getRegistendTime();
             String endTime1 = date.format(endTime);//获取当天日期字符串
