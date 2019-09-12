@@ -152,13 +152,13 @@
         insert into edu_article (userid, title, image,
         createtime, updatetime, ispublic,
         istop, visits, thumbup,
-        comment, state, url,
+        comment, state, url,audio,
         type, collect, content, school_id, topdate, topenddate,author,cid
         )
         values (#{userid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
         #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{ispublic,jdbcType=VARCHAR},
         #{istop,jdbcType=VARCHAR}, #{visits,jdbcType=INTEGER}, #{thumbup,jdbcType=INTEGER},
-        #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
+        #{comment,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},#{audio},
         #{type,jdbcType=VARCHAR}, #{collect,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{schoolId,jdbcType=INTEGER}, #{topdate},
         #{topenddate},#{author},#{cid}
         )
