@@ -10,6 +10,7 @@ import com.ovft.configure.sys.service.EduOfflineOrderService;
 import com.ovft.configure.sys.utils.AgeUtil;
 import com.ovft.configure.sys.vo.EduCourseVo;
 import com.ovft.configure.sys.utils.OrderIdUtil;
+import com.ovft.configure.sys.vo.LivePayVo;
 import net.sf.saxon.functions.Put;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,8 @@ public class EduCourseServiceImpl implements EduCourseService {
     private EduOfflineOrderMapper eduOfflineOrderMapper;
     @Resource
     private EduPayrecordMapper eduPayrecordMapper;
+    @Resource
+    private QuestionSearchMapper questionSearchMapper;
 
     /**
      * 按学校的id来查找专业类别
@@ -91,10 +94,14 @@ public class EduCourseServiceImpl implements EduCourseService {
 //        param.put("payment_status", OrderStatus.PAY);   //原来的
         param.put("payment_status", "PAID");
         int olineNum = orderMapper.countPayCourseNum(param);
+
             System.out.println(olineNum);
         //查询用户所对应的专业线下的总人数
         int offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
-
+        LivePayVo livePayVo=new LivePayVo();
+        livePayVo.setCourseId(courseId);   //查找当前课程的退课数量
+        List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
+        olineNum=olineNum-livePayVos.size();      //当前报的数量-退课的数量
         //得到最终报名人数
         int payNum = olineNum + offNum;
 
@@ -195,7 +202,6 @@ public class EduCourseServiceImpl implements EduCourseService {
             param.put("courseId", courseId);
             param.put("schoolId", schoolId);
             int courseNum = eduRegistMapper.queryCourseNum(param);
-
             if (allCourse >= courseNum) {
                 map.put("为了您的身体健康，本课程只允许总共报" + courseNum + "门，您报名课程总数已经超出", "");
                 return map;

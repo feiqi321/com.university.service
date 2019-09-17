@@ -28,10 +28,19 @@ public class PersonnelClassificationController {
         return  personnelClassificationService.createPersonnelClass(personnelClassification);
     }
     /**
-     * 查询
+     * 后台查询
      * @return
      */
     @PostMapping(value = "/server/selectPersonnelClass")
+    public WebResult selectServerPersonnelClass(@RequestBody PersonnelClassificationVo personnelClassificationVo) {
+
+        return  personnelClassificationService.selectPersonnelClass(personnelClassificationVo);
+    }
+    /**
+     * 前台查询
+     * @return
+     */
+    @PostMapping(value = "/api/selectPersonnelClass")
     public WebResult selectPersonnelClass(@RequestBody PersonnelClassificationVo personnelClassificationVo) {
 
         return  personnelClassificationService.selectPersonnelClass(personnelClassificationVo);

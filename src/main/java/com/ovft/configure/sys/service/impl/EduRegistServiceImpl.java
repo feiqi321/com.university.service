@@ -185,7 +185,6 @@ public class EduRegistServiceImpl implements EduRegistService {
 
             return pageInfo6;
         }
-
         //有直接展示报名条件列表
         //如果总条件查询不为空，添加进去
         if (eduRegists.size() != 0)
@@ -214,13 +213,13 @@ public class EduRegistServiceImpl implements EduRegistService {
 //                }
 //
 //            }
-            for (EduCourse eduCours : eduCourses) {
-                EduRegist eduRegist = new EduRegist();
-                eduRegist.setCourseId(eduCours.getCourseId());
-                eduRegist.setCourseName(eduCours.getCourseName());
-                eduRegist.setSchoolId(schoolId);
-                eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
-                eduRegistMapper.insertSelective(eduRegist);
+        for (EduCourse eduCours : eduCourses) {
+            EduRegist eduRegist = new EduRegist();
+            eduRegist.setCourseId(eduCours.getCourseId());
+            eduRegist.setCourseName(eduCours.getCourseName());
+            eduRegist.setSchoolId(schoolId);
+            eduRegist.setRegistPriority(String.valueOf(Status.PRIORITYTWO));
+            eduRegistMapper.insertSelective(eduRegist);
 //            if (!eduRegistsNew2.isEmpty()) {     //当有特殊条件设置的时候
 //                for (EduRegist eduRegist1 : eduRegistsNew2) {
 //                    if (!eduRegist1.getCourseId().equals(eduCours.getCourseId()) ) {
@@ -273,13 +272,13 @@ public class EduRegistServiceImpl implements EduRegistService {
             eduRegistExample6.createCriteria().andCourseIdEqualTo(eduRegist1.getCourseId()).andRegistPriorityEqualTo(String.valueOf(Status.PRIORITYTWO));
             eduRegistMapper.deleteByExample(eduRegistExample6);
         }
-            //3.生成默认原始条件列表
-            EduRegistExample eduRegistExample1 = new EduRegistExample();
-            eduRegistExample1.createCriteria().andSchoolIdEqualTo(schoolId).andRegistPriorityEqualTo(String.valueOf(Status.PRIORITYTWO));
-            List<EduRegist> eduRegistsNew = eduRegistMapper.selectByExample(eduRegistExample1);
-            PageInfo pageInfo5 = new PageInfo<>(eduRegistsNew);
-            UpDateSchoolName(eduRegistsNew);
-            return pageInfo5;
+        //3.生成默认原始条件列表
+        EduRegistExample eduRegistExample1 = new EduRegistExample();
+        eduRegistExample1.createCriteria().andSchoolIdEqualTo(schoolId).andRegistPriorityEqualTo(String.valueOf(Status.PRIORITYTWO));
+        List<EduRegist> eduRegistsNew = eduRegistMapper.selectByExample(eduRegistExample1);
+        PageInfo pageInfo5 = new PageInfo<>(eduRegistsNew);
+        UpDateSchoolName(eduRegistsNew);
+        return pageInfo5;
 
     }
 
@@ -411,13 +410,13 @@ public class EduRegistServiceImpl implements EduRegistService {
                 regist.setRegistendTime(eduRegistAll.getRegistendTime());
                 regist.setStartAge(eduRegistAll.getStartAge());
                 regist.setEndAge(eduRegistAll.getEndAge());
-                regist.setRegistCategoryOne(eduRegistAll.getRegistCategoryOne());
-                regist.setRegistCategoryTwo(eduRegistAll.getRegistCategoryTwo());
-                regist.setRegistCategoryThree(eduRegistAll.getRegistCategoryThree());
-                regist.setRegistCategoryFour(eduRegistAll.getRegistCategoryFour());
-                regist.setRegistCategoryFive(eduRegistAll.getRegistCategoryFive());
-                regist.setRegistCategorySix(eduRegistAll.getRegistCategorySix());
-                regist.setRegistCategoryTwo(eduRegistAll.getRegistCategoryTwo());
+                regist.setRegistCategoryOne(eduRegistAll.getRegistCategoryOne() == null ? "" : eduRegistAll.getRegistCategoryOne());
+                regist.setRegistCategoryTwo(eduRegistAll.getRegistCategoryTwo() == null ? "" : eduRegistAll.getRegistCategoryTwo());
+                regist.setRegistCategoryThree(eduRegistAll.getRegistCategoryThree() == null ? "" : eduRegistAll.getRegistCategoryThree());
+                regist.setRegistCategoryFour(eduRegistAll.getRegistCategoryFour() == null ? "" : eduRegistAll.getRegistCategoryFour());
+                regist.setRegistCategoryFive(eduRegistAll.getRegistCategoryFive() == null ? "" : eduRegistAll.getRegistCategoryFive());
+                regist.setRegistCategorySix(eduRegistAll.getRegistCategorySix() == null ? "" : eduRegistAll.getRegistCategorySix());
+//                regist.setRegistCategoryTwo(eduRegistAll.getRegistCategoryTwo());
                 regist.setSchoolName(eduRegistAll.getSchoolName());
                 regist.setOfflineRegist(eduRegistAll.getOfflineRegist());
                 regist.setCourseNum(eduRegistAll.getCourseNum());
@@ -447,6 +446,53 @@ public class EduRegistServiceImpl implements EduRegistService {
     @Override
     public EduRegist queryById(Integer id) {
         EduRegist eduRegist = eduRegistMapper.selectByPrimaryKey(id);
+        for (int i = 0; i < 6; i++) {    //把空字符串设置成null,方便前端显示(要不然会显示空字符串)
+            switch (i) {
+                case 0:
+                    if (eduRegist.getRegistCategoryOne()!=null) {
+                        if (eduRegist.getRegistCategoryOne().equals("") && eduRegist.getRegistCategoryOne() != null) {
+                            eduRegist.setRegistCategoryOne(null);
+                        }
+                    }
+                    break;
+                case 1:
+                    if (eduRegist.getRegistCategoryTwo()!=null) {
+                        if (eduRegist.getRegistCategoryTwo().equals("") && eduRegist.getRegistCategoryTwo() != null) {
+                            eduRegist.setRegistCategoryTwo(null);
+                        }
+                    }
+                    break;
+                case 2:
+                    if (eduRegist.getRegistCategoryThree()!=null) {
+                        if (eduRegist.getRegistCategoryThree().equals("") && eduRegist.getRegistCategoryThree() != null) {
+                            eduRegist.setRegistCategoryThree(null);
+                        }
+                    }
+                    break;
+                case 3:
+                    if(eduRegist.getRegistCategoryFour()!=null) {
+                        if (eduRegist.getRegistCategoryFour().equals("") && eduRegist.getRegistCategoryFour() != null) {
+                            eduRegist.setRegistCategoryFour(null);
+                        }
+                    }
+                    break;
+                case 4:
+                    if (eduRegist.getRegistCategoryFive()!=null) {
+                        if (eduRegist.getRegistCategoryFive().equals("") && eduRegist.getRegistCategoryFive() != null) {
+                            eduRegist.setRegistCategoryFive(null);
+                        }
+                    }
+                    break;
+                case 5:
+                    if (eduRegist.getRegistCategorySix()!=null) {
+                        if (eduRegist.getRegistCategorySix().equals("") && eduRegist.getRegistCategorySix() != null) {
+                            eduRegist.setRegistCategorySix(null);
+                        }
+                    }
+                    break;
+
+            }
+        }
         System.out.println(eduRegist);
         return eduRegist;
     }
@@ -525,7 +571,6 @@ public class EduRegistServiceImpl implements EduRegistService {
         PageInfo pageInfo = new PageInfo<>(eduRegists);
         return new WebResult("200", "查询成功", pageInfo);
     }
-
 
 
     //全局设置部分

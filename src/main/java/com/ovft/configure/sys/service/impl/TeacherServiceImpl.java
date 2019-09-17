@@ -631,7 +631,7 @@ public class TeacherServiceImpl implements TeacherService {
                 }
             }
             teacherMapper.updateCourseByCourseId(course);
-            if (course.getIsenable() == 1 &&course.getSchoolId()!=null) {
+            if (course.getIsenable() == 1 ) {
 
                 //同步生成课程报名条件表（edu_regist）记录
                 EduRegistExample eduRegistExample = new EduRegistExample();
