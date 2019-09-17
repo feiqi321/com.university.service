@@ -336,7 +336,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
             List<MyCourseAll> livePaysList=new LinkedList<>();
 
             for (int n = 0; n <livePayVos.size(); n++) {     //封装线下缴费列表记录
-                livePaysList.get(n).setCourseId(livePayVos.get(n).getCourseId());
+                livePaysList.get(n).setCourseId(((EduLivePay)livePayVos.get(n)).getCourseId());
                 livePaysList.get(n).setUserName(livePayVos.get(n).getUserName());
                 livePaysList.get(n).setCourseName(livePayVos.get(n).getCourseName());
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
@@ -352,7 +352,13 @@ public class QuestionSearchImpl implements QuestionSearchService {
                 livePaysList.get(n).setPhone(livePayVos.get(n).getPhone());
                 livePaysList.get(n).setIdentityCard(livePayVos.get(n).getIdentityCard());
                 livePaysList.get(n).setJob(livePayVos.get(n).getJob());
-                livePaysList.get(n).setStatu("现场收费");
+                if (((EduLivePay)livePayVos.get(n)).getPayCode()==1) {
+                    livePaysList.get(n).setStatu("现场收费");
+                }
+                if (((EduLivePay)livePayVos.get(n)).getPayCode()==2) {
+                    livePaysList.get(n).setStatu("免费");
+                }
+
                 list.add(livePaysList.get(n));
             }
             for (int m = 0; m < myCourseAlltop.size(); m++) {
@@ -412,28 +418,34 @@ public class QuestionSearchImpl implements QuestionSearchService {
         //查询现场报名相关成员记录
         LivePayVo livePayVo=new LivePayVo();
         livePayVo.setCourseId(pageVo.getCourseId());
-        List<LivePayVo> livePayVos = eduLivePayMapper.selectLivePay(livePayVo);
-        List<MyCourseAll> livePaysList=new LinkedList<>();
+        List<LivePayVo> livePayVos =eduLivePayMapper.selectLivePay(livePayVo);
 
-        for (int n = 0; n <livePayVos.size(); n++) {     //封装线下缴费列表记录
-            livePaysList.get(n).setCourseId(livePayVos.get(n).getCourseId());
-            livePaysList.get(n).setUserName(livePayVos.get(n).getUserName());
-            livePaysList.get(n).setCourseName(livePayVos.get(n).getCourseName());
+        MyCourseAll myCourseAll=new MyCourseAll();
+
+        for (int n = 0; n <livePayVos.size(); n++) {     //封装现场缴费列表记录，将现场缴费记录的人查出来然后在班级里面显示
+            myCourseAll.setCourseId(((EduLivePay)livePayVos.get(n)).getCourseId());
+            myCourseAll.setUserName(((EduLivePay)livePayVos.get(n)).getUserName());
+            myCourseAll.setCourseName(((EduLivePay)livePayVos.get(n)).getCourseName());
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(livePayVos.get(n).getPayDate());
+            String format = formatter.format(((EduLivePay)livePayVos.get(n)).getPayDate());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
-                livePaysList.get(n).setCourseyear(format.substring(0, 4) + "下半年度");
+                myCourseAll.setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
-                livePaysList.get(n).setCourseyear(format.substring(0, 4) + "上半年度");
+                myCourseAll.setCourseyear(format.substring(0, 4) + "上半年度");
             }
-            livePaysList.get(n).setCourseTeacher(livePayVos.get(n).getCourseTeacher());
-            livePaysList.get(n).setSchoolName(schoolName);
-            livePaysList.get(n).setAddress(livePayVos.get(n).getAddress());
-            livePaysList.get(n).setPhone(livePayVos.get(n).getPhone());
-            livePaysList.get(n).setIdentityCard(livePayVos.get(n).getIdentityCard());
-            livePaysList.get(n).setJob(livePayVos.get(n).getJob());
-            livePaysList.get(n).setStatu("现场收费");
-            list2.add(livePaysList.get(n));
+            myCourseAll.setCourseTeacher(((EduLivePay)livePayVos.get(n)).getCourseTeacher());
+            myCourseAll.setSchoolName(schoolName);
+            myCourseAll.setAddress(((EduLivePay)livePayVos.get(n)).getAddress());
+            myCourseAll.setPhone(((EduLivePay)livePayVos.get(n)).getPhone());
+            myCourseAll.setIdentityCard(((EduLivePay)livePayVos.get(n)).getIdentityCard());
+            myCourseAll.setJob(((EduLivePay)livePayVos.get(n)).getJob());
+            if (((EduLivePay)livePayVos.get(n)).getPayCode()==1) {
+                myCourseAll.setStatu("现场收费");
+            }
+            if (((EduLivePay)livePayVos.get(n)).getPayCode()==2) {
+                myCourseAll.setStatu("免费");
+            }
+            list2.add(myCourseAll);
         }
 
         for (int m = 0; m < myCourseAlltop2.size(); m++) {
@@ -483,7 +495,7 @@ public class QuestionSearchImpl implements QuestionSearchService {
         PageInfo pageInfo3 = new PageInfo<>(myCourseAlltop2);
         PageInfo pageInfo2 = new PageInfo<>(myCourseAlldown2);
         PageInfo pageInfo = new PageInfo<>(list2);
-           pageInfo.setTotal(pageInfo3.getTotal()+pageInfo2.getTotal());
+           pageInfo.setTotal(pageInfo3.getTotal()+pageInfo2.getTotal()+livePayVos.size());   //
         return new WebResult("200", "查询成功", pageInfo);
     }
 
@@ -503,29 +515,33 @@ public class QuestionSearchImpl implements QuestionSearchService {
         LivePayVo livePayVo=new LivePayVo();
         livePayVo.setCourseId(pageVo.getCourseId());
         List<LivePayVo> livePayVos = eduLivePayMapper.selectLivePay(livePayVo);
-        List<MyCourseAll> livePaysList=new LinkedList<>();
+        MyCourseAll myCourseAll=new MyCourseAll();
 
-        for (int n = 0; n <livePayVos.size(); n++) {     //封装线下缴费列表记录
-            livePaysList.get(n).setCourseId(livePayVos.get(n).getCourseId());
-            livePaysList.get(n).setUserName(livePayVos.get(n).getUserName());
-            livePaysList.get(n).setCourseName(livePayVos.get(n).getCourseName());
+        for (int n = 0; n <livePayVos.size(); n++) {     //封装现场缴费列表记录，将现场缴费记录的人查出来然后在班级里面显示
+            myCourseAll.setCourseId(((EduLivePay)livePayVos.get(n)).getCourseId());
+            myCourseAll.setUserName(((EduLivePay)livePayVos.get(n)).getUserName());
+            myCourseAll.setCourseName(((EduLivePay)livePayVos.get(n)).getCourseName());
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-            String format = formatter.format(livePayVos.get(n).getPayDate());
+            String format = formatter.format(((EduLivePay)livePayVos.get(n)).getPayDate());
             if (Integer.parseInt(format.substring(5, 7)) > 6) {
-                livePaysList.get(n).setCourseyear(format.substring(0, 4) + "下半年度");
+                myCourseAll.setCourseyear(format.substring(0, 4) + "下半年度");
             } else {
-                livePaysList.get(n).setCourseyear(format.substring(0, 4) + "上半年度");
+                myCourseAll.setCourseyear(format.substring(0, 4) + "上半年度");
             }
-            livePaysList.get(n).setCourseTeacher(livePayVos.get(n).getCourseTeacher());
-            livePaysList.get(n).setSchoolName(schoolName);
-            livePaysList.get(n).setAddress(livePayVos.get(n).getAddress());
-            livePaysList.get(n).setPhone(livePayVos.get(n).getPhone());
-            livePaysList.get(n).setIdentityCard(livePayVos.get(n).getIdentityCard());
-            livePaysList.get(n).setJob(livePayVos.get(n).getJob());
-            livePaysList.get(n).setStatu("现场收费");
-            list.add(livePaysList.get(n));
+            myCourseAll.setCourseTeacher(((EduLivePay)livePayVos.get(n)).getCourseTeacher());
+            myCourseAll.setSchoolName(schoolName);
+            myCourseAll.setAddress(((EduLivePay)livePayVos.get(n)).getAddress());
+            myCourseAll.setPhone(((EduLivePay)livePayVos.get(n)).getPhone());
+            myCourseAll.setIdentityCard(((EduLivePay)livePayVos.get(n)).getIdentityCard());
+            myCourseAll.setJob(((EduLivePay)livePayVos.get(n)).getJob());
+            if (((EduLivePay)livePayVos.get(n)).getPayCode()==1) {
+                myCourseAll.setStatu("现场收费");
+            }
+            if (((EduLivePay)livePayVos.get(n)).getPayCode()==2) {
+                myCourseAll.setStatu("免费");
+            }
+            list.add(myCourseAll);
         }
-
 
         for (int m = 0; m < myCourseAlltop.size(); m++) {
 
@@ -1099,8 +1115,15 @@ public class QuestionSearchImpl implements QuestionSearchService {
 
             //得到最终报名人数
             Integer payNum = olineNum + offNum;
+            LivePayVo livePayVo=new LivePayVo();
+            livePayVo.setCourseId(eduPayrecord.getCourseId());   //查找当前课程的退课数量
+            List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
+            //查询现场报名相关成员记录
+            LivePayVo livePayVo2=new LivePayVo();
+            livePayVo2.setCourseId(eduPayrecord.getCourseId());
+            List<LivePayVo> livePayVos3 = eduLivePayMapper.selectLivePay(livePayVo2);
             //可报名剩余人数
-            int nowtotal = acceptNum - payNum;
+            int nowtotal = acceptNum-(payNum-livePayVos.size())+livePayVos3.size();
             if (nowtotal<=0){
                 return new WebResult("600", "换课失败：该课程人数已满", "");
             }

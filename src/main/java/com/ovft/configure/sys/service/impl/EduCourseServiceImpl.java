@@ -98,10 +98,10 @@ public class EduCourseServiceImpl implements EduCourseService {
             System.out.println(olineNum);
         //查询用户所对应的专业线下的总人数
         int offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
-        LivePayVo livePayVo=new LivePayVo();
-        livePayVo.setCourseId(courseId);   //查找当前课程的退课数量
-        List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
-        olineNum=olineNum-livePayVos.size();      //当前报的数量-退课的数量
+//        LivePayVo livePayVo=new LivePayVo();
+//        livePayVo.setCourseId(courseId);   //查找当前课程的退课数量
+//        List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
+        olineNum=olineNum;      //当前报的数量-退课的数量
         //得到最终报名人数
         int payNum = olineNum + offNum;
 

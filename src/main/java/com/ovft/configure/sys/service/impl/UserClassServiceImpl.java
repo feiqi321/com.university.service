@@ -130,7 +130,7 @@ public class UserClassServiceImpl implements UserClassService {
 
         return list;
     }
-    //学员报名记录（已支付的===>> 线上报名+线下报名）   分别对应 ===》 edu_payrecord，edu_offline_num
+    //学员报名记录（已支付的===>> 线上报名+线下报名）   分别对应 ===》 edu_payrecord，edu_offline_num   ===>>学员班级列表
     @Override
     public WebResult userClassList(UserClassVo userClassVo) {
 
@@ -176,11 +176,16 @@ public class UserClassServiceImpl implements UserClassService {
                             }
 
                 }
+
                 for (int q=0;q<endUserClassList.size();q++){    //通过课程Id查找相应班级的上课人数,然后封装 endUserClassList.get(q)
                     pageVo2.setSchoolId(pageVo.getSchoolId());
                       pageVo2.setCourseId(endUserClassList.get(q).getCourseId());
                     List<MyCourseAll> myCourseList2=findMyCourseList(pageVo2);
-                    endUserClassList.get(q).setNum(myCourseList2.size());
+                    //查询现场报名相关成员记录
+                    LivePayVo livePayVo2=new LivePayVo();
+                    livePayVo2.setCourseId(endUserClassList.get(q).getCourseId());
+                    List<LivePayVo> livePayVos3 = eduLivePayMapper.selectLivePay(livePayVo2);
+                    endUserClassList.get(q).setNum(myCourseList2.size()+livePayVos3.size());   //线上报名+现场报名的
 
                 }
                 return new WebResult("200", "查询成功", endUserClassList);
@@ -195,13 +200,23 @@ public class UserClassServiceImpl implements UserClassService {
             List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);
             for (int m = 0; m <userClassList.size() ; m++) {
                 //给每个班级设置封装计划人数
+                userClassList.get(m).setPeopleNumber(eduCourseMapper.queryAcceptNum(userClassList.get(m).getCourseId()));
+                //给每个班级设置封装计划人数
               userClassList.get(m).setPeopleNumber(eduCourseMapper.queryAcceptNum(userClassList.get(m).getCourseId()));
                 //查询用户所对应的专业显示已经购买人数
                 Map<String, Object> param = new HashMap<>();
                 param.put("course_id", userClassList.get(m).getCourseId());
                 param.put("payment_status", "PAID");
                 int olineNum = orderMapper.countPayCourseNum(param);
-                userClassList.get(m).setNowNumber(olineNum);      //给每个班级封装实际人数
+                //查询现场报名相关成员记录
+                LivePayVo livePayVo=new LivePayVo();
+                livePayVo.setCourseId(userClassList.get(m).getCourseId());
+                List<LivePayVo> livePayVos = eduLivePayMapper.selectLivePay(livePayVo);
+//                LivePayVo livePayVo2=new LivePayVo();
+//                livePayVo2.setCourseId(userClassList.get(m).getCourseId());   //查找当前课程的退课数量
+//                List<LivePayVo> livePayVos2 = questionSearchMapper.selectClassOut(livePayVo2);
+                int NowNumber= olineNum+livePayVos.size(); //   线上报名+现场报名的-退课的人数
+                userClassList.get(m).setNowNumber(NowNumber);      //给每个班级封装实际人数
 
             }
             FindUserCourseUtil findUserCourseUtil = new FindUserCourseUtil();

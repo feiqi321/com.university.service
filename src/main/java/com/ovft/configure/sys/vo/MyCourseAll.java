@@ -50,7 +50,7 @@ public class MyCourseAll  {
     /**
      * 课程id
      */
-    private int courseId;
+    private Integer courseId;
 
     private String userName;
     /**

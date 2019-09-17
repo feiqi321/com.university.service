@@ -79,12 +79,12 @@
         select did,course_id as courseId, course_name as courseName, course_price as coursePrice, course_teacher as courseTeacher,
         place_class as placeClass, start_date as startDate, end_date as endDate,
         people_number as peopleNumber, school_id as schoolId, isenable,isAddQuestion,
-        (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher) as teacherName,
-        (SELECT school_name FROM edu_school where school_id = edu_course.school_id) as schoolName,
-        (SELECT d_name FROM edu_department where did = edu_course.did) as departmentName,
-        (SELECT registstart_time FROM edu_regist where course_id = edu_course.course_id) as registStartTime,
-        (SELECT registend_time FROM edu_regist where course_id = edu_course.course_id) as regitEndTime,
-        (SELECT offline_regist FROM edu_regist where course_id = edu_course.course_id) as offlineRegist
+        (SELECT name FROM edu_admin where admin_id = edu_course.course_teacher limit 1) as teacherName,
+        (SELECT school_name FROM edu_school where school_id = edu_course.school_id limit 1) as schoolName,
+        (SELECT d_name FROM edu_department where did = edu_course.did limit 1) as departmentName,
+        (SELECT registstart_time FROM edu_regist where course_id = edu_course.course_id limit 1) as registStartTime,
+        (SELECT registend_time FROM edu_regist where course_id = edu_course.course_id limit 1) as regitEndTime,
+        (SELECT offline_regist FROM edu_regist where course_id = edu_course.course_id limit 1) as offlineRegist
         from edu_course
         where 1=1
         <if test="schoolId != null">

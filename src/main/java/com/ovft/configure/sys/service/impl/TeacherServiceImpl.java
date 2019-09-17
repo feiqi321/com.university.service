@@ -63,6 +63,8 @@ public class TeacherServiceImpl implements TeacherService {
     private  EduClassMapper eduClassMapper;
     @Resource
     private  QuestionSearchMapper questionSearchMapper;
+    @Resource
+    private EduLivePayMapper eduLivePayMapper;
 
 
 
@@ -411,14 +413,19 @@ public class TeacherServiceImpl implements TeacherService {
                     param.put("payment_status", "PAID");
 
                     int olineNum = orderMapper.countPayCourseNum(param);
-                    livePayVo.setCourseId(courseVo.getCourseId());   //查找当前课程的退课数量
-                    List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
-                    olineNum=olineNum-livePayVos.size();      //当前报的数量-退课的数量
+//                    livePayVo.setCourseId(courseVo.getCourseId());   //查找当前课程的退课数量
+//                    List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
+                    //查询现场报名相关成员记录
+                    LivePayVo livePayVo2=new LivePayVo();
+                    livePayVo2.setCourseId(courseId);
+                    List<LivePayVo> livePayVos3 = eduLivePayMapper.selectLivePay(livePayVo2);
+
+                    int olineNum2=olineNum+livePayVos3.size();      //当前报的数量+现场缴费报名人数
                     //查询用户所对应的专业线下的总人数
                     Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(courseId);
 
                     //得到最终报名人数
-                    Integer payNum = olineNum + offNum;
+                    Integer payNum = olineNum2 + offNum;
                     //可报名剩余人数
                     int nowtotal = acceptNum - payNum;
                     courseVo.setNowtotal(nowtotal >= 0 ? nowtotal : 0);
