@@ -3,7 +3,6 @@ package com.ovft.configure.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.WebResult;
-import com.ovft.configure.sys.bean.EduLivePay;
 import com.ovft.configure.sys.bean.User;
 import com.ovft.configure.sys.bean.UserClass;
 import com.ovft.configure.sys.bean.VateType;
@@ -45,8 +44,6 @@ public class UserClassServiceImpl implements UserClassService {
     private OrderMapper    orderMapper;
     @Resource
     private  EduLivePayMapper eduLivePayMapper;
-    @Resource
-    private UserMapper userMapper;
 
     @Override
     public WebResult deleteUserClass(Integer classId) {
@@ -71,9 +68,6 @@ public class UserClassServiceImpl implements UserClassService {
         VateType vateType = questionSearchMapper.findCourseImage(2);
         List<MyCourseAll> list = new ArrayList();
         String schoolName = schoolMapper.findSchoolById(pageVo.getSchoolId());
-
-
-
         for (int m = 0; m < myCourseAlltop.size(); m++) {
 
 
@@ -136,7 +130,7 @@ public class UserClassServiceImpl implements UserClassService {
 
         return list;
     }
-    //学员报名记录（已支付的===>> 线上报名+线下报名+现场报名的）   分别对应 ===》 edu_payrecord，edu_offline_num   ===>>学员班级列表
+    //学员报名记录（已支付的===>> 线上报名+线下报名）   分别对应 ===》 edu_payrecord，edu_offline_num   ===>>学员班级列表
     @Override
     public WebResult userClassList(UserClassVo userClassVo) {
 
@@ -203,7 +197,7 @@ public class UserClassServiceImpl implements UserClassService {
         } else {
 
             PageHelper.startPage(userClassVo.getPageNum(), userClassVo.getPageSize());
-            List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);    //查找所有班级
+            List<UserClass> userClassList = userClassMapper.userClassList(userClassVo);
             for (int m = 0; m <userClassList.size() ; m++) {
                 //给每个班级设置封装计划人数
                 userClassList.get(m).setPeopleNumber(eduCourseMapper.queryAcceptNum(userClassList.get(m).getCourseId()));
@@ -232,40 +226,6 @@ public class UserClassServiceImpl implements UserClassService {
             if (userClassVo.getUserId() != null) {
                 PageVo pageVo2=new PageVo();
                 List<UserClass> userClassList2 = userClassMapper.userClassList(userClassVo);
-                //查询现场报名相关成员记录
-                String schoolName = schoolMapper.findSchoolById(pageVo.getSchoolId());
-                User user = userMapper.selectById(pageVo.getUserId());
-                LivePayVo livePayVo=new LivePayVo();
-
-                livePayVo.setPhone(user.getPhone());
-                List<LivePayVo> livePayVos = eduLivePayMapper.selectLivePay(livePayVo);
-
-                for (int n = 0; n <livePayVos.size(); n++) {     //封装现场缴费列表记录，将现场缴费记录的人查出来然后在班级里面显示
-                    MyCourseAll myCourseAll=new MyCourseAll();
-                    myCourseAll.setCourseId(((EduLivePay)livePayVos.get(n)).getCourseId());
-                    myCourseAll.setUserName(((EduLivePay)livePayVos.get(n)).getUserName());
-                    myCourseAll.setCourseName(((EduLivePay)livePayVos.get(n)).getCourseName());
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd ");
-                    String format = formatter.format(((EduLivePay)livePayVos.get(n)).getPayDate());
-                    if (Integer.parseInt(format.substring(5, 7)) > 6) {
-                        myCourseAll.setCourseyear(format.substring(0, 4) + "下半年度");
-                    } else {
-                        myCourseAll.setCourseyear(format.substring(0, 4) + "上半年度");
-                    }
-                    myCourseAll.setCourseTeacher(((EduLivePay)livePayVos.get(n)).getCourseTeacher());
-                    myCourseAll.setSchoolName(schoolName);
-                    myCourseAll.setAddress(((EduLivePay)livePayVos.get(n)).getAddress());
-                    myCourseAll.setPhone(((EduLivePay)livePayVos.get(n)).getPhone());
-                    myCourseAll.setIdentityCard(((EduLivePay)livePayVos.get(n)).getIdentityCard());
-                    myCourseAll.setJob(((EduLivePay)livePayVos.get(n)).getJob());
-                    if (((EduLivePay)livePayVos.get(n)).getPayCode()==1) {
-                        myCourseAll.setStatu("现场收费");
-                    }
-                    if (((EduLivePay)livePayVos.get(n)).getPayCode()==2) {
-                        myCourseAll.setStatu("免费");
-                    }
-                    myCourseList.add(myCourseAll);
-                }
                 List<UserClass> endUserClassList = new LinkedList<>();      //处理前台只显示用户已报名的班级
                 for (int n = 0; n < myCourseList.size(); n++) {
                         for (int m=0;m<userClassList2.size();m++) {
@@ -278,11 +238,7 @@ public class UserClassServiceImpl implements UserClassService {
                     pageVo2.setSchoolId(pageVo.getSchoolId());
                     pageVo2.setCourseId(endUserClassList.get(q).getCourseId());
                     List<MyCourseAll> myCourseList2=findMyCourseList(pageVo2);
-                    //查询现场报名相关成员记录
-                    LivePayVo livePayVo2=new LivePayVo();
-                    livePayVo2.setCourseId(endUserClassList.get(q).getCourseId());
-                    List<LivePayVo> livePayVos3 = eduLivePayMapper.selectLivePay(livePayVo2);
-                    endUserClassList.get(q).setNum(myCourseList2.size()+livePayVos3.size());
+                    endUserClassList.get(q).setNum(myCourseList2.size());
 
                 }
                 PageInfo pageInfo = new PageInfo<>(endUserClassList);

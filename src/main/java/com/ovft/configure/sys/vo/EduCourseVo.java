@@ -3,7 +3,6 @@ package com.ovft.configure.sys.vo;
 import com.ovft.configure.sys.bean.EduClass;
 import com.ovft.configure.sys.bean.EduCourse;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
  * @author vvtxw
  * @create 2019-04-14 7:53
  */
-public class EduCourseVo extends EduCourse implements Serializable {
+public class EduCourseVo extends EduCourse {
     private List<EduClass> classList;
     private String schoolName;
     private String teacherName;

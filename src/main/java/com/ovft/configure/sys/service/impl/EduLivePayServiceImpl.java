@@ -5,10 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.EduLivePay;
-import com.ovft.configure.sys.bean.EduOfflineOrder;
 import com.ovft.configure.sys.bean.EduPayrecord;
 import com.ovft.configure.sys.bean.User;
-import com.ovft.configure.sys.dao.*;
+import com.ovft.configure.sys.dao.EduLivePayMapper;
 import com.ovft.configure.sys.service.EduLivePayService;
 import com.ovft.configure.sys.vo.LivePayVo;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author vvtxw
@@ -27,21 +28,6 @@ import java.util.*;
 public class EduLivePayServiceImpl implements EduLivePayService {
     @Resource
     private EduLivePayMapper eduLivePayMapper;
-    @Resource
-    private UserMapper userMapper;
-    @Resource
-    private EduOfflineOrderMapper eduOfflineOrderMapper;
-    @Resource
-    private EduPayrecordMapper eduPayrecordMapper;
-    @Resource
-    private EduRegistMapper eduRegistMapper;
-    @Resource
-    private EduCourseMapper eduCourseMapper;
-    @Resource
-    private OrderMapper orderMapper;
-    @Resource
-    private QuestionSearchMapper questionSearchMapper;
-
 
     //增加现场报名班级报名记录
     @Override
@@ -86,58 +72,6 @@ public class EduLivePayServiceImpl implements EduLivePayService {
                //如果查出数据说明报名重复不能添加进去
                return new WebResult("400", "报名重复,您已经报名过该班级", "");
            }
-
-           //3.限制可报名的报名学科门数
-           //查询线下的报名门数
-           User userByPhone2 = userMapper.findUserByPhone2(livePayVo.getPhone());
-           Integer offCourseNum = eduOfflineOrderMapper.queryCountCourseNum(userByPhone2.getUserId());
-           //查询线上的报名门数
-           Integer oLineCourseNum = eduPayrecordMapper.queryCourseNum(userByPhone2.getUserId());
-           User user1 = userMapper.selectById(userByPhone2.getUserId());
-           LivePayVo livePayVo5=new LivePayVo();
-           livePayVo5.setPhone(user1.getPhone());
-           List<LivePayVo> livePayVos = eduLivePayMapper.selectLivePay(livePayVo5);
-           Integer allCourse = offCourseNum + oLineCourseNum+livePayVos.size();    //线下+线上+现场
-           //查询条件限制的门数
-           Map<String, Object> param = new HashMap<>();
-           param.put("courseId", livePayVo.getCourseId());
-           param.put("schoolId", livePayVo.getSchoolId());
-           int courseNum = eduRegistMapper.queryCourseNum(param);
-           if (allCourse >= courseNum) {
-               return new WebResult("600","为了您的身体健康，本课程只允许总共报" + courseNum + "门，您报名课程总数已经超出", "");
-           }
-
-           //查询专业接受报名的人数
-           int acceptNum = eduCourseMapper.queryAcceptNum(livePayVo.getCourseId());
-           if (acceptNum == 0) {
-               return new WebResult("200", "录入失败：该课程尚未设置计划招生人数", "");
-           } else {     //编辑
-               //查询用户所对应的专业显示已经购买人数
-               Map<String, Object> param2 = new HashMap<>();
-               param2.put("course_id", livePayVo.getCourseId());
-               param2.put("payment_status", "PAID");
-
-               int olineNum = orderMapper.countPayCourseNum(param2);
-
-               //查询用户所对应的专业线下的总人数
-               Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(livePayVo.getCourseId());
-
-               //得到最终报名人数
-               Integer payNum = olineNum + offNum;
-               LivePayVo livePayVo6=new LivePayVo();
-               livePayVo.setCourseId(livePayVo.getCourseId());   //查找当前课程的退课数量
-               List<LivePayVo> livePayVos7 = questionSearchMapper.selectClassOut(livePayVo);
-               //查询现场报名相关成员记录
-               LivePayVo livePayVo2=new LivePayVo();
-               livePayVo2.setCourseId(livePayVo.getCourseId());
-               List<LivePayVo> livePayVos3 = eduLivePayMapper.selectLivePay(livePayVo2);
-               //可报名剩余人数
-               int nowtotal = acceptNum-(payNum+livePayVos3.size());
-               if (nowtotal<=0){
-                   return new WebResult("600", "录入失败：该课程人数已满", "");
-               }
-           }
-
            eduLivePayMapper.addLivePay(livePayVo);
            return new WebResult(StatusCode.OK, "添加现场报名记录成功", "");
        }else {
@@ -147,38 +81,6 @@ public class EduLivePayServiceImpl implements EduLivePayService {
            if (!eduLivePays.isEmpty() || ! eduPayrecords.isEmpty()){//如果查出数据说明报名重复不能修改进去
                return new WebResult("400", "修改重复,他/她已经报名过该班级.如果想修改金额时,请先换个班级在修改金额", "");
            }
-
-           //查询专业接受报名的人数
-           int acceptNum = eduCourseMapper.queryAcceptNum(livePayVo.getCourseId());
-           if (acceptNum == 0) {
-               return new WebResult("200", "编辑失败：该课程尚未设置计划招生人数", "");
-           } else {
-               //查询用户所对应的专业显示已经购买人数
-               Map<String, Object> param2 = new HashMap<>();
-               param2.put("course_id", livePayVo.getCourseId());
-               param2.put("payment_status", "PAID");
-
-               int olineNum = orderMapper.countPayCourseNum(param2);
-
-               //查询用户所对应的专业线下的总人数
-               Integer offNum = eduOfflineOrderMapper.queryOffRecordNum(livePayVo.getCourseId());
-
-               //得到最终报名人数
-               Integer payNum = olineNum + offNum;
-               LivePayVo livePayVo6=new LivePayVo();
-               livePayVo.setCourseId(livePayVo.getCourseId());   //查找当前课程的退课数量
-               List<LivePayVo> livePayVos7 = questionSearchMapper.selectClassOut(livePayVo);
-               //查询现场报名相关成员记录
-               LivePayVo livePayVo2=new LivePayVo();
-               livePayVo2.setCourseId(livePayVo.getCourseId());
-               List<LivePayVo> livePayVos3 = eduLivePayMapper.selectLivePay(livePayVo2);
-               //可报名剩余人数
-               int nowtotal = acceptNum-(payNum+livePayVos3.size());
-               if (nowtotal<=0){
-                   return new WebResult("600", "编辑失败：该课程人数已满", "");
-               }
-           }
-
            eduLivePayMapper.updateLivePayById(livePayVo);
            return new WebResult(StatusCode.OK, "修改报名记录成功", "");
        }

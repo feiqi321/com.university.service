@@ -6,10 +6,8 @@ import org.csource.fastdfs.StorageClient;
 import org.csource.fastdfs.TrackerClient;
 import org.csource.fastdfs.TrackerServer;
 import org.springframework.beans.factory.annotation.Value;
-import sun.applet.Main;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * @author vvtxw
