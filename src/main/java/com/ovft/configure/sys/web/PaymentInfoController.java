@@ -6,20 +6,24 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.ovft.configure.WXmodel.WXPay;
 import com.ovft.configure.config.AlipayConfig;
-import com.ovft.configure.constant.OrderStatus;
-import com.ovft.configure.constant.PaymentStatus;
-import com.ovft.configure.constant.Status;
+import com.ovft.configure.config.WXPayConfig;
+import com.ovft.configure.config.WXPayConfigImpl;
+import com.ovft.configure.constant.*;
 import com.ovft.configure.http.result.StatusCode;
 import com.ovft.configure.http.result.WebResult;
 import com.ovft.configure.sys.bean.*;
 import com.ovft.configure.sys.dao.*;
 import com.ovft.configure.sys.service.*;
 import com.ovft.configure.sys.utils.OrderIdUtil;
+import com.ovft.configure.sys.utils.RedisUtil;
+import com.ovft.configure.sys.utils.WXPayUtil;
 import com.ovft.configure.sys.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +31,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author vvtxw
@@ -96,6 +100,12 @@ public class PaymentInfoController {
     @Resource
     private EduPayrecordMapper eduPayrecordMapper;
 
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private PayConfigMapper payConfigMapper;
+
 
     @GetMapping(value = "showonoroff")
     public WebResult sendToStatus(Integer courseId, HttpServletRequest request) {
@@ -104,6 +114,7 @@ public class PaymentInfoController {
         int status = eduRegistService.queryOffRegist(schoolId, courseId);
         return new WebResult(StatusCode.OK, "查询成功", status);
     }
+
 
     /**
      * 网上报名
@@ -118,16 +129,50 @@ public class PaymentInfoController {
      */
     @GetMapping(value = "alipay/submit")
     @Transactional
-    public Object paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
+    public Object paymentAlipay(@RequestParam("courseId") Integer courseId, Integer type, String code, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String schoolId1 = request.getHeader("schoolId");
         int schoolId = Integer.parseInt(schoolId1);
 
 
         //微信支付 1
-        /*if (type == 1) {
-            ResponseEntity<String> stringResponseEntity = wxpayMethod(courseId, request, httpServletResponse);
-            return new WebResult(StatusCode.OK, "支付成功", stringResponseEntity);
-        }*/
+        if (type == 1) {
+
+            redisUtil.set(schoolId1, schoolId1);   //后面会根据schoolId去查找对应学校的支付配置信息
+            //校验用户是否已报名
+            String userId = request.getHeader("userId");
+            //查询学员的基本信息
+            User user2 = userService.queryInfo(Integer.parseInt(userId));
+
+            //查询是否有订单，如果已经下单了，返回信息
+            List<EduOfflineOrder> oldOrder = eduOfflineOrderService.queryOffRecord(user2.getUserId(), courseId);
+            List<OrderVo> orderVos = orderMapper.queryAllRecordByCourseId(user2.getUserId(), courseId);
+            if (oldOrder.size() > 0 || orderVos.size() > 0) {
+                return new WebResult("600", "您已经报名该课程，不要重复报名");
+            }
+            ResponseEntity<String> stringResponseEntity = alipayMethod(courseId, request, httpServletResponse, 1);
+            Map<String, String> map2 = new HashMap<>();
+            try {
+                WXPayConstants.SignType signType = WXPayConstants.SignType.MD5;
+                System.out.println("微信打印返回实体类内容" + stringResponseEntity.toString());
+                Map<String, String> map = WXPayUtil.xmlToMap(stringResponseEntity.toString().split(",")[1]);
+
+                map2.put("appId",map.get("appid"));
+                map2.put("timeStamp", String.valueOf(Calendar.getInstance().getTimeInMillis()));
+                map2.put("nonceStr", map.get("nonce_str"));
+                map2.put("package", "prepay_id="+map.get("prepay_id"));
+                map2.put("signType", signType.toString());
+                EduCourseVo courseByCourseId = eduCourseMapper.queryCourseInfo(courseId);
+                WxConfigPojo wxConfigPojo = payConfigMapper.selectWxPayConfig(1, null);//通过学校id进行查询对应学校配置系信息
+                String paySign = WXPayUtil.generateSignature(map2, wxConfigPojo.getWxkey(), signType);
+                map2.put("paySign", paySign);
+                map2.remove("appId");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new WebResult("200", "操作成功", map2);
+
+
+        }
 
 
         //支付宝支付 2
@@ -146,7 +191,7 @@ public class PaymentInfoController {
             }
 
 
-            ResponseEntity<String> stringResponseEntity = alipayMethod(courseId, request, httpServletResponse);
+            ResponseEntity<String> stringResponseEntity = alipayMethod(courseId, request, httpServletResponse, 2);
 
             return stringResponseEntity;
         }
@@ -172,9 +217,9 @@ public class PaymentInfoController {
         }
         return new WebResult(StatusCode.ERROR, "报名失败", "");
     }
-
     //2.支付宝线上支付
-    private ResponseEntity<String> alipayMethod(Integer courseId, HttpServletRequest request, HttpServletResponse httpServletResponse) {
+
+    private ResponseEntity<String> alipayMethod(Integer courseId, HttpServletRequest request, HttpServletResponse httpServletResponse, Integer type) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
         String schoolId1 = request.getHeader("schoolId");
@@ -185,7 +230,8 @@ public class PaymentInfoController {
 
         //1.根据courseId查询订单的信息
         EduCourseVo courseInfo = eduCourseMapper.queryCourseByCourseId(courseId);
-
+        redisUtil.set("payCourseName", courseInfo.getCourseName());
+        redisUtil.set("clientIp", WXPay.getIp2(request));
         //2.生成订单关联
         Order order = new Order();
 
@@ -197,7 +243,12 @@ public class PaymentInfoController {
         order.setTotalAmount(courseInfo.getCoursePrice());//预付款金钱
         order.setTradeBody(courseInfo.getCourseName());//订单标题
         order.setSchoolId(String.valueOf(schoolId));
-        order.setPaymentWay("支付宝");
+        if (type == 1) {
+            order.setPaymentWay("微信支付");
+        }
+        if (type == 2) {
+            order.setPaymentWay("支付宝");
+        }
         orderMapper.insertSelective(order);
         Order orderInfo = orderService.getOrderInfo(String.valueOf(order.getId()));
         System.out.println(orderInfo.toString());
@@ -230,13 +281,17 @@ public class PaymentInfoController {
         orderDetail.setSchoolId(schoolId);
         orderDetail.setSchoolName(school.getSchoolName());
         orderDetailMapper.insertSelective(orderDetail);
-        System.out.println("=============>>" + request.getRemoteAddr());
-        System.out.println("=============>>" + request.getRemotePort());
+
         order.setReturnurl(request.getHeader("referer"));
         System.out.println("=============>>" + order.getReturnurl());
-        return getStringResponseEntity(httpServletResponse, order);
+        if (type == 1) {
+            return getWxResponseBody(httpServletResponse, order, courseInfo);
+        }
+        if (type == 2) {
+            return getStringResponseEntity(httpServletResponse, order);
+        }
+        return null;
     }
-
 
     @RequestMapping(value = "/alipay/callback/notify", method = RequestMethod.POST)
     @ResponseBody
@@ -245,7 +300,8 @@ public class PaymentInfoController {
         System.out.println(" ----------callbackstart 支付宝开始回调" + paramMap.toString());
         boolean isCheckPass = false;
         try {
-            isCheckPass = AlipaySignature.rsaCheckV1(paramMap, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
+
+            isCheckPass = AlipaySignature.rsaCheckV1(paramMap, redisUtil.get("ALIPAY_PUBLIC_KEY").toString(), AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
@@ -337,7 +393,129 @@ public class PaymentInfoController {
 
     }
 
+    @RequestMapping(value = "/alipay/callback/Wxnotify", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public Boolean wxPayNotifyUrl(Map<String, String> map) throws Exception {
+        //  log.info(">>>>微信支付回调...<<<<");
+
+        String outTradeNo = map.get("out_trade_no");
+        String return_code = map.get("return_code");
+
+        if (return_code.equals("SUCCESS")) {
+//            log.info(">>>>微信调起成功...<<<<");
+//            PaymentDetailVo entity = paymentDao.queryPaymentDetail(out_trade_no);
+            PaymentInfo paymentInfoQuery = new PaymentInfo();
+            paymentInfoQuery.setOutTradeNo(outTradeNo);
+            PaymentInfo paymentInfo = paymentService.getPaymentInfo(paymentInfoQuery);
+            /*微信重复调起-->校验如果已经支付则直接返回*/
+            if (paymentInfoQuery.getPaymentStatus().equals("PAID")) {
+                return true;
+            }
+            WXPayConfig wxPayConfig = new WXPayConfigImpl();
+            WXPay wxPay = new WXPay(wxPayConfig);
+            /*判断sign签名是否一致*/
+            if (wxPay.isResponseSignatureValid(map)) {
+                System.out.println(">>>>微信签名通过...<<<<");
+
+                /*校验api返回的金额与流水单的金额是否一致*/
+                if (map.get("total_fee") == null) {
+                    System.out.println("API返回无金额!");
+//                    /*调用退款接口 */
+//                    wxRefund(out_trade_no,entity.getUserId(), entity.getPaymentStatus());
+                    throw new Exception("API返回无金额！");
+                }
+                /*转换金额为元*/
+                BigDecimal totalPrice = new BigDecimal(paymentInfo.getTotalAmount().toString()); //单位是元
+                String paymentPrive = totalPrice.multiply(new BigDecimal(100)).toBigInteger().toString();
+                String total_fee = map.get("total_fee").toString();
+                if (!total_fee.equals(paymentPrive)) {
+                    System.out.println("API返回的交易金额与流水单的金额不一致，存在假通知的危险！");
+                    //wxRefund(out_trade_no,entity.getUserId(), entity.getPaymentStatus());
+                    throw new Exception("API返回的交易金额与流水单的金额不一致，存在假通知的危险！");
+                }
+
+                HashMap param = new HashMap();
+                param.put("no", paymentInfo.getOutTradeNo());
+                System.out.println("未处理，更新状态=" + outTradeNo);
+                PaymentInfo paymentInfo4Upt = new PaymentInfo();
+                paymentInfo4Upt.setPaymentStatus(PaymentStatus.PAID);
+                paymentInfo4Upt.setCallbackTime(new Date());
+                paymentInfo4Upt.setCallbackContent(param.toString());
+                paymentInfo4Upt.setCreateTime(new Date());
+                paymentService.updatePaymentInfoByOutTradeNo(outTradeNo, paymentInfo4Upt);
+
+                Order order = orderMapper.selectByPrimaryKey(Integer.valueOf(paymentInfo.getOrderId()));
+                order.setOrderStatus(OrderStatus.PAY);
+                order.setResourceStatus("PAID");
+
+                order.setPaymentTime(paymentInfo4Upt.getCreateTime());
+                orderMapper.updateByPrimaryKeySelective(order);
+
+                User user = userService.selectById(order.getUserId());
+                OrderDetailExample orderDetailExample = new OrderDetailExample();
+                orderDetailExample.createCriteria().andOrderIdEqualTo(Long.valueOf(order.getId()));
+                List<OrderDetail> orderDetails = orderDetailMapper.selectByExample(orderDetailExample);
+//                Long courseId = orderDetails.get(0).getCourseId();
+//                EduCourseVo eduCourseVo = teacherMapper.selectByCourseId(courseId.intValue());
+//                    eduCourseVo.setNowtotal();
+//
+//                teacherMapper.updateCourseByCourseId();
+
+                //更新线上支付记录状态
+                EduPayrecord eduPayrecord = new EduPayrecord();
+                eduPayrecord.setPayStatus(String.valueOf(OrderStatus.PAY));
+                eduPayrecord.setOrderId(Integer.valueOf(paymentInfo.getOrderId()));
+
+                eduPayrecordMapper.updateByPrimaryKey2(eduPayrecord);
+
+                BigDecimal orderPrice = new BigDecimal("0");
+                BigDecimal SettlementMoney = new BigDecimal("0");
+                BigDecimal feilu = new BigDecimal("0.006");//费率
+                String schoolName = null;
+                for (OrderDetail orderDetail : orderDetails) {
+                    orderPrice = orderDetail.getOrderPrice();
+                    BigDecimal multiply = orderPrice.multiply(feilu);
+                    SettlementMoney = orderPrice.subtract(multiply);
+                    schoolName = orderDetail.getSchoolName();
+                }
+
+                //对账系统生成未结算订单表详细表
+                EduSettlementOrderDetails eduSettlementOrderDetails = new EduSettlementOrderDetails();
+                eduSettlementOrderDetails.setOrderNumber(paymentInfo.getOutTradeNo());
+                eduSettlementOrderDetails.setResourceName(paymentInfo.getSubject());
+                eduSettlementOrderDetails.setTradingTime(new Date());
+                eduSettlementOrderDetails.setPaymentType(String.valueOf(2));//支付宝
+                eduSettlementOrderDetails.setSettlementStatus(1);//未结算
+                eduSettlementOrderDetails.setTelephone(user.getPhone());
+                eduSettlementOrderDetails.setSchoolId(Integer.valueOf(order.getSchoolId()));
+                eduSettlementOrderDetails.setSchoolName(schoolName);
+                eduSettlementOrderDetails.setTransactionAmount(orderPrice);
+                eduSettlementOrderDetails.setSettlementAmount(SettlementMoney);
+                eduSettlementOrderDetails.setPayrecordId(paymentInfo.getId());
+                eduSettlementOrderDetails.setOrderId(order.getId());
+                eduSettlementOrderDetailsMapper.insertSelective(eduSettlementOrderDetails);
+                System.out.println("结束...");
+
+
+                /*异步回调成功，修改订单状态*/
+                //...
+
+
+                System.out.println(">>>>微信异步回调完毕...<<<<");
+            } else {
+                System.out.println("API返回的数据签名验证不通过，有可能被第三方篡改!!!");
+                // wxRefund(out_trade_no,entity.getUserId(), Integer.valueOf(map.get("type").toString()));
+                throw new Exception("API返回的数据签名验证不通过，有可能被第三方篡改!!!");
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     //3.线下支付
+
     private int offlineRegist(HttpServletRequest request, Integer courseId) {
         //生存线下报名记录
         String userId1 = request.getHeader("userId");
@@ -429,7 +607,6 @@ public class PaymentInfoController {
         return -1;
     }
 
-
     /**
      * 教材购买提交订单
      *
@@ -470,6 +647,7 @@ public class PaymentInfoController {
     }
 
     //2.支付宝线上支付
+
     private ResponseEntity<String> alipayMethodBoooks(SubmitOrderVos submitOrderVos, HttpServletRequest request, HttpServletResponse httpServletResponse) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
@@ -522,6 +700,8 @@ public class PaymentInfoController {
     }
 
 
+
+
     /**
      * 视频购买
      *
@@ -553,6 +733,7 @@ public class PaymentInfoController {
 
 
     //2.支付宝线上支付
+
     private ResponseEntity<String> alipayMethodVideo(Integer videoId, HttpServletRequest request, HttpServletResponse httpServletResponse) {
         String userId1 = request.getHeader("userId");
         Integer userId = Integer.parseInt(userId1);
@@ -615,16 +796,18 @@ public class PaymentInfoController {
         paymentInfo.setPaymentStatus(PaymentStatus.UNPAID);
         paymentInfo.setTotalAmount(orderInfo.getTotalAmount());
         paymentService.savePaymentInfo(paymentInfo);
-
-        AlipayClient client = new DefaultAlipayClient(AlipayConfig.URL, AlipayConfig.APPID,
-                AlipayConfig.RSA_PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET,
-                AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE);
+        AliConfigPojo aliConfigPojoList = payConfigMapper.selectAliPayConfig(1, null);//通过学校id进行查询对应学校配置系信息
+        AlipayConfig alipayConfig = new AlipayConfig(Integer.parseInt(orderInfo.getSchoolId()), 1, aliConfigPojoList);
+        redisUtil.set("ALIPAY_PUBLIC_KEY", alipayConfig.ALIPAY_PUBLIC_KEY);  //设置5分钟的过期时间
+        AlipayClient client = new DefaultAlipayClient(AlipayConfig.URL, alipayConfig.APPID,
+                alipayConfig.RSA_PRIVATE_KEY, alipayConfig.FORMAT, alipayConfig.CHARSET,
+                alipayConfig.ALIPAY_PUBLIC_KEY, alipayConfig.SIGNTYPE);
         //利用支付宝客户端生成表单页面
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
         AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
 
         alipayRequest.setReturnUrl(AlipayConfig.return_url);
-        alipayRequest.setNotifyUrl(AlipayConfig.notify_url);
+        alipayRequest.setNotifyUrl(alipayConfig.notify_url);
 
         model.setOutTradeNo(paymentInfo.getOutTradeNo());
         model.setSubject(paymentInfo.getSubject());
@@ -643,5 +826,46 @@ public class PaymentInfoController {
         }
 
         return ResponseEntity.ok().body(form);
+
+    }
+
+    //
+    private ResponseEntity<String> getWxResponseBody(HttpServletResponse httpServletResponse, Order order, EduCourseVo eduCourseVo) {
+        EduCourseVo courseByCourseId = eduCourseMapper.queryCourseInfo(eduCourseVo.getCourseId());
+        WxConfigPojo wxConfigPojoList = payConfigMapper.selectWxPayConfig(1, null);//通过学校id进行查询对应学校配置系信息
+        WXPayConfig wxPayConfig = new WXPayConfigImpl(Integer.parseInt(courseByCourseId.getSchoolId()), 1, wxConfigPojoList);
+        redisUtil.set("wxkey", wxPayConfig.getKey());
+        String notify_url = "http://47.105.55.14:8830/pay/alipay/callback/notify";
+        String s = null;
+        try {
+            WXPay wxPay = new WXPay(wxPayConfig, notify_url, true, true);
+            HashMap map = new HashMap();
+            map.put("openid", redisUtil.get("openid").toString());
+            map.put("appid", wxConfigPojoList.getAppid());
+            map.put("body", courseByCourseId.getCourseName());
+            map.put("mch_id", wxConfigPojoList.getMchId());
+            map.put("nonce_str", WXPayUtil.generateNonceStr());
+            map.put("notify_url", wxConfigPojoList.getNotifyUrl());
+            map.put("out_trade_no", order.getOrderSn());
+            map.put("spbill_create_ip", redisUtil.get("clientIp").toString());
+            map.put("timeStamp", String.valueOf(Calendar.getInstance().getTimeInMillis()));
+            map.put("total_fee", 10 + "");
+            map.put("trade_type", "JSAPI");
+
+
+            Map<String, String> reqData = wxPay.fillRequestData(map);
+            System.out.println("入参xml" + reqData);
+//                wxPay.isResponseSignatureValid(reqData);
+//                wxPay.isPayResultNotifySignatureValid(reqData);
+
+            s = wxPay.requestWithoutCert("/pay/unifiedorder", reqData, wxPayConfig.getHttpConnectTimeoutMs(), wxPayConfig.getHttpReadTimeoutMs());
+            System.out.println("微信支付返回信息xml" + s);
+
+            Map<String, String> stringStringMap = wxPay.processResponseXml(s);
+            System.out.println("微信支付返回信息map" + WXPayUtil.xmlToMap(s));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(s);
     }
 }

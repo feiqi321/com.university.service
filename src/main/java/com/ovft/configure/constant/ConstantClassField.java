@@ -24,6 +24,14 @@ public class ConstantClassField {
      * redis        app端用户信息
      */
     public static final String USER_INFO = "USER_INFO";
+    /**
+     * redis        weixinzhanghao信息
+     */
+    public static final String WxPayCourseInfo = "WxPayCourseInfo";
+    /**
+     * redis        weixinzhanghao信息
+     */
+    public static final String wxPayConfig = "WxPayCourseInfo";
 
     /**
      * redis    用户权限

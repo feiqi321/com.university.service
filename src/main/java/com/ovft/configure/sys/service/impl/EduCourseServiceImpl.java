@@ -54,6 +54,11 @@ public class EduCourseServiceImpl implements EduCourseService {
     private EduPayrecordMapper eduPayrecordMapper;
     @Resource
     private QuestionSearchMapper questionSearchMapper;
+    @Resource
+    private EduLivePayMapper eduLivePayMapper;
+    @Resource
+    private SchoolMapper schoolMapper;
+
 
     /**
      * 按学校的id来查找专业类别
@@ -102,8 +107,12 @@ public class EduCourseServiceImpl implements EduCourseService {
 //        livePayVo.setCourseId(courseId);   //查找当前课程的退课数量
 //        List<LivePayVo> livePayVos = questionSearchMapper.selectClassOut(livePayVo);
         olineNum=olineNum;      //当前报的数量-退课的数量
+        //查询现场报名相关成员记录
+        LivePayVo livePayVo2=new LivePayVo();
+        livePayVo2.setCourseId(courseId);
+        List<LivePayVo> livePayVos3 = eduLivePayMapper.selectLivePay(livePayVo2);
         //得到最终报名人数
-        int payNum = olineNum + offNum;
+        int payNum = olineNum + offNum+livePayVos3.size();   //线上+线下+现场报的
 
         if (payNum >= acceptNum) {
             map.put("人数已满，请下期再报名", "");
@@ -196,7 +205,11 @@ public class EduCourseServiceImpl implements EduCourseService {
             Integer offCourseNum = eduOfflineOrderMapper.queryCountCourseNum(userId);
             //查询线上的报名门数
             Integer oLineCourseNum = eduPayrecordMapper.queryCourseNum(userId);
-            Integer allCourse = offCourseNum + oLineCourseNum;
+            User user1 = userMapper.selectById(userId);
+              LivePayVo livePayVo=new LivePayVo();
+            livePayVo.setPhone(user1.getPhone());
+            List<LivePayVo> livePayVos = eduLivePayMapper.selectLivePay(livePayVo);
+            Integer allCourse = offCourseNum + oLineCourseNum+livePayVos.size();    //线下+线上+现场
             //查询条件限制的门数
             Map<String, Object> param = new HashMap<>();
             param.put("courseId", courseId);
