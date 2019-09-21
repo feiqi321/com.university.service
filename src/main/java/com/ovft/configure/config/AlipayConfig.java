@@ -1,44 +1,27 @@
 package com.ovft.configure.config;
 
-import com.ovft.configure.sys.bean.AliConfigPojo;
-import com.ovft.configure.sys.bean.WxConfigPojo;
-
 public class AlipayConfig {
-
     // 商户appid
-    public  String APPID = "2019070665757804";
-    // 私钥 pkcs8格式的 ===
-    public  String RSA_PRIVATE_KEY = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCv3/yapCVkFEtxVnCXT4JZ9XHOPxHXH+p7yk6M5RHal/9hmT/t2Y41MQNP1s9pcrwKkgfrAXX6diXSR3fShFaB0Y/xW7CfYHhtmdhgkhw1Ab3eoVFHiRaigpxqG+ssJ635UoKXySKJfZj3ttRJ8GTQPP/+vsB2boiB26p8yoLKYOMXmHFtwYz+YOh28tt95TDtupllC5sBnnrYJLRja2+S0fQn5b1PyxZRPveM2n9lnYr1ArKlFDo7VpbRMSFT3PbbESpv86KFpH8xy4UeIX0D9lzjgBnbEWwKHGvSxE91fpIDz+RM3yltyaxnY4D6e4WAVlQQ2IuC5JKhC6hXDO3bAgMBAAECggEATmNM2Tf0GmkZPwjB4g7kEGhfMwfVUca94jLHU/D9Riqc/skpPz/KLFcOHNWnWF51BVkVAl+CUAG81b5Y35FwZSgcOf0d+csrod4CHPjCbbW7BLFt4q5tUj1YrcqHxQRifE+UOUbCh/lc5nusns/wfwfRKZ+ndKHLYeWgVUKFjOFm7XLRh4tszQBJrStXSfVpW87mjwwba+VPyDufNbHjksMeUYjF2YDAHUCzvdFM+ORK+l+ONMijpZJEvC9qVEHFLQSo3WZVVne1QczCL9FPt/jDeBSYVe18N3ucZ41bNdpOGdBwO0iU0hNXxOaWYbMgecIeRXtHYJ11v5HNj8inUQKBgQD1diuEucLB8Rci9YwL7wY4svSMBLKdGX1FJAUtwcn8RQ8ss7SCtFScG8DiPDBprS5B5IsLT2mT27AMxDA1ns3mdRd5z/8jSEYLLTiMHO3WvhTOP9adGVxsGtnKogJSguf8TSRDN5+gSWRQkYoxZoddtOFeBVO4ETIdJdZAncW2hwKBgQC3bQAwN/373UTOGVzQzwkmCahAQuTzY8j5tVr4FITH1jZQ2iCDK/pYgIqSes+JKOcBI93SGb9mSd0aHIhE8ki8qLTx+DeARFGJi/9HoZ/ocsjCdoI86gqEzsgtptAFgiGaCr+p4nY0lIXODBh9KpiEKSzZgzSk7NNfr0V8dplPDQKBgGdGfuzrE4xyGZ/13CSxPtbgRJAc8eGzdcd/bkZgQNHJZKcUPSC5Ktg7vR3y4RO1b779n5r0oKE7T4kvinElDdCm92ejIeAAaqgNMLuS+GbftvVIWs3ie8ZoTbY6D+wTc/PtqRI29wyDlJdphNFgKBg/IItkhmLtqT4mS00IlMVFAoGBAJp8boUuE3c21EV1bQvc48qqpY+CB8zKRTGzQevhdDfPPi34mRuBRbeWg599WiAeV/lI2QGkd+TR3yunzkmregGTYdrOAQjCAZ6ET7xn7wNa8aV/JI/jWnqiokx4y4loIZ7Y4LZXqtD8KnnxDAsXfh8JguGrtQIXCKv1NePvC45dAoGBAN7K7rs0n2iu94U2jqoYCZJVRDhypgQc6CzpxXsPAOSWZ7D18ldbZXmAgIQ2lx3FEA4PrQlO0xhG5yRthQGhoWTzkCGOc6DkcmLv/ah2sY32Wa8pOBnMDl502461xzPmU9HDgWOG6CQXjIe9V/KMrzWGogZbdEeEDLkFvUA9APq8";
+    public static String APPID = "2016092700607568";
+    // 私钥 pkcs8格式的
+    public static String RSA_PRIVATE_KEY = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC2oM4dCz7iLNlzpZAxpmURPaQdhDH9qvUI+bpfBwcMjtn2jtBzYhALdiPhamv3hDVuG2biG9C3HPWEm3Jyam31mvOwkLtNbZv7TZ9i/l1IUSgU4dpB7q358wUAdm7zH2t+foIBQp4pdk/AV+f/DPl95HOa1Bb1JDmVZGYRng0yvjPFMc8aZsOO3q6BttCzEG8QMx/VV/lkiGbwgqLL1RadZv/eE4Y3ZE9MIdE6HYugx3jVJSd2Komf0TtqVTtRJ06oNnFy7kpWHazkbiy1roNld3C2zd/P60q2+RaHlXRKFvHgGXtyRrfWGlcbp5LCm4HxjehK07eBLSadH/crIc1xAgMBAAECggEBAK5zv0/ZLTGKXBHvhmUXKJYmhr23SLWi97yiKJibsu0ZDDZMx+xgMSlxqeaq7QWcYhmSzV2R6nbwj8sjXljTN8SURtJT/seAu657wJQknOD2vU3tTLsMj14i+ZUujN9rFRjZKcCgbUr3/Eik8DUfpLfQYWn1zRRQjT0akbGkg8ECdp5FvuF8trcncNcxlegQoUzouQ1MqxBCbFm5MnDVDn4psrDseoClVNgU3ROgE4eyRC8kENSwl/2ng/8Ul1a6TgPMvhrADUk9Os+7X7JkBWs3iaMGxJAt50gGaqWPDyXzgEUfNL9jXcRGHh93K2xmNZ+RvOzuLr+SVc1kjHskWQ0CgYEA7fPwfLvxzzE1liJWigfsDVSUGjfa/In5D+oP3HS3QJbLsF0n0xasNkO/jDegPTZtJ1rbhNm1MvHJE/nzC3/Ufw1UBXXFLhZ5ahcRZ0qVATZfzvLY61ATNMOTnnDiXZj2vgMHk7xnVpAFYrJzSFe3YefAzLhH/e6+VrP/o2NyyWcCgYEAxHqwKA1ms+D2Q3/Y3z2CzBaZVXyN8cOTh2iiIstV3JaSiilYKmYWAGbE8E6OqiJoPRU3aNOqbTsnfdJ7haqTOd49Wuj+7OXaBKZRPvGobdGGrz7VWdG4sMuF8Xlxs9q7OsrUc8X72lVt6CQKmNfYzUjp0xZqdLr1BB2CHk1K82cCgYAYgg1862ambm0Uf4jmQpafcNyoLqSRaiyK5RKpJCRTtLRZ/95AMY+fLy8lY/1PELIBYaxGbJ3rF1gchJvxzUK3q0nCHjUm4A21TZbvSpE6RL1tdTm+UssHnjUwFnRaK40OWQWIw9jo44CKf9K72rz6ioIjE7/meZaFG5jy3SVPdQKBgE8d8E1QiCiqz7+Cfbv3MvInr3ri+u19iayfD5rfMiXvY/bKizwXe4iR2X/CwmP0EvF116gYg6oUheR+m0rJ0xscSKyQ4gZW0CHLLzAfc2k1U/zBWnwenTZj3f3Mn2KDE52rCz3LXY0flXBDAxlk4WJYl/9uKVPz7LHJiBnXmfTFAoGBAJSdk6Uc2oZlnLrODhaAG1C8XekUOhGkBUFyb1zEPkxpPD23GJe3G+1p8iulhT0V1L0brD/PtNdxZVFC8b2L717FVuMUNp8kHZARRGQ3fswPMiiJPmwkUUQtjosrdy88QkUUwlSrpCP0kuFvshhvHZXjPKeQIJuJnGoHKXq24UKv";
     // 服务器异步通知页面路径 需http://或者https://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public  String notify_url = "http://47.105.55.14:8830/pay/alipay/callback/notify";//http://47.105.55.14:8830/alipay/callback/notify
+    public static String notify_url = "http://47.105.55.14/alipay/callback/notify";
     // 页面跳转同步通知页面路径 需http://或者https://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
     // 商户可以自定义同步跳转地址
-    public static String return_url = "https://www.zanbazanma16.com/public/appvuew.html";
-    //http://47.105.55.14:8830/pay/alipay/callback/return
-   // public static String return_url = "https://www.zanbazanma16.com/#/Record/";
-
-    // public static String return_order_url = "https://www.zanbazanma16.com/public/sucess.jpg";
+    public static String return_url = "http://47.105.55.14/alipay/callback/return";
+    public static String return_order_url = "http://47.105.55.14/#/registerOnline";
     // 请求网关地址
-    public static String URL = "https://openapi.alipay.com/gateway.do";
+    public static String URL = "https://openapi.alipaydev.com/gateway.do";
     // 编码
-    public  static String CHARSET = "UTF-8";
+    public static String CHARSET = "UTF-8";
     // 返回格式
     public static String FORMAT = "json";
-    // 支付宝公钥 ===
-    public   String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoyS3uWAGmT29tlL7tg2ViTft+TVK2/zpH0KvdfdiXsFbI6GpbnQZyI8uTze4AYPm3QosuERaRJ4uP/bvFJMd4Uv6KSxUbWjO/hdp1Jf+inwDT/eev47QxwTEsIAbWF/kDWjBWWsvkUQ61h9fvrwr2R+wgbKkPrssAys2ZvFNsKoS3DJN6EbEeDhLViCh615ytVq5X+EPsaLX0ri/wn6VVjiSeJ5chz6FDP2k/zp53oapXzDAAzaGmdOqAyBgBkQU54FA6Sw6msWtPdZVjWSDwKGqHB/9YjhN8KuhlkIDChmx9YXDZNwIy0rFXcJMoxy4In1RUekXrDXHQU1sBiviZwIDAQAB";
+    // 支付宝公钥
+    public static String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyozTFWH8lhnRQGyB0OWsL1AkDRKdNX+WxTqVB0BGipSVnjX0dpcH2GKDDUEvKYH7+PuRrxVwjoIJ2FJYtSrnIa34NogZHrbwakZ46m/Znj0XYIG4FF0eYrQFnBpkexBCsTxfYlAwQTAkzTXNOLRPwM8QDtaYiorf48TBUPLpSMbC99pzx5hvOg082y8jT05LS2S3MA7How5nkEn2TOcKA/kwu4a/Hq9mJ0KPGbR225VuvKCurvFdsdVi9Ha0M2k9gVvf9NCAOq+Dm74xxKYmc18erN1gm4uKw15a2RjlsrsXhyoOj+c+0hr/4qBYk+6nw+Wzg4qT3/scYoFzKw0rWQIDAQAB";
     // 日志记录目录
     public static String log_path = "/log";
     // RSA2
     public static String SIGNTYPE = "RSA2";
-
-
-              public   AlipayConfig(Integer schoolId,Integer type,AliConfigPojo aliConfigPojo){
-                  this.APPID=aliConfigPojo.getAppid();
-                  this.notify_url=aliConfigPojo.getNotifyUrl();
-                  this.ALIPAY_PUBLIC_KEY=aliConfigPojo.getAlipayPublicKey();
-                  this.RSA_PRIVATE_KEY=aliConfigPojo.getRsaPrivateKey();
-
-              }
-
 
 }
